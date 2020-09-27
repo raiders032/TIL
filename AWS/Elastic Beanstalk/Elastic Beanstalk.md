@@ -66,6 +66,6 @@
 1. 애플리케이션 생성
 2. 플랫폼 docker 선택
 
-![image-20200927133531361](/Users/yeongsamno/Desktop/dev/md/images/image-20200927133531361.png)
+![image-20200927133531361](../../images/image-20200927133531361.png)
 
 3. 
