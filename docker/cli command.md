@@ -4,7 +4,7 @@
 
 > Build an image from a Dockerfile
 
-```
+```shell
 docker build [OPTIONS] PATH | URL | -
 ```
 
@@ -35,7 +35,7 @@ ___
 
 > Create a new image from a container’s changes
 
-```
+```shell
 docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
 ```
 
@@ -74,6 +74,14 @@ ___
 ```
 docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
 ```
+
+예시
+
+```
+docker exec -it jenkins /bin/bash
+```
+
+
 
 ___
 
@@ -155,7 +163,11 @@ docker ps [OPTIONS]
 | --quiet , -q | Only display numeric IDs                         |
 |              |                                                  |
 
-```
+
+
+예시
+
+```shell
 // 모든 컨테이너 삭제
 docker rm `docker ps -a -q`
 ```
