@@ -400,3 +400,14 @@ hooks: # CodeDeploy배포 단계에서 실행할 명령어를 지정합니다.
   * 외부의 요청을 받아 백엔드 서버로 요청을 전달하는 행위
 * 리눅스 서버에 nginx 1개와 스프링 부트 jar 2개를 이용해 무중단 배포를 해보자
 
+
+
+#### Nginx Dockerfile
+
+```dockerfile
+FROM nginx
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+EXPOSE 443
+```
+
