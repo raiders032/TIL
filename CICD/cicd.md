@@ -1,5 +1,7 @@
 ### Jenkins
 
+
+
 #### Dockerfile 작성
 
 ```dockerfile
@@ -29,7 +31,6 @@ RUN apt-get update && \
 #### Docker-compose 작성
 
 ```yml
-# docker-compose.yml
 version: '3'
 volumes:
   grafana_data:
@@ -39,7 +40,7 @@ services:
   jenkins:
     build:
       context: .
-      dockerfile: Dockerfile-jenkins
+      dockerfile: Dockerfile
     container_name: jenkins
     restart: always
     volumes:
@@ -48,21 +49,11 @@ services:
     ports:
       - 10000:8080
       - 50000:50000
-
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    ports:
-      - 9090:9090
-    restart: always
 ```
 
 
 
-#### jenkins password 확인하기
+#### jenkins 설치 후 unlock을 위해 password 확인하기
 
 ```
 docker exec -it jenkins /bin/bash
@@ -70,11 +61,6 @@ cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
 
-
-#### install suggested plugins
-
-* gitlab
-* gitlab api
 
 #### shell script 작성
 
@@ -108,10 +94,12 @@ mv before-deploy/before-deploy.zip deploy/sprint1.zip
 
 #### Jenkinsfile 작성
 
+* Jenkins pipeline project 생성시 작성한다. 
 * Docker Pipeline plugin 설치
-*  AWS Global Configurationl 설치
+*  AWS Global Configurationl plugin 설치
+*  Pipeline script from SCM 선택시 
 
-```
+```groovy
 node{
     stage('SCM Checkout'){
         git branch: 'cicd', credentialsId: 'gitlab-ssh-key', url: 'git@git.swmgit.org:swmaestro/recorder-1.git'
@@ -132,6 +120,45 @@ node{
          docker.withRegistry('https://644637824921.dkr.ecr.ap-northeast-2.amazonaws.com', 'ecr:ap-northeast-2:ecr-credential') {
              app.push("latest")
         }
+    }
+}
+```
+
+```groovy
+node{
+    stage('SCM Checkout'){
+        git branch: 'cicd', credentialsId: 'gitlab-ssh-key', url: 'git@git.swmgit.org:swmaestro/recorder-1.git'
+    }
+
+    stage('build & test'){
+        sh './gradlew build'
+    }
+
+    stage ('make zip file'){
+        sh 'mkdir -p before-deploy'
+        sh 'cp build/libs/*.jar before-deploy/'
+        sh 'cp scripts/*.sh before-deploy/'
+        sh 'cp appspec.yml before-deploy/'
+        sh 'cd before-deploy && zip -r before-deploy *'
+        sh 'cd ../'
+        sh 'mkdir -p deploy'
+        sh 'mv before-deploy/before-deploy.zip deploy/sprint1.zip'
+    }
+
+    stage ('upload to AWS S3'){
+    	withAWS(credentials:"$AWS_CREDENTIALS") {
+      	sh 'aws s3 cp deploy/sprint1.zip s3://cicd-spring/sprint1.zip --region ap-northeast-2'
+      }
+    }
+
+    stage('deploy'){
+      withAWS(credentials:"$AWS_CREDENTIALS") {
+        sh 'aws deploy create-deployment \
+               --application-name backend-spring \
+               --deployment-group-name backend-spring-group \
+               --region ap-northeast-2 \
+               --s3-location bucket=cicd-spring,bundleType=zip,key=sprint1.zip'
+      }
     }
 }
 ```
@@ -161,18 +188,31 @@ chmod 700 ~/.ssh/id_rsa*
    * Username : gitlab 계정 이메일
    * Private key -> enter directly -> 1에서 생성한 private key 복사 -> 추가
    * Passphrase : 1번 key 생성시 입력한 비밀번호 
+   * ![image-20201006122415465](../images/image-20201006122415465.png)
 
 
 
 #### gitlab web hook 설정
 
 1. GitLab에서 Access Token 발급
+
+   ![image-20201006143137655](../images/image-20201006143137655.png)
+
 2. Jenkins에서 GitLab과 연동을 위해 1에서 발급받았던 Access Token을 credential로 추가한다.(gitlab plugin 설치 후)
+
+   ![image-20201006143334727](../images/image-20201006143334727.png)
+
 3. Jenkins에서 추가한 credential을 global setting에서 gitlab 설정으로 추가한다.
+
 4. Jenkins에서 자동 Build Trigger가 진행되도록 설정한다.
+
    * Build when a change is pushed to GitLab. ~~ 체크
+   * ![image-20201006143558503](../images/image-20201006143558503.png)
+
 5. GitLab에서 Webhook을 생성한다.
-   * Integrations에서 url과 Jenkins에서 생성한 Secret Tokene 등록
+
+   * Integrations에서 webhook url과 Jenkins에서 생성한 Secret Tokene 등록
+   * ![image-20201006143508816](../images/image-20201006143508816.png)
 
 
 
@@ -209,6 +249,7 @@ chmod 700 ~/.ssh/id_rsa*
 ```shell
 aws s3 cp s3://aws-codedeploy-ap-northeast-2/latest/install . --region ap-northeast-2
 chmod +x ./install
+sudo apt  install ruby
 sudo ./install auto
 sudo service codedeploy-agent status
 ```
@@ -262,14 +303,14 @@ files:
     destination: /home/ubuntu/build/ # source에서 지정된 파일을 받을 위치, 이후 jar를 실행하는 등은 destination에서 옮긴 파일들로 진행
     overwrite: yes
 
-permissions: # CodeDeploy에서 EC2서버로 넘겨준 파일들을 모두 ec2-user권한을 갖도록 합니다.
+permissions: # CodeDeploy에서 EC2서버로 넘겨준 파일들을 모두 ubuntu권한을 갖도록 합니다.
   - object: /
     pattern: "**"
     owner: ubuntu
     group: ubuntu
 
 hooks: # CodeDeploy배포 단계에서 실행할 명령어를 지정합니다.
-  ApplicationStart: # deploy.sh를 ec2-user권한으로 실행합니다.
+  ApplicationStart: # deploy.sh를 ubuntu권한으로 실행합니다.
     - location: deploy.sh
       timeout: 60 # 스크립트 실행 60초 이상 수행되면 실패가 됩니다.
       runas: ubuntu
@@ -279,14 +320,83 @@ hooks: # CodeDeploy배포 단계에서 실행할 명령어를 지정합니다.
 
 
 
+#### CodeDeploy log 확인
+
+* `/opt/codedepoly-agent/deployment-root/deployment-logs/codedeploy-agent-deployments.log`
+
+
+
 #### 오류
 
 1. The CodeDeploy agent did not find an AppSpec file within the unpacked revision directory at revision-relative path "appspec.yml". 
-2. https://forums.aws.amazon.com/thread.jspa?threadID=296302
+   * https://forums.aws.amazon.com/thread.jspa?threadID=296302
+   * 원인 : 쉘 스크립트에서 배포할 파일을 압축했는데 AWS codedeploy plugin이 자동으로 압축해 압축이 2번 된 것이 원인
+   * 해결: 쉘 스크립트에 압축하는 부분을 제거함
 
 
 
+2. ```
+   aws s3 cp deploy/sprint1.zip s3://cicd-spring/sprint1.zip --region ap-northeast-2
+   /var/jenkins_home/workspace/test@tmp/durable-37608fef/script.sh: 1: /var/jenkins_home/workspace/test@tmp/durable-37608fef/script.sh: aws: not found
+   ```
+
+* ```shell
+  docker exec -it jenkins /bin/bash
+  sudo apt-get install awscli.
+  aws --version.
+  ```
 
 
-http://ec2-3-34-162-241.ap-northeast-2.compute.amazonaws.com:10000/project/codedelploy
+
+3. ```
+   aws s3 cp deploy/sprint1.zip s3://cicd-spring/sprint1.zip --region ap-northeast-2
+   upload failed: deploy/sprint1.zip to s3://cicd-spring/sprint1.zip An error occurred (AccessDenied) when calling the CreateMultipartUpload operation: Access Denied
+   ```
+
+* `AWS Credentail` 만들기
+
+* 매개변수 추가
+
+* ![image-20201006135353189](../images/image-20201006135353189.png)
+
+* ```groovy
+  #jenkinsfile
+  
+  stage ('upload to AWS S3'){
+  	withAWS(credentials:"$AWS_CREDENTIALS") {
+    	sh 'aws s3 cp deploy/sprint1.zip s3://cicd-spring/sprint1.zip --region ap-northeast-2'
+    }
+  }
+  ```
+
+  
+
+4. ```
+   java.lang.NoSuchMethodError: No such DSL method 'withAWS' found among steps
+   ```
+
+   * `Pipeline: AWS Steps` plugin 설치
+
+   
+
+5. ```
+   aws deploy create-deployment --application-name backend-spring --deployment-group-name backend-spring-group --region ap-northeast-2 --s3-location bucket=cicd-spring,bundleType=zip,key=sprint1.zip
+   
+   An error occurred (AccessDeniedException) when calling the CreateDeployment operation: User: arn:aws:sts::644637824921:assumed-role/ec2-codedeploy-role/i-05e2227397eab28ac is not authorized to perform: codedeploy:CreateDeployment on resource: arn:aws:codedeploy:ap-northeast-2:644637824921:deploymentgroup:backend-spring/backend-spring-group
+   ```
+
+   * 3번 해결책과 동일
+
+
+
+### 무중단 배포
+
+
+
+#### Nginx
+
+* 웹 서버, 리버스 프록시, 캐싱, 로드 밸런싱, 미디어 스프리밍등을 위한 오픈소스 소프트웨어
+* 리버스 프록시
+  * 외부의 요청을 받아 백엔드 서버로 요청을 전달하는 행위
+* 리눅스 서버에 nginx 1개와 스프링 부트 jar 2개를 이용해 무중단 배포를 해보자
 
