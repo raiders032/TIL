@@ -68,3 +68,43 @@ ON절을 활용한 조인(JPA 2.1부터 지원) 1. 조인대상필터링
 
    
 
+####  페이징 적용하기
+
+컨트롤러
+
+* http://localhost:8080/api/v1/post?size=5&page=0
+
+````java
+@ApiOperation(value = "식당 정보 수정 요청 조회", notes = "식당 정보 수정 요청을 조회합니다.")
+@GetMapping("/api/v1/post")
+public ResponseEntity<?> getPost(Pageable pageable){
+  Page<PostResponseDto> posts = postService.getPost(pageable);
+	ApiResponse response = new ApiResponse(true, "식당 정보 수정 요청 조회 완료");
+	response.putData("posts", posts);
+  return ResponseEntity.ok(response);
+}
+````
+
+
+
+리포지토리
+
+```java
+@Override
+public Page<PostResponseDto> findAllPostResponseDto(Pageable pageable) {
+	List<PostResponseDto> content = queryFactory
+                .select(Projections.fields(PostResponseDto.class, post.id, 
+                                           post.restaurant.id.as("restaurantId"), post.imageUrl, post.claim))
+                .from(post)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+  JPAQuery<Post> countQuery = queryFactory
+                .select(post)
+                .from(post);
+
+  return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+}
+```
+
