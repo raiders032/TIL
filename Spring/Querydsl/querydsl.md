@@ -5,7 +5,7 @@ ON절을 활용한 조인(JPA 2.1부터 지원) 1. 조인대상필터링
 
 
 
-#### 프로젝션과 결과 DTO로 반환
+### 프로젝션과 결과 DTO로 반환
 
 1. 프로퍼티 접근
 
@@ -107,4 +107,3 @@ public Page<PostResponseDto> findAllPostResponseDto(Pageable pageable) {
   return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
 }
 ```
-
