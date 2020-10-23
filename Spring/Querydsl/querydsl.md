@@ -1,10 +1,3 @@
-#### 조인 - on절
-
-ON절을 활용한 조인(JPA 2.1부터 지원) 1. 조인대상필터링
- \2. 연관관계없는엔티티외부조인
-
-
-
 ### 프로젝션과 결과 DTO로 반환
 
 1. 프로퍼티 접근
@@ -55,7 +48,7 @@ ON절을 활용한 조인(JPA 2.1부터 지원) 1. 조인대상필터링
    
 
    ```java
-   		@Override
+   ㅉ		@Override
        public List<MenuResponseDto> findMenuResponseDto(Long restaurantId) {
            return queryFactory
                    .select(Projections.constructor(MenuResponseDto.class, menu.id, menu.name, menu.price ))
@@ -68,7 +61,7 @@ ON절을 활용한 조인(JPA 2.1부터 지원) 1. 조인대상필터링
 
    
 
-####  페이징 적용하기
+### 페이징 적용하기
 
 컨트롤러
 
@@ -107,3 +100,44 @@ public Page<PostResponseDto> findAllPostResponseDto(Pageable pageable) {
   return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
 }
 ```
+
+
+
+### SQL function 호출
+
+* 사용하는 방언에 함수가 등록되어 있는지 확인하기
+
+```java
+public class MySQLDialect extends Dialect {
+...
+	public MySQLDialect() {
+		super();
+		registerFunction( "ascii", new StandardSQLFunction( "ascii", StandardBasicTypes.INTEGER ) );
+		registerFunction( "bin", new StandardSQLFunction( "bin", StandardBasicTypes.STRING ) );
+		registerFunction( "char_length", new StandardSQLFunction( "char_length", StandardBasicTypes.LONG ) );
+  	registerFunction( "rand", new NoArgSQLFunction( "rand", StandardBasicTypes.DOUBLE ) );
+		...
+	}
+}		
+```
+
+* 사용하기
+
+```java
+// group_concat() 사용하기
+Expressions.stringTemplate("group_concat({0})",menu.name).as("menu"))
+```
+
+```java
+//rand() 사용하기
+Expressions.numberTemplate(Double.class, "rand()").asc()
+```
+
+
+
+### 랜덤 정렬하기
+
+```
+.orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
+```
+

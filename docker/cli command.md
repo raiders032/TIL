@@ -75,6 +75,19 @@ ___
 docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
 ```
 
+| Options             | Descripton                                            |
+| :------------------ | ----------------------------------------------------- |
+| --detach , -d       | Detached mode: run command in  the background         |
+| --detach-keys       | Override the key sequence for  detaching a container  |
+| --env  , -e         | Set environment variables                             |
+| --interactive  , -i | Keep STDIN open even if not  attached                 |
+| --privileged        | Give extended privileges to the  command              |
+| --tty ,  -t         | Allocate a pseudo-TTY                                 |
+| --user  , -u        | Username or UID (format:  <name\|uid>[:<group\|gid>]) |
+| --workdir  , -w     | Working directory inside the container                |
+
+
+
 예시
 
 ```

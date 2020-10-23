@@ -152,6 +152,58 @@ Menu findByRestaurantIdAndMenuId(Long restaurantId, Long menuId);
 
 
 
+___
+
+
+
+### JPQL
+
+* 객체지향 쿼리 언어
+* **테이블이 아닌 엔티티 객체를 대상으로 검색**
+* JPQL은 SQL을 추상화해서 특정데이터베이스 SQL에 의존하지 않는다.
+
+
+
+#### 기본 함수
+
+* CONCAT
+* SUBSTRING 
+* TRIM
+
+* LOWER
+* UPPER 
+* LENGTH 
+* LOCATE
+* ABS
+* SQRT
+* MOD
+
+
+
+#### 사용자 정의 함수 호출
+
+* 하이버네이트는 사용전 방언에 추가해야 한다.
+* 사용하는 DB 방언을 상속받고, 사용자 정의 함수를 등록한다.
+
+```java
+public class MysqlCustomDialect extends MySQL5Dialect {
+    public MysqlCustomDialect() {
+        super();
+        registerFunction("group_concat", new StandardSQLFunction("group_concat",StandardBasicTypes.STRING));
+    }
+}
+```
+
+```properties
+spring.jpa.database-platform = com.swm.sprint1.config.MysqlCustomDialect
+```
+
+
+
+___
+
+
+
 ### 예외
 
 * `org.hibernate.QueryException: query specified join fetching, but the owner of the fetched association was not present in the select list`
