@@ -141,3 +141,21 @@ Expressions.numberTemplate(Double.class, "rand()").asc()
 .orderBy(Expressions.numberTemplate(Double.class, "rand()").asc())
 ```
 
+
+
+### 별칭으로 정렬하기
+
+```java
+ NumberPath<Long> aliasLike = Expressions.numberPath(Long.class, "like");
+ List<Tuple> tuples = queryFactory
+                .select(restaurant, userLiking.id.count().as(aliasLike))
+                .from(restaurant)
+                .leftJoin(restaurant.userLikings, userLiking)
+                .where( longitudeBetween(condition.getLongitude(), condition.getRadius()),
+                        latitudeBetween(condition.getLatitude(), condition.getRadius()),
+                        nameLike(condition.getName()))
+                .groupBy(restaurant.id)
+                .orderBy(aliasLike.asc())
+                .fetch();
+```
+

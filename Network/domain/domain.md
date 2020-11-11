@@ -14,6 +14,11 @@ ___
 >
 > 넓은 의미로는 네트워크상에서 컴퓨터를 식별하는 호스트명을 가리키며, 좁은 의미에서는 도메인 레지스트리에게서 등록된 이름을 의미합니다.
 
+### root domain & sub domain
+
+* root domain : momelet.com
+* Sub domain : study.momelet.com
+
 ### Host
 
 > 네트워크에 연결된 장치(컴퓨터, 서버 등)들에게 부여되는 고유한 이름이다. 도메인과 유사하지만 더 넓은 의미를 가지고 있다. 
@@ -35,6 +40,10 @@ ___
 > domain에 대응되는 IP를 알려주는 서비스.
 
 ___
+
+
+
+## Domain Name System
 
 
 

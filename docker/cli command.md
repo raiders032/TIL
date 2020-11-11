@@ -23,6 +23,8 @@ docker build [OPTIONS] PATH | URL | -
 docker build -t neptunes032/react-test-app -f ./frontend/Dockerfile.dev ./frontend
 
 docker build -t neptunes032/docker-frontend ./frontend
+
+docker build .
 ```
 
 
@@ -130,6 +132,16 @@ ___
 
 ```
 docker image rm [OPTIONS] IMAGE [IMAGE...]
+```
+
+
+
+예시
+
+```shell
+# 모든 이미지 삭제
+docker image rm $(docker images -q) 
+
 ```
 
 
@@ -255,6 +267,37 @@ docker run -p 127.0.0.1:80:8080/tcp ubuntu bash
 
 ___
 
+#### docker rm
+
+> Remove one or more containers
+
+```shell
+docker rm [OPTIONS] CONTAINER [CONTAINER...]
+```
+
+| Options        | Description                                             |
+| -------------- | ------------------------------------------------------- |
+| --force , -f   | Force the removal of a running container (uses SIGKILL) |
+| --link , -l    | Remove the specified link                               |
+| --volumes , -v | Remove anonymous volumes associated with the container  |
+
+
+
+예시
+
+```
+# 모든 도커 컨테이너 제거
+docker rm $(docker ps -a -q)
+```
+
+
+
+
+
+___
+
+
+
 
 
 #### docker start
@@ -276,6 +319,16 @@ ___
 ```
 docker stop [OPTIONS] CONTAINER [CONTAINER...]
 ```
+
+예시
+
+```shell
+# 구동중인 모든 컨테이너 중지
+docker stop $(docker ps -a -q)
+
+```
+
+
 
 ___
 

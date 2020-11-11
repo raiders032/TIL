@@ -16,12 +16,19 @@
 ## Services ID 만들기
 
 * client_id : Service ID
+
+  ![image-20201105123902612](image-20201105123902612.png)
+
 * redirect URL
   * authorization code를 반환 받을 URL 입력
   * localhost 안됨
   * 127.0.0.1 안됨
 
+![image-20201105124002564](image-20201105124002564.png)
 
+Configure 클릭하고 redirect url 설정하기
+
+![image-20201105124134429](image-20201105124134429.png)
 
 ## Private Key 만들기
 
