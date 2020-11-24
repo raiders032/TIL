@@ -254,11 +254,38 @@ sudo apt install elasticsearch
 ```shell
 sudo vi /etc/elasticsearch/elasticsearch.yml
 
-# 변경 사항
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
 node.name: node-1
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
 network.host: 0.0.0.0
+#
+# Set a custom port for HTTP:
+#
+#http.port: 9200
+#
+# For more information, consult the network module documentation.
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
 discovery.seed_hosts: ["127.0.0.1"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
 cluster.initial_master_nodes: ["node-1"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
 ```
 
 5. Elasticsearch 실행
@@ -328,9 +355,37 @@ curl -H 'Content-Type: application/json' -XGET '127.0.0.1:9200/shakespeare/_sear
 
 
 
+도커로 설치
+
+```shell
+#이미지 가져오기
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+
+#싱글 노드 클러스터 실행하기
+docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+```
+
+
+
+
+
 ___
 
 ## Logstash
+
+	### 설치
+
+```shell
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+
+sudo apt-get install apt-transport-https
+
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+
+sudo apt-get update && sudo apt-get install logstash
+```
+
+
 
 > 무료 오픈 소스 서버의 데이터 처리 파이프라인인 Logstash는 다양한 소스에서 데이터를 수집하여 변환한 후 자주 사용하는 저장소로 전달합니다.
 
