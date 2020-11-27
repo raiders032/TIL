@@ -10,10 +10,15 @@ docker build [OPTIONS] PATH | URL | -
 
 
 
-| Options     | Description                                           |
-| ----------- | ----------------------------------------------------- |
-| --tag , -t  | Name and optionally a tag in the ‘name:tag’ format    |
-| --file , -f | Name of the Dockerfile (Default is ‘PATH/Dockerfile’) |
+| Options     | Description                                             |
+| ----------- | ------------------------------------------------------- |
+| --build-arg | Set build-time variables                                |
+| --tag , -t  | Name and optionally a tag in the ‘name:tag’ format      |
+| --rm        | Remove intermediate containers after a successful build |
+| --file , -f | Name of the Dockerfile (Default is ‘PATH/Dockerfile’)   |
+|             |                                                         |
+|             |                                                         |
+|             |                                                         |
 
 
 
@@ -124,6 +129,14 @@ docker image ls [OPTIONS] [REPOSITORY[:TAG]]
 
 ___
 
+#### docker image prune
+
+> Remove unused images
+
+```
+docker image prune [OPTIONS]
+```
+
 
 
 #### docker image rm
@@ -177,6 +190,18 @@ docker logs [OPTIONS] CONTAINER
 | --timestamps , -t | Show timestamps                                  |
 
 
+
+___
+
+
+
+#### docker network ls
+
+> List networks
+
+```shell
+docker network ls [OPTIONS]
+```
 
 ___
 
