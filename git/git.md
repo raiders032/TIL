@@ -33,12 +33,20 @@
 ### working directory
 
 * untracked
+  * `git add` 를 통해 `staging area`로 옮길 수 있다.
 * tracked
   * unmodified
   * modified
-* `git add` 를 통해 staging area로 옮길 수 있다.
+    * `staging area`로 옮길 수 있다.
+  * deleted
+    * `staging area`로 옮길 수 있다.
+  * `git add` 를 통해 `staging area`로 옮길 수 있다.
 
-### staging area
+### staging area(index)
+
+* newfile
+* modified
+* deleted
 
 ### .git repository(directory)
 

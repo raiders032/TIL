@@ -3,7 +3,7 @@
 * HTTP는 HTML 문서와 같은 리소스들을 가져올 수 있도록 해주는 프로토콜이다.
 * 신뢰 가능한 전송 프로토콜이라면 이론상으로는 무엇이든 사용할 수 있으나 TCP 혹은 암호화된 TCP 연결인 TLS를 통해 전송된다.
 * HTTP Request Method
-  * ![HTTP request methods](/Users/yeongsamno/Desktop/dev/md/Network/OSI model/136h7s2robdd4v9ev6xe.png)
+  * ![HTTP request methods](136h7s2robdd4v9ev6xe.png)
 
 
 

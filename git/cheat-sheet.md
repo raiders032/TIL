@@ -76,9 +76,7 @@ git status -s #short status
 
 ## Ignoring Files
 
-Add files that should be ignored in **.gitignore** in project directory
-
-For example:
+* 깃으로 관리하고 싶지 않은 파일이 있을경우 .`gitignore` 를 사용한다. 
 
 ```bash
 # ignore all .a files
@@ -115,14 +113,37 @@ git add . #stage everything
 **Removing files**
 
 ```bash
-rm file.txt #delete file
-git add file.txt #add to staging area
-git rm file.txt # removes file from working directory and staging area
+rm file.txt #파일 삭제
+git add file.txt #deleted 상태의 파일을 staging area로 올긴다.
+git rm file.txt #파일 삭제하고 deleted 상태의 파일을 staging area로 올긴다. 앞선 두 명령어를 합친것과 같다.
 git rm --cached file.txt #removes from staging area only
 git clean -fd #removes all untracked files
 ```
 
 **Moving files**
+
+```shell
+git status
+On branch master
+nothing to commit, working tree clean
+ls
+a.txt
+mv a.txt b.txt
+git status
+On branch master
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    a.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	b.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+
 
 ```bash
 git mv from.txt to.txt
@@ -157,6 +178,8 @@ git difftool
 ```
 
 ## Commit
+
+* Staging area의 파일을 git repository로 옮긴다.
 
 ```bash
 git commit #commit stagged files
@@ -412,8 +435,13 @@ git restore --source=HEAD~2 file.txt
 
 **Amending the last commit**
 
+* 아직 서버에 push를 하지 않은 경우 사용할 수 있다.
+
 ```bash
 git commit --amend
+
+#커밋 메세지 변경하기
+git commit --amend -m "message"
 ```
 
 ## Reset

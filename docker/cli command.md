@@ -1,6 +1,6 @@
+## 
 
-
-#### docker build
+## docker build
 
 > Build an image from a Dockerfile
 
@@ -38,7 +38,7 @@ ___
 
 
 
-#### docker commit
+## docker commit
 
 > Create a new image from a container’s changes
 
@@ -50,7 +50,7 @@ ___
 
 
 
-#### docker container ls
+## docker container ls
 
 > List containers
 
@@ -62,7 +62,26 @@ ___
 
 
 
-#### docker container rm
+## docker container prune
+
+> Remove all stopped containers
+
+```
+docker container prune [OPTIONS]
+```
+
+| Options        | Descripton                            |
+| :------------- | ------------------------------------- |
+| --filter       | Provide filter values (e.g. ‘until=') |
+| `--force , -f` | Do not prompt for confirmation        |
+
+
+
+___
+
+
+
+## docker container rm
 
 > Remove one or more containers
 
@@ -74,7 +93,7 @@ ___
 
 
 
-#### docker exec
+## docker exec
 
 > Run a command in a running container
 
@@ -107,7 +126,7 @@ ___
 
 
 
-#### docker images
+## docker images
 
 > List images
 
@@ -119,7 +138,7 @@ ___
 
 
 
-#### docker image ls
+## docker image ls
 
 > List images
 
@@ -129,7 +148,9 @@ docker image ls [OPTIONS] [REPOSITORY[:TAG]]
 
 ___
 
-#### docker image prune
+
+
+## docker image prune
 
 > Remove unused images
 
@@ -137,9 +158,17 @@ ___
 docker image prune [OPTIONS]
 ```
 
+| Options      | Description                                      |
+| ------------ | ------------------------------------------------ |
+| --all , -a   | Remove all unused images, not just dangling ones |
+| --filter     | Provide filter values (e.g. ‘until=')            |
+| --force , -f | Do not prompt for confirmation                   |
+
+___
 
 
-#### docker image rm
+
+## docker image rm
 
 > Remove one or more images
 
@@ -157,13 +186,11 @@ docker image rm $(docker images -q)
 
 ```
 
-
-
 ___
 
 
 
-#### docker inspect
+## docker inspect
 
 > Return low-level information on Docker objects
 
@@ -175,7 +202,7 @@ ___
 
 
 
-#### docker logs
+## docker logs
 
 > Fetch the logs of a container
 
@@ -195,7 +222,7 @@ ___
 
 
 
-#### docker network ls
+## docker network ls
 
 > List networks
 
@@ -207,7 +234,7 @@ ___
 
 
 
-#### docker ps
+## docker ps
 
 > List containers
 
@@ -236,7 +263,7 @@ ___
 
 
 
-#### docker pull
+## docker pull
 
 >  Pull an image or a repository from a registry
 
@@ -248,7 +275,7 @@ ___
 
 
 
-#### docker push
+## docker push
 
 > Push an image or a repository to a registry
 
@@ -260,7 +287,7 @@ ___
 
 
 
-#### docker run
+## docker run
 
 > Run a command in a new container
 
@@ -279,7 +306,7 @@ docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 | --publish , -p     | Publish a container’s port(s) to the host          |
 | --rm               | Automatically remove the container when it exits   |
 | --volume , -v      | Bind mount a volume                                |
-|                    |                                                    |
+| --tty , -t         | Allocate a pseudo-TTY                              |
 |                    |                                                    |
 
 
@@ -293,7 +320,7 @@ docker run -p 3000:80 -d --name feedback-app --rm feedback-node
 
 
 
-##### Publish or expose port (-p, --expose)
+### Publish or expose port (-p, --expose)
 
 > This binds port `8080` of the container to TCP port `80` on `127.0.0.1` of the host machine. You can also specify `udp` and `sctp` ports. The [Docker User Guide](https://docs.docker.com/network/links/) explains in detail how to manipulate ports in Docker.
 
@@ -303,7 +330,7 @@ docker run -p 127.0.0.1:80:8080/tcp ubuntu bash
 
 ___
 
-#### docker rm
+## docker rm
 
 > Remove one or more containers
 
@@ -336,7 +363,7 @@ ___
 
 
 
-#### docker start
+## docker start
 
 > Start one or more stopped containers
 
@@ -348,7 +375,7 @@ ___
 
 
 
-#### docker stop
+## docker stop
 
 > Stop one or more running containers
 
@@ -367,4 +394,12 @@ docker stop $(docker ps -a -q)
 
 
 ___
+
+## docker tag
+
+> Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+```shell
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+```
 
