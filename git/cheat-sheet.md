@@ -1,4 +1,4 @@
-# Set up
+# git lSet up
 
 ## Git Config
 
@@ -461,6 +461,9 @@ git reset --hard hash
 
 ## Revert
 
+* 취소사항을 버전으로 남기기
+* 이미 리모트 마스터 브랜치에 커밋이 된 경우에 사용한다.
+
 ```bash
 git revert hash #reverts the given commit
 git revert HEAD~1 
@@ -468,6 +471,9 @@ gut revert --no-commit hash #reverts the given commit without revert commit
 ```
 
 ## Interactive Rebasing
+
+* 로컬에서 사용하자.
+* 변경하고자 하는 커밋의 이전 커밋의 해시코드를 사용한다.
 
 ```bash
 git rebase -i HEAD~2
