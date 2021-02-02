@@ -11,13 +11,21 @@
 
 * Team ID(App ID Prefix)
 
+![image-20210129201118269](./images/image-20210129201118269.png)
 
+![image-20210129200537350](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129200537350.png)
+
+![image-20210129200621204](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129200621204.png)
 
 ## Services ID 만들기
 
+![image-20210129201215124](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129201215124.png)
+
+![image-20210129200816849](./images/image-20210129200816849.png)
+
 * client_id : Service ID
 
-  ![image-20201105123902612](image-20201105123902612.png)
+  ![image-20210129201256589](./images/image-20210129201256589.png)
 
 * redirect URL
   * authorization code를 반환 받을 URL 입력
@@ -30,7 +38,13 @@ Configure 클릭하고 redirect url 설정하기
 
 ![image-20201105124134429](image-20201105124134429.png)
 
+
+
 ## Private Key 만들기
+
+![image-20210129201446656](./images/image-20210129201446656.png)
+
+![image-20210129201525586](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129201525586.png)
 
 * Key ID
 * 단순히 OAuth client String을 쓰는 것 대신 애플은 public/private key pair을 사용한다.
