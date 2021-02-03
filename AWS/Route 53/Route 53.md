@@ -52,11 +52,17 @@ ___
 
 
 
-## 도메인이름과 IP주소연결
+## Amazon EC2 인스턴스로 트래픽을 라우팅
 
+* [참고](https://docs.aws.amazon.com/ko_kr/Route53/latest/DeveloperGuide/routing-to-ec2-instance.html)
 
+1. Amazon EC2 인스턴스의 IP 주소 가져옵니다.
+   * 인스턴스와 탄력적 IP를 연결하지 않은 경우 **IPv4 퍼블릭 IP**. 값을 가져옵니다.
+2. 트래픽을 라우팅할 도메인의 이름과 일치하는 호스팅 영역 이름을 선택합니다.
+   * [https://console.aws.amazon.com/route53](https://console.aws.amazon.com/route53/)
+3. **Create Record Set(레코드 세트 생성)**.를 선택합니다.
 
-
+![image-20210129224329812](./images/image-20210129224329812.png)
 
 참고
 
