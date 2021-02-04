@@ -1,4 +1,4 @@
-
+## 
 
 # Jenkins 와 AWS Code deploy를 활용한 CI/CD 파이프 라인 구축하기
 
@@ -178,11 +178,11 @@ $ cat id_rsa
 
 Deploy keys -> Add deploy key 버튼을 차례로 클릭합니다
 
-![스크린샷_2021__2__3__오후_4_34](./images/스크린샷_2021__2__3__오후_4_34.png)
+![스크린샷_2021__2__3__오후_4_34](./images/2021__2__3___4_34.png)
 
 아래에 복사한 공개키를 넣어줍니다.
 
-![스크린샷_2021__2__3__오후_4_38](./images/스크린샷_2021__2__3__오후_4_38.png)
+![스크린샷_2021__2__3__오후_4_38](./images/2021__2__3___4_38.png)
 
 
 
@@ -192,9 +192,9 @@ Deploy keys -> Add deploy key 버튼을 차례로 클릭합니다
 
 Add Credentials 클릭
 
-![스크린샷_2021__2__3__오후_5_00](./images/스크린샷_2021__2__3__오후_5_00.png)
+![스크린샷_2021__2__3__오후_5_00](./images/2021__2__3___5_00.png)
 
-![스크린샷_2021__2__3__오후_5_03](./images/스크린샷_2021__2__3__오후_5_03.png)
+![스크린샷_2021__2__3__오후_5_03](./images/2021__2__3___5_03.png)
 
 
 
@@ -204,19 +204,19 @@ Add Credentials 클릭
 
 메인화면에서 새로운item 클릭후 파이프라인 프로젝트 생성
 
-![스크린샷_2021__2__3__오후_5_23](./images/스크린샷_2021__2__3__오후_5_23.png)
+![스크린샷_2021__2__3__오후_5_23](./images/2021__2__3___5_23.png)
 
-![스크린샷_2021__2__3__오후_5_49](./images/스크린샷_2021__2__3__오후_5_49.png)
+![스크린샷_2021__2__3__오후_5_49](./images/2021__2__3___5_49.png)
 
 **방법1 Pipeline script를 직접 작성하기**
 
 * Pipeline script 웹에서 직접 작성한다.
 
-![스크린샷_2021__2__3__오후_5_26](./images/스크린샷_2021__2__3__오후_5_26.png)
+![스크린샷_2021__2__3__오후_5_26](./images/2021__2__3___5_26.png)
 
-![스크린샷_2021__2__3__오후_5_28](./images/스크린샷_2021__2__3__오후_5_28.png)
+![스크린샷_2021__2__3__오후_5_28](./images/2021__2__3___5_28.png)
 
-![스크린샷_2021__2__3__오후_5_31](./images/스크린샷_2021__2__3__오후_5_31.png)
+![스크린샷_2021__2__3__오후_5_31](./images/2021__2__3___5_31.png)
 
 ```
 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '898311cc-05c1-4fe6-b527-93dc23bd9830', url: 'git@github.com:raiders032/momelet_backend_spring.git']]])
@@ -266,7 +266,7 @@ node{
 
 다음과 같이 파이프라인이 정상적으로 동작하는걸 볼 수 있다.
 
-![image-20210203175223034](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/image-20210203175223034.png)
+![image-20210203175223034](./images/image-20210203175223034.png)
 
 
 
@@ -283,7 +283,7 @@ Jenkins 관리 -> 플러그인 관리 -> 설치 가능 페이지에서 docker를
 
 
 
-### DockerHub Credential 만들기
+## DockerHub Credential 만들기
 
 * 도커 이미지를 빌드하고 도커허브에 업로드하기 때문에 젠킨스가 dockerhub접근할 수 있도록 Credential을 만든다.
 
@@ -293,7 +293,7 @@ http://localhost:8080/credentials/store/system/domain/_/ 로 이동 Add Credenti
 
 
 
-### Jenkinsfile 작성
+## Jenkinsfile 작성
 
 * 앞서 설정한대로 스크립트를 작성하자
   * 스크립트의 위치는 리포지토리 최상단
@@ -303,7 +303,7 @@ http://localhost:8080/credentials/store/system/domain/_/ 로 이동 Add Credenti
 
 * 다음과 같이 애플리케이션 리포지토리의 최상단 디렉토리에 Jenkinsfile을 작성한다.
 
-![raiders032_momelet_backend_spring_at_dev](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/raiders032_momelet_backend_spring_at_dev.png)
+![raiders032_momelet_backend_spring_at_dev](./images/raiders032_momelet_backend_spring_at_dev.png)
 
 * Jenkinsfile
 
@@ -363,11 +363,11 @@ dev 브랜치에 테스트용 commit을 푸시하면
 
 파이프 라인이 정상적으로 동작하는 것을 볼 수 있다.
 
-![momelet_pipeline__Jenkins_](/Users/YT/Library/Application Support/typora-user-images/momelet_pipeline__Jenkins_.png)
+![momelet_pipeline__Jenkins_](./images/momelet_pipeline__Jenkins_.png)
 
 도커허브에도 업로드가 되었다.
 
-![Docker_Hub](/Users/YT/Library/Application Support/typora-user-images/Docker_Hub.png)
+![Docker_Hub](./images/Docker_Hub.png)
 
 
 
