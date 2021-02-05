@@ -133,7 +133,9 @@ ___
 
 * 프로토콜: TCP, UDP
 
-* 주소: port numbers
+* 주소 시스템: port numbers
+
+  * 통신하고자 하는 호스트에는 여러 프로세스가 실행될 수 있기 때문에 올바른 프로세스와 커뮤니케이션을 하기 위해 필요하다.
 
 
 
@@ -144,14 +146,10 @@ ___
 * reliable transmission
 * in-order delivery
 * flow control
-  * 데이터 처리 속도를 조절해서 수신자의 버퍼 오버플로우를 방지한다.
+  * 
 * congestion control
   * 네트워크 내의 패킷 수가 넘치게 증가하지 않도록 방지한다.
 * connection-oriented
-
-**주소 시스템: **Port
-
-* 통신하고자 하는 호스트에는 여러 프로세스가 실행될 수 있기 때문에 올바른 프로세스와 커뮤니케이션을 하기 위해 필요하다.
 
 
 
@@ -186,6 +184,10 @@ ___
 * Connection less
   * 패켓 도착을 보장하지 않는다.
   * 상위 프로토콜에서 이를 처리해야 한다.
+
+**UDP 헤더 구조**
+
+![image-20210205113551099](./images/image-20210205113551099.png)
 
 
 
@@ -229,25 +231,25 @@ ___
 
 * 프로토콜: IPv4, IPv6, ARP, RARP
 
-* 주소: Logical address
+* 주소 시스템: Logical address
+
+  * IP address
 
 
 
 ### IP
 
 > IP 프로토콜은 인터넷 환경에서 네트워크 계층의 데이터 전송 프로토콜이다. 주요 특징으로 비연결형 서비스이고 패킷 분할/병합 기능을 가지고 있다. 데이터 체크썸은 없고, 헤더 체크썸만 제공한다. Best-effort 방식으로 동작을 한다. 이 방식은 전송 패킷이 수신 호스트에 100% 도착하는 것을 보장하지는 않는다.
->
 
-* Internet Protocol
 * Internet Layer에서 가장 중요한 프로토콜
-* 모든 패켓이 도착을 보장하지 않는다.
+* 모든 패캣의 도착을 보장하지 않는다.
+  
   * 상위 프로토콜에서 이를 처리해야한다.
 * connectionless protocol
   * 모든 packet이 독립적으로 처리된다.
   * 출발지에서 패켓을 보낸 순서가 도착지에서 받은 순서와 다를 수 있다.
-  * <img src="/Users/YT/GoogleDrive/dev/md/Network/TCP-IP/images/image-20210127162533366.png" alt="image-20210127162533366" style="zoom:50%;" />
-
-**주소 시스템**: IP address
+  
+  <img src="./images/image-20210127162533366.png" alt="image-20210127162533366" style="zoom:50%;" />
 
 - 네트워크상 최종 목적지까지 정확하게 연결되도록 연결성을 제공
 - 단말을 구분하기위해 논리적인 주소(Logical Address) IP를 할당
@@ -259,26 +261,74 @@ ___
 - 패킷단위의 데이타 구성
   - 세그먼트를 목적지까지 전송하기 위해 시작 주소와 목적지의 논리적 주소를 붙인 단위. 데이타 + IP Header
 
+
+
 **IPv4 헤더 구성**
 
-![image-20210127155633443](./images/image-20210127155633443.png)
+![image-20210205104505505](./images/image-20210205104505505.png)
 
+*  Version
+  *  IP프로토콜의 버전 여기서는 4
+*  Internet Header Protocol
+  *  헤더의 길이를 나타냄
+    *  IP 프로토콜의 헤더의 최소 길이는 20Bytes 최대 60Bytes
+  *  바이트 단위이며 헤더의 길이를 4로 나눈 값
+*  TOS
+  *  현재는 사용하지 않는다
+*  Total Length
+  *  패킷의 총 길이
+*  Identification
+  *  큰 데이터는 조각화를 통해 여러개의 패킷으로 쪼개진다.
+  *  따라서 패킷이 원래 같은 데이터에 속하는지 식별하기 위해 부여된 ID
+*  Fragment Offset
+  *  원래 데이터의 순서를 맞추기 위해 사용됨
+*  Protocol
+  *  상위 프로토콜의 타입
+  *  ICMP(1), TCP(6), UDP(17)
 *  Protocol Identifier
   * 상위 계층의 프로토콜을 나타낸다
   * TCP(6), UDP(17)
-
-
+*  Source Address
+   * 출발지 IP 주소
+*  Destinations Address
+   * 목적지 IP 주소
 
 ### ARP
 
->  ARP 프로토콜은 Address Resolution Protocol의 약자로 IP주소를 MAC 주소로 바꾸어 주는 작용을 한다. 실제로 통신이 이루어지기 위해선 데이터링크 계층의 MAC 주소를 알아야 가능하다. 송신의 MAC 주소는 송신 호스트의 LAN 카드에 저장이 되어 있으므로 얻을 수 있지만 수신 호스트의 MAC 주소는 알 수가 없다. 따라서 ARP 프로토콜을 이용하게 된다. ARP 프로토콜의 과정은 ARP request를 브로드캐스팅을 통해 방송을 하게 된다. 이때 보내는 데이터는 수신 호스트의 IP 주소이다. 이 IP 주소와 일치하는 호스트는 자신의 MAC 주소를 ARP reply 패킷을 이용해서 회신을 하게 된다. 이렇게 해서 송신 호스트는 적절한 수신 호스트의 MAC 주소를 알 수 있게 된다. 하지만 데이터를 매 번 전송할 때마다 ARP 프로토콜을 실행시켜 브로드캐스팅을 하게 되면 과도한 트래픽일 발생할 수 있으므로 가장 최근에 얻은 IP 주소와 MAC 주소 매핑 값을 보관하는 캐시 정보를 이용한다. 따라서 다음에 수신할 때에는 수신 호스트의 MAC 값을 쉽게 얻을 수 있다. 만약 적절한 IP 주소를 가진 호스트가 같은 네트워크상에서 존재하지 않고 다른 네트워크상에 존재한다면 브로드캐스팅에 대한 응답을 라우터가 반응을 하게 된다. 라우터는 이에 대해 다른 네트워크상을 통해 MAC 주소를 얻을 수 있다.
+> * 논리적인 IP주소를 물리적인 MAC 주소로 바꾸어주는 역할를 하는 프로토콜
+> * OSI 모델의 3계층 Network layer에 속하는 프로토콜
+> * [ARP 패킷 포멧](http://www.ktword.co.kr/abbr_view.php?nav=1&m_temp1=2188&id=421)
 >
-> 출처: https://copycode.tistory.com/94?category=740132 [ITstory]
-
-1. IP 호스트 A가 IP 호스트 B에게 IP 패킷을 전송하려고 할 때 IP 호스트 B의 물리적 네트워크 주소를 모른다면
-2. ARP 프로토콜을 사용하여 목적지 IP 주소 B와 브로드캐스팅 물리적 네트워크 주소 FFFFFFFFFFFF를 가지는 ARP 패킷을 네트워크 상에 전송한다.
-3. IP 호스트 B는 자신의 IP 주소가 목적지에 있는 ARP 패킷을 수신하면 자신의 물리적 네트워크 주소를 A에게 응답한다.
-4. 이와 같은 방식으로 수집된 IP 주소와 이에 해당하는 물리적 네트워크 주소 정보는 각 IP 호스트의 ARP 캐시라 불리는 메모리에 테이블 형태로 저장된 다음, 패킷을 전송할 때에 다시 사용된다. 
+> 라우터 상의 ARP 동작
+>
+> 1. ARP 요청
+>
+>    * 만일 이전에 전혀 통신한 경험이 없는 LAN(서브네트워크)의 라우터에 외부로부터 데이터 패킷이 전달되어 목적지 호스트를 찾을때
+>    * 라우터가 최초로 하는 일은 ARP Request packet(ARP 요청 패킷)을 LAN의 전체 노드에 송출함  (브로드캐스트)
+>    * APP 요청 메세지에는 송신자 자신의 MAC 주소 및 IP 주소, 목적지 IP 주소를 채우고 목적지의 MAC 주소는 0으로 채워넣음
+>
+> 2. ARP 응답
+>
+>    * ARP 요청 패킷에 포함된 목적지 IP 주소와 일치하는 Host가 응답을 한다.
+>    * 자신의 IP 주소 및 물리주소 를 채워놓은 ARP Reply packet(ARP 응답패킷)을 해당 라우터에게 송출한다 (유니캐스트)
+>    * 물리 주소 및 IP 주소 상호간의 관련 정보를 얻게됨
+>
+> 3. ARP 캐쉬
+>
+>    * 각 노드(node)는 ARP의 효율적 수행을 위해 ARP 캐쉬를 최신으로 유지하는 일이 필수
+>
+>    * 캐쉬의 각 항목은 새로이 생긴 후로 20분이 지나면 자동적으로 소멸 (RFC 1122)
+>
+>    * 자주 사용되는 곳은 ARP cache를 통해 즉각적으로 조회가 가능
+>
+>    * 만약 ARP cache에 조회되는 자료가 없는 경우에만 ARP request packet (ARP 요청 패킷)을 송출하게 되어 전체적으로 LAN 트래픽을 경감시킴
+>
+>    * ```bash
+>      #ARP 캐쉬 확인 명령어 
+>      arp -a
+>      ```
+>
+>    [출처](
 
 
 
@@ -299,7 +349,10 @@ ___
 * 장비: 브릿지, 스위치
 * PDU: frame
 * 프로토콜: Ethernet
-* 주소: Physical address
+* 주소 시스템: Physical address
+  * MAC address
+    * 네트워크 인터페이스 컨트롤러(NIC)의 제조업체가 NIC 할당한 고유한 주소
+    * 이더넷 하드웨어 주소(Ethernet hardware address, EHA), 하드웨어 주소, 물리 주소로 부르기도 한다. 
 
 
 
@@ -309,18 +362,9 @@ ___
 
 
 
-**주소 시스템**: MAC address
-
--  네트워크 인터페이스 컨트롤러(NIC)의 제조업체가 NIC 할당한 고유한 주소
-- 이더넷 하드웨어 주소(Ethernet hardware address, EHA), 하드웨어 주소, 물리 주소로 부르기도 한다. 
-
-
-
 **이더넷 프레임의 형식**
 
-**![ethernet-data-frame-format-01](./images/ethernet-data-frame-format-01.svg)**
-
-
+![ethernet-data-frame-format-01](./images/ethernet-data-frame-format-01.svg)
 
 * Len/Type
   * Len
@@ -337,25 +381,10 @@ MAC, LAN, 패킷망 등에 사용되는 것
 
 
 
-1. 
-
-
-
-
-
 ## L1 Physical Layer
 
 * 장비: 허브
 * PDU: bits
-
-
-
-**PDU**
-
-* frame
-* bits
-
-
 
 
 
