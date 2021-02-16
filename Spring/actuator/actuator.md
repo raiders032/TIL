@@ -10,7 +10,9 @@
 
 ## 의존성 추가하기
 
-```
+메이븐
+
+```xml
 <dependencies>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -19,7 +21,9 @@
 </dependencies>
 ```
 
-```
+그래들
+
+```groovy
 dependencies {
 	compile("org.springframework.boot:spring-boot-starter-actuator")
 }
@@ -29,14 +33,19 @@ dependencies {
 
 ## Actuator Endpoints로 어플리케이션 모니터링 하기
 
-* /health
+> Actuator는 여러개의 Endpoint를 노출한다. 이 Endpoint를 통해 모니터링을 할 수 있다. 아래와 같은 Endpoint가 존재한다. Endpoint는 명시적으로 활성화거나 비활성화 할 수 있다.
+
+* `/health`
+  
   * 어플리케이션에 대한 기본적인 정보를 제공한다.
   * Status가  `UP` 인 경우 어플리케이션이 건강하다는 뜻이다
   * `DOWN` 인경우  디비와 연결 문제가 있거나 디스크 공간이 부족하거나 등등의 문제가 있다는 것이다.
-* /metrics
+* `/metrics`
+  
   * JVM memory 사용률
   * CPU usage
-* /loggers
+* `/loggers`
+  
   * 어플리케이션의 로그를 보여준다
   * 로그 설정을 바꿔 런타임에 로그 레벨을 바꿀 수 있다.
 * http://localhost:8080/actuator
@@ -49,13 +58,29 @@ dependencies {
 
 > 기본적으로 모든 endpoint은 활성화 되어 있다. (shutdown 빼고) properties파일을 통해 endpoint를 활성화하고 비활성화 할 수 있다.
 >
-> * `management.endpoint.<id>.enabled = true`
+> * `management.endpoint.<Endpoint ID>.enabled = true`
 >
 > ```properties
 > management.endpoint.shutdown.enabled=true //false
 > ```
 >
-> 
+> | Endpoint ID    | Description                                                  |
+> | :------------- | :----------------------------------------------------------- |
+> | auditevents    | Exposes audit events (e.g. auth_success, order_failed) for your application |
+> | info           | Displays information about your application.                 |
+> | health         | Displays your application’s health status.                   |
+> | metrics        | Shows various metrics information of your application.       |
+> | loggers        | Displays and modifies the configured loggers.                |
+> | logfile        | Returns the contents of the log file (if `logging.file` or `logging.path` properties are set.) |
+> | httptrace      | Displays HTTP trace info for the last 100 HTTP request/response. |
+> | env            | Displays current environment properties.                     |
+> | flyway         | Shows details of Flyway database migrations.                 |
+> | liquidbase     | Shows details of Liquibase database migrations.              |
+> | shutdown       | Lets you shut down the application gracefully.               |
+> | mappings       | Displays a list of all @RequestMapping paths.                |
+> | scheduledtasks | Displays the scheduled tasks in your application.            |
+> | threaddump     | Performs a thread dump.                                      |
+> | heapdump       | Returns a GZip compressed JVM heap dump.                     |
 
 
 
@@ -66,8 +91,10 @@ dependencies {
 > * Http 상에서 endpoint 공개하기
 >
 > ```properties
+> # 공개
 > management.endpoints.web.exposure.include=health,info 
-> management.endpoints.web.exposure.exclude=health,info
+> # 비공개
+> management.endpoints.web.exposure.exclude=*
 > ```
 
 ___
@@ -241,6 +268,8 @@ ___
 
 > endpoints에는 민감한 정보가 있기에 보호되어야한다. 
 
+* spring security 설정
+
 ```java
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.actuate.context.ShutdownEndpoint;
@@ -307,9 +336,9 @@ public class ActuatorSecurityConfig extends WebSecurityConfigurerAdapter {
 
 * actuator 와 Prometheus를 통합하기 위해서 해당 의존성이 필요하다.
 * 해당 의존성을 추가하면 스프링 부트가 자동적으로 metrics을 수집하고 Prometheus server가 수집해 갈 수 있도록 metrics을 export할 것이다.
-* 모든 애플리케이션의 metrics actuator의 엔드포인트인 `/prometheus` 를 통해 접근이 가능하다.
+* 모든 애플리케이션의 metrics은 엔드포인트  `/prometheus` 를 통해 접근이 가능하다.
 
-```
+```xml
 <!-- Micrometer Prometheus registry  -->
 <dependency>
 	<groupId>io.micrometer</groupId>
@@ -441,9 +470,9 @@ docker-compose up --build -d
 
 
 
-![image-20210201170633285](/Users/YT/GoogleDrive/dev/md/Spring/actuator/images/image-20210201170633285.png)
+![image-20210201170633285](./images/image-20210201170633285.png)
 
-![image-20210201170652333](/Users/YT/GoogleDrive/dev/md/Spring/actuator/images/image-20210201170652333.png)
+![image-20210201170652333](./images/image-20210201170652333.png)
 
 
 
@@ -508,7 +537,7 @@ a5daa23dd1d6   grafana/grafana              "/run.sh"                About a min
 **동작 확인하기**
 
 * `http://localhost:3030` 으로 접속하자!
-* 기본 유저네임 : admin, 
+* 기본 유저네임 : admin
 * 기본 비밀번호: admin
 
 <img src="./images/image-20210201184830209.png" alt="image-20210201184830209" style="zoom:50%;" />
@@ -549,3 +578,4 @@ a5daa23dd1d6   grafana/grafana              "/run.sh"                About a min
 * 대시보드
 
 <img src="./images/image-20210201190728107.png" alt="image-20210201190728107" style="zoom:50%;" />
+
