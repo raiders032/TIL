@@ -1,4 +1,4 @@
-### qJenkins 와 AWS Code deploy를 활용한 CI/CD 파이프 라인 구축하기
+### Jenkins 와 AWS Code deploy를 활용한 CI/CD 파이프 라인 구축하기
 
 
 
@@ -25,16 +25,19 @@
 2. GitHub의 WebHook을 통해 Jenkins에 알린다.
 3. Jenkins는 GitHub에서 소스코드를 받아온다.
 4. 빌드와 테스트 과정을 거친다
-5. 배포할 앱과, appspec.yml, scripts를 압축하여 S3로 업로드 한다.
-6. AWS codeDeploy에 배포를 요청한다.
-7. AWS codeDeploy는 S3에 업로드된 파일을 EC2로 옮기고 appspec.yml을 읽어 scripts를 실행한다.
+5. 애플리케이션을 도커 이미지로 빌드하고 도커 허브에 업로드한다.
+6. appspec.yml, scripts를 압축하여 S3로 업로드 한다.
+7. AWS codeDeploy에 배포를 요청한다.
+8. AWS codeDeploy는 S3에 업로드된 파일을 EC2로 옮기고 appspec.yml을 읽어 scripts를 실행한다.
+
+
 
 ## Jenkins
 
 ### docker와 docker-compose 설치
 
+* AWS amazon-linux-2 인스턴스 기준
 * Jenkins를 도커 컨테이너로 띄울 예정이다 따라서 먼저 docker와 docker-compose를 설치한다.
-* amazon-linux-2 인스턴스 기준
 
 ```bash
 sudo yum update -y
@@ -244,8 +247,6 @@ node{
 }
 ```
 
-![스크린샷_2021__2__3__오후_5_37](./images/스크린샷_2021__2__3__오후_5_37.png)
-
 
 
 **방법2 Pipeline script를 SCM(깃)으로 부터 가져오기**
@@ -397,11 +398,11 @@ dev 브랜치에 테스트용 commit을 푸시하면
 
 ![Update_Center__Jenkins_-2781745](./images/Update_Center__Jenkins_-2781745.png)
 
-### jenkins에 credential 추가
+### Jenkins에 credential 추가
 
 대쉬보드 -> Jenkins 관리 -> manage Credentials -> 
 
-![New_Credentials__Jenkins_-2782854](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/New_Credentials__Jenkins_-2782854.png)
+![New_Credentials__Jenkins_-2782854](./images/New_Credentials__Jenkins_-2782854.png)
 
 
 
@@ -511,7 +512,7 @@ IAM -> 사용자 -> 사용자 추가
 ### EC2에 code deploy Agent 설치
 
 * EC2에 CodeDeploy로 지정한 위치에서 파일을 받아 실행하기 위해서는 Code Deploy Agent가 설치되있어야만 합니다.
-* ec2에 접속하고 아애와 같이 진행
+* ec2에 접속하고 아래와 같이 진행
 
 ```bash
 # aws-cli 설치
@@ -552,28 +553,62 @@ sudo chmod +x /etc/init.d/codedeploy-startup.sh
 
 ### appspec.yml 작성
 
-* 프로젝트 내부에 appspec.yml을 생성
+* 프로젝트 리포지토리 최상단에 appspec.yml을 생성
 
   ![raiders032_momelet_backend_spring-2768189](./images/raiders032_momelet_backend_spring-2768189.png)
 
 * AWS CodeDeploy는 appspec.yml을 통해 어떤 파일들을, 어느 위치로 배포하고, 이후  어떤 스크립트를 실행할지 관리합니다.
 
 ```yml
-#appspec.yml
-version: 0.0
+version: 0.0 
 os: linux
 files:
-  - source:  /
+  - source: /
     destination: /home/ec2-user/build/
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+
+hooks:
+  ApplicationStart:
+    - location: application-start.sh
+      timeout: 60
+      runas: ec2-user
 ```
 
 * 위 코드는 Code Build / S3 / Github 등을 통해서 받은 전체 파일들(`source: /`)을 `/home/ec2-user/build/`로 옮기겠다는 의미입니다.
+* `hooks`
+  * `ApplicationStart` : 애플리케이션이 시작될 때 실행할 스크립트를 설정
 
 ec2에 디랙토리를 생성합니다.
 
 ```bash
 mkdir /home/ec2-user/build/
 ```
+
+
+
+### Script 파일 작성
+
+* AWS CodeDeploy가 실행할 스크립트를 작성합니다.
+* 위치는 애플리케이션 리포지토리의 `/scripts/application-start.sh` 
+  * 애플리케이션이 시작될 때 실행될 스크립트
+
+```sh
+#!/bin/bash
+
+# 도커 컴포즈 파일이 있는 곳으로 이동
+cd /home/ec2-user/momelet/backend/spring
+# 새로운 이미지 pull
+docker-compose pull
+docker-compose up -d
+```
+
+
 
 
 
@@ -597,7 +632,7 @@ AWS 서비스 -> code deploy
 
 Code deploy -> 애플리케이션 -> 애플리케이션 생성
 
-![CodeDeploy_-_AWS_Developer_Tools](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/CodeDeploy_-_AWS_Developer_Tools.png)
+![CodeDeploy_-_AWS_Developer_Tools](./images/CodeDeploy_-_AWS_Developer_Tools.png)
 
 ![CodeDeploy_-_AWS_Developer_Tools-2769077](./images/CodeDeploy_-_AWS_Developer_Tools-2769077.png)
 
@@ -609,7 +644,7 @@ Code deploy -> 애플리케이션 -> 애플리케이션 생성
 
 ![image-20210208163500765](./images/image-20210208163500765.png)
 
-![image-20210208163529125](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/image-20210208163529125.png)
+![image-20210208163529125](./images/image-20210208163529125.png)
 
 
 
@@ -621,7 +656,7 @@ Code deploy -> 애플리케이션 -> 애플리케이션 생성
 
 S3 -> 버킷 -> 버킷 만들기
 
-![S3_Management_Console](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/S3_Management_Console.png)
+![S3_Management_Console](./images/S3_Management_Console.png)
 
 버킷 이름을 입력하고 나머지는 기본 설정으로 생성합니다.
 
@@ -639,7 +674,7 @@ S3 -> 버킷 -> 버킷 만들기
 
 ![image-20210208211226076](./images/image-20210208211226076.png)
 
-생성된 파이프라인 스크립트을 기존 스크립트에 추가
+생성된 파이프라인 스크립트
 
 ```
 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS_CREDENTIALS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
@@ -647,9 +682,24 @@ withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariab
 }
 ```
 
-수정된 jenkinsfile
 
-*`sh 'aws s3 cp deploy/momelet_spring.zip s3://<s3버켓이름>/momelet_spring.zip --region ap-northeast-2'`
+
+**수정된 jenkinsfile**
+
+* Pipeline Syntax로 생성된 파이프라인 스크립트를 추가해줍니다.
+* Stage `make zip file` 
+  * 앞서 작성한 `appspec.yml` 과 `application-start.sh` 압축하는 과정
+* Stage `upload to AWS S3`
+  * 앞선 stage에서 압축한 파일을 S3로 업로드하는 과정
+  * `sh 'aws s3 cp deploy/momelet_spring.zip s3://<s3버켓이름>/momelet_spring.zip --region ap-northeast-2'`
+* Stage `deploy`
+  * --application-name
+    * codedeploy 애플리케이션 이름
+  * --deployment-group-name 
+    * 배포그룹 이름
+  *  --region 
+    * ap-northeast-2
+  * --s3-location bucket=<버켓이름>,bundleType=zip,key=<압축파일이름>.zip'
 
 ```
 pipeline {
@@ -667,6 +717,7 @@ pipeline {
             }
         }
     }
+
     stage('Build & Test'){
        steps{
             script {
@@ -674,13 +725,15 @@ pipeline {
             }
         }
     }
+
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":latest"
         }
       }
     }
+
     stage('Deploy Image') {
       steps{
         script {
@@ -690,13 +743,14 @@ pipeline {
         }
       }
     }
+
     stage('Remove Unused docker image') {
       steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $registry:latest"
       }
     }
 
-    stage('make zip file & upload to AWS S3') {
+    stage('make zip file') {
       steps{
             sh 'mkdir -p before-deploy'
             sh 'cp scripts/*.sh before-deploy/'
@@ -716,13 +770,35 @@ pipeline {
       }
     }
 
+    stage('deploy') {
+          steps{
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS_CREDENTIALS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+               sh 'aws deploy create-deployment \
+                              --application-name momelet-deploy-app \
+                              --deployment-group-name momelet-spring \
+                              --region ap-northeast-2 \
+                              --s3-location bucket=momelet-deploy,bundleType=zip,key=momelet_spring.zip'
+            }
+          }
+        }
+
   }
 }
 ```
 
-테스트 커밋을 푸시한 후 S3에 잘 올라왔다.
+**테스트**
 
-![image-20210208211606245](/Users/YT/GoogleDrive/dev/md/CICD/Jenkins/images/image-20210208211606245.png)
+모든 파이프라인이 정상 동작했다.
+
+![image-20210209104905201](./images/image-2021020123.png)
+
+CodeDeploy -> 배포 
+
+성공적으로 배포된 것을 볼 수 있다.
+
+![CodeDeploy_-_AWS_Developer_Tools-2835448](./images/CodeDeploy_-_AWS_Developer_Tools-2835448.png)
+
+
 
 
 
@@ -733,5 +809,3 @@ pipeline {
 * [Docker를 이용한 Jenkins 컨테이너 만들기(docker in docker)](https://www.hanumoka.net/2019/10/14/docker-20191014-docker-jenkins-docker-in-docker/)
 * [pipelie 참고](https://www.edureka.co/community/55640/jenkins-docker-docker-image-jenkins-pipeline-docker-registry)
 * [codedeploy 참조](https://jojoldu.tistory.com/281?category=777282)
-
-https://pyxispub.uzuki.live/?p=1549
