@@ -28,8 +28,13 @@
 * 소셜 로그인을 하기 위해선 구글과 같은 `Resource Server` 에 앱을 등록해야 한다.
 
   * 구글:  [Google Developer Console](https://console.developers.google.com/)
-
+  * [네이버](https://developers.naver.com/products/login/api/)
+  * 
 * 앱을 등록하면 `Client ID` ,  `Client Secret` 등을 얻을 수 있다.
+
+네이버 콘솔에서 `Client ID` ,  `Client Secret`
+
+![애플리케이션_-_NAVER_Developers](./images/NAVER_Developers.png)
 
 * 앱을 등록할 때 `Authorized redirect URIs` 와 `Scope`  등을 설정한다.
 
@@ -37,9 +42,15 @@
 
   * 예시: `http://localhost:8080/oauth2/callback/google`.
 
-    
 
-    ![스크린샷_2021__2__2__오후_3_25](/Users/YT/GoogleDrive/dev/md/Spring/security/Social-login/images/스크린샷_2021__2__2__오후_3_25.png)
+
+구글 콘솔에서 `Authorized redirect URIs` 설정
+
+![스크린샷_2021__2__2__오후_3_25](./images/2021__2__2_3_25.png)
+
+네이버 콘솔에서 `Authorized redirect URIs` 설정
+
+![애플리케이션_-_NAVER_Developers-3440078](./images/NAVER_Developers-3440078.png)
 
 
 
@@ -301,13 +312,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 ## OAuth2 Login 흐름
 
 * Front end client 가 유저를 특정 스프링 서버의 엔드포인트로 보내면서 시작된다.
-  * `http://localhost:8080/oauth2/authorize/{provider}?redirect_uri=<redirect_uri_after_login>`.
-  * `provider` 는 `google`, `facebook` 등이 될 수 있다.
-  * 여기서의 redirect_uri는 인증이 끝나고 리다이렉트 될 주소이며 앞서 언급한 OAuth2의 `Authorized redirect URIs` 와는 다른 것이다.
+  * 엔드포인트 예시 
+    * `http://localhost:8080/oauth2/authorize/{provider}?redirect_uri=<redirect_uri_after_login>`.
+    * `provider` 는 `google`, `facebook` 등이 될 수 있다.
+    * 여기서의 redirect_uri는 인증이 끝나고 리다이렉트 될 주소이며 앞서 언급한 OAuth2의 `Authorized redirect URIs` 와는 다른 것이다.
 * 요청을 받은 Spring Security’s OAuth2 client는 유저를`Authorization Server`의 `Authorization Endpoint` 로 리다이렉트 시킨다.
+  * `authorizationRequestRepository` 를 이용해 `state` 를 저장한다.
+  * `provider` 의 페이지에서 유저는 앱의 접근 권한을 허가하거나 거부한다.
 * 유저가 허가하면 `Authorization Server`  는 유저를 앱을 등록할 때 설정한 `Authorized redirect URIs` 로 리다이렉트 시킨다.
   * `authorization code` 를 포함하고 있다.
-* OAuth2 callback이 실패하면 스프링 스큐리티는 `oAuth2AuthenticationFailureHandler` 을 호출한다.
+* 유저가 거절하면 `error` 를 가지고 `Authorized redirect URIs` 로 리다이렉트 된다.
+  * OAuth2 callback이 실패하면 스프링 스큐리티는 `oAuth2AuthenticationFailureHandler` 을 호출한다.
 * OAuth2 callback이 성공하면 스프링 스큐리티는 `authorization code` 를 `Access Token` 으로 교환하고 `customOAuth2UserService` 를 호출한다.
 * `customOAuth2UserService` 은 `Access Token` 을 이용해 유저의 정보를 가져오고 회원가입을 하거나 로그인을 한다.
 * 마지막으로 `oAuth2AuthenticationSuccessHandler` 가 호출되고 jwt 인증 토큰을 만들고 유저를 ( `redirect_uri_after_login` +  jwt 인증 토큰)로 리다이렉트 시킨다.
@@ -415,21 +430,153 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
 ### CustomOAuth2UserService
 
+* `CustomOAuth2UserService` 는 스프링 시큐리티의 `DefaultOAuth2UserService` 를 상속 받는다.
+* `loadUser()` 메서드를 구현한다.
+  *  `Authorization Server`로 부터 `Access Token` 을 얻게 되면 호출되는 메서드이다.
+  * 유저의 정보를 `Resource Server` 로 부터 가져온다
+  * 유저를 회원가입/로그인 시킨다.
+
+```java
+package com.swm.sprint1.security.oauth2;
+
+
+import com.swm.sprint1.config.AppProperties;
+import com.swm.sprint1.domain.AuthProvider;
+import com.swm.sprint1.domain.Category;
+import com.swm.sprint1.domain.User;
+import com.swm.sprint1.repository.category.CategoryRepository;
+import com.swm.sprint1.repository.user.UserRepository;
+import com.swm.sprint1.security.UserPrincipal;
+import com.swm.sprint1.security.oauth2.user.OAuth2UserInfo;
+import com.swm.sprint1.security.oauth2.user.OAuth2UserInfoFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@RequiredArgsConstructor
+@Service
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final AppProperties appProperties;
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
+
+        try {
+            return processOAuth2User(oAuth2UserRequest, oAuth2User);
+        } catch (AuthenticationException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            // Throwing an instance of AuthenticationException will trigger the OAuth2AuthenticationFailureHandler
+            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+        }
+    }
+
+    private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
+        Optional<User> userOptional = userRepository.findByProviderAndProviderId(
+                AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()),oAuth2UserInfo.getId());
+        User user;
+        if(userOptional.isPresent()) {
+            user = userOptional.get();
+        } else {
+            user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+        }
+        return UserPrincipal.create(user, oAuth2User.getAttributes());
+    }
+
+    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        AuthProvider provider =AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
+        String providerId = oAuth2UserInfo.getId();
+        String name = oAuth2UserInfo.getName();
+        String email = oAuth2UserInfo.getEmail();
+        String imageUrl = oAuth2UserInfo.getImageUrl();
+        if(imageUrl == null)
+            imageUrl = appProperties.getS3().getDefaultImageUri() + appProperties.getS3().getDefaultNumber() +appProperties.getS3().getDefaultExtension();
+        List<Category> categories = categoryRepository.findAll();
+        User user = new User(name, email, imageUrl, provider, providerId, categories);
+        return userRepository.save(user);
+    }
+
+}
+```
 
 
 
+### OAuth2AuthenticationSuccessHandler
 
+* 성공적으로 인증하면 스프링 시큐리티는 `OAuth2AuthenticationSuccessHandler` 의 `onAuthenticationSuccess()` 메서드를 호출한다.
+* `onAuthenticationSuccess()`
+  * JWT token과 재발급을 위한 리프레시 토큰을 생성한다.
+  * 유저가 명시한 `redirect_uri` 로 유저를 리다이렉트 시키며 쿼리 스트링으로  `JWT token` 을 더한다.
 
+```java
+RequiredArgsConstructor
+@Component
+public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final AuthService authService;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(OAuth2AuthenticationSuccessHandler.class);
 
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        logger.debug("OAuth2AuthenticationSuccessHandler 호출 됨");
+        String targetUrl = determineTargetUrl(request, response, authentication);
 
+        if (response.isCommitted()) {
+            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            return;
+        }
 
+        clearAuthenticationAttributes(request, response);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
 
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        SimpleDateFormat formatter = new SimpleDateFormat ( "yyyy/MM/dd HH:mm:ss", Locale.KOREA );
 
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
 
+        if(!redirectUri.isPresent()) {
+            throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+        }
 
+        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        AuthResponse accessAndRefreshToken = authService.createAccessAndRefreshToken(userPrincipal.getId());
+        Token accessToken = accessAndRefreshToken.getAccessToken();
+        Token refreshToken = accessAndRefreshToken.getRefreshToken();
+
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("accessToken",accessToken.getJwtToken())
+                .queryParam("accessTokenExpiryDate", formatter.format(accessToken.getExpiryDate()))
+                .queryParam("refreshToken", refreshToken.getJwtToken())
+                .queryParam("refreshTokenExpiryDate", formatter.format(refreshToken.getExpiryDate()))
+                .build().toUriString();
+    }
+
+    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+        super.clearAuthenticationAttributes(request);
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+    }
+
+}
+```
 
 
 
