@@ -50,6 +50,24 @@ ___
 
 ![image-20210129213621730](./images/image-20210129213621730.png)
 
+* 수동 생성
+
+![Route_53_Console_Hosted_Zones](./images/Route_53_Console_Hosted_Zones.png)
+
+![Route_53_Console_Hosted_Zones-3542658](./images/Route_53_Console_Hosted_Zones-3542658.png)
+
+생성된 모습
+
+![image-20210217152515931](./images/image-20210217152515931.png)
+
+네임서버 확인하기 
+
+```bash
+$ dig +trace momelet.world
+```
+
+![YT_yeongsamnoui-MacBookPro__](./images/YT_yeongsamnoui-MacBookPro__.png)
+
 
 
 ## Amazon EC2 인스턴스로 트래픽을 라우팅
