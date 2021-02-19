@@ -56,17 +56,27 @@ ___
 
 ![Route_53_Console_Hosted_Zones-3542658](./images/Route_53_Console_Hosted_Zones-3542658.png)
 
-생성된 모습
-
-![image-20210217152515931](./images/image-20210217152515931.png)
-
-네임서버 확인하기 
+네임서버 확인하기
 
 ```bash
 $ dig +trace momelet.world
 ```
 
 ![YT_yeongsamnoui-MacBookPro__](./images/YT_yeongsamnoui-MacBookPro__.png)
+
+
+
+### 도메인의 네임서버 갱신하기
+
+![Route_53_Management_Console_및_Route_53_md](./images/Route_53_Management_Consol_Route_53_md.png)
+
+![Route_53_Management_Console](/Users/YT/GoogleDrive/dev/md/AWS/Route 53/images/Route_53_Management_Console.png)
+
+
+
+![Route_53_Management_Console-3729335](./images/Route_53_Management_Console-3729335.png)
+
+![Route_53_Management_Console-3729375](./images/Route_53_Management_Console-3729375.png)
 
 
 
