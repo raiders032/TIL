@@ -1,3 +1,7 @@
+
+
+
+
 참고
 
 * https://whitepaek.tistory.com/60
@@ -7,48 +11,107 @@
 
 
 
-## App ID 만들기
+# 앱 등록 과정 3단계
 
-* Team ID(App ID Prefix)
+## 1단계 App ID 생성
 
-![image-20210129201118269](./images/image-20210129201118269.png)
+* [Account - Apple Developer](https://developer.apple.com/account/)
 
-![image-20210129200537350](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129200537350.png)
+![Account_-_Apple_Developer](./images/Account_-_Apple_Developer.png)
 
-![image-20210129200621204](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129200621204.png)
+![Certificates__Identifiers___Profiles_-_Apple_Developer](./images/Certificates__Identifiers___Profiles_-_Apple_Developer.png)
 
-## Services ID 만들기
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4043584](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4043584.png)
 
-![image-20210129201215124](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129201215124.png)
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4043618](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4043618.png)
 
-![image-20210129200816849](./images/image-20210129200816849.png)
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4043709](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4043709.png)
 
-* client_id : Service ID
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4043770](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4043770.png)
 
-  ![image-20210129201256589](./images/image-20210129201256589.png)
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4043869](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4043869.png)
 
-* redirect URL
-  * authorization code를 반환 받을 URL 입력
-  * localhost 안됨
-  * 127.0.0.1 안됨
+생성 왼료 후 App ID 확인하기
 
-![image-20201105124002564](image-20201105124002564.png)
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044024](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044024.png)
 
-Configure 클릭하고 redirect url 설정하기
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044087](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044091.png)
 
-![image-20201105124134429](image-20201105124134429.png)
+Team ID
 
+* client secret을 생성할 때 필요
 
 
-## Private Key 만들기
 
-![image-20210129201446656](./images/image-20210129201446656.png)
+## 2단계 Servises ID 생성
 
-![image-20210129201525586](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/image-20210129201525586.png)
+* [Account - Apple Developer](https://developer.apple.com/account/)
+
+![Account_-_Apple_Developer](./images/Account_-_Apple_Developer.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044271](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044271.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044311](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044311.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044396](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044396.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044442](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044442.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044480](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044480.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044517](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044517.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044675](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044675.png)
+
+Website URLs
+
+* Return URLs로 애플 로그인을 진행한 유저의 정보가 전달됩니다.
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4044884](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4044884.png)
+
+Identifier
+
+* Service의 ID는 client_id, aud의 값으로 사용됩니다.
+
+
+
+## 3단계 Private Key 만들기
+
+* Client Secret을 생성할 때 사용할 비밀 키(private key)를 생성
+
+## ![Certificates__Identifiers___Profiles_-_Apple_Developer-4045068](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045068.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4045229](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045229.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4045325](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045325.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4045411](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045411.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4045444](/Users/YT/GoogleDrive/dev/md/Spring/social-login/images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045444.png)
+
+![Certificates__Identifiers___Profiles_-_Apple_Developer-4045531](./images/Certificates__Identifiers___Profiles_-_Apple_Developer-4045531.png)
 
 * Key ID
+  * Client Secret을 생성할 때 사용됨
 * 단순히 OAuth client String을 쓰는 것 대신 애플은 public/private key pair을 사용한다.
 * 다운로드가 한번만 가능하므로 잘 저장해두자.
+  * 다운 받은 키는 아래와 같은 프로젝트 위치에 옮긴다.
+
+![sprint1_–_application-oauth_properties__sprint1_main_-4046257](./images/sprint1_–_application-oauth_properties__sprint1_main_-4046257.png)
+
+# 스프링
+
+## 프로퍼티 설정
+
+* application.properties 에 다음과 같이 추가
+
+```properties
+APPLE.TEAM.ID=[Team ID]
+APPLE.WEBSITE.URL=[Website URLs]
+APPLE.AUD=[Client ID / Service ID]
+APPLE.KEY.ID=[Key ID]
+APPLE.KEY.PATH=static/AuthKey_[KeyID].p8
+```
 
 
 
@@ -94,10 +157,6 @@ Configure 클릭하고 redirect url 설정하기
 ### verify user and get token
 
 * token을 얻기위해 앞서 반환 받은  `authorization code` 을 검증하고 token을 생성한다.
-
-
-
-
 
 ```bash
 keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
