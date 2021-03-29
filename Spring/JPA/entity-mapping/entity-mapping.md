@@ -6,6 +6,8 @@
 
 ## 객체와 테이블 매핑
 
+
+
 ### @Entity
 
 * JPA를 사용해서 테이블과 매핑할 클래스에 해당 어노테이션을 붙이며 이 클래스를 엔티티라고 부른다.
@@ -44,6 +46,8 @@
 ###  @Id
 
 * 엔티티 클래스의 필드를 테이블의 기본 키에 매핑하며 이 필드를 식별자 필드라고 한다.
+
+
 
 ### @GeneratedValue
 
@@ -165,6 +169,11 @@
 | validate    | 엔티티와 테이블이 정상 매핑되었는지만 확인     |
 | none        | 사용하지 않음                                  |
 
+```properties
+#application.properties 예시
+spring.jpa.hibernate.ddl-auto = validate
+```
+
 
 
 **주의사항**
@@ -183,8 +192,6 @@
   * `@Column(nullable = false, length = 10)`
 * 유니크 제약조건 추가
   * `@Table(uniqueConstraints = {@UniqueConstraint( name = "NAME_AGE_UNIQUE",**  **columnNames = {"NAME", "AGE"} )})`
-
-
 
 
 
