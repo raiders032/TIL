@@ -29,7 +29,7 @@
 
   * 구글:  [Google Developer Console](https://console.developers.google.com/)
   * [네이버](https://developers.naver.com/products/login/api/)
-  * 
+  * [카카오](https://developers.kakao.com/)
 * 앱을 등록하면 `Client ID` ,  `Client Secret` 등을 얻을 수 있다.
 
 네이버 콘솔에서 `Client ID` ,  `Client Secret`
@@ -40,7 +40,7 @@
 
   * `Authorized redirect URIs` : 엔드 유저가 애플리케이션에게 권한을 주었을 때 엔드 유저가 리디렉션 되는 주소
 
-  * 예시: `http://localhost:8080/oauth2/callback/google`.
+  * 예시: `http://localhost:8080/oauth2/callback/google`
 
 
 
@@ -307,7 +307,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
+* @EnableGlobalMethodSecurity
 
+  * 특정 메서드에 권한 처리를 하는 MethodSecurity 설정 기능 제공한다. 각 설정값 true로 변경하면 사용가능 ( default값은 false)
+  * securedEnable : @Secured 사용하여 인가처리하는 옵션
+  * prePostEnable : @PreAuthorize, @PostAuthorize 사용하여 인가처리 옵션
+  * jsr250Enabled : @RolesAllowed 사용하여 인가처리 옵션
+
+* httpBasic().disable()
+
+  * REST API 이므로 기본설정 사용안함. 기본설정은 비인증시 로그인폼 화면으로 리다이렉트 된다.
+
+* csrf().disable()
+
+  * REST API 이므로 csrf 보안이 필요없다. 따라서 disable처리한다.
+
+* sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+  * jwt token으로 인증하므로 더 이상 세션쿠키 방식의 인증 메카니즘으로 인증처리를 하지 않음
+
+* userInfoEndpoint().userService(customOAuth2UserService)
+
+  * 유저의 정보를 얻을 수 있는 UserInfo Endpoint로 부터 유저의 정보를 얻어오기 위해 사용될 서비스로 `customOAuth2UserService` 를 등록한다.
+
+  
 
 ## OAuth2 Login 흐름
 
@@ -372,7 +395,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 * 이를 위해 `client` 는 `state` 를 잠시 저장하고 비교해야한다.
 
-* 아래의 클래스는 authorization 요청을 쿠키에 저장하고 다시 꺼낼 수 있는 기능을 한다.
+* 아래의 클래스는 Authorization Reqeust를 Based64 encoded 해서 cookie에 저장하고 다시 꺼낼 수 있는 기능을 한다.
+
+  * Authorization Reqeust 안에 state가 있다.
 
 ```java
 package com.example.springsocial.security.oauth2;
@@ -580,3 +605,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 
 
+참조
+
+* https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-2/
