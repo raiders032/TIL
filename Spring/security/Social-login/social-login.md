@@ -313,24 +313,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   * securedEnable : @Secured 사용하여 인가처리하는 옵션
   * prePostEnable : @PreAuthorize, @PostAuthorize 사용하여 인가처리 옵션
   * jsr250Enabled : @RolesAllowed 사용하여 인가처리 옵션
-
 * httpBasic().disable()
 
-  * REST API 이므로 기본설정 사용안함. 기본설정은 비인증시 로그인폼 화면으로 리다이렉트 된다.
-
+  * 요청 헤더에 username와 password를 실어 보내면 브라우저 또는 서버가 그 값을 읽어서 인증하는 방식인 Basic 인증을 비활성화 한다.
 * csrf().disable()
 
-  * REST API 이므로 csrf 보안이 필요없다. 따라서 disable처리한다.
-
+  * Jwt token을 사용할 것이므로 비활성화 한다.
+  * 일반 사용자들이 브라우저를 통해 요청을 하는 경우에는 CSRF 방지를 사용하는 것이 좋다.
 * sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-  * jwt token으로 인증하므로 더 이상 세션쿠키 방식의 인증 메카니즘으로 인증처리를 하지 않음
-
+  * 애플리케이션 내에서 세션을 사용하지 않으므로 세션을 사용하지 않는 전략을 선택했다.
+* .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+  * 인증을 하지 않은 사용자가 인증이 필요한 리소스에 접근 했을 때 유저가 인증 할 수 있는 authenticationEntryPoint 설정하는 것
+* .oauth2Login().authorizationEndpoint().authorizationRequestRepository(cookieAuthorizationRequestRepository())
+  * OAuth2 진행시 state 값을 잠시 저장해야 한다.(자세한 설명은 아래에 있습니다) 
+  * AuthorizationRequest 쿠키를 통해 저장하겠다는 의미
 * userInfoEndpoint().userService(customOAuth2UserService)
-
   * 유저의 정보를 얻을 수 있는 UserInfo Endpoint로 부터 유저의 정보를 얻어오기 위해 사용될 서비스로 `customOAuth2UserService` 를 등록한다.
 
-  
+
 
 ## OAuth2 Login 흐름
 
