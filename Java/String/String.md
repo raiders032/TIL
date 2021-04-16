@@ -4,6 +4,55 @@
 
 
 
+## String은 왜 immutable할까?
+
+* immutable이란?
+  * 객체의 내부 상태가 생성 후 변하지 않는 것을 의미한다.
+* immutable의 장점
+  * 캐싱
+  * 보안
+  * 동기화
+  * 성능
+
+## String Pool
+
+* String이 저장되는 메모리의 특수한 공간을 의미한다.
+* String은 immutable하기 때문에 JVM은 String에게 할당되는 메모리의 양을 최적화할 수 있다.
+* 오직 하나의 String객체를 String Pool에 생성하고 여러개의 다른 변수들이 하나의 같은 String 객체를 가르키게하여 메모리 자원을 절약할 수 있다.
+
+```java
+// s1과 s2 모두 String Pool의 같은 String 객체를 가르키기 때문에 결과는 True이다.
+String s1 = "Hello World";
+String s2 = "Hello World";
+         
+assertThat(s1 == s2).isTrue();
+```
+
+* 메모리 구조
+  * s1과 s2 모두 String Pool의 같은 String 객체를 가르키고 있다.
+
+![image-20210416190232847](./images/image-20210416190232847.png)
+
+## immutable의 장점
+
+**Security**
+
+* 
+
+### **Synchronization**
+
+* immutable하면 thread safe하다고 말할 수 있다. 그 이유는 객체의 내부 상태가 생성 후 변하지 않기 때문이다.
+
+### **Hashcode Caching**
+
+* 객체의 내부 상태가 생성 후 변하지 않기 때문에 hashCode() 메소드의 결과를 캐싱할 수 있다.
+
+### **Performance**
+
+* *String* pool의 존재로 메모리를 절약할 수 있다.
+
+
+
 ## 자주 사용되는 String 메소드
 
 | Modifier and Type | Method                                    | Description                                                  |
@@ -95,9 +144,10 @@ while (st.hasMoreTokens()){
 
 
 
+참고
 
-
-
+* 이것이 자바다
+* https://www.baeldung.com/java-string-immutable
 
 
 
