@@ -21,7 +21,29 @@
 
 ## CPU Scheduler
 
+* 단기 스케줄러(short term Scheduler)라고 불린다.
 * ready 상태의 프로세스 중에서 이번에 CPU를 할당할 프로세스를 결정한다.
+  * ready 큐에 있는 모든 프로세스들은 CPU에서 실행될 기회를 기다리며 대기하고 있다.
+  * ready 큐에 있는 레코드들은 일반적으로 프로세스들의 PCB들 이다.
+
+## Preemptive Scheduling
+
+* CPU 스케줄링 결정은 다음 네 가지 상황에서 발생한다.
+
+1. 한 프로세스가 실행 상태에서 대기 상태로 전환될 때
+   * 입출력 요청, wait() 시스템 콜
+2. 프로세스가 실행 상태에서 준비 완료 상태로 전환될 때
+   * 인터럽트
+3. 프로세스가 대기 상태에서 준비 완료 상태로 전활될 때
+   * 입출력 완료
+4. 프로세스가 종료할 때
+
+* 1번과 4번의 경우 실행을 위해 새로운 프로세스가 반드시 선택되어야한다.
+* 2번과 3번의 경우는 선택의 여지가 있다.
+* 1, 4번에서만 스케줄링이 발생할 경우 비선점형 스케줄링이라 한다.
+  * 프로세스가 자발적으로 CPU를 놓을 때를 의미한다.
+* 그렇지 않으면 비선점형 스케줄링이라 한다.
+* 선점형 스케줄링은 race conditions을 초래할 수 있다.
 
 
 
@@ -30,7 +52,8 @@
 * CPU의 제어권을 CPU Scheduler에 의해 선택된 프로세스에게 넘겨주는 모듈이며 다음과 같은 일을 한다.
 * 문맥 교환
 * 사용자 모드로 전환하는 일
-* 프고르램을 다시 시작하기 위해 사용자 프로그램의 적절한 위치로 이동하는 일
+* 프로그램을 다시 시작하기 위해 사용자 프로그램의 적절한 위치로 이동하는 일
+* Dispatch latency: 하나의 프로세스를 중지하고 다른 프로세스를 실행하기 까지 걸리는 시간
 
 
 
@@ -43,22 +66,27 @@
   * 단위 시간당 완료된 프로세스의 개수를 의미한다.
 * Turnaround Time(소요 시간)
   * 프로세스의 제출시간과 완료 시간의 간격을 의미한다.
+  * Turnaround Time = 완료 시간 - 도착 시간
 * Wating Time(대기 시간)
   * 대기 시간은 ready 큐에서 대기하면서 보낸 시간의 합이다.
 * Response Time(응답 시간)
   * 하나의 요구를 제출한 후 첫번째 응답이 나올때까지의 시간이다.
+  * Response Time = 첫 실행 시간 – 도착 시간
 
-
+![image-20210427185326514](./images/image-20210427185326514.png)
 
 ## FCFS Scheduling
 
 * CPU를 먼저 요청하는 프로세스가 CPU를 먼저 할당하는 스케줄링 기법
 * 비선점형
+* 장점
+  * 구현과 이해가 쉽다.
 * 단점
-  * 평균 대기 시간이 길어질 수 있다.
-  * convoy effect
+  * 짧은 잡이 긴 잡을 기다리느라 평균 대기 시간이 길어질 수 있다.
+  * convoy effect: 모든 다른 프로세스들이 하나의 긴 CPU-bound process가 CPU를 양도하기를 기다리는 것
+  * 시분할 시스템에는 적합하지 않다.
 
-
+![image-20210427184605499](./images/image-20210427184605499.png)
 
 ## SJF Scheduling
 
@@ -66,15 +94,17 @@
 * 비선점형
 * 단점
   * Starvation(기아 상태)
-  * CPU 버스트 시간을 계산하는 것이 어렵다.
+  * 다음 CPU 버스트 시간을 알 수 없다
     * 과거의 CPU 버스트 시간을 이용해서 추정이 가능하다
     * exponential averaging 기법을 주로 사용한다.
 
+![image-20210427184536275](./images/image-20210427184536275.png)
 
+![image-20210427184831939](./images/image-20210427184831939.png)
 
 ## SRTF Scheduling
 
-* Shortest-Remaining-TIme-First Scheduling
+* Shortest-Remaining-TIme-First Scheduling or STCF
 * 현재 수행중인 프로세스의 남은 버스트 타임보다 더 짧은 버스트 타임을 가지는 새로운 프로세스가 도착하면 CPU를 새로운 프로세스에 할당하는 스케줄링 기법
 * SJF Scheduling의 선점형 버전이라고 보면 된다.
 * 장점
@@ -83,7 +113,11 @@
   * Starvation(기아 상태)
   * CPU 버스트 시간을 계산하는 것이 어렵다.
 
+![image-20210427184810518](./images/image-20210427184810518.png)
 
+![image-20210427185203468](./images/image-20210427185203468.png)
+
+![image-20210427185212395](./images/image-20210427185212395.png)
 
 ## Priority Scheduling
 
@@ -98,20 +132,32 @@
 ## Round Robin Scheduling
 
 * 각 프로세스는 동일한 크기의 할당 시간(time quantum)을 가진다.
+
+  * 일반적으로 적절한 time quantum은 10-100 milliseconds로 알려져있다
+
 * 선점형 스케줄링
+
 * 할당 시간이 지나면 프로세스는 선점되고 ready queue의 제일 뒤에 가서 다시 줄을 서게된다.
+
 * n개의 프로세스가  ready queue에 있고 할당 시간이 q time unit인 경우
   * 각 프로세스는 최대  q time unit 단위로 CPU 시간의 1/n을 얻는다
   * 어떤 프로세스도 (n-1)q time unit 이상 기다리지 않는다
+  
 * 성능
   * time quantum이 극단적으로 커지면 FCFS Scheduling과 같아진다.
+  
   * time quantum이 작아지면 context switch 오버헤드가 커진다
-  * 일반적으로 적절한 time quantum은 10-100 milliseconds로 알려져있다
+  
+    ![image-20210427185834926](./images/image-20210427185834926.png)
+  
 * 단점
-  * 평균 Turnaround Time이 SJF보다 일반적으로 길다 
+  * 평균 Turnaround Time이 SJF보다 일반적으로 길다
+    * 같은 크기의 잡이 여러개일 때 평균 Turnaround Time 크게 나옴
+  
 * 장점
   * Response Time이 짧다.
   * CPU 버스트 시간을 계산하지 않아도 된다.
+  * 짧은 잡이 빨리 종료될 수 있게 한다
 
 
 
