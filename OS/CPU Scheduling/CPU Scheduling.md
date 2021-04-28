@@ -26,6 +26,8 @@
   * ready 큐에 있는 모든 프로세스들은 CPU에서 실행될 기회를 기다리며 대기하고 있다.
   * ready 큐에 있는 레코드들은 일반적으로 프로세스들의 PCB들 이다.
 
+
+
 ## Preemptive Scheduling
 
 * CPU 스케줄링 결정은 다음 네 가지 상황에서 발생한다.
@@ -119,17 +121,23 @@
 
 ![image-20210427185212395](./images/image-20210427185212395.png)
 
+
+
 ## Priority Scheduling
 
 * 가장 높은 우선순위를 가지는 프로세스에게 CPU를 할당하는 스케줄링 기법
 * SJF Scheduling, SRTF Scheduling은  Priority Scheduling의 일종이다.
 * 선점형과 비선점형으로 나뉜다.
 * 단점
-  * Starvation(기아 상태)
+  * Starvation(기아 상태): 실행 준비는 되어 있으나 낮은 우선순위의 프로세스들이 CPU를 무한히 기다리는 상태
+* 기아 상태 해결 방안
+  * Aging 기법: 오랫동안 시스템에서 대기하는 프로세스들의 우선순위를 점진적으로 증가시켜서 기아 상태를 해결하는 기법
 
 
 
 ## Round Robin Scheduling
+
+* CPU 스케줄러가 준비 완료 큐를 돌면서 한 번에 한 프로세스에게 시간 할당량 동안 CPU를 할당하는 스케줄링 기법
 
 * 각 프로세스는 동일한 크기의 할당 시간(time quantum)을 가진다.
 
@@ -146,7 +154,7 @@
 * 성능
   * time quantum이 극단적으로 커지면 FCFS Scheduling과 같아진다.
   
-  * time quantum이 작아지면 context switch 오버헤드가 커진다
+  * time quantum이 매우 작아지면 context switch 오버헤드가 커진다
   
     ![image-20210427185834926](./images/image-20210427185834926.png)
   
@@ -168,6 +176,7 @@
 * ready queue를 다수의 별도의 queue로 분할한다.
 * 프로세스는 특성에 따라 한 개의 큐에 영구적으로 할당된다.
 * 각 큐는 독립전인 스케쥴링 알고리즘을 가지고 있다
+* 각 큐는 낮은 우선순위의 큐보다 절대적인 우선순위를 가진다.
 * 예시 
   * 프로세스를 forground(대화형), background(일괄처리)로 구분한다
   * forground 큐는 응답시간을 줄이기 위해 Round Robin Scheduling을 사용하고
@@ -180,10 +189,19 @@
 ![Pin on Article](./images/Multilevel Feedback Queue.png)
 
 * ready queue를 다수의 별도의 queue로 분할한다.
-* 프로세스가 큐들 사이를 이동하는것이 가능하다.
+* Multilevel Queue와 달리 프로세스가 큐들 사이를 이동하는것이 가능하다.
 * 스케쥴링 절차
   * 새로운 프로세스가 첫번째 큐로 들어감
   * CPU를 잡아서 할당 시간 8 milliseconds 동안 수행됨
   * 8 milliseconds 동안 다 끝내지 못했으면 두번째 큐로 내려감
   * 두번째 큐에서 할당을 기다리다가 CPU를 잡아서 할당 시간 16 milliseconds 동안 수행됨
   * 16 milliseconds 동안 다 끝내지 못했으면 FCFS 큐로 내려감
+* 이 방법에서는 입출력 중심의 프로세스와 대화형 프로세스들이 높은 우선순위를 가진다.
+* 낮은 우선순위의 큐에서 너무 오래 대기하는 프로세스는 높은 우선순위 큐로 이동시키는 Aging 기법으로 기아 상태를 예방할 수 있다.
+
+
+
+
+
+
+
