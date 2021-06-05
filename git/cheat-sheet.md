@@ -348,6 +348,8 @@ git branch -d testing #deletes the branch
 git push origin --delete testing
 git branch --move wrong correct #rename
 git push --set-upstream origin correct #push new name
+git checkout -t origin/feature/create-meeting #원격 저장소의 branch 가져오기
+git checkout -b [생성할 branch 이름] [원격 저장소의 branch 이름] # 원격의 branch 이름을 변경하여 가져오고 싶다면
 ```
 
 ### Comparing

@@ -573,8 +573,10 @@ git his
 * [2020-11-01] [707de7d] | Setup Dependencies {{Ellie}}
 * [2020-11-01] [20ee16f] | Initialise Project {{Ellie}}
 
+# 커밋 파일 수정 전
 cat add.txt
 add
+# 커밋 파일 수정 후
 cat add.txt
 fixed
 git status
@@ -1153,6 +1155,23 @@ git his
 * [2020-11-01] [20ee16f] | Initialise Project {{Ellie}}
 ```
 
+
+
+### 저장소 미러링하기
+
+* gitlab 리포지토리를 github 리포지토리로 미러링 하기
+
+```bash
+#복사할 저장소를 bare clone 한다.
+git clone --bare https://gitlab.com/nameks17/momelet_spring.git
+ 
+#새로운 저장소로 mirror push 한다.
+cd momelet_spring.git
+git push --mirror git@github.com:raiders032/momelet_spring.git
+```
+
+
+
 7.9 fetch vs pull 차이점
 
 ### 7.10 fetch 심화
@@ -1280,6 +1299,19 @@ git his
 7.12 오픈소스 프로젝트 참가법
 
 7.13 UI 간단 사용법
+
+
+
+### 이미 tracking된 원격 저장소에 .gitignore 적용
+
+1. .gitignore 수정
+
+2. ```bash
+   $ git rm -r --cached .
+   $ git add .
+   $ git commit -m "Apply .gitignore"
+   $ git push
+   ```
 
 
 
