@@ -1,4 +1,18 @@
-## Interface
+# Interface
+
+
+
+## Interface의 구성
+
+* 인터페이스는 `Constant Field`, `Astract Method`, `Default Method`, `Static Method` 로 구성된다.
+
+
+
+## Constant Field
+
+* 인터페이스는 객체의 사용 설명서로 런타임 시 데이터를 저장할 수 있는 필드를 선언한 수 없다.
+* 그러나 상수 필드는 선언이 가능하다.
+  * 상수를 선언할 때에는 반드시 초기값을 대입해야 한다.
 
 
 
