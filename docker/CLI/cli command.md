@@ -1,4 +1,12 @@
-## 
+## docker attach
+
+> Attach local standard input, output, and error streams to a running container
+
+```bash
+ docker attach [OPTIONS] CONTAINER
+```
+
+
 
 ## docker build
 
@@ -401,5 +409,13 @@ ___
 
 ```shell
 docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+```
+
+
+
+
+
+```bash
+docker network create --gateway 172.28.0.1 --subnet 172.28.0.0/16 ai-network
 ```
 

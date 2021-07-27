@@ -2,9 +2,11 @@
 
 > 컨테이너를 사용하여 응용 프로그램을 더 쉽게 만들고 배포하고 실행할 수 있도록 설계된 도구 이며 컨테이너 기반의 오픈소스 가상화 플랫폼이며 생태계 입니다.
 
-___
+
 
 ## 도커와 기존 가상화 기술
+
+![image-20210615210521717](./images/image-20210615210521717.png)
 
 공통점
 
@@ -21,6 +23,7 @@ ___
 * 즉, 공유, re-building이 쉽다.
 * 같은 호스트의 다른 컨테이너와 동일한 커널을 공유한다.
 * 디스크 공간을 적게 차지한다.
+* 리눅스의 자체 기능인 chroot, 네임스페이스, cgroup을 이용하여 프로세스 단위의 격리 환경을 만들기 때문에 성능 손실이 거의 없다.
 
 VM 
 
@@ -101,8 +104,10 @@ ___
 * 이미지의 레이어는 읽기전용이다.
 * 이미지를 재빌드할 때 변화가 없는 레이어는 캐시된 데이터를 사용
   * 한 레이어의 변화가 있을 경우 그 이후 레이어는 다시 빌드를 하게 된다.
+* 컨테이너 이미지에는 로그인 정보나 게시글 등과 같이 애플리케이션을 운영하면서 쌓이는 데이터가 저장됩니다.
+  * 이러한 데이터를 영속화하기 위해 볼륨을 사용한다.
 
-### ![image-20201117215748040](docker.png) 
+### ![image-20201117215748040](/Users/YT/GoogleDrive/dev/TIL/docker/Image&Container/images/docker.png) 
 
 ### 이미지 생성 흐름
 
@@ -140,8 +145,8 @@ ___
 **FROM**
 
 * 베이스 이미지를 지정한다.
-
-* 이미지 생성시 기반이 되는 이미지 레이어.
+* 이미지 생성시 기반이 되는 이미지 레이어
+* 반드시 한번이상 입력해야 한다
 
 **WORKDIR**
 
@@ -149,7 +154,6 @@ ___
 * 해당 디렉토리가 없으면 새로 생성한다.
 * 작업 디렉토리를 지정하면 그 이후 명령어는 해당 디렉토리를 기준으로 동작한다.
   * `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD`
-* 이미지안에서 어플리케이션 소스 코드를 가지고있는 디렉토리를 생성합니다.
 
 **USER**
 
@@ -228,11 +232,11 @@ ___
 
 * 3가지 형태 가능
 
-  * ```
-    CMD ["executable","param1","param2"] (exec form, this is the preferred form)
-    CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
-    CMD command param1 param2 (shell form)
-    ```
+```
+CMD ["executable","param1","param2"] (exec form, this is the preferred form)
+CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
+CMD command param1 param2 (shell form)
+```
 
 **ENTRYPOINT**
 
@@ -314,6 +318,9 @@ ___
   
   * 데이터 영속화가 가능하다.
 * 컨테이너는 불룜의 데이터를 읽고 쓸 수 있다.
+* 볼륨에는 `Anonymous  Volume`, `Named Volume`, `Bind Mounts`가 있다.
+
+
 
 ### Anonymous  Volume
 
@@ -333,6 +340,8 @@ ___
 
 * 데이터 영속화에 사용 할 수 없음
 
+
+
 ### Named Volume
 
 * `docker run -v data:/app/data`
@@ -344,6 +353,8 @@ ___
 * 데이터 영속화에 사용 할 수 있음
 
   * 수정이 필요없는 데이터를 영속화 할 때 사용
+
+
 
 ### Bind Mounts
 
@@ -360,11 +371,18 @@ ___
   * **개발 단계**에서 컨테이너는 실행환경을 캡슐화 해야하지만 코드는 필수가 아니다.
   * 이미지를 다시 빌드할 필요없이 컨테이너에 최신 코드를 반영할 수 있다.
   * **프로덕션 단계**에선 컨테이너는 독립적으로 동작해야된다. 따라서 Bind Mounts를 사용하지 않는다.
-    * 대신 `dockerfile`에서 `COPY` 인스트럭션을 사용한다. 
+    * 대신 `dockerfile`에서 `COPY` 인스트럭션을 사용한다.
+* 호스트에 디렉토리가 존재하지 않는 경우 컨테이너의 파일이 호스트로 복사된다.
+* 호스트에 디렉토리가 이미 존재하는 경우 컨테이너의 파일을 호스트의 파일로 덮어씌운다.
 
 ___
 
 ## 네트워크
+
+* 컨테이너는 가상 IP주소를 할당받는다.
+* 기본적으로 도커 컨테이너는 172.17.0.x 의 IP 주소를 순차적으로 할당 받는다.
+
+
 
 ### 요청의 종류
 
@@ -392,6 +410,56 @@ ___
 
 * `docker run -d --name mongoldb --network app-net mongo`
   * 네트워크를 자동으로 생성해주지 않기 때문에 먼저 만들고 사용해야 한다. 
+
+
+
+### 도커 네트워크 구조
+
+* 도커는 도커 컨테이너에 내부 IP를 순차적으로 할당한다.
+* 이 내부 IP는 도커가 설치된 호스트에서만 사용할 수 있다.
+* 도커는 각 컨테이너에 외부와의 네트워크를 제공하기 위해 컨테이너마다 가상의 네트워크 인터페이스를 호스트에 생성한다.
+  * 이 인터페이스는 veth로 시작한다.
+  * 이  인터페이스를 사용자가 직접 생성하지 않고 도커 엔지이 자동으로 생성한다.
+
+**veth 예시**
+
+* 실행중인 컨테이너의 수 만큼 veth로 시작하는 인터페이스를 볼 수 있다.
+
+```bash
+docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED        STATUS        PORTS     NAMES
+b98b1c27de41   gitlab/gitlab-runner:latest   "/usr/bin/dumb-init …"   23 hours ago   Up 23 hours             gitlab-runner
+
+ifconfig
+...
+vethd58560f: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::689e:24ff:fe88:9bd  prefixlen 64  scopeid 0x20<link>
+        ether 6a:9e:24:88:09:bd  txqueuelen 0  (Ethernet)
+        RX packets 20040  bytes 2623949 (2.5 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 20054  bytes 2280905 (2.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+
+![image-20210615215557871](./images/도커네트워크구조.png)
+
+**host의 `eth0`**
+
+* 호스트의 네트워크 인터페이스 공인 IP 또는 내부 IP가 할당되어 실제 외부와 통신한다.
+
+**veth**
+
+* 도커 엔진이 컨테이를 실행할 때 자동으로 만드는 인터페이스
+* 각 컨테이너의 `eth0`와 연결되어 있다.
+
+**`docker0`**
+
+* 각 `veth` 인터페이스와 바인딩돼 호스트의 `eth0`와 이어주는 역할을 한다.
+
+**정리**
+
+* 컨테이너의 `eth0` 인터페이스는 호스트의 `veth` 라는 인터페이스와 연결된다.
+* `veth` 인터페이스는 `docker0` 브리지와 바인딩돼 외부와 통신할 수 있다.
 
 ___
 
@@ -561,6 +629,8 @@ MYSQL_ROOT_PASSWORD=secret
 >4. 변화된 데이터를 컨테이너 안에 저장
 >5. 컨테이너 삭제시 컨테이너 안에 저장된 데이터도 함께 삭제된다.
 
+
+
 ## 도커 설치
 
 * 우분투 기준
@@ -593,3 +663,60 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 #To run Docker without root privileges
 sudo usermod -aG docker $USER
 ```
+
+* 아마존 리눅스 기준
+
+```bash
+sudo yum update -y
+
+# 최신 도커 엔진 패키지를 설치합니다.
+sudo amazon-linux-extras install docker
+
+sudo yum install docker
+
+# 도커 서비스를 시작합니다.
+sudo service docker start
+
+# ec2-user를 사용하지 않고도 도커 명령을 실행할 수 있도록 docker 그룹에 sudo.를 추가합니다.
+sudo usermod -a -G docker ec2-user
+
+# 도커 컴포즈 설치
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+#섪치 확인
+docker-compose --version
+```
+
+* cent os
+
+```bash
+#Uninstall old versions
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+  
+#Set up the repository
+sudo yum install -y yum-utils
+sudo yum-config-manager \
+--add-repo \
+https://download.docker.com/linux/centos/docker-ce.repo
+
+#Install Docker Engine
+sudo yum install docker-ce docker-ce-cli containerd.io
+
+#Start Docker
+sudo systemctl start docker
+sudo usermod -a -G docker $USER
+
+#docker-compose install
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
