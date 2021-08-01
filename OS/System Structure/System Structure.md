@@ -1,6 +1,6 @@
 #   System Structure
 
-![메모리상의 프로세스](./images/system-structure.png)
+![메모리상의 프로세스](./images/system-structure.jpg)
 
 ## CPU
 
