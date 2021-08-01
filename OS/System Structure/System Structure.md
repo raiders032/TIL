@@ -1,6 +1,6 @@
-#  System Structure
+#   System Structure
 
-<img src=".\images\image-20210505120315631.png" alt="image-20210505120315631" style="zoom:70%;" />
+![메모리상의 프로세스](./images/image-20210505120315631.png)
 
 ## CPU
 
@@ -15,7 +15,7 @@
   * 이러한 인스트럭션을 privileged instructions이라 한다.
   * 예) 유저 모드에서 커널 모드로 전환하는 인스트럭션
 
-![image-20210505124941580](.\images\image-20210505124941580.png)
+![image-20210505124941580](./images/image-20210505124941580.png)
 
 **registers**
 
@@ -41,10 +41,10 @@
 ## DMA Controller
 
 * direct memory access controller
-* 인터럽트를 이용한 작은 양의 데이터 전송은 괜찮지만 많은 양의 데이터를 전송하기에는 너무 많은 인터럽트가 발생해 효율적이지 못하다.
+* 입력 장치에 입력이 발생할 때 마다 인터럽트를 발생시키고 이를 CPU 너무 많은 인터럽트가 발생해 효율적이지 못하다.
 * 이를 해결하기위해 DMA Controller가 사용된다.
-* CPU를 방해하는 일없이, DMA Controller는 데이터 블록 전체를 메인 메모리에 직접 올린다.
-* 블록 전체를 메모리에 올리고 오직 한번에 인터럽트만 발생시킨다.
+* CPU 대신, DMA Controller는 데이터 블록 전체를 메인 메모리에 직접 올린다.
+* 블록 전체를 메모리에 올리고 오직 한번만 인터럽트를 발생시킨다.
 
 
 
