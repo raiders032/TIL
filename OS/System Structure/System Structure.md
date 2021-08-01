@@ -15,7 +15,7 @@
   * 이러한 인스트럭션을 privileged instructions이라 한다.
   * 예) 유저 모드에서 커널 모드로 전환하는 인스트럭션
 
-![image-20210505124941580](./images/mode bit.png)
+![image-20210505124941580](./images/mode-bit.png)
 
 **registers**
 
