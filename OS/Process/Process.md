@@ -117,7 +117,7 @@
 * I\O 장치의 처리를 기다리는 프로세스의 집합
 * 각 장치는 그 자신의 `device queue`를 가진다
 
-![ready queue](./images/ready queue.png)
+<img src="./images/ready queue.png" alt="ready queue" style="zoom:67%;" />
 
 
 
