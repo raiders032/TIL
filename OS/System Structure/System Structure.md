@@ -1,6 +1,6 @@
 #   System Structure
 
-<img src="./images/system-structure.jpg" alt="메모리상의 프로세스" style="zoom:50%;"/>
+<img src="images/system-structure.jpg" alt="메모리상의 프로세스" style="zoom:50%;"/>
 
 ## CPU
 
