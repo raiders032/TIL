@@ -1,4 +1,4 @@
-## Gradle 설정
+# 1. Gradle 설정
 
 * jacoco 설정
 
@@ -51,7 +51,7 @@ jacocoTestCoverageVerification {
 
 
 
-## .gitlab-ci.yml 작성
+# 2. `.gitlab-ci.yml` 작성
 
 ```yml
 # ...
@@ -72,7 +72,11 @@ test:
 
 
 
-## GitLab 설정
+# 3. GitLab 설정
+
+
+
+## 3.1 Test coverage parsing 작성
 
 * *Settings -> CI/CD -> General pipelines -> Test coverage parsing*
 
@@ -82,15 +86,20 @@ test:
 
 
 
-**cicd 파이프라인 실행 후**
+## 3.2 **cicd 파이프라인 실행 후**
 
-![coverage-badge](./images/2.png)
+* 아래와 같이 `Pipeline status` 와 `Coverage report`를 볼 수 있다.
+* 뱃지 이미지 URL: `https://gitlab~~~.svg`
+* 링크: `https://gitlab~~~/master`
+
+![image-20210720191610909](./images/4.png)
 
 ****
 
 **깃랩 Badge 등록하기**
 
 * Settings -> General -> Badges -> Test coverage parsing
+* 위에서 복사한 값을 아래와 같이 등록한다.
 
 ![image-20210720123126966](./images/3.png)
 

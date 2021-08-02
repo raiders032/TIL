@@ -89,9 +89,17 @@ rm -f
 * 파일 이동
 * 파일 이름 변경
 
+
+
 ### cp
 
 * 파일 복사
+
+```bash
+ cp sourcefile destinationfile
+```
+
+
 
 ### cat
 
@@ -120,9 +128,13 @@ tail -20
 tail -f
 ```
 
+
+
 ### more
 
 * 파일 내용 확인
+
+
 
 ## 파일 및 디렉토리 검색
 
@@ -346,4 +358,209 @@ ___
  # archive.tar.gz을 압축 해제와 아카이브를 해제를 동시에 한다.
  tar -zxvf archive.tar.gz
 ```
+
+
+
+
+
+## 사용자 관리 관련 파일들
+
+1. /etc/passwd
+
+* 사용자의 기본 정보를 가지고 있다
+
+* ```bash
+  cat /etc/passwd
+  ...
+  ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
+  ...
+  ```
+
+* ubuntu
+
+  * 로그인명
+
+* x
+
+  * 현재는 사용하지 않는다.
+
+* 1000
+
+  * UID
+
+* 1000
+
+  * GID
+
+* /home/ubuntu
+
+  * 사용자의 홈 디렉토리
+
+* /bin/bash
+
+  * 로그인 쉘
+
+
+
+2. /etc/group
+
+* 그룹에 대한 정보를 가지고 있다
+
+* ```bash
+  cat /etc/group
+  ...
+  sudo:x:27:ubuntu
+  ...
+  ```
+
+* sudo
+
+  * 그룹이름
+
+* x
+
+  * 패스워드 현재 사용하지 않음
+
+* 27
+
+  * GID
+
+* ubuntu
+
+  * 사용자 목록
+
+
+
+## 사용자 관리 명령어
+
+### useradd
+
+> 새로운 유저를 생성한다.
+
+```bash
+# user01 사용자를 생성한다.
+useradd user01
+tail -1 /etc/passwd
+user01:x:1002:1002::/home/user01:/bin/bash
+
+# user02 사용자를 생성한다. 유저 아이디, 주석 옵션 사용
+useradd -u 2000 -c "test user" user02
+tail -1 /etc/passwd
+user02:x:2000:2000:test user:/home/user02:/bin/bash
+```
+
+### usermod
+
+> 유저의 정보를 변경한다.
+
+```bash
+# 변경전
+tail -1 /etc/passwd
+user02:x:2000:2000:test user:/home/user02:/bin/bash
+
+# 사용자 user02의 유저 아이디를 1003으로 변경
+usermod -u 1003 user02
+tail -1 /etc/passwd
+user02:x:1003:2000:test user:/home/user02:/bin/bash
+
+# 현재 유저를 docker 그룹에 추가
+sudo usermod -aG docker $USER
+```
+
+### userdel
+
+> 유저를 삭제한다.
+
+```bash
+# user01 사용자를 삭제한다.
+userdel user01
+# user02 사용자를 삭제한다 홈디렉토리도 함께
+userdel -r user02
+```
+
+### passwd
+
+> 사용자의 비밀번호를 변경한다.
+
+```bash
+# 현재 사용자의 비밀번호 변경
+passwd
+# ec2-user 유저의 비밃번호 변경
+passwd ec2-user
+```
+
+
+
+## 그룹 관리 명령어
+
+**cat /etc/group**
+
+> 그룹 조회하기.
+
+### groupadd
+
+> 새로운 그룹을 생성한다.
+
+### groupmod
+
+> 그룹 정보를 수정한다.
+
+### groupdel
+
+> 그룹을 삭제한다.
+
+### groups
+
+> 유저가 속한 그룹을 확인한다.
+
+```bash
+$ groups youngthree
+youngthree : youngthree docker
+```
+
+
+
+## 사용자 로그인 관련 명령어
+
+### su
+
+> 다른 계정의 권한으로 명령어를 실할수 있게한다.
+>
+> * `-` 의 유무
+>   * O: 입력한 사용자의 사용자 초기화 파일을 적용
+>   * X: 현재 사용자의 환경을 유지
+
+```bash
+# root 유저의 권한을 빌려 명령을 수행함
+su
+# user 유저의 권한을 빌려 명령을 수행함
+su user
+# su - 는 root 계정으로 완전히 전환하고, root 사용자의 환경설정을 불러온다.
+su -
+# su - 는 다른 user 계정으로 완전히 전환하고, 전환한 사용자의 환경설정을 불러온다.
+su - user
+```
+
+### who
+
+> 로그인한 유저를 보여준다.
+
+```bash
+who
+# 런레벨 확인
+who -r
+run-level 5  2021-01-29 13:29
+```
+
+### last
+
+> 로그인 내역을 확인한다.
+
+```bash
+last
+```
+
+
+
+##  Systemctl 관련 명령어
 

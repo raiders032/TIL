@@ -65,6 +65,12 @@ Declarative REST 클라이언트
 </dependencies>
 ```
 
+```groovy
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+}
+```
+
 
 
 **Eureka 클라이언트 실행 방법**

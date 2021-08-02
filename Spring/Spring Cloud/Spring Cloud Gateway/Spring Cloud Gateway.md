@@ -269,7 +269,11 @@ public class PreGatewayFilterFactory extends AbstractGatewayFilterFactory<PreGat
 ```java
 @Slf4j
 @Component
-public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
+public class JwtFilter extends AbstractGatewayFilterFactory<JwtFilter.Config> {
+
+    public JwtFilter() {
+        super(Config.class);
+    }
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -286,6 +290,7 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
     }
 
     public static class Config {
+
     }
 }
 ```
@@ -404,9 +409,14 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 }
 ```
 
+```
+2021-07-17 07:51:54.798 TRACE 1 --- [or-http-epoll-1] o.s.c.g.filter.RouteToRequestUrlFilter   : RouteToRequestUrlFilter start
+2021-07-17 07:51:54.798 TRACE 1 --- [or-http-epoll-1] s.c.g.f.ReactiveLoadBalancerClientFilter : ReactiveLoadBalancerClientFilter url before: lb://email-service/email-service/v2/api-docs
+2021-07-17 07:51:54.799 TRACE 1 --- [or-http-epoll-1] s.c.g.f.ReactiveLoadBalancerClientFilter : LoadBalancerClientFilter url chosen: http://10.7.27.17:8080/email-service/v2/api-docs
+2021-07-17 07:51:54.803 ERROR 1 --- [or-http-epoll-1] a.w.r.e.AbstractErrorWebExceptionHandler : [2c4af1b3-7]  500 Server Error for HTTP GET "/email-service/v2/api-docs"
 
-
-## 
+2021-07-17 07:54:58.865 TRACE 1 --- [or-http-epoll-1] s.c.g.f.ReactiveLoadBalancerClientFilter : LoadBalancerClientFilter url chosen: http://10.7.27.18:30040/user-service/v2/api-docs
+```
 
 
 

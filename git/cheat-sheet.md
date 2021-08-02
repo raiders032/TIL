@@ -400,6 +400,13 @@ git rebase --onto master service ui #take commits of the ui branch forked from t
 git cherry-pick hash #applies the given commit 
 ```
 
+## Update
+
+```bash
+git remote prune origin
+git remote update --prune
+```
+
 # Stashing
 
 * working directory에 변경사항이 있고 브랜치를 전환해야 할 때 변경사항을 잠시 저장해두고 브랜치를 전환할 수 있다.

@@ -215,3 +215,8 @@ REVISION  CHANGE-CAUSE
 $ kubectl rollout undo deployment my-nginx-deployment --to-revision=1
 ```
 
+
+
+참고
+
+* http://www.yes24.com/Product/Goods/84927385
