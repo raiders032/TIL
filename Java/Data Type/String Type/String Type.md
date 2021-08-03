@@ -1,10 +1,10 @@
-# String
+# 1. String
 
-> 자바의 문자열은 java.lang 패키지의 String 클래스의 인스턴스로 관리된다. 소스상에 문자열 리터렁은 String 클래스로 자동 생성되지만 String 클래스의 다양한 생성자를 이용해서 직접 String 클래스를 생성할 수도 있다.
+> 자바의 문자열은 java.lang 패키지의 String 클래스의 인스턴스로 관리된다. 소스상에 문자열 리터럴은 String 클래스로 자동 생성되지만 String 클래스의 다양한 생성자를 이용해서 직접 String 클래스를 생성할 수도 있다.
 
 
 
-## String은 왜 immutable할까?
+# 2. String은 왜 immutable할까?
 
 * immutable이란?
   * 객체의 내부 상태가 생성 후 변하지 않는 것을 의미한다.
@@ -14,7 +14,9 @@
   * 동기화
   * 성능
 
-## String Pool
+
+
+# 3. String Pool
 
 * String이 저장되는 메모리의 특수한 공간을 의미한다.
 * String은 immutable하기 때문에 JVM은 String에게 할당되는 메모리의 양을 최적화할 수 있다.
@@ -33,27 +35,63 @@ assertThat(s1 == s2).isTrue();
 
 ![image-20210416190232847](./images/image-20210416190232847.png)
 
-## immutable의 장점
+**String 비교 예시**
+
+```java
+public class StringEqualsExample {
+    public static void main(String[] args) {
+
+        String strVar1 = "노영삼";
+        String strVar2 = "노영삼";
+
+        if (strVar1 == strVar2) {
+            System.out.println("strVar1과 strVar2는 참조가 같음.");
+        } else {
+            System.out.println("strVar1과 strVar2는 참조가 다름.");
+        }
+
+        String strVar3 = new String("노영삼");
+        String strVar4 = new String("노영삼");
+
+        if (strVar3 == strVar4) {
+            System.out.println("strVar3과 strVar4는 참조가 같음.");
+        } else {
+            System.out.println("strVar3과 strVar4는 참조가 다름.");
+        }
+
+        if (strVar3.equals(strVar4)) {
+            System.out.println("strVar3과 strVar4는 문자열이 같음.");
+        }
+    }
+}
+
+//결과
+strVar1과 strVar2는 참조가 같음.
+strVar3과 strVar4는 참조가 다름.
+strVar3과 strVar4는 문자열이 같음.
+```
+
+# 4. immutable의 장점
 
 **Security**
 
 * 
 
-### **Synchronization**
+**Synchronization**
 
 * immutable하면 thread safe하다고 말할 수 있다. 그 이유는 객체의 내부 상태가 생성 후 변하지 않기 때문이다.
 
-### **Hashcode Caching**
+**Hashcode Caching**
 
 * 객체의 내부 상태가 생성 후 변하지 않기 때문에 hashCode() 메소드의 결과를 캐싱할 수 있다.
 
-### **Performance**
+**Performance**
 
 * *String* pool의 존재로 메모리를 절약할 수 있다.
 
 
 
-## 자주 사용되는 String 메소드
+# 5. 자주 사용되는 String 메소드
 
 | Modifier and Type | Method                                    | Description                                                  |
 | :---------------- | :---------------------------------------- | :----------------------------------------------------------- |
@@ -64,8 +102,6 @@ assertThat(s1 == s2).isTrue();
 | `int`             | `length()`                                | Returns the length of this string.                           |
 | `String`          | `substring(int beginIndex, int endIndex)` | Returns a string that is a substring of this string          |
 | `String`          | `substring(int beginIndex)`               | Returns a string that is a substring of this string.         |
-|                   |                                           |                                                              |
-|                   |                                           |                                                              |
 
 
 
@@ -73,9 +109,9 @@ assertThat(s1 == s2).isTrue();
 
 
 
-## StringTokenizer 클래스
+# 6. StringTokenizer 클래스
 
-> 문자열이 특정 구분자로 연결되어 있을 경우, 구분자를 기준으로 부분 문자열을 분리 하기 위해서는 String의 split() 메소드를 이용하거나, java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다. split()은 정규 표현식으로 구분하고, StringTokenizer는 무자로 구분한다는 차이점이 있다.
+> 문자열이 특정 구분자로 연결되어 있을 경우, 구분자를 기준으로 부분 문자열을 분리 하기 위해서는 String의 split() 메소드를 이용하거나, java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다. split()은 정규 표현식으로 구분하고, StringTokenizer는 문자로 구분한다는 차이점이 있다.
 
 **StringTokenizer 메소드**
 
@@ -92,7 +128,9 @@ assertThat(s1 == s2).isTrue();
 
 ```java
 StringTokenizer st = new StringTokenizer("문자열", "구분자");
-StringTokenizer st = new StringTokenizer("문자열"); 					// 구분자 생략시 공백이 기본 구분자가 된다.
+
+// 구분자 생략시 공백이 기본 구분자가 된다.
+StringTokenizer st = new StringTokenizer("문자열"); 					
 
 // 모든 token 접근 방식1
 int countTokens = st.countTokens();
@@ -112,7 +150,7 @@ while (st.hasMoreTokens()){
 
 
 
-## StringBuilder 클래스
+# 7. StringBuilder 클래스
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 
@@ -135,7 +173,7 @@ while (st.hasMoreTokens()){
 
 
 
-## StringBuffer 클래스
+# 8. StringBuffer 클래스
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 >
