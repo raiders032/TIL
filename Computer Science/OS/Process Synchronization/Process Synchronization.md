@@ -218,22 +218,45 @@
 
 ## 5. Semaphores
 
-* critical section 문제를 해결하기 위한 추상적인 자료형
-* Busy-wait 방식과 block/wakeup 방식이 있으며 아래는 block/wakeup방식을 설명하고 있다.
+* Critical Section문제를 해결하기 위한 추상적인 자료형
+* **Busy-wait** 방식과 **block/wakeup** 방식이 있으며 아래는 block/wakeup방식을 설명하고 있다.
   * critical section이 짧은 경우 Busy-wait 방식이 적절할 수 있다. -> block/wakeup 오버헤드가 더 클 수 있으므로
   * 일반적으로는 block/wakeup 방식이 더 효율적이다.
-* Semaphores를 아래와 같이 정의한다.
+* Semaphores의 단점
+  * 코딩하기 힘들다
+  * 정확성의 입증이 어렵다
+  * 자발적 협력이 필요하다
+  * 한번의 실수가 시스템에 치명적인 영향을 미친다
+  * 이를 극복하기 위해 **Monitor**라는 것을 사용한다
+  * ![image-20210805094804092](./images/세마포어 단점.png)
+
+
+
+### 5.1 Semaphores의 정의
 
 ![image-20210416145715939](./images/image-20210416145715939.png)
 
+* `value` 
+  * Synchronization Variable
+  * `양수` : 현재 공유 자원이 놀고 있다
+  * `0` 현재 놀고 있는 공유 자원이 없다
+  * `음수` : 현재 놀고 있는 공유 자원이 없어 프로세스가 wait queue에서 기다리고 있다
+* `L` 
+  * 공유 자원이 모두 사용중일 때 공유 자원을 요청한 프로세스를 wait queue에 넣는다 
+  * `L` 은 **wait queue**를 의미한다
+
+
+
+### 5.2 원자적 연산 
+
 * Semaphores S는 정수 변수로 초기화를 제외하고 두가지 표준 원자적 연산만을 제공한다.
-* 원자적 연산: 한 스레드가 세마포 값을 변경하면 다른 어떤 스레드도 동시에 동일한 세마포 값을 변경할 수 없다.
-  * wait() 또는 P() : 
-    * 자원을 획득할때 사용한다.
-    * value를 1감소 시키고 value가 0보다 작다면 wait queue L에 추가하고 block된다.
-  * signal() 또는 V() : 
-    * 자원을 반납할때 사용한다.
-    * value를 1 증가시키고 value가 0이하하면 wait queue에서 기다리고 있는 프로세스를 queue에서 제거하고 wakeup시켜준다.
+* 한 스레드가 세마포 값을 변경하면 다른 어떤 스레드도 동시에 동일한 세마포 값을 변경할 수 없다.
+* **wait() 또는 P()**
+  * 자원을 획득할때 사용한다.
+  * value를 1감소 시키고 value가 0보다 작다면 wait queue L에 추가하고 block된다.
+* **signal() 또는 V()**
+  * 자원을 반납할때 사용한다.
+  * value를 1 증가시키고 value가 0이하하면 wait queue에서 기다리고 있는 프로세스를 queue에서 제거하고 wakeup시켜준다.
 
 ![image-20210416150017134](./images/image-20210416150017134.png)
 
@@ -241,37 +264,47 @@
 
 
 
-## 6. Monitor
+## 6. 동기화 문제들
+
+### 6.1 Bounded Buffer Problem
+
+![image-20210805091307573](./images/bounded-buffer2.png)
 
 
 
-## 7. Deadlock
+### 6.2 Readers and Writers Problem
+
+![image-20210805091121880](./images/reders-writers-problem.png)
+
+* reader가 끊임없이 도착한다면 writer는 starvation 문제를 겪을 수 있다
 
 
 
+### 6.3 Dining Philosophers Problem
+
+![image-20210805092029807](./images/Dining Philosophers Problem.png)
+
+* Deadlock 발생 가능성이 있다
+  * 모든 철학자가 왼쪽 젓가락울 집는 경우
+* 해결책
+  * 젓가락을 둘다 집을 수 있을 때만 젓가락을 집을 수 있게 한다
+  * 짝수 철학자는 왼쪽 젓가락은 홀수 철학자는 오른쪽 젓가락을 먼저 집게 한다
+
+![image-20210805093108141](./images/Dining Philosophers Problem2.png)
 
 
 
+## 7. Monitor
+
+### 7.1 Bounded Buffer Problem
+
+![image-20210805095553763](./images/모니터 유한 버퍼 문제.png)
 
 
 
+### 7.2 Dining Philosophers Problem
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![image-20210805095852849](./images/모니터 식사하는 철학자 문제.png)
 
 
 
