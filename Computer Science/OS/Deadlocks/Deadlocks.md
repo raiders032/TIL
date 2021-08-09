@@ -57,16 +57,43 @@
 ### 2.2 Deadlock Avoidance
 
 * 자원 요청에 대한 부가적인 정보를 이용해서 deadlock의 가능성이 없는 경우만 자원을 할당하는 방법
+  * 각 프로세스가 한 시점에서 최대로 사용하는 자원의 수를 이용한다
 
 
+
+**Banker's Alogorithm**
+
+![image-20210810080655888](./images/banker's.png)
+
+* Allocation: 각 프로세스가 현재 할당 받은 자원의 수를 의미한다
+* Max: 각 프로세스가 한 시점에 할당 받은 최대 자원 수를 의미한다
+* Available: 현재 할당되지 않은 자원의 수를 의미한다
+* Need: 각 프로세스가 앞으로 요청할 수 있는 최대 자읜 수를 의마한다
+* **Banker's Alogorithm** 은 한 프로세스가 자원을 요청했을 때 `Need`가 `Available` 보다 높은 경우 데드락 방지를 위해 요청을 거절한다
+  * 위 그림의 상태에서
+  * P0의 요청은 `Available` 자원 그 이상을 요청하기 때문에 데드락이 발생할 수 있기 때문에 받아들이지 않는다
+  * P1의 요청은 허용된다
+* sequence <P1, P3, P4, P2, P0> 가 존재한다
+  * sequence 순서대로 프로세스에 자원을 할당하고 해당 프로세스가 모든 처리를 끝내고 자원을 반납하면 가용할 수 있는 자원의 범위 내에서만 요청하기 때문에 데드락이 발생하지 않는다
+  * 이런 sequence가 존재할 때 시스템이 `safe state`하다라고 한다
+
+ 
 
 ### 2.3 Deadlock Detection and revovery
 
 * Deadlock 발생은 허용하되 이를 감지하여 회복시키는 방법
+* revovery
+  * Process termination
+    * 데드락이 발생한 모든 프로세스 종료
+    * 데드락이 발생하지 않을 때까지 프로세스 중 하나를 종료한다
+  * Resource Preemption
+    * 비용을 최소화할 vitim을 선정한다
 
 
 
 ### 24 Deadlock Ignorance
 
 * Deadlock을 시스템이 책임지지 않는 방법
+* Deadloc은 매우 드물게 발생하므로 Deadlock에 대한 조치 자체가 overhead일 수 있다
+* Deadlock이 발생한 경우 사람이 느낀 후 직접 프로세스를 종료하는 방식으로 대처한다
 * Unix를 포함한 대부분의 운영체제가 이 방법을 채택했다
