@@ -131,7 +131,10 @@
 
 * Repeatable Reads는 MySQL의 InnoDB 스토리지 엔진에서 기본으로 사용하는 격리 수준이다.
 * **Phantom reads**  현상이 발생하는 격리 수준
-* InnoDB 스토리지 엔진은 트랜잭션이 ROLLBACK될 가능성에 대비해 변경되기 전 레코드를 언두 공간에 백업해주고 실제 레코드 값을 변경한다. 이 방식을 MVCC(Multi Version Concurrency Control)라고 한다. 
+* InnoDB 스토리지 엔진은 트랜잭션이 ROLLBACK될 가능성에 대비해 변경되기 전 레코드를 **언두 공간에 백업해두고 실제 레코드 값을 변경**한다. 이 방식을 MVCC(Multi Version Concurrency Control)라고 한다.
+* 백업된 데이터는 불필요하다고 판단하는 시점에 주기적으로 삭제한다.
+* Undo에 백업된 레코드가 많아지면 MySQL 서버의 처리 성능이 떨어질 수 있다.
+* MySQL에서는 트랜잭션마다 트랜잭션 ID를 부여하여 트랜잭션 ID보다 작은 트랜잭션 번호에서 변경한 것만 읽게 된다.
 
 
 
