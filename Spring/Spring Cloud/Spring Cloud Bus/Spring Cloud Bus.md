@@ -6,6 +6,10 @@
 
 
 
+## 1.1 Spring Cloud Bus를 사용하는 이유
+
+* 아래 3가지 방법중 마이크로 서비스 아키텍처에 가장 적합한 방법이 Spring Cloud Bus를 사용하는 것이다.
+
 **마이크로 서비스의 configuration 변경을 위한 방식 3가지**
 
 1. 서버 재기동
@@ -13,18 +17,16 @@
    * 고려할 가치가 없다
 
 2. `Spring Boot Actuator` 이용
-
    * `actuator/refresh` 엔드포인트를 이용 서버의 configuration를 다시 읽도록 한다.
-
+   
    * 각각의 마이크로 서비스에 refresh를 호출하는 것이 번거롭다.
-
+   
 3. `Spring Cloud Bus`
-
-   * 상태 및 구성에 대한 변경 사항을 연결된 마이크로 서비스들에게 전달한다.
-
+* 하나의 마이크로 서비스에 `/actuator/busrefresh` 를 호출하면 브로커에 연결된 모든 서비스에 configuration 변경 사항이 전달된다.
 
 
-**Spring Cloud Bus 실행하기**
+
+## 1.2 Spring Cloud Bus 실행하기
 
 * Spring Cloud Bus를 활성화 하려면 `spring-cloud-starter-bus-amqp` 또는 `spring-cloud-starter-bus-kafka` 을 추가한다.
 * 나머지는 스프링클라우드(Spring Cloud)가 처리한다.
@@ -47,15 +49,25 @@ spring:
 # 2. Bus Endpoints
 
 * Spring Cloud Bus는 `/actuator/busrefresh` 와 `/actuator/busenv` 2가지 엔드포인트를 제공한다.
-* Spring Cloud Bussms 분산 Spring Boot Actuator 같다.
-  * `/actuator/busrefresh` : 개별 Actuator endpoint `/actuator/refresh` 와 같다. 
-  *  `/actuator/busenv` : 개별 Actuator endpoint `/actuator/env` 와 같다.
+* Spring Cloud Bus는 분산 Spring Boot Actuator 같다.
+  * `/actuator/busrefresh` : 개별적인 Actuator endpoint `/actuator/refresh`를 모은 것과 같다
+  *  `/actuator/busenv` : 개별적인 Actuator endpoint `/actuator/env`를 모은 것과 같다
 
 
 
 ## 2.1 Bus Refresh Endpoint
 
 * `/actuator/busrefresh` 엔드 포인트는 RefreshScope 캐시를 지우고 `@ConfigurationProperties`를 리바인드한다.
+
+
+
+**`/actuator/busrefresh` 엔드 포인트 노출하기**
+
+* 애플리키이션 컨피그에 아래와 같이 추가해야한다
+
+```properties
+management.endpoints.web.exposure.include=busrefresh
+```
 
 
 
@@ -71,6 +83,65 @@ spring:
         "value": "value1"
     }
     ```
+
+
+
+**`/actuator/busenv` 엔드 포인트 노출하기**
+
+* 애플리키이션 컨피그에 아래와 같이 추가해야한다
+
+```properties
+management.endpoints.web.exposure.include=busenv
+```
+
+
+
+# 3. Spring Cloud Config Client
+
+* 브로커에 연결할 클라이언트를 의미한다.
+
+**의존성 추가**
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+</dependency>
+```
+
+**application.yml**
+
+* 브로커(rabbitmq)와 연결하기위한 설정
+
+```yml
+server:
+  port: 8080
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: name
+    password: password
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh
+```
+
+**bootstrap.yml**
+
+* 컨피스 서버(http://localhost:8888)와 연결
+
+```yml
+spring:
+  application:
+    name: client
+  cloud:
+    config:
+      uri: http://localhost:8888
+```
 
 
 
