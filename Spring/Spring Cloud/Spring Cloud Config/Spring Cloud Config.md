@@ -316,6 +316,7 @@ implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 
 ### 3.1.1 bootstrap.yml 작성
 
+* `bootstrap.yml`은 스프링 부트 애플리케이션이 기동될 때 `application.yml` 보다 더 먼저 로드 된다.
 * 프로파일 별로 bootstrap.yml을 지정할 수 있다.
 
 **bootstrap.yml**
@@ -338,3 +339,11 @@ spring:
     config:
       enabled: false
 ```
+
+
+
+## 3.2 Config Update
+
+* 애플리케이션에 최신 config를 적용하기 위해 애플리케이션의 `actuator/refresh` 엔드 포인트를 호출하여 설정값을 변경할 수 있다.
+* Spring Cloud Bus를 이용하면 일일이 모든 애플리케이션`actuator/refresh` 엔드 포인트를 호출하지 않아도 여러 애플리케이션의 설정값을 업데이트할 수 있다.
+
