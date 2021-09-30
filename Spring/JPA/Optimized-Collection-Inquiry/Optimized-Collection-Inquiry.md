@@ -1,6 +1,6 @@
-## 컬렉션 조회 최적화
+# 1.컬렉션 조회 최적화
 
-*  [지연 로딩과 조회 성능 최적화.md](../지연 로딩과 조회 성능 최적화/지연 로딩과 조회 성능 최적화.md) 에서 ToOne 관계에 대해서 알아봤다면 이번엔 ToMany관계에 대해서 알아보자
+*  [지연로딩과 조회 성능 최적화](../Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)에서 ToOne 관계에 대해서 알아봤다면 이번엔 ToMany관계에 대해서 알아보자
 * `Order` 와 `Member` 일대일 관계이다.
 * `Order` 와 `Delivery` 일대일 관계이다.
 * `Order` 와 `OrderItem` 일대다 관계이다.
@@ -9,7 +9,7 @@
 
 
 
-## 엔티티 직접 노출 버전
+# 2.엔티티 직접 노출 버전
 
 * 엔티티 직접 노출은 피하자!
 
@@ -38,7 +38,7 @@ public class OrderApiController {
 
 
 
-## 엔티티를 DTO로 변환 버전
+# 3.엔티티를 DTO로 변환 버전
 
 * SQL 실행 횟수
   * `Order` 조회 1회 -> N개의 `Order` 가 조회됨
@@ -107,7 +107,7 @@ class OrderItemDto {
 
 
 
-## 엔티티를 DTO로 변환 + 페치 조인 최적화 버전
+# 4.엔티티를 DTO로 변환 + 페치 조인 최적화 버전
 
 * `Order` 와 `OrderItem` 일대다 관계이다. 
 * `Order` 와 `OrderItem` 을 페치 조인한다
@@ -167,7 +167,7 @@ public class OrderSimpleQueryRepository {
 
 
 
-## 엔티티를 DTO로 변환 + 페치 조인 최적화 + 페이징 버전
+# 5.엔티티를 DTO로 변환 + 페치 조인 최적화 + 페이징 버전
 
 * 앞선 버전에서는 컬렉션을 페치 조인하면서 페이징이 불가능했다.
 * 페이징 + 컬렉션 엔티티를 함께 조회하는 방법을 알아보자.
@@ -235,7 +235,7 @@ default_batch_fetch_size: 1000
 
 
 
-## JPA에서 DTO 직접 조회
+# 6.JPA에서 DTO 직접 조회
 
 * SQL 실행 횟수
   * 루트 조회 (ToOne 관계 함께) N개의 결과가 나온다 ->  1회
@@ -338,7 +338,7 @@ public class OrderItemQueryDto {
 
 
 
-## JPA에서 DTO 직접 조회 - 컬렉션 조회 최적화
+# 7.JPA에서 DTO 직접 조회 - 컬렉션 조회 최적화
 
 * SQL 실행 횟수
   * Query: 루트 1번
