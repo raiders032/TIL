@@ -132,9 +132,8 @@
 
 ### 2.2.2 kube-proxy
 
-* Node 와 Pod 의 네트워크 커뮤니케이션을 관리
-
-
+* kube-proxy는 쿠버네티스 클러스터 내 모든 노드에서 실행되는 프로세스다.
+* Node 와 Pod 의 네트워크 커뮤니케이션을 관리힌디
 
 # 3 리소스
 
@@ -164,9 +163,9 @@
 ## 3.2 Deployment(controller)
 
 * pod들을 제어한다.  
-  
+
   * 개발자가 직접 pod를 제어하지 않고 대신 Deployment를 사용해 원하는 상태를 유지시킨다.
-  
+
 * Deployment는 중지, 삭제, 롤백이 가능하다.
 
 * Deployment는 스케일링 될 수 있다. 
@@ -288,7 +287,7 @@ Minikube
 sysctl -a | grep -E --color 'machdep.cpu.features|VMX'
 ```
 
-![image-20201210171407808](image-20201210171407808.png)
+![image-20201210171407808](/Users/YT/GoogleDrive/dev/TIL2/kubernetes/kubernetes/image-20201210171407808.png)
 
 2. install kubectl
 
@@ -298,7 +297,7 @@ brew install kubectl
 kubectl version --client
 ```
 
-![image-20201210172003604](image-20201210172003604.png)
+![image-20201210172003604](/Users/YT/GoogleDrive/dev/TIL2/kubernetes/kubernetes/image-20201210172003604.png)
 
 3. virtualbox 설치
 
@@ -322,4 +321,4 @@ minikube status
 minikube dashboard
 ```
 
-![image-20201210173406071](image-20201210173406071.png)
+![image-20201210173406071](/Users/YT/GoogleDrive/dev/TIL2/kubernetes/kubernetes/image-20201210173406071.png)
