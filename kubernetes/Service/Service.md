@@ -194,7 +194,10 @@ kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP      
 
 * 클러스터의 모든 노드에 내부 IP 또는 외부 IP를 통해 `30914` 포트로 접근하면 동일한 서비스에 연결할 수 있다
 * `NodePort`  타입의 서비스가 `ClusterIP` 타입의 서비스의 기능을 포함하고 있기 때문에 CLUSTER-IP 또는 서비스 이름을 이용해 pod에 접근할 수 있다
-  * 즉 `NodePort`  타입의 서비스는 내부 네트워크와 외부 네트워크 양쪽에서 접근할 수 있다
+  * 즉 `NodePort` 타입의 서비스는 내부 네트워크와 외부 네트워크 양쪽에서 접근할 수 있다
+  * 외부에서 접근할 경우 노드의 IP와 개방된 포트로 접근한다
+  * 내부에서 접근할 경우 서비스의 이름 또는 IP로 접근한다.
+* `NodePort`를 사용하면 노드의 IP를 알아야만 포드에 접근할 수 있지만 `LoadBalancer`를 이용하면 클라우드 플랫폼으로부터 도메인 이름과 IP를 할당받기 때문에 더 쉽게 접근할 수 있다.
 
 ```bash
 # 노드 목록 조회
@@ -242,6 +245,8 @@ $ curl hostname-svc-nodeport:8080 --silent | grep Hello
   * 온프레미스 환경에서 LoadBalancer를 사용하려면 MetalLb나 오픈스택 같은 특수한 환경을 직접 구축해야한다
 * LoadBalancer 타입의 서비스는 클라우드 플랫폼으로부터 도메인 이름과 IP 주소를 할당받기 때문에 NodePort 보다 쉽게 pod에 접근할 수 있다
   * NodePort 는 각 노드의 IP 주소를 알아야 pod에 접근할 수 있다 
+
+
 
 ## 4.1 yaml 작성
 
