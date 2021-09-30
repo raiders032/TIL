@@ -82,12 +82,20 @@
 ### 2.3 Deadlock Detection and revovery
 
 * Deadlock 발생은 허용하되 이를 감지하여 회복시키는 방법
-* revovery
-  * Process termination
-    * 데드락이 발생한 모든 프로세스 종료
-    * 데드락이 발생하지 않을 때까지 프로세스 중 하나를 종료한다
-  * Resource Preemption
-    * 비용을 최소화할 vitim을 선정한다
+
+**Detection**
+
+* 자원 할당 그래프를 통해 교착 상태를 탐지함
+* 자원 요청 시, 탐지 알고리즘을 실행시켜 그에 대한 오버헤드 발생함
+
+**revovery**
+
+* Process termination
+  * 데드락이 발생한 모든 프로세스 종료
+  * 데드락이 발생하지 않을 때까지 프로세스 중 하나를 종료한다
+* Resource Preemption
+  * 교착 상태의 프로세스가 점유하고 있는 자원을 선점해 다른 프로세스에게 할당 (해당 프로세스 일시정지 시킴)
+  * 우선 순위가 낮은 프로세스나 수행 횟수 적은 프로세스 위주로 프로세스 자원 선점
 
 
 

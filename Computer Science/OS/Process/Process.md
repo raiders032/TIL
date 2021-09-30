@@ -6,14 +6,17 @@
 
 * **프로세스**란 실행 중인 프로그램이다
 * **프로그램**은 명령어 리스트를 내용으로 가진 디스크에 저장된 파일과 같은 수동적인 존재이다
-* 이와 대조적으로 **프로세스**는 다음에 실행한 명령어를 지정하는 프로그램 카운터와 관련 자원의 집합을 가진 능동적인 존재이다. 
+* **프로세스의 구성**
+  * 현재 활동 정보들(**program counter**, registers)
+  * Text, data, stack, heap
+  * 자원: CPU time, memory, files, and I/O devices 등
 * **실행 파일**이 메모리에 적재될 때 프로그램은 **프로세스**가 된다.
 
 
 
 ## 2. Process의 주소 공간
 
-![메모리상의 프로세스](./images/memory.jpg)
+![메모리상의 프로세스](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/memory.jpg)
 
 * Process 주소 공간(Address Space)은 stack, heap, data, text로 구성된다
 
@@ -40,7 +43,7 @@
 
 ## 3. Process의 상태
 
-![image-20210415182124609](./images/state1.png)
+![image-20210415182124609](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/state1.png)
 
 * 프로세스는 실행되면서 상태가 변하며 아래 상태들 중 하나에 있게 된다
 
@@ -79,7 +82,7 @@
 
 ## 4. PCB(Process Controll Block)
 
-![Process Control Block](./images/pcb2.png)
+![Process Control Block](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/pcb2.png)
 
 * PCB는 운영체제가 각 프로세스를 관리하기 위해 프로세스마다 유지하는 자료구조이다
 * Context Switch 과정에서 현재 실행중인 프로세스의 정보를 저장고 이후 중단된 부분부터 다시 실행하기 위해 사용한다
@@ -100,7 +103,7 @@
 
 * code, data, stack의 위치 정보
 
-**입풀력 상태 정보**
+**입출력 상태 정보**
 
 * 프로세스에 할당된 입출력 장치들과 열린 파일의 목록
 
@@ -114,16 +117,16 @@
     * program counter, 각종 register
   * 프로세스의 **주소 공간**
     * code, data, stack
-  
+
   * **PCB**
     * 운영체제의 커널이 프로세스를 관리하기 위해 사용하는 자료 구조
     * 커널의 데이터 영역에 프로세스의 context를 저장한다
     * 커널의 주소 공간 중 data 영역에 존재한다 아래 그림 참조
-  
+
   * **Kernel stack**
     * 프로세스 마다 별도의 커널 스택이 할당된다
 
-![image-20210802112153087](./images/kernel-pcb.png)
+![image-20210802112153087](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/kernel-pcb.png)
 
 
 
@@ -139,11 +142,11 @@
 
 **Context Switch가 아닌 경우**
 
-![Context Switch가 아닌 경우](./images/no-context-switch.png)
+![Context Switch가 아닌 경우](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/no-context-switch.png)
 
 * 사용자 프로세스 A를 실행중 시스템콜이나 인터럽트 발생시 커널 모드에 진입 이후 문맥 교환 없이 프로세스 A의 user mode로 복귀하는 경우 Context Switch가 일어난다고 할 수 없다.
 
-![Context Switch가 발생하는 경우](/Users/YT/GoogleDrive/dev/TIL/OS/Process/images/context-switch.png)
+![Context Switch가 발생하는 경우](./images/context-switch.png)
 
 * 허나 timer interrupt나 프로세스 A의  I\O 요청 system call인 경우에는 항상 문맥교환이 일어난다
 
@@ -174,7 +177,7 @@
 * I\O 장치의 처리를 기다리는 프로세스의 집합
 * 각 장치는 그 자신의 `device queue`를 가진다
 
-<img src="./images/ready queue.png" alt="ready queue" style="zoom:67%;" />
+<img src="/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/ready queue.png" alt="ready queue" style="zoom:67%;" />
 
 
 
@@ -254,7 +257,7 @@
 * exec() 시스템 콜을 통해 프로세스는 다른 프로그램을 실행할 수 있다.
 * 호출자의 주소공간을 새로운 프로그램으로 교체한다.
 
-![image-20210415205321469](./images/exec.png)
+![image-20210415205321469](/Users/YT/GoogleDrive/dev/TIL2/Computer Science/OS/Process/images/exec.png)
 
 **wait() 시스템 콜**
 

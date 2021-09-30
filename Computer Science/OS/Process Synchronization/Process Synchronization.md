@@ -189,7 +189,7 @@
 
 **Bounded Wating(한정된 대기)**
 
-* 프로세스가 critical section에 들어가려고 요청한 후부터 그 요청이 허용될 때까지 다른 프세스들이 critical section에 들어가는 횟수에 한계가 있어야한다.
+* 프로세스가 critical section에 들어가려고 요청한 후부터 그 요청이 허용될 때까지 다른 프로세스들이 critical section에 들어가는 횟수에 한계가 있어야한다.
 * 즉 **starvation** 현상이 없어야 한다
 
 
@@ -244,6 +244,14 @@
 * `L` 
   * 공유 자원이 모두 사용중일 때 공유 자원을 요청한 프로세스를 wait queue에 넣는다 
   * `L` 은 **wait queue**를 의미한다
+
+
+
+**Mutex**
+
+* Semaphores는 그 가용한 **자원의 개수** 로 초기화 된다. 자원을 사용하면 세마포가 감소, 방출하면 세마포가 증가 한다.
+* **Mutex**는 Synchronization Variable를 1로 초기화 한 것을 의미한다.
+* 다중 프로세스들 사이의 Critical Section 문제를 해결하기 위해 사용한다.
 
 
 
