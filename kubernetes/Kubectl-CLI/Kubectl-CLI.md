@@ -104,7 +104,17 @@ kubectl set image deployment my-nginx-deployment nginx=nginx:1.11 --record
 # kubectl rollout
 
 ```shell
-# 완료될 때까지 "frontend" 디플로이먼트의 롤링 업데이트 상태를 감시kubectl rollout status -w deployment/frontend   # 이전 디플로이먼트로 롤백kubectl rollout undo deployment/frontend# 현 리비전을 포함한 디플로이먼트의 이력을 체크kubectl rollout history deployment/frontendkubectl rollout history deployment/first-app --revision=1# 특정 리비전으로 롤백kubectl rollout undo deployment/frontend --to-revision=2         
+# 완료될 때까지 "frontend" 디플로이먼트의 롤링 업데이트 상태를 감시
+kubectl rollout status -w deployment/frontend   
+
+# 이전 디플로이먼트로 롤백
+kubectl rollout undo deployment/frontend
+
+# 현 리비전을 포함한 디플로이먼트의 이력을 체크
+kubectl rollout history deployment/frontendkubectl rollout history deployment/first-app --revision=1
+
+# 특정 리비전으로 롤백
+kubectl rollout undo deployment/frontend --to-revision=2         
 ```
 
 
@@ -112,7 +122,8 @@ kubectl set image deployment my-nginx-deployment nginx=nginx:1.11 --record
 # kubectl run
 
 ```bash
-# Start a nginx pod.kubectl run nginx --image=nginx
+# Start a nginx pod.
+kubectl run nginx --image=nginx
 ```
 
 
@@ -128,7 +139,8 @@ kubectl expose deployment http-go --port=8080 --target-port=8080 --type=LoadBala
 # kubectl exec
 
 ```shell
-# 기존 파드에서 명령 실행(한 개 컨테이너 경우)kubectl exec my-pod -- ls /   
+# 기존 파드에서 명령 실행(한 개 컨테이너 경우)
+kubectl exec my-pod -- ls /   
 ```
 
 
@@ -136,7 +148,17 @@ kubectl expose deployment http-go --port=8080 --target-port=8080 --type=LoadBala
 # kubectl delete
 
 ```shell
-# webapp pod 삭제kubectl delete pod webapp# name=myLabel 라벨을 가진 파드와 서비스 삭제kubectl delete pods,services -l name=myLabel# deployment.yaml과 service.yaml 설정 파일을 사용하여 리소스 삭제kubectl delete -f deployment.yaml -f service.yaml# "production" 네임스페이스 삭제 (네임스페이스 삭제 시 네임스페이스에 존재하는 모든 리소스 또한 삭제된다)kubectl delete namespace production
+# webapp pod 삭제
+kubectl delete pod webapp
+
+# name=myLabel 라벨을 가진 파드와 서비스 삭제
+kubectl delete pods,services -l name=myLabel
+
+# deployment.yaml과 service.yaml 설정 파일을 사용하여 리소스 삭제
+kubectl delete -f deployment.yaml -f service.yaml
+
+# "production" 네임스페이스 삭제 (네임스페이스 삭제 시 네임스페이스에 존재하는 모든 리소스 또한 삭제된다)
+kubectl delete namespace production
 ```
 
 
@@ -146,7 +168,8 @@ kubectl expose deployment http-go --port=8080 --target-port=8080 --type=LoadBala
 > pod의 로그를 확인할 수 있다
 
 ```bash
-# 파드 로그 덤프 (stdout)kubectl logs my-pod                          
+# 파드 로그 덤프 (stdout)
+kubectl logs my-pod                   
 ```
 
 
