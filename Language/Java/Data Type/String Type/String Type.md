@@ -154,7 +154,25 @@ while (st.hasMoreTokens()){
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 
-자주 사용되는 메소드
+* StringBuffer와 사용법은 동일하다
+* **StringBuilder**는 단일 스레드 환경에서만 사용하도록 설계되어 있다.
+  * **Thread Safe하지 않다.**
+  * **StringBuffer는 Thread Safe**하다
+* 버퍼가 부족할 경우 자동으로 버퍼의 크기를 늘리기 때문에 초기 버퍼의 크기는 그다지 중요하지 않다
+
+**초기화**
+
+```java
+StringBuilder sb = new StringBuilder();
+StringBuilder sb = new StringBuilder(16);
+StringBuilder sb = new StringBuilder("Java");
+```
+
+
+
+
+
+**자주 사용되는 메소드**
 
 | Modifier and Type | Method                                    | Description                                                  |
 | :---------------- | :---------------------------------------- | :----------------------------------------------------------- |
