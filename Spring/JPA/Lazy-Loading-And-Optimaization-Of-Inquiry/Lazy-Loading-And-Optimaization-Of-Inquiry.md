@@ -1,13 +1,14 @@
-## 지연 로딩과 조회 성능 최적화
+# 1.지연 로딩과 조회 성능 최적화
 
 * ToOne 관계에서 지연 로딩으로 발생할 수 있는 N+1 문제의 해결법을 알아보자
 * 아래 예시에서 `order` -> `member` 와 `order` -> `delivery` 의 관계는 모두 ToOne 관계이며 `fetch = FetchType.LAZY` 로 설정되어 있다.
 
 
 
-## 엔티티를 직접 노출 버전
+# 2.엔티티를 직접 노출 버전
 
 * 엔티티를 직접 노출하는 컨트롤러
+  * **예시일 뿐 컨트롤러에 엔티티를 직접 노출해서는 안된다**
   * `order` -> `member` 와 `order` -> `delivery` 의 관계는 모두 ToOne 관계이며 `fetch = FetchType.LAZY` 로 설정되어 있다.
   * 따라서 실제 엔티티 대신 프록시가 존재한다.
   * jackson 라이브러리는 기본적으로 초기화되지 않은 프록시 객체를 json으로 어떻게 생성해야 하는지 모름
@@ -40,7 +41,7 @@ public class OrderSimpleApiController {
 
 
 
-## 엔티티를 DTO로 변환하는 버전
+# 3.엔티티를 DTO로 변환하는 버전
 
 * 엔티티를 DTO로 변환하는 일반적인 방법이다.
 * 쿼리가 총 1 + N + N번 실행된다.
@@ -83,7 +84,7 @@ public class OrderSimpleApiController {
 
 
 
-## 엔티티를 DTO로 변환 + 페치 조인 최적화 버전
+# 4.엔티티를 DTO로 변환 + 페치 조인 최적화 버전
 
 * 엔티티를 페치 조인(fetch join)을 사용해서 쿼리 1번에 조회
   * `order` -> `member` 프록시 객체가 아닌 실제 객체이므로 지연로딩하지 않는다.
@@ -133,7 +134,7 @@ public class OrderSimpleApiController {
 
 
 
-## JPA에서 DTO 직접 조회
+# 5.JPA에서 DTO 직접 조회
 
 * 일반적인 SQL을 사용할 때 처럼 원하는 값을 선택해서 조회
 * `new` 명령어를 사용해서 JPQL의 결과를 DTO로 즉시 변환
@@ -172,14 +173,13 @@ public class OrderSimpleQueryDto {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.address = address;
-
     }
 }
 ```
 
 
 
-## 쿼리 방식 선택 권장 순서
+# 6.쿼리 방식 선택 권장 순서
 
 1. 우선 엔티티를 DTO로 변환하는 방법을 선택한다.
 2. 필요하면 페치 조인으로 성능을 최적화 한다. 대부분의 성능 이슈가 해결된다.
@@ -188,6 +188,6 @@ public class OrderSimpleQueryDto {
 
 
 
-참조
+**참조**
 
 * https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-API%EA%B0%9C%EB%B0%9C-%EC%84%B1%EB%8A%A5%EC%B5%9C%EC%A0%81%ED%99%94/dashboard
