@@ -1,18 +1,18 @@
-# 엔티티 매핑
+# 1.엔티티 매핑
 
 > JPA를 사용할 때 가장 중요한 일은 엔티티와 테이블을 매핑하는 것이다. JPA는 다양한 매핑 어노테이션을 지원하고 객체와 테이블 매핑, 기본 키 매핑, 필드와 컬럼 매핑, 연관관계 매핑 크게 4가지로 분류한 수 있다.  각각 분류마다 대표하는 어노테이션을 알아보자.
 
 
 
-## 객체와 테이블 매핑
+# 2.객체와 테이블 매핑
 
 
 
-### @Entity
+## 2.1 @Entity
 
 * JPA를 사용해서 테이블과 매핑할 클래스에 해당 어노테이션을 붙이며 이 클래스를 엔티티라고 부른다.
 * 주의사항
-  * 기본 생성자 필수
+  * **기본 생성자 필수**(public 또는 protected)
   * final클래스, enum, interface, inner에는 사용할 수 없다.
   * 저장할 필드에 final을 사용하면 안 된다.
 
@@ -24,7 +24,7 @@
 
 
 
-### @Table
+## 2.2 @Table
 
 * 엔티티와 매핑할 테이블을 지정한다. 생략하면 엔티티 이름을 테이블 이름으로 사용한다.
 
@@ -37,19 +37,22 @@
 
 
 
-## 기본 키 매핑
+# 3. 기본 키 매핑
 
 * 기본키 매핑 방법은 두가지 방법이 있다. ID를 직접 할당하는 직접 할당 방법과 ID를 자동으로 할당하는 자동 생성 방법이 있다.
   * 직접 할당: @Id만 사용
   * 자동 생성: @Id와 @GeneratedValue를 사용
 
-###  @Id
-
-* 엔티티 클래스의 필드를 테이블의 기본 키에 매핑하며 이 필드를 식별자 필드라고 한다.
 
 
+##  3.1 @Id
 
-### @GeneratedValue
+* 엔티티 클래스의 필드를 테이블의 기본 키에 매핑한다
+* 이 필드를 **식별자 필드**라고 한다.
+
+
+
+## 3.2 @GeneratedValue
 
 * 기본 키를 직접 할당하는 대신에 데이터베이스가 생성해주는 값을 사용한다.
 * 데이터베이스 벤더가 지원하는 방식에 맞게 사용한다.
@@ -66,9 +69,9 @@
 **예시**
 
 ```java
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
 ```
 
 
@@ -83,21 +86,37 @@
 - IDENTITY 전략은 em.persist() 시점에 즉시 INSERT SQL 실행 하고 DB에서 식별자를 조회한다.
   - 따라서 이 전략은 트랙잭션을 지원하는 쓰기 지연이 동작하지 않는다.
 
+
+
 **SEQUENCE 전략**
 
 * 데이터베이스 시퀀스는 유일한 값을 순서대로 생성하는 특별한 데이터베이스 오브젝트다.
 * 오라클, PostgreSQL, DB2, H2 데이터베이스에서 사용한다.
 
+```java
+@Entity
+@SequenceGenerator(
+ name = "MEMBER_SEQ_GENERATOR",
+ sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+ initialValue = 1, allocationSize = 1)
+public class Member { 
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GENERATOR")
+    private Long id; 
+}
+```
+
+
+
 **TABLE 전략**
 
 * 키 생성 전용 테이블을 하나 만들어서 데이터베이스 시퀀스를 흉내 내는 전략이다.
 * 모든 데이터베이스에 적용 가능하다는 장점이 있으나 성능이 좋지 못하다는 단점이 있디.
+* TABLE 전략은 잘 사용하지 않는다.
 
+# 4.필드와 컬럼 매핑
 
-
-## 필드와 컬럼 매핑
-
-### @Column
+## 4.1 @Column
 
 * 엔티티의 필드를 테이블의 컬럼에 매핑한다.
 
@@ -109,7 +128,8 @@
 | unique(DDL)            | @Table의 uniqueConstraints와 같지만 한 컬럼에 간단히 유니크 제 약조건을 걸 때 사용한다. |                                                          |
 
 
-### @Enumerated
+
+## 4.2 @Enumerated
 
 * 자바 enum 타입을 매핑할 때 사용
 * EnumType.STRING을 사용하는 것을 권장한다.
@@ -121,15 +141,19 @@
 
 
 
-### @Temporal
+## 4.3 @Temporal
 
 * 날짜 타입(java.util.Date, java.util.Calendar)을 매핑할 때 사용
-
 * LocalDate, LocalDateTime을 사용할 때는 생략 가능(최신 하이버네이트 지원)
 
-  
 
-### @Lob
+| 속성  | 설명                                                         | 기본값 |
+| ----- | ------------------------------------------------------------ | ------ |
+| value | TemporalType.DATE: 날짜, 데이터베이스 date 타입과 매핑 <br />(예: 2013–10–11)  <br />TemporalType.TIME: 시간, 데이터베이스 time 타입과 매핑 <br />(예: 11:11:11)  <br />TemporalType.TIMESTAMP: 날짜와 시간, 데이터베이 스 timestamp 타입과 매핑<br />(예: 2013–10–11 11:11:11) |        |
+
+
+
+## 4.4 @Lob
 
 * 데이터베이스 BLOB, CLOB 타입과 매핑
 * @Lob에는 지정할 수 있는 속성이 없다.
@@ -139,14 +163,14 @@
 
 
 
-### @Transient
+## 4.5 @Transient
 
 * 필드 매핑을 하지 않는다.
 * 주로 메모리상에서만 임시로 어떤 값을 보관하고 싶을 때 사용
 
 
 
-## 데이터베이스 스키마 자동 생성
+# 5. 데이터베이스 스키마 자동 생성
 
 > JPA는 클래스의 매핑 정보를 가지고 데이터베이스 방언을 사용해서 데이터베이스 스키마를 자동적으로 생성하는 기능을 제공한다. 이 기능을 사용하면 애플리케이션 실행 시점에 데이터베이스 테이블이 자동 생성되므로 개발자의 수고를 덜 수 있다. 하지만 자동 생성된 DDL이 운영 환경에서 사용할 만큼 완벽하지 않기 때문에 개발 용도나 참고용으로 사용하는 것이 좋다.
 
