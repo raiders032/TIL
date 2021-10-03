@@ -6,7 +6,6 @@
 
 ## 목록
 
-*  [kuberetes란?](Kubernetes/Kuberetes.md)
 *  [쿠버네티스의 구성요소](Kubernetes-Components/Kubernetes-Components.md)
 
 
