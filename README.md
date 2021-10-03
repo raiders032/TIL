@@ -7,13 +7,13 @@
 # Spring
 
 *  [Spring](Spring/README.md)
-*  [JPA](Spring\JPA\README.md) 
+*  [JPA](Spring/JPA/README.md)
 
 
 
 # Container
 
-*  [Docker](Docker\README.md) 
+*  [Docker](Docker/README.md)
 *  [Kubernetes](Kubernetes/README.md)
 
 
