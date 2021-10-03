@@ -1,6 +1,6 @@
 # JPA
 
-* [JPA란?](JPA?/JPA?.md)
+* [JPA란?](JPA/JPA.md)
 
 
 
