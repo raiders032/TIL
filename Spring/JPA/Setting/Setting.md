@@ -16,22 +16,28 @@ spring:
         format_sql: true
 logging.level:
   org.hibernate.SQL: debug
-
+  org.hibernate.type: trace
 ```
 
 `spring.jpa.hibernate.ddl-auto`
 
-* create: 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
+* `create`: 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
 
 `spring.jpa.properties.show_sql`
 
 * true: System.out 에 하이버네이트 실행 SQL을 남긴다
 
+`spring.jpa.properties.format_sql`
+
+* SQL을 보기 좋게 포맷팅 해준다
+
 `logging.level.org.hibernate.SQL`
 
 * logger를 통해 하이버네이트 실행 SQL을 남긴다
 
+  `logging.level.org.hibernate.type`
 
+* trace: 바인딩된 파라미터를 보여준다 
 
 # 쿼리 파라미터 로그 남기기
 
