@@ -308,6 +308,7 @@ docker network create [OPTIONS] NETWORK
 ```bash
 # bridge 드라이버 네트워크 생성
 docker network create --driver bridge network-name
+
 #
 docker network create --driver bridge \
 --subnet 172.72.0.0/16 \
