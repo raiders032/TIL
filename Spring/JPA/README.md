@@ -6,7 +6,7 @@
 
 ## 환경 설정
 
-* [환경설정](환경설정/환경설정.md)
+* [환경설정](Setting/Setting.md)
 
 
 
@@ -23,7 +23,7 @@
 * [OSIV](OSIV/OSIV.md)
 * [Spring Data JPA](Spring-Data-JPA/Spring-Data-JPA.md)
   * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 사용자 정의 리포지토리, 네이티브 쿼리
-* [Querydsl](Querydsl/Querydsl.md) 
+* [Querydsl](Querydsl/Querydsl.md)
 
 
 
