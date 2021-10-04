@@ -1,10 +1,10 @@
-# Auditing
+# 1 Auditing
 
-엔티티를 생성, 변경할 때 변경한 사람과 시간을 추적하고 싶을 때 JPA의 Auditing 기능을 사용한다.
+* 엔티티를 생성, 변경할 때 변경한 사람과 시간을 추적하고 싶을 때 JPA의 Auditing 기능을 사용한다.
 
 
 
-## 순수 JPA 사용
+# 2 순수 JPA 사용 
 
 * 먼저 순수 JPA를 사용해서 엔티티 생성과 변경 시간을 기록해보자.
 * JPA 주요 이벤트 어노테이션에는 `@PrePersist`, `@PostPersist`, `@PreUpdate`, `@PostUpdate`이 있다
@@ -36,14 +36,14 @@ public class JpaBaseEntity {
 * 시간 추적이 필요한 클래스에서 위에 클래스를 상속 받아서 사용한다.
 
 ```java
-   public class Member extends JpaBaseEntity {
-   	...
-   }
+public class Member extends JpaBaseEntity {
+  ...
+}
 ```
 
 
 
-## 스프링 데이터 JPA의 Auditing 기능 사용
+# 3 스프링 데이터 JPA의 Auditing 기능 사용
 
 * 스프링 부트 설정 클래스에 `@EnableJpaAuditing` 을 적용한다.
 * `@EntityListeners(AuditingEntityListener.class)` 를 엔티티에 적용한다.
