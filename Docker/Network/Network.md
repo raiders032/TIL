@@ -1,4 +1,4 @@
-# 1.도커 네트워크
+# 1 도커 네트워크
 
 * 컨테이너는 가상 IP주소를 할당받는다.
 * 기본적으로 도커 컨테이너는 172.17.0.x 의 IP 주소를 순차적으로 할당 받는다.
@@ -88,18 +88,21 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-# 3. 도커 네트워크 종류
+# 3. Docker Networking Drivers
 
 * 컨테이너를 생성하면 기본적으로 `docker0` 브리지를 통해 외부와 통신할 수 있는 환경이 제공된다
 * 사용자의 선택에 따라 다른 네트워크 드라이브를 사용할 수 있다
-  * 브리지, 호스트, 논, 컨테이너, 오버레이
-  *  weave, flannel, openvswitch
+  * Bridge, Host, Overlay, Macvlan, None
+  * weave, flannel, openvswitch
 
 
 
-## 3.1 브리지
+## 3.1 Bridge
 
-* 아무런 설정을 하지않고 컨테이너를 생성하면 자동으로 `docker0`를 사용한다. 
+* 가장 흔히 쓰이는 드라이버이다.
+* 아무런 설정을 하지않고 컨테이너를 생성하면 자동으로 `docker0`를 사용한다.
+* 같은 호스트에서 실행되는 컨테이너의 네트워킹에 사용된다.
+  * 도커 스웜을 사용하여 여러 호스트에서 컨테이너를 실행하는 것이 아니라면 보통 Bridge 드라이버를 사용할 것이다
 
 
 
@@ -133,11 +136,13 @@ lo        Link encap:Local Loopback
 
 
 
-## 3.2  호스트 네트워크
+## 3.2 Host
 
 * 네트워크를 호스트로 설정하면 호스트의 네트워크 환경을 그대로 쓸 수 있다
 * 호스트 드라이버 네트워크는 별도 생성없이 기존의 `host`라는 이름의 네트워크를 사용한다
 * 드라이버로 `host`를 선택하면 별도의 포트 포워딩 없이 외부에서 접근할 수 있다
+* 여러개의 컨테이너를 실행하는 환경에서는 적합하지 않다.
+  * 포트 충돌이 발생할 수 있다
 
 ```bash
 # 호스트와 컨테이너 내부에서 ifconfig 결과가 같다
@@ -175,7 +180,11 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-## 3.3 논 네트워크
+## 3.3 Overlay
+
+## 3.4 Macvlan
+
+## 3.5 None
 
 * 아무런 네트워크를 사용하지 않는 것을 뜻한다
 
@@ -194,11 +203,27 @@ lo        Link encap:Local Loopback
 
 
 
-## 3.4 컨테이너 네트워크
+# 4 Default Bridge Network
+
+* 도커를 설치하면 항상 Default Bridge Network가 생성된다.
+* 네트워크 설정없이 컨테이너를 실행하면 Default Bridge Network를 사용한다.
+  * 이는 기본적으로 여러 컨테이너가 통신을 할 수 있음을 의미한다.
 
 
 
-# 4. 요청의 종류
+**사용자 정의 Bridge와 차이점**
+
+* Default Bridge Network는 컨테이너 끼리 IP주소로만 통신할 수 있다.
+* 사용자 정의 Bridge는 컨테이너의 이름 또는 IP 주소로 통신할 수 있다.
+* 컨테이너를 재시작하면 IP 주소가 변한다. 따라서 Default Bridge Network를 사용하면 변한 IP 주소로 설정을 다시 해야한다.
+  * 이런 경우 사용자 정의 Bridge를 사용해서 변하지 않는 컨테이너 이름으로 통신하는 편이 좋다. 
+* Default Bridge Network를 사용하는 컨테이너는 중지후 다른 네트워크로 설정할 수 있다.
+  * 사용자 정의 Bridge를 사용하는 컨테이너를 재시작 없이 네트워크를 변경할 수 있다.
+* **프로덕션에서는 Default Bridge Network 대신 항상 사용자 정의 Bridge를 사용하는 편이 좋다.**
+
+
+
+# 5 요청의 종류
 
 1. 컨테이너에서 WWW로
    * 특별한 설정 없이 가능
