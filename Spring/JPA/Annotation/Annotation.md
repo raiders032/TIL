@@ -35,6 +35,7 @@ public class MemberRepository {
 ## @Transactional
 
 * `org.springframework.transaction.annotation.Transactional`
+* JPA의 모든 변경은 트랜잭션 안에서 동작
 * 트랜잭션, 영속성 컨텍스트
   * 데이터의 변경은 트랜잭션 안에서 이뤄져야 한다
 * `@Transactional(readOnly = true)`
