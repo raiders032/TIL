@@ -105,3 +105,33 @@ public class MemberServiceTest {
 }
 ```
 
+
+
+## @PrePersist
+
+* 이벤트 어노테이션
+* 엔티티를 영속화하기 전에 호출된다.
+
+```java
+@PrePersist
+public void prePersist() {
+  LocalDateTime now = LocalDateTime.now();
+  createdDate = now;
+  updatedDate = now;
+}
+```
+
+
+
+## @PreUpdate
+
+* 이벤트 어노테이션
+* 엔티티를 업데이트하기 전에 호출된다. 
+
+```java
+@PreUpdate
+public void preUpdate() {
+  updatedDate = LocalDateTime.now();
+}
+```
+
