@@ -307,6 +307,47 @@ Page<MemberDto> dtoPage = page.map(m -> new MemberDto(m));
 
 
 
+## 4.2 Web 확장 - 페이징과 정렬
+
+* 스프링 데이터가 제공하는 페이징과 정렬 기능을 스프링 MVC에서 편리하게 사용할 수 있다.
+* 파라미터로 Pageable 을 받을 수 있다.
+* Pageable 은 인터페이스, 실제는 org.springframework.data.domain.PageRequest 객체 생성된다.
+* 요청예시 : `/members?page=0&size=3&sort=id,desc&sort=username,desc`
+  * page: 현재 페이지, 0부터 시작한다
+  * size: 한 페이지에 노출할 데이터 건수
+  * sort: 정렬 조건을 정의한다. 
+    * 예) 정렬 속성,정렬 속성...(ASC | DESC)
+    * 정렬 방향을 변경하고 싶으면 sort파라미터 추가 ( asc 생략 가능)
+
+
+
+```java
+@GetMapping("/members")
+public Page<Member> list(Pageable pageable) {
+    Page<Member> page = memberRepository.findAll(pageable);
+    return page;
+}
+```
+
+**글로벌 설정하기**
+
+```properties
+spring.data.web.pageable.default-page-size=20 # 기본 페이지 사이즈/
+spring.data.web.pageable.max-page-size=2000 # 최대 페이지 사이즈
+```
+
+**개별 설정하기**
+
+```java
+@RequestMapping(value = "/members_page", method = RequestMethod.GET)
+public String list(@PageableDefault(size = 12, sort = "username",
+                                    direction = Sort.Direction.DESC) Pageable pageable) {
+  ... 
+}
+```
+
+
+
 # 5 벌크성 수정 쿼리
 
 * 벌크성 수정, 삭제 쿼리는 @Modifying 어노테이션을 사용해야한다.
@@ -471,6 +512,19 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 List<Member> result = memberRepository.findMemberCustom();
 ```
 
-
-
 > 항상 사용자 정의 리포지토리가 필요한 것은 아니다. 그냥 임의의 리포지토리를 만들어도 된다. 예를들어 MemberQueryRepository를 인터페이스가 아닌 클래스로 만들고 스프링 빈으로 등록해서 그냥 직접 사용해도 된다. 물론 이 경우 스프링 데이터 JPA와는 아무런 관계 없이 별도로 동작한다.
+
+
+
+# 9 네이티브 쿼리
+
+* 가급적 네이티브 쿼리는 사용하지 않는게 좋음, 정말 어쩔 수 없을 때 사용하자
+* 페이징 지원
+* 반환 타입
+  * Object[]
+  * Tuple
+  * DTO(스프링 데이터 인터페이스 Projections 지원)
+* 제약
+  * Sort 파라미터를 통한 정렬이 정상 동작하지 않을 수 있음(믿지 말고 직접 처리) 
+  * JPQL처럼 애플리케이션 로딩 시점에 문법 확인 불가
+  * 동적 쿼리 불가
