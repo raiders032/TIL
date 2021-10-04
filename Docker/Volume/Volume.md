@@ -44,8 +44,6 @@
 
 ## 2.2 Named Volume
 
-* `docker run -v data:/app/data`
-* `Dokcerfile`에서 사용 불가
 * 한 컨테이너의 종속적이지 않다.
   * 컨테이너를 삭제해도 볼륨은 삭제되자 않는다.
   * 컨테이너간 공유 가능
@@ -56,12 +54,17 @@
 
   * 수정이 필요없는 데이터를 영속화 할 때 사용
 
+**Named Volume 사용하기**
 
+* docker run -v data:/app/data
+* `Dokcerfile`에서 사용 불가
 
 # 3 Bind Mounts
 
-* `docker run -v /path/to/code:/app/data`
-* `Dokcerfile`에서 사용 불가
+* Docker Volume과 마찬가지로 호스트 파일 시스템을 이용한다.
+  * Bind Mount는 호스트 파일 시스템에 위치한 디렉토리이다.
+  * Docker Volume과는 다르게 호스트 파일 시스템에 어디든 위치할 수 있다.
+  * 디릭토리가 호스트 파일에 위치하기 때문에 권한 문제가 발생할 수 있다.
 * 한 컨테이너의 종속적이지 않다.
   * 컨테이너를 삭제해도 볼륨은 삭제되지 않는다.
   * 컨테이너간 공유 가능
@@ -76,6 +79,13 @@
     * 대신 `dockerfile`에서 `COPY` 인스트럭션을 사용한다.
 * 호스트에 디렉토리가 존재하지 않는 경우 컨테이너의 파일이 호스트로 복사된다.
 * 호스트에 디렉토리가 이미 존재하는 경우 컨테이너의 파일을 호스트의 파일로 덮어씌운다.
+
+
+
+**Bind Mounts 사용하기**
+
+* `docker run -v /path/to/code:/app/data`
+* `Dokcerfile`에서 사용 불가
 
 
 
