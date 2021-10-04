@@ -21,7 +21,8 @@
 * [지연 로딩과 조회 성능 최적화](Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)
 * [컬렉션 조회 최적화](Optimized-Collection-Inquiry/Optimized-Collection-Inquiry.md)
 * [OSIV](OSIV/OSIV.md)
-* [Spring Data JPA](Spring-Data-JPA/SpringDataJPA.md)
+* [Spring Data JPA](Spring-Data-JPA/Spring-Data-JPA.md)
+  * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 사용자 정의 리포지토리
 
 
 
@@ -29,4 +30,11 @@
 
 *  [JPA Auditing](JPA-Auditing/JPA-Auditing.md)
 * [Annotation](Annotation/Annotation.md)
-* [Test](Test/Test.md) 
+* [Test](Test/Test.md)
+
+
+
+참고
+
+* [자바 ORM 표준 JPA 프로그래밍](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788960777330)
+
