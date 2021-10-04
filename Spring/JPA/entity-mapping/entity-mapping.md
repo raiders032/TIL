@@ -52,7 +52,51 @@
 
 
 
-## 3.2 @GeneratedValue
+## 3.2 기본키 직접 할당하는 방식
+
+* @Id만 사용하고 @GeneratedValue 사용하지 않고 기본키를 직접 할당하는 방식
+* JPA 식별자 생성 전략이 @GenerateValue 면 save() 호출 시점에 식별자가 없으므로 새로운 엔티티로 인식해서 정상 동작한다
+* JPA 식별자 생성 전략이 @Id 만 사용해서 직접 할당이면 이미 식별자 값이 있는 상태로 save() 를 호출한다. 
+  * 따라서 이 경우 merge() 가 호출된다.
+  * merge() 는 우선 DB를 호출해서 값을 확인하고, DB에 값이 없으면 새로운 엔티티로 인지하므로 매우 비효율적이다
+* 따라서 `Persistable`를 구현해서 새로운 엔티티 확인 여부를 직접 구현하는 것이 효과적이다.
+* 등록시간( `@CreatedDate` )을 조합해서 사용하면 이 필드로 새로운 엔티티 여부를 편리하게 확인할 수 있다
+
+**기본키 직접 할당 방식 예시**
+
+* `@Id`만 사용했다
+* Persistable을 구현해 새로운 엔티티 확인 여부를 직접 구현했다.
+* 등록시간( `@CreatedDate` )을 사용해서 새로운 엔티티 여부를 편리하게 확인할 수 있다.
+
+```java
+@Entity  
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Item implements Persistable<String> {
+  @Id
+  private String id;
+      
+  @CreatedDate
+  private LocalDateTime createdDate;
+  public Item(String id) {
+    this.id = id;
+  }
+      
+  @Override
+  public String getId() {
+		return id; 
+  }
+  
+  @Override
+  public boolean isNew() {
+    return createdDate == null;
+  }
+}
+```
+
+
+
+## 3.3 @GeneratedValue
 
 * 기본 키를 직접 할당하는 대신에 데이터베이스가 생성해주는 값을 사용한다.
 * 데이터베이스 벤더가 지원하는 방식에 맞게 사용한다.
