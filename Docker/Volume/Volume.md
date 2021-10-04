@@ -1,13 +1,4 @@
-# 1. 도커 볼륨
-
-* 쉽게 말하면 로컬 머신의 폴더이다. 볼륨은 이미지와 컨테이너 안에 있는 것이 아니고 호스트 머신에 존재한다.
-* 볼륨은 호스트 머신에 존재하고 이를 컨테이너가 사용하거나 매핑시킨 것이다. 
-* 한 곳의 변화는 다른 한 곳에 반영된다.
-* 즉, 로컬 머신에 파일을. 추가하면 컨테이너 안에서 그 폴더를 접근할 수 있다
-* 컨테이너 안에서 폴더를 추가하면 로컬 머신에서도 접근이 가능하다.
-* 도커 볼륨의 종류로는 `Anonymous  Volume`, `Named Volume`, `Bind Mounts`가 있다.
-
-
+# 1 Persistent Data
 
 **이미지 레이어와 컨테이너 레이어**
 
@@ -19,9 +10,23 @@
 * 컨테이너 레이어는 로컬 호스트의 파일 시스템에 존재하는 디렉토리이다.
 * 컨테이너 레이어는 컨테이너가 제거될 때 까지 호스트 파일 시스템에 존재한다.
 * 컨테이너가 삭제되면 모든 변경 사항이 사라진다.(Containers are **ephemeral**)
-* 이를 방지하기 위해 **볼륨**을 사용해서 **데이터를 영속화**할 수 있다.
+* 이를 방지하기 위해 `Docker Volume`, `Docker Bind Mount`을 사용해서 **데이터를 영속화**할 수 있다.
 
-# 2. Anonymous  Volume
+# 2 Docker Volume
+
+* 쉽게 말하면 로컬 머신의 폴더이다. 볼륨은 이미지와 컨테이너 안에 있는 것이 아니고 호스트 머신에 존재한다.
+  * 볼륨을 만들면 새로운 디렉토리가 호스트 파일 시스템에 생긴다.
+  * `/var/lib/docker/volumes/<volume ID>/.` 위치에 만들어짐
+  * 이 볼륨 디렉토리에는 `_data`라는 디렉토리가 존재하고 이 안에 실제 데이터가 저장된다.
+* 볼륨은 호스트 머신에 존재하고 이를 컨테이너가 사용하거나 매핑시킨 것이다. 
+* 한 곳의 변화는 다른 한 곳에 반영된다.
+* 즉, 로컬 머신에 파일을. 추가하면 컨테이너 안에서 그 폴더를 접근할 수 있다
+* 컨테이너 안에서 폴더를 추가하면 로컬 머신에서도 접근이 가능하다.
+* 도커 볼륨의 종류로는 `Anonymous  Volume`, `Named Volume`이 있다.
+
+
+
+## 2.1  Anonymous  Volume
 
 * `docker run -v /app/data`
 * `Dockerfile`에서 사용 가능
@@ -37,7 +42,7 @@
 
 
 
-# 3. Named Volume
+## 2.2 Named Volume
 
 * `docker run -v data:/app/data`
 * `Dokcerfile`에서 사용 불가
@@ -53,7 +58,7 @@
 
 
 
-# 4. Bind Mounts
+# 3 Bind Mounts
 
 * `docker run -v /path/to/code:/app/data`
 * `Dokcerfile`에서 사용 불가
@@ -74,7 +79,7 @@
 
 
 
-# 5. 볼륨 컨테이너
+# 4 Volume Container
 
 <img src="./images/volumes.png" alt="image-20201117215748040">
 
