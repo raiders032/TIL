@@ -444,8 +444,6 @@ public void queryHint() throws Exception {
 }
 ```
 
-
-
 **Lock**
 
 ```java
@@ -455,68 +453,7 @@ List<Member> findByUsername(String name);
 
 
 
-# 8 사용자 정의 리포지토리 구현
-
-* 스프링 데이터 JPA 리포지토리는 인터페이스만 정의하고 구현체는 스프링이 자동 생성
-* 스프링 데이터 JPA가 제공하는 인터페이스를 직접 구현하면 구현해야 하는 기능이 너무 많음
-* 인터페이스의 메서드를 직접 구현하고 싶다면 사용자 정의 리포지토리를 구현한다
-* 실무에서는 주로 QueryDSL이나 SpringJdbcTemplate을 함께 사용할 때 사용자 정의 리포지토리 기능 자주 사용
-
-
-
-**사용자 정의 인터페이스**
-
-* 직접 구현할 메소드 정의
-
-```java
-public interface MemberRepositoryCustom {
-      List<Member> findMemberCustom();
-}
-```
-
-
-
-**사용자 정의 인터페이스 구현 클래스**
-
-* 구현 클래스의 이름 = `리포지토리 인터페이스 이름` + `Impl` 또는 `사용자 정의 인터페이스 이름 + Impl`
-  * `MemberRepositoryImpl` 또는 `MemberRepositoryCustomImpl`
-* 사용자 정의 인터페이스를 구현한다.
-
-```java
-@RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepositoryCustom {
-      private final EntityManager em;
-      
-    	@Override
-      public List<Member> findMemberCustom() {
-          return em.createQuery("select m from Member m")
-                  .getResultList();
-			} 
-}
-```
-
-
-
-**사용자 정의 인터페이스 상속**
-
-```java
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
-}
-```
-
-
-
-**실제 사용**
-
-```java
-List<Member> result = memberRepository.findMemberCustom();
-```
-
-> 항상 사용자 정의 리포지토리가 필요한 것은 아니다. 그냥 임의의 리포지토리를 만들어도 된다. 예를들어 MemberQueryRepository를 인터페이스가 아닌 클래스로 만들고 스프링 빈으로 등록해서 그냥 직접 사용해도 된다. 물론 이 경우 스프링 데이터 JPA와는 아무런 관계 없이 별도로 동작한다.
-
-
-
-# 9 네이티브 쿼리
+# 8 네이티브 쿼리
 
 * 가급적 네이티브 쿼리는 사용하지 않는게 좋음, 정말 어쩔 수 없을 때 사용하자
 * 페이징 지원
