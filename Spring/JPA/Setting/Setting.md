@@ -1,4 +1,4 @@
-# 기본 설정
+# 1 기본 설정
 
 ```yml
 spring:
@@ -39,7 +39,11 @@ logging.level:
 
 * trace: 바인딩된 파라미터를 보여준다 
 
-# 쿼리 파라미터 로그 남기기
+`spring.jpa.properties.hibernate.use_sql_comments`
+
+* true: 실행되는 JPQL을 볼 수 있다.
+
+# 2 쿼리 파라미터 로그 남기기
 
 **의존성 추가**
 
@@ -53,7 +57,7 @@ implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 
 
 
-# IntelliJ Gradle 대신에 자바로 바로 실행하기
+# 3 IntelliJ Gradle 대신에 자바로 바로 실행하기
 
 * 최근 IntelliJ 버전은 Gradle로 실행을 하는 것이 기본 설정이다. 
 * 이렇게 하면 실행속도가 느리다. 다음과 같이 변경하면 자바로 바로 실행하므로 좀 더 빨라진다.
@@ -64,13 +68,13 @@ implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 
 
 
-# 롬복 적용
+# 4 롬복 적용
 
 1. Preferences plugin lombok 검색 실행 (재시작)
 2. Preferences Annotation Processors 검색 Enable annotation processing 체크 (재시작)
 3. 임의의 테스트 클래스를 만들고 @Getter, @Setter 확인
 
-# Querydsl 설정
+# 5 Querydsl 설정
 
 **build.gradle**
 
@@ -102,3 +106,35 @@ compileQuerydsl {
   options.annotationProcessorPath = configurations.querydsl
 }
 ```
+
+**JPAQueryFactory 스프링 빈 등록**
+
+```java
+@Bean
+JPAQueryFactory jpaQueryFactory(EntityManager em) {
+  return new JPAQueryFactory(em);
+}
+```
+
+**JPAQueryFactory 사용하기**
+
+```java
+@Repository
+public class MemberJpaRepository {
+  private final JPAQueryFactory queryFactory;
+
+  public List<Member> findAll_Querydsl() {
+    return queryFactory
+      .selectFrom(member).fetch();
+  }
+  
+  public List<Member> findByUsername_Querydsl(String username) {
+    return queryFactory
+      .selectFrom(member)
+      .where(member.username.eq(username))
+      .fetch();
+  }
+}
+```
+
+> 동시성 문제는 걱정하지 않아도 된다. 왜냐하면 여기서 스프링이 주입해주는 엔티티 매니저는 실제 동작 시점에 진짜 엔티티 매니저를 찾아주는 프록시용 가짜 엔티티 매니저이다. 이 가짜 엔티티 매니저는 실제 사용 시점에 트랜잭션 단위로 실제 엔티티 매니저(영속성 컨텍스트)를 할당해준다.
