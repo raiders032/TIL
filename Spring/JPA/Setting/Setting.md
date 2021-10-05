@@ -50,3 +50,55 @@ implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 [라이브러리](https://github.com/gavlyukovskiy/spring-boot-data-source-decorator)
 
 > 쿼리 파라미터를 로그로 남기는 외부 라이브러리는 시스템 자원을 사용하므로, 개발 단계에서는 편하 게 사용해도 된다. 하지만 운영시스템에 적용하려면 꼭 성능테스트를 하고 사용하는 것이 좋다.
+
+
+
+# IntelliJ Gradle 대신에 자바로 바로 실행하기
+
+* 최근 IntelliJ 버전은 Gradle로 실행을 하는 것이 기본 설정이다. 
+* 이렇게 하면 실행속도가 느리다. 다음과 같이 변경하면 자바로 바로 실행하므로 좀 더 빨라진다.
+
+1. Preferences Build,Execution,Deployment BuildTools Gradle
+2. Build and run using: Gradle IntelliJ IDEA
+3. Run tests using: Gradle IntelliJ IDEA
+
+
+
+# 롬복 적용
+
+1. Preferences plugin lombok 검색 실행 (재시작)
+2. Preferences Annotation Processors 검색 Enable annotation processing 체크 (재시작)
+3. 임의의 테스트 클래스를 만들고 @Getter, @Setter 확인
+
+# Querydsl 설정
+
+**build.gradle**
+
+```groovy
+plugins {
+  id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+dependencies {
+	implementation 'com.querydsl:querydsl-jpa'
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+  jpa = true
+  querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+  options.annotationProcessorPath = configurations.querydsl
+}
+```
