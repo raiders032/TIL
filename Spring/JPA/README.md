@@ -22,8 +22,8 @@
 * [컬렉션 조회 최적화](Optimized-Collection-Inquiry/Optimized-Collection-Inquiry.md)
 * [OSIV](OSIV/OSIV.md)
 * [Spring Data JPA](Spring-Data-JPA/Spring-Data-JPA.md)
-  * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 사용자 정의 리포지토리, 네이티브 쿼리
-* [Querydsl](Querydsl/Querydsl.md)
+  * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 네이티브 쿼리
+* [Querydsl](Querydsl/README.md)
 
 
 
@@ -32,6 +32,7 @@
 *  [JPA Auditing](JPA-Auditing/JPA-Auditing.md)
 * [Annotation](Annotation/Annotation.md)
 * [Test](Test/Test.md)
+* [사용자 정의 리포지토리](Custom-Repository/Custom-Repository.md) 
 
 
 
