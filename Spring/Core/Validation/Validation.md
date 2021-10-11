@@ -12,12 +12,14 @@
 
 **Validation 어디에서 해야되나?**
 
->  클라이언트 검증, 서버 검증 클라이언트 검증은 조작할 수 있으므로 보안에 취약하다. 서버만으로 검증하면, 즉각적인 고객 사용성이 부족해진다. 둘을 적절히 섞어서 사용하되, **최종적으로 서버 검증은 필수** API 방식을 사용하면 API 스펙을 잘 정의해서 검증 오류를 API 응답 결과에 잘 남겨주어야 한다
+>   클라이언트 검증은 조작할 수 있으므로 보안에 취약하다. 서버만으로 검증하면, 즉각적인 고객 사용성이 부족해진다. 둘을 적절히 섞어서 사용하되, **최종적으로 서버 검증은 필수** API 방식을 사용하면 API 스펙을 잘 정의해서 검증 오류를 API 응답 결과에 잘 남겨주어야 한다.
+
+
 
 # 2 [Validator Interface](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validator)
 
-* 스프링에는 개체를 검증하는 데 사용할 수 있는 인터페이스다
-* `Validator Interface`는 `Errors ` 개체를 사용하여 작동하므로 `Validator` 는 검증 실패를 `Errors`개체에 등록한다.
+* 스프링이 제공하는 객체를 검증하는 데 사용할 수 있는 인터페이스다.
+* `Validator Interface`는 `Errors ` 객체를 사용하여 작동하므로 `Validator` 는 검증 실패를 `Errors` 객체에 등록한다.
 
 
 
@@ -73,13 +75,28 @@ public class PersonValidator implements Validator {
 
 
 
+
+
+# 3 Resolving Codes to Error Messages
+
+* 검증 오류에 해당하는 메시지 출력하기
+* `MessageSource` 에 오류 코드를 정의하고 그에 해당하는 오류 메시지를 출력할 수 있다.
+*  `e.rejectValue("age", "too.darn.old");`
+  * MessageCodesResolver에 의해서 `too.darn.old code` 뿐만 아니라 `too.darn.old.age`,  `too.darn.old.age.int`도 코드로 등록된다.
+
+
+
 # 3 Bean Validation
 
 > 먼저 Bean Validation은 특정한 구현체가 아니라 Bean Validation 2.0(JSR-380)이라는 기술 표준이다. 쉽게 이야기해서 검증 애노테이션과 여러 인터페이스의 모음이다. 마치 JPA가 표준 기술이고 그 구현체로 하이버네이트가 있는 것과 같다. Bean Validation을 구현한 기술중에 일반적으로 사용하는 구현체는 하이버네이트 Validator이다. 이름이 하이버네이트가 붙어서 그렇지 ORM과는 관련이 없다.
 
+* Bean Validation은 Java 애플리케이션에 대한 제약 조건 선언 및 메타데이터를 통해 일반적인 검증 방법을 제공합니다. 
+* 도메인 모델에 애노테이션을 적용하면 런타임에 검증이 적용됩니다.
+* 기본으로 제공되는 애노테이션이 있으며 사용자 지정 제약 조건을 정의할 수도 있다
 
 
-## 3.1디펜던시 추가
+
+## 3.1 디펜던시 추가
 
 * Bean Validation을 사용하려면 다음 의존관계를 추가해야 한다.
 
@@ -87,7 +104,7 @@ public class PersonValidator implements Validator {
 implementation 'org.springframework.boot:spring-boot-starter-validation'
 ```
 
-`jakarta.validation-api` : Bean Validation 인터페이스 
+`jakarta.validation-api` : Bean Validation 인터페이스
 
 `hibernate-validator` : 구현체
 
@@ -103,12 +120,15 @@ import javax.validation.constraints.NotNull;
 @Data
 public class Item {
     private Long id;
-    @NotBlank
+    
+  	@NotBlank
     private String itemName;
-    @NotNull
+    
+  	@NotNull
     @Range(min = 1000, max = 1000000)
     private Integer price;
-    @NotNull
+
+  	@NotNull
     @Max(9999)
     private Integer quantity;
 
@@ -166,13 +186,12 @@ public class Item {
 > ```java
 > @SpringBootApplication
 > public class ItemServiceApplication implements WebMvcConfigurer {
->  // 글로벌 검증기 추가
-> @Override
-> public Validator getValidator() {
-> return new ItemValidator();
-> }
->  // ...
-> }
+>    // 글로벌 검증기 추가
+>   @Override
+>   public Validator getValidator() {
+>     return new ItemValidator();
+>   }	
+>  }
 > ```
 
 
@@ -183,23 +202,23 @@ public class Item {
 * 검증 오류가 발생하면, `FieldError` , `ObjectError` 가 `BindingResult` 에 담겨있다.
 
 ```java
-    @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute Item item, BindingResult bindingResult) {
+@PostMapping("/add")
+public String addItem(@Validated @ModelAttribute Item item, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            return "validation/v3/addForm";
-        }
-        
-        ...
-    }
+  if (bindingResult.hasErrors()) {
+    log.info("errors={}", bindingResult);
+    return "validation/v3/addForm";
+  }
+
+  ...
+}
 ```
 
 
 
 ## 3.4 검증 순서
 
-1. @ModelAttribute 각각의 필드에 타입 변환 시도 
+1. @ModelAttribute 각각의 필드에 타입 변환 시도
    * 성공하면 다음으로
    * 실패하면 `typeMismatch` 로 `FieldError` 추가
 2. Validator 적용
@@ -207,15 +226,15 @@ public class Item {
 
 **예시 1**
 
-1. itemName 에 문자 "A" 입력 
-2. 타입 변환 성공 
-3. itemName 필드에 BeanValidation 적용 
+1. itemName 에 문자 "A" 입력
+2. 타입 변환 성공
+3. itemName 필드에 BeanValidation 적용
 
 **예시 2**
 
-1. price 에 문자 "A" 입력 
-2. "A"를 숫자 타입 변환 시도 실패 
-3. typeMismatch FieldError 추가 
+1. price 에 문자 "A" 입력
+2. "A"를 숫자 타입 변환 시도 실패
+3. typeMismatch FieldError 추가
 4. price 필드는 BeanValidation 적용 X
 
 **참고**
@@ -223,6 +242,8 @@ public class Item {
 > `@ModelAttribute` 는 HTTP 요청 파라미터(URL 쿼리 스트링, POST Form)를 다룰 때 사용한다.
 > `@RequestBody` 는 HTTP Body의 데이터를 객체로 변환할 때 사용한다. 주로 API JSON 요청을 다룰 때
 > 사용한다.
+
+
 
 # 4 Bean Validation - 에러 코드
 
@@ -237,7 +258,7 @@ public class Item {
 
 * 검증 에러시 애노테이션을 기반으로 `MessageCodesResolver`가 오류 아래와 같이 오류 코드를 자동 생성한다.
 
-  
+
 
 **@NotBlank**
 
@@ -382,7 +403,7 @@ public Object addItem(@RequestBody @Validated ItemSaveForm form, BindingResult b
   * `@ModelAttribute`는 필드 단위로 정교하게 바인딩이 적용된다. 
   * 특정 필드가 바인딩 되지 않아도 나머지 필드는 정상 바인딩 되고, Validator를 사용한 검증도 적용할 수 있다. 
 * `@RequestBody`
-  * `@RequestBody`는 HttpMessageConverter 단계에서 JSON 데이터를 객체로 변경하지 못하면 이후 단계 자체가 진행되지 않고 예외가 발생한다. 
+  * `@RequestBody`는 HttpMessageConverter 단계에서 JSON 데이터를 객체로 변경하지 못하면 이후 단계 자체가 진행되지 않고 예외가 발생한다.
   * 컨트롤러도 호출되지 않고, Validator도 적용할 수 없다.
 
 
