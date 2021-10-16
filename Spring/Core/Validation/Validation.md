@@ -20,10 +20,11 @@
 
 * 스프링이 제공하는 객체를 검증하는 데 사용할 수 있는 인터페이스다.
 * `Validator Interface`는 `Errors ` 객체를 사용하여 작동하므로 `Validator` 는 검증 실패를 `Errors` 객체에 등록한다.
+* 컨트롤러에서 직접 검증 로직을 처리하기보다 별도의 클래스로 역할을 분리하는 것이 좋다 이럴 때 `Validator`를 사용한다.
 
 
 
-**Valisdator 인터페이스**
+## 2.1 Validator 인터페이스
 
 ```java
 package org.springframework.validation
@@ -39,41 +40,108 @@ public interface Validator {
 
 
 
-**예시**
+## 2.2 Validator 인터페이스 구현
 
 ```java
-public class Person {
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 
-    private String name;
-    private int age;
+@Component
+public class ItemValidator implements Validator {
+  @Override
+  public boolean supports(Class<?> clazz) {
+    return Item.class.isAssignableFrom(clazz);
+  }
 
-    // the usual getters and setters...
+  @Override
+  public void validate(Object target, Errors errors) {
+    Item item = (Item) target;
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "itemName","required");
+    
+    if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
+      errors.rejectValue("price", "range", new Object[]{1000, 1000000},
+    }
+
+    if (item.getQuantity() == null || item.getQuantity() > 10000) {
+    	errors.rejectValue("quantity", "max", new Object[]{9999}, null);
+    }
+
+    //특정 필드 예외가 아닌 전체 예외
+    if (item.getPrice() != null && item.getQuantity() != null) {
+    	int resultPrice = item.getPrice() * item.getQuantity();
+      if (resultPrice < 10000) {
+      	errors.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+      }                   
+    }                       
+  }
 }
 ```
 
+
+
+## 2.3 Validator 직접 사용하기
+
+* 빈으로 등록된 ItemValidator을 주입받아 직접 검증하기
+
 ```java
-public class PersonValidator implements Validator {
+private final ItemValidator itemValidator;
 
-    /**
-     * This Validator validates only Person instances
-     */
-    public boolean supports(Class clazz) {
-        return Person.class.equals(clazz);
-    }
-
-    public void validate(Object obj, Errors e) {
-        ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
-        Person p = (Person) obj;
-        if (p.getAge() < 0) {
-            e.rejectValue("age", "negativevalue");
-        } else if (p.getAge() > 110) {
-            e.rejectValue("age", "too.darn.old");
-        }
-    }
+@PostMapping("/add")
+public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+  //검증
+  itemValidator.validate(item, bindingResult);
+  
+  //검증 오류시
+  if (bindingResult.hasErrors()) {
+    log.info("errors={}", bindingResult);
+    return "validation/v2/addForm";
+  }
+  
+  //성공 로직
+  Item savedItem = itemRepository.save(item); redirectAttributes.addAttribute("itemId", savedItem.getId());
+  redirectAttributes.addAttribute("status", true);
+ 	return "redirect:/validation/v2/items/{itemId}";
 }
 ```
 
 
+
+## 2.4 WebDataBinder를 통해서 Validator 사용하기
+
+* WebDataBinder 는 스프링의 파라미터 바인딩의 역할을 해주고 검증 기능도 내부에 포함한다.
+* 아래의 코드를 컨트롤러에 작성한다.
+  * WebDataBinder에 검증기가 추가되고 해당 컨트롤러에서는 검증기를 자동으로 적용할 수 있다.
+  * 해당 컨트롤러에만 영향을 준다. 글로벌 설정은 별도로 해야한다.
+
+```java
+@InitBinder
+public void init(WebDataBinder dataBinder) {
+  log.info("init binder {}", dataBinder);
+  dataBinder.addValidators(itemValidator);
+}
+```
+
+* validator를 직접 호출하지 않고 검증 대상 앞에 `@Validated` 를 붙인다
+  * @Validated 는 검증기를 실행하라는 애노테이션이다.
+  * WebDataBinder 에 등록한 검증기를 찾아서 실행한다. 
+  * 여러 검증기를 등록한다면 그 중에 어떤 검증기가 실행되어야 할지 구분이 필요하다. 이때 supports() 가 사용된다.
+
+```java
+@PostMapping("/add")
+public String addItemV6(@Validated @ModelAttribute Item item, BindingResult bindingResult,RedirectAttributes redirectAttributes){
+  if (bindingResult.hasErrors()) {
+    log.info("errors={}", bindingResult);
+    return "validation/v2/addForm";
+  }
+  
+  //성공 로직
+  Item savedItem = itemRepository.save(item); redirectAttributes.addAttribute("itemId", savedItem.getId()); 
+  redirectAttributes.addAttribute("status", true);
+  return "redirect:/validation/v2/items/{itemId}";
+}
+```
 
 
 
