@@ -17,15 +17,27 @@ public class HelloServlet extends HttpServlet {
 ```
 
 * urlPatterns(/hello)의 URL이 호출되면 서블릿 코드가 실행
+  * 서블릿 컨테이너가 service() 메서드를 실행한다.
 * HTTP 요청 정보를 편리하게 사용할 수 있는 HttpServletRequest
 * HTTP 응답 정보를 편리하게 제공할 수 있는 HttpServletResponse
 * 개발자는 HTTP 스펙을 매우 편리하게 사용
 
+# 2 서블릿의 역할
 
+**HttpServletRequest**
 
-# 2. 서블릿의 흐름
+* HTTP 요청 메시지를 개발자가 직접 파싱해서 사용해도 되지만, 매우 불편할 것이다. 
+* 서블릿은 개발자가 HTTP 요청 메시지를 편리하게 사용할 수 있도록 개발자 대신에 HTTP 요청 메시지를 파싱하고 그 결과를 HttpServletRequest 객체에 담아서 제공한다.
+* HttpServletRequest을 통해 개발자는 헤더, 쿠키, 쿼리파라미터등을 편리하게 얻을 수 있다.
 
-**HTTP 요청시**
+**HttpServletResponse**
+
+* **HTTP** **응답 메시지 생성** 
+* HTTP 응답코드 지정 
+* 헤더 생성
+* 바디 생성
+
+# 3 서블릿의 흐름
 
 1. WAS는 Request, Response 객체를 새로 만들어서 서블릿 객체 호출
 2. 개발자는 Request 객체에서 HTTP 요청 정보를 편리하게 꺼내서 사용
@@ -34,7 +46,7 @@ public class HelloServlet extends HttpServlet {
 
 
 
-# 3. Servlet 컨테이너
+# 4 Servlet 컨테이너
 
 * 톰캣처럼 서블릿을 지원하는 WAS를 서블릿 컨테이너라고 함
 * 서블릿 컨테이너는 서블릿 객체를 생성, 초기화, 호출, 종료하는 생명주기 관리
@@ -49,7 +61,7 @@ public class HelloServlet extends HttpServlet {
 
 
 
-## 3.1 쓰레드 풀
+## 4.1 쓰레드 풀
 
 * 쓰레드가 Servlet을 실행하는 주체이다
 * 필요한 쓰레드를 쓰레드 풀에 보관하고 관리한다.
@@ -67,7 +79,7 @@ public class HelloServlet extends HttpServlet {
 
 
 
-## 3.2 실무 팁
+## 4.2 실무 팁
 
 * WAS의 주요 튜닝 포인트는 최대 쓰레드(max thread) 수이다.
 * 이 값을 너무 낮게 설정하면?
