@@ -7,6 +7,16 @@
   * 이러한 방식은 유연성을 제공해 다양한 작업 방식을 지원한다.
 * DispacherServlet 도 부모 클래스에서 HttpServlet 을 상속 받아서 사용하고, 서블릿으로 동작한다.
 * `DispatcherServlet` 은 다른 `Servlet` 과 마찬가지로 Servlet specification에 따라 선언되고 매핑되어야 하는데 이때 specification으로 Java configuration 또는 `web.xml` 을 사용할 수 있다.
+* 스프링 부트는 DispacherServlet 을 서블릿으로 자동으로 등록하면서 **모든 경로**( urlPatterns="/" )에 대해서 매핑한다.
+
+
+
+## 1.1 FrontController 패턴 특징
+
+* 프론트 컨트롤러 서블릿 하나로 클라이언트의 요청을 받음 프론트 컨트롤러가 요청에 맞는 컨트롤러를 찾아서 호출한다
+* 입구를 하나로 만들어 공통 처리가 가능하다
+* 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿을 사용하지 않아도 된다
+* 스프링 웹 MVC의 **DispatcherServlet**이 FrontController 패턴으로 구현되어 있다
 
 
 
@@ -74,41 +84,32 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 
 
-
-
-
-
 # 3 DispacherServlet 동작 과정
 
-## 3.1 핸들러 매핑
+![image-20211016144658997](./images/spring-mvc.png)
 
-1. 매핑되는 핸들러를 찾아온다 즉 uri가 매핑되는 핸들러(컨트롤러) 객체를 찾아서 반환한다.
+1. 핸들러 조회
+   * 매핑되는 핸들러를 찾아온다 즉 uri가 매핑되는 핸들러(컨트롤러) 객체를 찾아서 반환한다.
+2. 핸들러 어댑터 목록 조회
+   * 핸들러를 실행할 수 있는 핸들러 어댑터를 조회한다.
+3. 핸들러 어댑터 실행: 
+   * 핸들러 어댑터를 실행한다.
+4. 핸들러 실행: 
+   * 핸들러 어댑터가 실제 핸들러를 실행한다.
+5. ModelAndView 반환: 
+   * 핸들러 어댑터는 핸들러가 반환하는 정보를 ModelAndView로 변환해서 반환한다.
+6. viewResolver 호출: 
+   * 뷰 리졸버를 찾고 실행한다.
+   * JSP의 경우: InternalResourceViewResolver 가 자동 등록되고, 사용된다.
+7. View반환:
+   * 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고,렌더링 역할을 담당하는 뷰 객체를 반환한다.
+   * JSP의 경우 InternalResourceView(JstlView) 를 반환하는데, 내부에 forward() 로직이 있다.
+8. 뷰렌더링:
+   * 뷰를 통해서 뷰를 렌더링한다.
 
-```java
-// DispacherServlet.doDispatch()
-protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HttpServletRequest processedRequest = request;
-        HandlerExecutionChain mappedHandler = null;
-        ModelAndView mv = null;
-        
-        // 1. 핸들러 조회
-        mappedHandler = getHandler(processedRequest);
-        if (mappedHandler == null) {
-            noHandlerFound(processedRequest, response);
-            return;
-        }
-```
 
 
-
-**핸들러 어댑터 목록 조회**
-
-2. 핸들러를 실행할 수 있는 핸들러 어댑터를 조회한다.
-
-```java
-//2.핸들러 어댑터 조회-핸들러를 처리할 수 있는 어댑터
-HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
-```
+# 4 핸들러 매핑과 핸들러 어댑터
 
 
 
