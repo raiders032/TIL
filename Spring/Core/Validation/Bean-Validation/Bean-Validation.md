@@ -329,7 +329,7 @@ public class Item {
 
 
 
-# 5 Bean Validation - groups
+# 5 groups
 
 * 아이템을 등록할 때와 수정할 때 동일한 모델 객체를 사용한다고 가정하고 각각 다르게 검증하는 방법을 알아보자
 
@@ -407,9 +407,11 @@ public String addItem(@Validated(SaveCheck.class) @ModelAttribute Item item, Bin
 
 
 
-
-
 ## 5.2 Form 전송 객체 분리
+
+* groups를 적용하기 보다 아래와 같이 Form 전송 객체 분리하는 것이 실무에 적합하다
+
+
 
 **아이템**
 
@@ -433,7 +435,7 @@ public class ItemSaveForm {
   private String itemName;
   
   @NotNull
-  @Range(min = 1000, max = 1000000)
+  @Range(min = 1000, max = 1000000)  
   private Integer price;
   
   @NotNull
@@ -478,9 +480,14 @@ public String edit(@PathVariable Long itemId, @Validated @ModelAttribute ItemUpd
 
 
 
-# 6 Bean Validation - HTTP 메시지 컨버터
+# 6 HTTP 메시지 컨버터
 
 * `@Valid` , `@Validated` 를 HttpMessageConverter (`@RequestBody`)에도 적용할 수 있다
+* `@ModelAttribute`는 HTTP 요청 파라미터(URL 쿼리 스트링, POST Form)를 다룰 때 사용한다.
+*  `@RequestBody` 는 HTTP Body의 데이터를 객체로 변환할 때 사용한다. 
+  * 주로 API JSON 요청을 다룰 때 사용한다.
+
+
 
 **사용 예시**
 
@@ -501,15 +508,19 @@ public Object addItem(@RequestBody @Validated ItemSaveForm form, BindingResult b
 
 
 
-## 7.2 검증 순서
+## 6.1 @RequestBody의 3가지 케이스
 
-1. 성공 요청: 성공 
-2. 실패 요청: JSON을 객체로 생성하는 것 자체가 실패함
-3. 검증 오류 요청: JSON을 객체로 생성하는 것은 성공했고, 검증에서 실패함
+1. 성공 요청 
+   * JSON을 객체로 생성하고 검증 또한 성공
+2. 실패 요청 
+   * JSON을 객체로 생성하는 것 자체가 실패함
+   * 컨드롤러가 호출되지 않는다
+3. 검증 오류 요청 
+   * JSON을 객체로 생성하는 것은 성공했고, 검증에서 실패함
 
 
 
-## 7.3 @ModelAttribute vs @RequestBody
+## 6.2 @ModelAttribute vs @RequestBody
 
 * `@ModelAttribute`
   * `@ModelAttribute`는 필드 단위로 정교하게 바인딩이 적용된다. 
