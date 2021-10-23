@@ -111,70 +111,95 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 # 4 핸들러 매핑과 핸들러 어댑터
 
+* 스프링은 이미 필요한 핸들러 매핑과 핸들러 어댑터를 대부분 구현해두었다. 
+  * 개발자가 직접 핸들러 매핑과 핸들러 어댑터를 만드는 일은 거의 없다.
 
 
-**어댑터 호출**
 
-3. 핸들러 어댑터 실행
-4. 핸들러 어댑터가 실제 핸들러를 실행한다.
-5. 핸들러 어댑터는 핸들러가 반환하는 정보를 ModelAndView로 변환해서 반환한다.
+## 4.1 핸들러 매핑
+
+* 핸들러 매핑에서 컨트롤러를 찾는다
+* 예)스프링 빈의 이름으로 핸들러를 찾을 수 있는 핸들러 매핑이 필요하다
+
+
+
+**자동 등록되는 핸들러 매핑**
+
+* 실제로 더 많다
+
+1. RequestMappingHandlerMapping
+   * 애노테이션 기반의 컨트롤러인 @RequestMapping에서
+2. BeanNameUrlHandlerMapping
+   * 스프링 빈의 이름으로 핸들러를 찾는다.
+
+
+
+**애노테이션 기반 컨트롤러**
 
 ```java
-// 3. 핸들러 어댑터 실행 -> 4. 핸들러 어댑터를 통해 핸들러 실행 -> 5. ModelAndView 반환 
-mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
-```
-
-
-
-**뷰 렌더링**
-
-6. 뷰 리졸버를 찾고 실행한다.
-7. 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고,렌더링 역할을 담당하는 뷰 객체를 반환한다.
-8. 뷰를 통해서 뷰를 렌더링한다.
-
-```java
-processDispatchResult(processedRequest, response, mappedHandler, mv,dispatchException);
-
-private void processDispatchResult(HttpServletRequest request,
-                                   HttpServletResponse response, 
-                                   HandlerExecutionChain mappedHandler, 
-                                   ModelAndView mv, Exception exception) throws Exception {
-  // 뷰 렌더링 호출
-  render(mv, request, response);
-}
-
-protected void render(ModelAndView mv, HttpServletRequest request,
-                      HttpServletResponse response) throws Exception {
-  View view;
-  String viewName = mv.getViewName(); 
-
-  //6. 뷰 리졸버를 통해서 뷰 찾기, 7.View 반환
-  view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
-
-  // 8. 뷰 렌더링
-  view.render(mv.getModelInternal(), request, response);
+@Controller
+public class SpringMemberFormControllerV1 {
+  @RequestMapping("/springmvc/v1/members/new-form")
+  public ModelAndView process() {
+    return new ModelAndView("new-form");
+  }
 }
 ```
 
-
-
-## 핸들러 매핑
-
-* 핸들러 매핑에서 이 컨트롤러를 찾을 수 있어야 한다.
-* 예) 스프링 빈의 이름으로 핸들러를 찾을 수 있는 핸들러 매핑이 필요하다.
-* 스프링 부트가 자동 등록하는 핸들러 매핑
-  * `RequestMappingHandlerMapping` : 애노테이션 기반의 컨트롤러인 `@RequestMapping`에서 사용
-  * `BeanNameUrlHandlerMapping` : 스프링 빈의 이름으로 핸들러를 찾는다.
+* @Controller
+  * 스프링이 자동으로 스프링 빈으로 등록한다.
+  * 스프링 MVC에서 애노테이션 기반 컨트롤러로 인식한다.
+* @RequestMapping
+  * 요청 정보를 매핑한다.
+  * 해당 URL이 호출되면 이 메서드가 호출된다.
+  * 애노테이션을 기반으로 동작하기 때문에, 메서드의 이름은 임의로 지으면 된다.
 
 
 
-## 핸들러 어댑터
+## 4.2 핸들러 어댑터
 
 * 핸들러 매핑을 통해서 찾은 핸들러를 실행할 수 있는 핸들러 어댑터가 필요하다.
-* 스프링 부트가 자동 등록하는 핸들러 어댑터
-  * `RequestMappingHandlerAdapter` : 애노테이션 기반의 컨트롤러인 `@RequestMapping`에서 사용
-  * `HttpRequestHandlerAdapter` : HttpRequestHandler 처리
-  * `SimpleControllerHandlerAdapter` : Controller 인터페이스(애노테이션X, 과거에 사용) 처리
+* 예) Controller 인터페이스를 실행할 수 있는 핸들러 어댑터를 찾고 실행해야 한다.
+
+**자동 등록되는 핸들러 어댑터**
+
+1. RequestMappingHandlerAdapter
+   * 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
+2. HttpRequestHandlerAdapter
+   * HttpRequestHandler 처리
+3. SimpleControllerHandlerAdapter
+   * Controller 인터페이스(애노테이션X, 과거에 사용)
+
+# 5 뷰 리졸버
+
+* 스프링 부트는 `InternalResourceViewResolver` 라는 뷰 리졸버를 자동으로 등록한다
+* application.properties 에 등록한 `spring.mvc.view.prefix`, `spring.mvc.view.suffix`설정 정보를 사용해서 등록한다.
+
+```properties
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+```
+
+* `@ResponseBody` , `HttpEntity`를 사용하면  뷰 템플릿을 사용하는 것이 아니라, HTTP 메시지 바디에 직접 응답 데이터를 출력할 수 있다. 즉 뷰 리졸버를 실행하지 않는다.
+
+
+
+**스프링 부트가 자동 등록하는 뷰 리졸버**
+
+1. BeanNameViewResolver
+   * 빈 이름으로 뷰를 찾아서 반환한다. (예: 엑셀 파일 생성 기능에 사용)
+2. InternalResourceViewResolver
+   * JSP를 처리할 수 있는 뷰를 반환한다.
+
+>  참고
+>
+>  Thymeleaf 뷰 템플릿을 사용하면 ThymeleafViewResolver 를 등록해야 한다. 최근에는 라이브러리 만추가하면 스프링 부트가 이런 작업도 모두 자동화해준다 아래는 기본 설정을 수정해서 사용할 수 있다.
+>
+>  ```properties
+>  # application.properties
+>  spring.thymeleaf.prefix=classpath:/templates/ 
+>  spring.thymeleaf.suffix=.html
+>  ```
 
 
 
@@ -266,25 +291,6 @@ public interface HttpMessageConverter<T> {
   * 응답 예) @ResponseBody return helloData 쓰기 미디어타입 application/json 관련
 
 
-
-## 뷰 리졸버
-
-* 스프링 부트는 `InternalResourceViewResolver` 라는 뷰 리졸버를 자동으로 등록한다.
-  * `application.properties`를 통해 `spring.mvc.view.prefix` , `spring.mvc.view.suffix` 로 설정 정보를 등록 할 수 있다.
-* `@ResponseBody` , `HttpEntity`를 사용하면  뷰 템플릿을 사용하는 것이 아니라, HTTP 메시지 바디에 직접 응답 데이터를 출력할 수 있다. 즉 뷰 리졸버를 실행하지 않는다.
-* 스프링 부트가 자동 등록하는 뷰 리졸버
-  * `BeanNameViewResolver` : 빈 이름으로 뷰를 찾아서 반환한다. (예: 엑셀 파일 생성 기능에 사용)
-  * `InternalResourceViewResolver` : JSP를 처리할 수 있는 뷰를 반환한다.
-
->  참고
->
-> Thymeleaf 뷰 템플릿을 사용하면 ThymeleafViewResolver 를 등록해야 한다. 최근에는 라이브러리 만추가하면 스프링 부트가 이런 작업도 모두 자동화해준다 아래는 기본 설정을 수정해서 사용할 수 있다.
->
-> ```properties
-> # application.properties
-> spring.thymeleaf.prefix=classpath:/templates/ 
-> spring.thymeleaf.suffix=.html
-> ```
 
 
 
