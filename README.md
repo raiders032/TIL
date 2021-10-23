@@ -6,7 +6,7 @@
 
 ## CS
 
-*  [Network](Computer Science/Network/README.md)
+*  [Network](Computer-Science/Network/README.md)
 
 
 
