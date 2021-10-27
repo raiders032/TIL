@@ -1,27 +1,22 @@
 # 1 기본 설정
 
-```yml
-spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
-```
+**datasource 설정**
+
+`spring.datasource.hikari.driver-class-name`
+
+* JDBC 드라이버의 이름입니다. 기본적으로 URL을 기준으로 자동 탐지됩니다.
+
+
+
+**스키마 자동 생성**
 
 `spring.jpa.hibernate.ddl-auto`
 
 * `create`: 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
+
+
+
+**SQL 로그 관련**
 
 `spring.jpa.properties.show_sql`
 
@@ -35,13 +30,65 @@ logging.level:
 
 * logger를 통해 하이버네이트 실행 SQL을 남긴다
 
-  `logging.level.org.hibernate.type`
+`logging.level.org.hibernate.type`
 
 * trace: 바인딩된 파라미터를 보여준다 
 
 `spring.jpa.properties.hibernate.use_sql_comments`
 
 * true: 실행되는 JPQL을 볼 수 있다.
+
+`spring.jpa.properties.hibernate.highlight_sql`
+
+* True인 경우 ANSI 이스케이프 코드를 통해 구문 강조 표시가 있는 SQL을 출력
+
+`spring.jpa.properties.hibernate.use_sql_comments`
+
+* 추가적인 주석 표시하기
+
+`logging.level.org.hibernate.type.descriptor.sql`
+
+* trace: 파라미터 바인딩 값 보여주기
+
+
+
+**h2 관련**
+
+`spring.h2.console.enabled`
+
+* true: h2 콘솔 사용하도록 설정
+
+
+
+**h2 데이터 베이스 설정 예시**
+
+```yml
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=Oracle;
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+```
+
+
 
 # 2 쿼리 파라미터 로그 남기기
 
