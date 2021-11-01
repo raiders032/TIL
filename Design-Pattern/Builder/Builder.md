@@ -1,4 +1,24 @@
-## 빌더 패턴(Builder Pattern)
+# 1 Builder Pattern
+
+* 생성자 인자가 많을 때는 Builder 패턴 적용을 고려하라
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 * https://johngrib.github.io/wiki/builder-pattern/
 
