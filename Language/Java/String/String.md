@@ -1,10 +1,11 @@
-# 1. String
+# 1 String
 
-> 자바의 문자열은 java.lang 패키지의 String 클래스의 인스턴스로 관리된다. 소스상에 문자열 리터럴은 String 클래스로 자동 생성되지만 String 클래스의 다양한 생성자를 이용해서 직접 String 클래스를 생성할 수도 있다.
+* 자바의 문자열은 java.lang 패키지의 String 클래스의 인스턴스로 관리된다. 
+* 소스상에 문자열 리터럴은 String 클래스로 자동 생성되지만 String 클래스의 다양한 생성자를 이용해서 직접 String 클래스를 생성할 수도 있다.
 
 
 
-# 2. String은 왜 immutable할까?
+# 2 String은 왜 immutable할까?
 
 * immutable이란?
   * 객체의 내부 상태가 생성 후 변하지 않는 것을 의미한다.
