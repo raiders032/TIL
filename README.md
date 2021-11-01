@@ -10,6 +10,18 @@
 
 
 
+## Common
+
+*  [Design Pattern](Design-Pattern/README.md) 
+
+
+
+## Language
+
+*  [Java](Language/Java/README.md) 
+
+
+
 ## Web
 
 * [WAS](WEB/WAS/WAS.md)
