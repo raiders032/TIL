@@ -65,6 +65,47 @@ Week today = null;
 
 
 
+# 4 Enumeration Type 메소드
+
+* 모든 열거 타입은 컴파일 시에 Enum클래스를 상속하게 되어있다.
+* 따라서 열거 객체를 통해 메소드를 실행할 수 있다.
+* 열거 객체는 열거 상수의 문자열을 내부 데이터로 가지고 있다.
+
+| 리턴 타입 | 메소드(매개 변수)    | 설명                                  |
+| :-------- | :------------------- | :------------------------------------ |
+| String    | name()               | 열거 객체의 문자열을 리턴             |
+| int       | ordinal()            | 열거 객체의 순번(0부터 시작)을 리턴   |
+| int       | compareTo()          | 열거 객체를 비교해서 순번 차이를 리턴 |
+| 열거 타입 | valueOf(String name) | 주어진 문자열의 열거 객체를 리턴      |
+| 열거 배열 | values()             | 모든 열거 객체들을 배열로 리턴        |
+
+```java
+// name()
+Week today = Week.SUNDAY;
+String name = today.name(); // “SUNDAY”
+
+// ordinal()
+Week today = Week.SUNDAY;
+int ordinal = today.ordinal();	// 0
+
+//compareTo()
+Week day1 = Week.MONDAY;
+Week day2 = Week.WEDNESDAY;
+int result1 = day1.compareTo(day2); // -2
+int result2 = day2.compareTo(day1); // 2
+
+//valueOf(String name)
+Week weekDay = Week.valueOf("SATURDAY"); // weekDay 변수는 Week.SATURDAY 열거 객체를 참조하게 된다.
+
+//values()
+Week[] days = Week.values();
+for(Week day : days){
+    System.out.println(day);
+}
+```
+
+
+
 참조
 
 * 이것이 자바다(신용권 저)
