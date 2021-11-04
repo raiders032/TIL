@@ -36,6 +36,25 @@
 
 
 
+**예시**
+
+```java
+public final class String {
+  ...
+}
+```
+
+아래와 같이 상속이 불가능하다
+
+```java
+// 불가능
+public class NewString extends String{
+
+}
+```
+
+
+
 # 4 final 메소드
 
 * 메소드를 선언할 때 `final`키워드를 붙이게 되면 해당 메소드는 최종적인 메소드이므로 오버라이딩 할 수 없다. 
