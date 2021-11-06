@@ -8,6 +8,7 @@
 * [Access Modifier](Access-Modifier/Access-Modifier.md)
   * public, protected, default, private
 * [Annotation](Annotation/Annotation.md)
+* [Anonymous Class](Anonymous-Class/Anonymous-Class.md)
 * [Data Type](Data-Type/Data-Type.md)
 * [Final](Final/Final.md)
   * final field, static final, final method, final class
