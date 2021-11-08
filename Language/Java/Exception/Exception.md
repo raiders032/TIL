@@ -1,11 +1,43 @@
 # 1 예외
 
+
+
+## 1.1 에러
+
 * 자바에서는 컴퓨터 하드웨어 오작동 또는 고장으로 오류가 발생하는 것을 **에러**라고 한다
   * 에러는 JVM 실행에 문제가 있다는 것으로 개발자는 이런 에러에 대처할 방법이 없다
+
+
+
+## 1.2 예외
+
 * 자바에서는 에러 이외에 **예외**라고 부르는 오류가 있다
-  * 예외란 사용자가 잘못된 조작 또는 코딩으로 발생하는 오류를 말한다
-  * 예외가 발생하면 프로그램이 종료된다는 점에서 에러와 같다
-  * 그러나 예외는 예외 처리를 통해 프로그램을 종료하지 않고 정상 실행 상태를 유지할 수 있다
+* 예외는 프로그램 실행 중에 발생하는 이벤트로, 프로그램 명령의 정상적인 흐름을 방해한다.
+* 메소드 내에서 오류가 발생하면 메소드는 객체를 만들어 런타임 시스템으로 전달합니다. 
+  * 예외 개체라고 하는 개체에는 오류 발생 시 프로그램 상태 및 유형 등 오류에 대한 정보가 포함되어 있다. 
+  * 예외 개체를 만들어 런타임 시스템에 전달하는 것을 **예외 던지기**라고 한다.
+
+
+
+## 1.3 예외 던지기 흐름
+
+![The call stack showing three method calls, where the first method called has the exception handler.](https://docs.oracle.com/javase/tutorial/figures/essential/exceptions-callstack.gif)
+
+* 메서드가 예외를 발생시킨 후 런타임 시스템은 메서드를 처리할 수 있는 핸들러를 콜 스택에서 찾으려고 시도한다
+* 런타임 시스템은 콜 스택에서 예외를 처리할 수 있는 코드 블록을 포함하는 메서드를 찾는다. 
+  * 이 코드 블록을 exception handler(예외 처리기)라고 한다.
+* 검색은 오류가 발생한 메서드로 시작하여 메서드가 호출된 역순으로 콜 스택을 통해 진행됩니다. 
+* 적절한 처리기가 발견되면 런타임 시스템은 예외를 처리기에 전달합니다. 
+  * 던져진 예외 개체의 유형이 처리기에서 처리할 수 있는 유형과 일치하는 경우 예외 처리기가 적절한 것으로 간주된다.
+  * 이것을 예외 핸들러가 예외를 잡는다고(catch) 한다.
+* 적절한 예외 처리기를 찾지 못하면 프로그램이 종료된다.
+
+![The call stack showing three method calls, where the first method called has the exception handler.](https://docs.oracle.com/javase/tutorial/figures/essential/exceptions-errorOccurs.gif)
+
+
+
+## 1.4 예외의 종류
+
 * 예외는 두 가지 종류가 있다. 하나는 **Checked Exception**이고 다른 하나는 **Unchecked Exception**이다
   * Checked Exception: `Exception` 클래스를 상속 받음
   * Unchecked Exception: `RuntimeException` 클래스를 상속 받음
@@ -58,7 +90,7 @@
 
 
 
-# 5 예외 처리 코드
+# 5 예외 처리 블록
 
 * 예외가 발생한 경우 프로그램의 종료를 막고 정상 실행을 유지할 수 있도록 처리하는 코드를 예외 처리 코드라고 한다.
 * 자바 컴파일러는 컴파일 할 때 **Checked Exception** 발생할 가능성이 있는 코드를 발견하면 컴파일 오류를 발생시켜 개발자가 강제적으로 예외 처리 코드를 작성하도록 요구한다.
@@ -84,6 +116,7 @@ try {
   * try 블록에서 예외 발생 없이 정상 실행되면 catch블록은 실행되지 않고 finally 블록이 실행된다.
   * 만약 예외 발생시 즉시 실행을 멈추고 catch블록으로 이동하여 예외 처리 코드를 실행하고 마지막으로 finally 블록을 실행한다.
 * catch 블록
+  * 각 캐치 블록은 argument에 표시된 예외 유형을 처리하는 **예외 핸들러**다
   * try 블록에서 예외가 발생한 경우 해당 예외를 처리하는 코드를 작성하는 블록
   * try 블록에서 다양한 예외가 발생할 수 있기 때문에 예외별로 처리코드를 다르게 하고 싶다면 다중 catch블록을 작성한다.
     * 발생한 예외를 위에서부터 아래로 매칭시키기 때문에 상위 예외 클래스가 하위 예외 클래보다 아래쪽에 위치해야한다.
@@ -146,11 +179,41 @@ try (FileInputStream fis = new FileInputStream("file.txt"); ){
 
 ## 5.3 예외 떠넘기기
 
-* 
+* 메소드 내부에서 예외가 발생할 수 있는 코드를 작성할 때 예외를 처리하지 않고 메소드를 호출한 곳으로 예외를 떠넘길 수 있다.
+  * 이때 `throws` 키워드를 사용한다.
+  * `throws` 키워드가 붙은 메소드는 반드시 try 블록 내에서 호출되어야 한다. 그리고 catch 블록에서 예외를 처리해야 한다.
+  * `throws` 키워드가 붙은 메소드를 try 블록으로 감싸지않고 다시 `throws` 키워드로 예외를 떠넘길 수 있다.
+  * 계속 이어져 main() 메소드에서도 `throws` 키워드로 예외를 떠넘기면 결국 JVM이 최종적으로 예외를 처리한다.
+    * 예외 내용을 콘솔에 출력하는 것으로 예외 처리함
+
+```java
+public void writeList() throws IOException, IndexOutOfBoundsException {
+	...
+}
+```
 
 
 
+## 5.4 예외 던지기
 
+* 모든 메소드는 `throw` 문을 사용하여 예외를 던질 수 있다.
+* 던질 수 있는 객체는 `Throwable` 클래스의 모든 하위 클래스 인스턴스이다.
+
+```java
+public Object pop() {
+    Object obj;
+
+    if (size == 0) {
+      	// 예외 던지기
+        throw new EmptyStackException();
+    }
+
+    obj = objectAt(size - 1);
+    setObjectAt(size - 1, null);
+    size--;
+    return obj;
+}
+```
 
 
 
@@ -162,4 +225,5 @@ try (FileInputStream fis = new FileInputStream("file.txt"); ){
 
 참고
 
+* https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html
 * 이것이 자바다(이상민 저)
