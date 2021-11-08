@@ -1,4 +1,4 @@
-# 1. 예외
+# 1 예외
 
 * 자바에서는 컴퓨터 하드웨어 오작동 또는 고장으로 오류가 발생하는 것을 **에러**라고 한다
   * 에러는 JVM 실행에 문제가 있다는 것으로 개발자는 이런 에러에 대처할 방법이 없다
@@ -7,28 +7,28 @@
   * 예외가 발생하면 프로그램이 종료된다는 점에서 에러와 같다
   * 그러나 예외는 예외 처리를 통해 프로그램을 종료하지 않고 정상 실행 상태를 유지할 수 있다
 * 예외는 두 가지 종류가 있다. 하나는 **Checked Exception**이고 다른 하나는 **Unchecked Exception**이다
-  * Checked Exception: Exception 클래스를 상속 받음
-  * Unchecked Exception: RuntimeException을 상속 받음
+  * Checked Exception: `Exception` 클래스를 상속 받음
+  * Unchecked Exception: `RuntimeException` 클래스를 상속 받음
 
-# 2. Checked Exception
+# 2 Checked Exception
 
-* Checked Exception이란 컴파일러가 예외 처리를 제대로 하는지 확인 해주는 예외이다.
 * **Exception 클래스를 상속**한 예외들은 모두 **Checked Exception**이다.
+* Checked Exception이란 컴파일러가 예외 처리를 제대로 하는지 확인 해주는 예외이다.
 * 어느 메서드가 어떤 예외를 던지는지 명확히 알 수 있다.
 * 자바 소스를 컴파일하는 과정에서 예외가 발생하는 코드에서 아래와 같은 조치중 하나를 하지않는다면 컴파일 오류가 발생한다.
   * 발생한 예외를 그 메서드 안에서 처리(`catch` 블록)
   * 처리를 안 할 경우 그 사실을 메서드 시그니쳐 옆에 표기(`throws`)
     * 그러면 이 메서드의 호출자가 다시 이 둘 중에 하나를 해야한다.
 
-# 3. Unchecked Exception
+# 3 Unchecked Exception
 
-* Unchecked Exception은 컴파일하는 과정에서 예외 처리 코드를 검사하지 않는 예외를 말한다
 * **RuntimeException** 클래스를 상속한 예외는 모두 **Unchecked Exception**이다
+* Unchecked Exception은 컴파일하는 과정에서 예외 처리 코드를 검사하지 않는 예외를 말한다
 * 처리를 안 할 경우에도 `throws`를 표기하지 않아도 된다.
 
 
 
-# 4. 비교
+# 4 비교
 
 |                        | Checked Exception         | Unchecked Exception                            |
 | ---------------------- | :------------------------ | ---------------------------------------------- |
@@ -56,3 +56,110 @@
 * 예외를 세분화하지말고 **RuntimeException**을 던지고 메세지를 잘 적자는 사람도 있고 예외를 던질 때는 세세한 예외 형을 던지자는 사람도 있다.
 * 팀 동료들과 상의해서 결정을 해보자
 
+
+
+# 5 예외 처리 코드
+
+* 예외가 발생한 경우 프로그램의 종료를 막고 정상 실행을 유지할 수 있도록 처리하는 코드를 예외 처리 코드라고 한다.
+* 자바 컴파일러는 컴파일 할 때 **Checked Exception** 발생할 가능성이 있는 코드를 발견하면 컴파일 오류를 발생시켜 개발자가 강제적으로 예외 처리 코드를 작성하도록 요구한다.
+* **Unchecked Exception**은 컴파일러가 체크해주지 않기 때문에 개발자의 경험을 바탕으로 작성해야 한다.
+* 예외 처리 코드는 try-catch-finally 블록을 이용한다.
+
+
+
+## 5.1 try-catch-finally 블록
+
+```java
+try {
+  // 예외 발생 가능 코드
+} catch( 예외클래스 e) {
+  // 예외 처리 코드
+} finally {
+  // 항상 실행되는 코드
+}
+```
+
+* try 블록
+  * 예외 발생 가능 코드가 위치한다.
+  * try 블록에서 예외 발생 없이 정상 실행되면 catch블록은 실행되지 않고 finally 블록이 실행된다.
+  * 만약 예외 발생시 즉시 실행을 멈추고 catch블록으로 이동하여 예외 처리 코드를 실행하고 마지막으로 finally 블록을 실행한다.
+* catch 블록
+  * try 블록에서 예외가 발생한 경우 해당 예외를 처리하는 코드를 작성하는 블록
+  * try 블록에서 다양한 예외가 발생할 수 있기 때문에 예외별로 처리코드를 다르게 하고 싶다면 다중 catch블록을 작성한다.
+    * 발생한 예외를 위에서부터 아래로 매칭시키기 때문에 상위 예외 클래스가 하위 예외 클래보다 아래쪽에 위치해야한다.
+* finally 블록
+  * 옵션으로 생략 가능하다
+  * 에외 발생 여부와 상관없이 할상 실행할 내용이 있을 경우 사용한다.
+  * try, catch 블록에서 return문을 실행해도 finally 블록은 항상 실행된다.
+
+
+
+## 5.2 try-with-resources 블록
+
+* try-with-resources를 사용하면 예외 발생 여부와 상관없이 사용했던 리소스 객체의 close() 메소드를 호출해서 안전하게 리소스를 닫아준다.
+* 리소스 객체는 AutoCloseable 인터페이스를 구현해야 한다.
+
+```java
+public interface AutoCloseable {
+  void close() throws Exception;
+}
+```
+
+
+
+**try-catch-finally 블록 사용**
+
+* `fis.close();` 를 통해 리소스를 직접 닫고있다.
+
+```java
+FileInputStream fis = null;
+try {
+  fis = new FileInputStream("file.txt");
+  ...
+} catch(IOException e){
+  ...
+} finally {
+  if(fis != null) {
+    try {
+      fis.close();
+    } catch (IOException e) {}
+  }
+}
+```
+
+
+
+**try-with-resources 블록 사용**
+
+* try 블록이 정상적으로 실행을 완료했거나 도중에 예외가 발생하면 자동으로 FileInputStream의 close() 메소드가 실행된다.
+* try에서 예외가 발생하면 close()로 리소스를 닫고 catch 블록을 실행한다.
+
+```java
+try (FileInputStream fis = new FileInputStream("file.txt"); ){
+	...
+} catch(IOException e){
+  ...
+}
+```
+
+
+
+## 5.3 예외 떠넘기기
+
+* 
+
+
+
+
+
+
+
+
+
+
+
+
+
+참고
+
+* 이것이 자바다(이상민 저)
