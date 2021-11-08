@@ -10,6 +10,8 @@
 * [Annotation](Annotation/Annotation.md)
 * [Anonymous Class](Anonymous-Class/Anonymous-Class.md)
 * [Data Type](Data-Type/Data-Type.md)
+* [Enumeration](Enumeration/Enumeration.md)
+* [Exception](Exception/Exception.md) 
 * [Final](Final/Final.md)
   * final field, static final, final method, final class
 * [Interface](Interface/Interface.md)
