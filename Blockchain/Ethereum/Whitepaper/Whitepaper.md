@@ -1,4 +1,4 @@
-# History
+# 1 History
 
 ## Introduction to Bitcoin and Existing Concepts
 
@@ -245,7 +245,7 @@
 
 
 
-# Ethereum
+# 2 Ethereum
 
 * 이더리움은 [스마트 컨트랙트](#contract)라는 프로그램을 실행하는 오픈 소스에 기반을 둔 전 세계에 걸쳐 탈중앙화된 컴퓨팅 인프라스트럭쳐이다
 * 분산 애플리케이션을 위한 플랫폼 제공
@@ -260,7 +260,7 @@
 
 
 
-## Account
+## 2.1 Account
 
 * 이더리움에서 state는 `account`라고 불리는 객체로 구성된다
 * account는 20바이트 주소를 가진다
@@ -339,7 +339,7 @@
 
 
 
-## Transaction
+## 2.2 Transaction
 
 ![ether-state-transition](https://ethereum.org/static/2c0e5e27e397f4ac6b88082fd28d072f/00e09/ether-state-transition.png)
 
@@ -445,7 +445,7 @@
 
 
 
-## Message(INTERNAL TRANSACTION)
+## 2.3 Message(INTERNAL TRANSACTION)
 
 * [컨트랙트](#contract)는 다른 컨트랙트으로 메시지를 보낼 수 있다. 
 * 메시지는 [트랜잭션](#transaction)과 다르게 별도 저장할 필요가 없으며 이더리움 실행 환경에만 존재하는 가상 객체입니다.
@@ -471,7 +471,7 @@
 
 
 
-## State Transition Function
+## 2.4 State Transition Function
 
 ![ether-state-transition](https://ethereum.org/static/2c0e5e27e397f4ac6b88082fd28d072f/00e09/ether-state-transition.png)
 
@@ -500,7 +500,7 @@
 
 
 
-## Code Execution
+## 2.5 Code Execution
 
 * 이더리움 **Contract의 코드**는 "[EVM](#evm) 코드"라고 하는 저수준의 스택 기반 **바이트코드 언어**로 작성된다. 
 * 이 코드는 연속된 바이트로 구성되어 있고, 각각의 바이트는 연산(operation)을 나타낸다. 
@@ -545,7 +545,7 @@
 
 
 
-## State
+## 2.7 State
 
 * [EVM](#evm) 코드의 공식적인 실행 모델은 놀라울 정도로 간단하다.
 * 이더리움 가상 머신이 실행되는 동안 상태는 tuple(block_state, transaction, message, code, memory, stack, pc, gas)로 정의된다.
@@ -563,7 +563,7 @@
 
 
 
-## Block
+## 2.8 Block
 
 * 비트코인의 블록과 유사하지만 차이점이 있다.
   * 주요 차이점으로는 비트코인과는 달리 이더리움 블록은 트랜잭션 리스트와 **가장 최근의 상태(state) 복사본을 가지고 있다는 것**이다. 
