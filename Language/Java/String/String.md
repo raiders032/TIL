@@ -2,13 +2,31 @@
 
 * 자바의 문자열은 java.lang 패키지의 String 클래스의 인스턴스로 관리된다. 
 * 소스상에 문자열 리터럴은 String 클래스로 자동 생성되지만 String 클래스의 다양한 생성자를 이용해서 직접 String 클래스를 생성할 수도 있다.
+  * 코드에서 문자열 리터럴이 발견될 때마다 컴파일러는 문자열 객체를 만든다.
 
 
 
-# 2 String은 왜 immutable할까?
+
+**String Literal**
+
+* 소스 코드에 작성된 문자열
+* 큰 따옴표로 묶는다.
+* 아래에 `Hello world!` 가 문자열 리터럴이다.
+
+```java
+String greeting = "Hello world!";
+```
+
+
+
+# 2 Immutable
 
 * immutable이란?
   * 객체의 내부 상태가 생성 후 변하지 않는 것을 의미한다.
+* String 클래스에는 여러 가지 메서드가 있으며, 그 중 일부는 문자열을 수정하는 것처럼 보인다.
+  * 하지만 문자열은 변경되지 않으므로(immutable) 메서드는 작업을 수행한 새 문자열을 만들고 반환한다.
+  * String의 replace() 메소드는 첫 번째 매개값인 문자열을 찾아 두 번째 매개값으로 대치한 완전히 새로운 문자열 생성하고 반환한다.
+  
 * immutable의 장점
   * 캐싱
   * 보안
@@ -17,7 +35,7 @@
 
 
 
-# 3. String Pool
+# 3 String Pool
 
 * String이 저장되는 메모리의 특수한 공간을 의미한다.
 * String은 immutable하기 때문에 JVM은 String에게 할당되는 메모리의 양을 최적화할 수 있다.
@@ -72,7 +90,9 @@ strVar3과 strVar4는 참조가 다름.
 strVar3과 strVar4는 문자열이 같음.
 ```
 
-# 4. immutable의 장점
+
+
+# 4 immutable의 장점
 
 **Security**
 
@@ -92,7 +112,7 @@ strVar3과 strVar4는 문자열이 같음.
 
 
 
-# 5. 자주 사용되는 String 메소드
+# 5 자주 사용되는 String 메소드
 
 | Modifier and Type | Method                                    | Description                                                  |
 | :---------------- | :---------------------------------------- | :----------------------------------------------------------- |
@@ -106,13 +126,13 @@ strVar3과 strVar4는 문자열이 같음.
 
 
 
----
+# 6 StringTokenizer 클래스
+
+* 문자열이 특정 구분자로 연결되어 있을 경우, 구분자를 기준으로 부분 문자열을 분리 하기 위해서는 String의 split() 메소드를 이용한다.
+* 또는 java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다. 
+* split()은 정규 표현식으로 구분하고, StringTokenizer는 문자로 구분한다는 차이점이 있다.
 
 
-
-# 6. StringTokenizer 클래스
-
-> 문자열이 특정 구분자로 연결되어 있을 경우, 구분자를 기준으로 부분 문자열을 분리 하기 위해서는 String의 split() 메소드를 이용하거나, java.util 패키지의 StringTokenizer 클래스를 이용할 수 있다. split()은 정규 표현식으로 구분하고, StringTokenizer는 문자로 구분한다는 차이점이 있다.
 
 **StringTokenizer 메소드**
 
@@ -147,19 +167,17 @@ while (st.hasMoreTokens()){
 
 
 
----
-
-
-
-# 7. StringBuilder 클래스
+# 7 StringBuilder 클래스
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 
-* StringBuffer와 사용법은 동일하다
+* StringBuilder와 StringBuffer의 사용법은 동일하다
 * **StringBuilder**는 단일 스레드 환경에서만 사용하도록 설계되어 있다.
   * **Thread Safe하지 않다.**
   * **StringBuffer는 Thread Safe**하다
 * 버퍼가 부족할 경우 자동으로 버퍼의 크기를 늘리기 때문에 초기 버퍼의 크기는 그다지 중요하지 않다
+
+
 
 **초기화**
 
@@ -183,21 +201,19 @@ StringBuilder sb = new StringBuilder("Java");
 | `StringBuilder`   | `reverse()`                               | Causes this character sequence to be replaced by the reverse of the sequence. |
 | `StringBuilder`   | `delete(int start, int end)`              | Removes the characters in a substring of this sequence.      |
 | `StringBuilder`   | `deleteCharAt(int index)`                 | Removes the `char` at the specified position in this sequence. |
-|                   |                                           |                                                              |
-|                   |                                           |                                                              |
 
 
 
----
-
-
-
-# 8. StringBuffer 클래스
+# 8 StringBuffer 클래스
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 >
-> * StringBuilder와 차이점
->   * 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 Thread safe하다
+
+
+
+**StringBuilder와 차이점**
+
+* 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 Thread safe하다
 
 
 
@@ -205,16 +221,3 @@ StringBuilder sb = new StringBuilder("Java");
 
 * 이것이 자바다
 * https://www.baeldung.com/java-string-immutable
-
-
-
-
-
-
-
-
-
-
-
-
-
