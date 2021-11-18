@@ -12,6 +12,6 @@
 ## Ethereum
 
 * [Ethereum Glossary](Ethereum/Glossary/Glossary.md)
-* [Whitepaper](Ethereum/Whitepaper/Whitepaper.md) 
+* [Whitepaper](Ethereum/Whitepaper/Whitepaper.md)
 * [Mastering Ethetrum](Ethereum/Mastering-Ethetrum/README.md) 
 
