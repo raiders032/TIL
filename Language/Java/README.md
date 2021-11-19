@@ -23,7 +23,7 @@
 * [Multi Thread](Multi-Thread/Multi-Thread.md) 
 * [Nested Class](Nested-Class/Nested-Class.md)
 * [Static Member](Static-Member/Static-Member.md)
-  * static field, static method
+  * static field, static method, static initialization block, initializer block
 * [String](String/String.md)
   * String, StringTokenizer, StringBuilder, StringBuffer
 
