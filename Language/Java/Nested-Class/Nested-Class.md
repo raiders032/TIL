@@ -3,54 +3,61 @@
 * 클래스가 여러 클래스와 관계를 맺는 경우 독립적으로 선언하는 것이 좋으나 특정 클래스와 관계를 맺는 경우에는 관계 클래스를 클래스 내부에 선언하는 것이 좋다. 
 * **중첩 클래스란(Nested Class)란 클래스 내부에 선언한 클래스를 말한다.**
 * 중첩 클래스를 사용하면 두 클래스의 멤버들은 서로 쉽게 접근 할 수 있다는 장점과 외부에는 불필요한 관계 클래스를 감춤으로서 코드의 복잡성을 줄일 수 있다.
-* 중첩 클래스는 선언 위치에 따라 분류된다. 
-  * **클래스의 멤버**로서 선언되는 중첩 클래스를 **멤버 클래스**라고 하고, **메소드 내부**에 선언되는 중첩 클래스를 **로컬 클래스**라고 한다.
 
 
 
 ## 1.1 중첩 클래스의 용도
 
-* 한 곳에서만 사용되는 클래스를 논리적으로 그룹화하는데 사용된다.
+* **클래스 그룹화**
+
+  * **한 곳에서만 사용되는 클래스를 논리적으로 그룹화하는데 사용된다.**
   * 하나의 클래스가 오직 다른 하나의 클래스에만 유용한 경우 해당 클래스에 클래스를 내장하고 두 클래스를 함께 유지하는 것이 좋다. 
   * 이러한 "helper class"를 중첩하면 패키지가 더 간소화된다.
-* 캡슐화 강화
 
->  두 개의 최상위 클래스, A와 B를 고려해보자. 여기서 B는 privated으로 선언될 A의 멤버에 대한 액세스가 필요하다. 클래스 A 내에서 클래스 B를 숨김으로써 A의 멤버는 private으로 선언되고 B가 액세스할 수 있다. 게다가, B 자체는 외부로부터 숨겨질 수 있다.
+* **캡슐화 강화**
 
-* 읽기 쉽고 유지보수가 쉬운 코드
+  * >  두 개의 최상위 클래스, A와 B를 고려해보자. 여기서 B는 privated으로 선언될 A의 멤버에 대한 액세스가 필요하다. 클래스 A 내에서 클래스 B를 숨김으로써 A의 멤버는 private으로 선언되고 B가 액세스할 수 있다. 게다가, B 자체는 외부로부터 숨겨질 수 있다.
+
+* **읽기 쉽고 유지보수가 쉬운 코드**
+
   * 최상위 클래스 내에 작은 클래스를 중첩하면  중첩 클래스의 코드가 사용되는 위치에 더 가깝게 배치되고 읽기가 쉬워진다.
 
 
 
-# 2 멤버 클래스
+## 1.2 Nested Class의 종류
 
-* **클래스의 멤버**로서 선언되는 중첩 클래스를 **멤버 클래스**하며 멤버 클래스의 종류로 **인스턴스 멤버 클래스**와 **정적 멤버 클래스**가 있다
-  * 인스턴스 멤버 클래스
-    * **Non-static nested class** 또는 **inner class**라고 불림
-    *  `static` 키워드 없음
-  * 정적 멤버 클래스: `static` 키워드 있음
-* 내부 클래스는  외부 클래스의 private으로 선언된 경우에도 다른 멤버에 액세스할 수 있습니다.
-* 멤버 클래스도 하나의 클래스이기 때문에 컴파일하면 바이트 코드가 별도로 생성된다
+* Nested Class는 `static` 키워드의 유무로 두 가지의 종류가 있다.
+  * **Non-static nested class(inner class)**: `static` 키워드 없음
+  * **static nested class**: `static` 키워드 있음
 
 
 
-## 2.1 인스턴스 멤버 클래스(non-static nested class)
+**이너 클래스의 종류**
+
+* **이너 클래스**: 클래스 내부에 선언된 클래스
+* **로컬 클래스**: 메서드의 바디 내에서 선언된 이너 클래스
+  * 로컬 클래스를 한번만 사용하는 경우 익명 클래스를 사용하는 것이 좋다
+* **익명 클래스**: 클래스 이름을 지정하지 않고 메서드 본문에 이너 클래스를 선언
+  * [Anonymous-Class.md](../Anonymous-Class/Anonymous-Class.md)
+  * 하나의 추상 메소드를 가진 인터페이스를 구현하는 경우 익명 클래스보다 람다식을 사용하는 것이 간결하다.
+
+
+
+
+# 2 inner class(non-static nested class)
 
 * `static` 키워드 없이 선언된 중첩 클래스를 말한다.
-
-* 인스턴스 멤버 클래스, non-static nested class, inner class라고 불린다.
-
 * 이너 클래스는 **외부 클래스의 인스턴스와 연결**되어 있다
-
 * 이너 클래스는 인스턴스와 연관되어 있기 때문에 정적 멤버를 선언할 수 없다.
 
   * 인스턴스 필드와 메서드만 선언 가능함
-
 * 이너 클래스의 인스턴스 객체는 반드시 외부 클래스의 인스턴스와 함께 존재한다.
 
-  * 이너 클래스의 인스턴스는 외부 클래스의 인스턴스의 메소드와 필드에 집적 접근이 가능하다
+  * 이너 클래스의 인스턴스는 외부 클래스의 인스턴스의 메소드와 인스턴스 필드에 집적 접근이 가능하다
+  * 이너 클래스는 private로 선언된 경우에도 바깥쪽 클래스의 다른 멤버에 액세스할 수 있다.
 
-  
+
+
 
 **이너 클래스 객체 생성하기**
 
@@ -66,15 +73,17 @@ OuterClass.InnerClass innerObject = outerObject.new InnerClass();
 **Inner Classes 셍성**
 
 ```java
-class A{
-	class B{
-		B() {} //생성자
-    int field; // 인스턴스 필드 가능
-    void method(){} // 인스턴스 메소드 가능
-    
-    static in field2; // 정적 필드 불가능
-    static void method2(){} // 정적 메소드 불가능
-	}
+class OuterClass {
+    class InnerClass {
+      	// 선언 가능
+        InnerClass() {}
+        int instanceField;
+        void instanceMethod() {}
+
+      	// 아래와 같이 static 멤버 선언 불가능
+        // static int staticField;
+        // static void staticMethod() {}
+    }
 }
 ```
 
@@ -83,52 +92,15 @@ class A{
 **사용 예시**
 
 ```java
-// 먼저 A 객체를 생성
-A a = new A();
-// B 객체 생성
-A.B b = a.new B();
-b.field = 3;
-b.mehtod();
+OuterClass outerClass = new OuterClass();
+OuterClass.InnerClass innerClass = outerClass.new InnerClass();
+innerClass.instanceField = 10;
+innerClass.instanceMethod();
 ```
 
 
 
-## 2.2 정적 멤버 클래스(static nested class)
-
-* `static` 키워드로 선언된 중첩 클래스를 말한다.
-* static nested class는 외부 클래스와 연결되어있다.
-  * A 클래스로 바로 접근할 수 있는 B 중첩 클래스
-* 정적 클래스 메서드와 마찬가지로 static nested class는 외부 클래스에 정의된 인스턴스 변수 또는 메서드를 직접 참조할 수 없다
-  * 객체 참조를 통해서만 사용할 수 있다.
-* 인스턴스 멤버 클래스와 달리 모든 종류의 필드와 메서드를 선언할 수 있다
-
-```java
-class A{
-	static classB{
-		B() {} //생성자
-    int field; // 인스턴스 필드 가능
-    void method(){} //인스턴스 메소드 가능
-    
-    static in field2; // 정적 필드 가능
-    static void method2(){} //정적 메소드 가능
-	}
-}
-```
-
-
-
-**사용 예시**
-
-```java
-// B 객체 생성
-A.B b = new A.B();
-b.field = 3;
-b.mehtod();
-```
-
-
-
-# 3 로컬 클래스
+# 3 Local Class
 
 * **메소드 내부**에 선언되는 중첩 클래스를 **로컬 클래스**라고 한다.
 * 메소드 실행 시에만 사용되고, 메소드가 종료되면 없어진다.
@@ -136,22 +108,22 @@ b.mehtod();
   * 메소드 내부에서만 사용하므로 접근을 제한할 필요가 없다.
 
 ```java
-class A{
-	void method(){
-    class B{
-      B() {} //생성자
-      int field; // 인스턴스 필드 가능
-      void method(){} // 인스턴스 메소드 가능
-    
-      static in field2; // 정적 필드 불가능
-      static void method2(){} // 정적 메소드 불가능
+class OuterClass {
+    void method(){
+        class LocalClass{
+            LocalClass() {}
+            int instanceField;
+            void instanceMethod() {}
+
+            // static int staticField; 정적 필드 선언 불가능
+            // static void staticMethod(){} 정적 메소드 선언 불가능
+        }
+      
+       // method 내에서 로컬 클래스를 사용한다.
+      LocalClass localClass = new LocalClass();
+      localClass.instanceField = 3;
+      localClass.instanceMethod();
     }
-    
-    // 로컬 클래스 사용
-    B b = new B();
-    b.field = 3;
-    b.method();
-  }
 }
 ```
 
@@ -173,40 +145,132 @@ class A{
 
 
 
+**로컬 클래스 예시**
+
+```java
+class OuterClass {
+  // 바깥 클래스의 인스턴스 멤버과 static 멤버 선언
+  int outerInstanceField = 10;
+  int outerInstanceMethod() { return 10; }
+  static int outerStaticField = 10;
+  static int outerStaticMethod() { return 10; }
+
+  int method(int parameter) {
+    int localVariable = 10;
+
+    // 로컬 클래스 선언
+    class LocalClass {
+      int localInstanceMethod() {
+        int total = 0;
+
+        // 바깥 클래스의 모든 멤버(인스턴스, static 멤버) 접근 가능
+        total += outerInstanceField;
+        total += outerStaticField;
+        total += outerInstanceMethod();
+        total += outerStaticMethod();
+
+        // 메소드의 로컬 변수와 파라미터 접근 가능
+        total += localVariable;
+        total += parameter;
+        
+        // 메소드의 로컬 변수와 파라미터 변경 불가능 값을 변경하면 effectively final하지 않아 컴파일 에러
+        // localVariable = 20;
+        // parameter = 20;
+
+        return total;
+      }
+    }
+
+    LocalClass localClass = new LocalClass();
+    return localClass.localInstanceMethod();
+  }
+
+
+}
+```
+
+![image-20211121164427515](./images/localvariable.png)
+
+
+
+# 3 static nested class
+
+* `static` 키워드로 선언된 중첩 클래스를 말한다.
+* static nested class는 바깥쪽 클래스와 연결되어있다.
+  * A 클래스로 바로 접근할 수 있는 B 중첩 클래스
+* 클래스 메소드와 마찬가지로 바깥쪽 클래스에 정의된 인스턴스 변수 또는 메서드를 직접 참조할 수 없다
+  * 객체 참조를 통해서만 사용할 수 있다.
+* 이너 클래스와 달리 모든 종류의 필드와 메서드를 선언할 수 있다
+
+```java
+class OuterClass {
+
+    static class StaticClass {
+      	// 생성자, 인스턴스 멤버, static 멤버 모두 선언 가능
+        StaticClass() {}
+        int instanceField;
+        void instanceMethod() {}
+        static int staticField;
+        static void staticMethod() {}
+    }
+}
+```
+
+
+
+**사용 예시**
+
+```java
+OuterClass.StaticClass staticClass = new OuterClass.StaticClass();
+// 인스턴스 멤버 접근 가능
+staticClass.instanceField = 10;
+staticClass.instanceMethod();
+
+// static 멤버 접근 가능 그러나 클래스 이름으로 직접 접근하는 것이 좋다
+staticClass.staticField = 10;
+staticClass.staticMethod();
+
+// static 멤버는 아래와같이 클래스 이름을 사용하여 접근하자
+OuterClass.StaticClass.staticField = 10;
+OuterClass.StaticClass.staticMethod();
+```
+
+
+
 # 4 중첩 클래스 접근 제한
 
 
 
-## 4.1 바깥 필드와 메소드에서 사용 제한
+## 4.1 바깥 클래스에서 내부 클래스 접근 제한
 
 * 바깥 클래스에서 내부 클래스에 대한 접근 제한을 알아보자
-* 외부 클래스 -> 인스턴스 멤버 클래스
-  * 외부 클래스에서 인스턴스 필드나 인스턴스 메소드에서 인스턴스 멤버 클래스 객체 생성 가능
-  * 외부 클래스에서 정적 필드나 정적 메소드에서 인스턴스 멤버 클래스 객체 생성 불가능
-* 외부 클래스 -> 정적 멤버 클래스
+* 바깥 클래스 -> 이너 클래스
+  * 바깥 클래스에서 인스턴스 필드나 인스턴스 메소드에서 이너 클래스 객체 생성 가능
+  * 바깥 클래스에서 static 필드나 static 메소드에서 이너 클래스 객체 생성 불가능
+* 바깥 클래스 -> static 클래스
   * 외부 클래스에서 인스턴스 필드나 인스턴스 메소드에서 정적 멤버 클래스 객체 생성 가능
   * 외부 클래스에서 정적 필드나 정적 메소드에서 정적 멤버 클래스 객체 생성 가능
 
 ```java
 public class A {
   // 인스턴스 필드 
-  B f1 = new B();	// 인스턴스 멤버 클래스 가능
-  C f2 = new C(); // 정적 멤버 클래스 가능
-  
-  // 정적 필드 
-  static B f3 = new B(); // 인스턴스 멤버 클래스 불가능
-  static C f4 = new C(); // 정적 멤버 클래스 가능
+  B f1 = new B();	// 이너 클래스 클래스 객체 생성 가능
+  C f2 = new C(); // static 클래스 객체 생성 가능
   
   // 인스턴스 메소드
   void method1(){
-    B var1 = new B(); // 인스턴스 멤버 클래스 가능
-    C var2 = new C(); // 정적 멤버 클래스 가능
+    B var1 = new B(); // 이너 클래스 클래스 객체 생성 가능
+    C var2 = new C(); // static 클래스 객체 생성 가능
   }
  	
+  // 정적 필드 
+  static B f3 = new B(); // 이너 클래스 클래스 객체 생성 불가능
+  static C f4 = new C(); // static 클래스 객체 생성 가능
+  
   // 정적 메소드
   static void method2(){
-    B var1 = new B();	// 인스턴스 멤버 클래스 불가능
-    C var2 = new C(); // 정적 멤버 클래스 가능
+    B var1 = new B();	// 이너 클래스 클래스 객체 생성 가능
+    C var2 = new C(); // static 클래스 객체 생성 가능
   }
   
   class B {}
@@ -217,16 +281,104 @@ public class A {
 
 
 
-## 4.2 멤버 클래스에서 사용 제한
+## 4.2 내부 클래스에서 바깥 클래스 접근 제한
 
 * 내부 클래스에서 바깥 클래스의 필드와 메소드에 대한 접근 제한을 알아보자
-* 인스턴스 멤버 클래스 -> 외부 클래스
-  * 모든 필드와 메소드 접근가능
-* 정적 멤버 클래스 -> 외부 클래스
-  * 외부 클래스의 정적 필드와 정적 메소드 접근 가능
-  * 외부 클래스의 인스턴스 필드와 인스턴스 메소드 접근 불가능
+
+**Inner class -> 바깥 클래스**
+
+* 모든 필드와 메소드 접근가능
+
+```java
+class OuterClass {
+  // 바깥 클래스에 인스턴스 멤버 선언
+  private int outerInstanceField = 10;
+  private static int outerStaticField = 10;
+  
+  // 바깥 클래스에 static 멤버 선언
+  static int outerStaticField = 10;
+  static int outerStaticMethod() { return 10; }
+
+  public OuterClass(int outerInstanceField) {
+    this.outerInstanceField = outerInstanceField;
+  }
+  
+  class InnerClass {
+    InnerClass() {}
+    
+    // 이너 클래스에 정적 멤버 선언 불가
+    // static int staticField;
+    // static void staticMethod() { }
+    
+    // 이너 클래스에 인스턴스 필드와 메소드 선언가능
+    int instanceField;
+    int instanceMethod() {
+      int total = 0;
+      // 바깥 클래스의 모든 멤버 접근 가능
+      total += outerInstanceField;
+      total += outerStaticField;
+      total += outerInstanceMethod();
+      total += outerStaticMethod();
+      return total;
+    }
+  }
+}
+```
 
 
+
+**static class -> 바깥 클래스**
+
+* 외부 클래스의 정적 필드와 정적 메소드 접근 가능
+* 외부 클래스의 인스턴스 필드와 인스턴스 메소드 접근 불가능
+
+```java
+class OuterClass {
+  // 바깥 클래스에 인스턴스 멤버 선언
+  private int outerInstanceField = 10;
+  private static int outerStaticField = 10;
+
+  // 바깥 클래스에 static 멤버 선언
+  static int outerStaticField = 10;
+  static int outerStaticMethod() { return 10; }
+
+  public OuterClass(int outerInstanceField) {
+    this.outerInstanceField = outerInstanceField;
+  }
+
+  static class StaticClass {
+    // 인스턴스 멤버 선언 가능
+    int instanceField;
+    void instanceMethod() {
+      OuterClass outerClass = new OuterClass(10);
+      int total = 0;
+      // 바깥 클래스의 static 멤버 접근 가능
+      total += outerStaticField;
+      total += outerStaticMethod();
+
+      // 바깥 클래스의 인스턴스 멤버 접근 불가능
+      // total += outerInstanceField;
+      // total += outerInstanceMethod();
+    }
+
+    // static 멤버 선언 가능
+    static int staticField;
+    static int staticMethod() {
+      OuterClass outerClass = new OuterClass(10);
+      int total = 0;
+      // 바깥 클래스의 static 멤버 접근 가능
+      total += outerStaticField;
+      total += outerStaticMethod();
+
+      // 바깥 클래스의 인스턴스 멤버 접근 불가능
+      // total += outerInstanceField;
+      // total += outerInstanceMethod();
+      
+      return total
+    }
+  }
+}
+```
 
 
 
