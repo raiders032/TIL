@@ -148,3 +148,4 @@ public static int getNumberOfBicycles() {
 참고
 
 * https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html
+
