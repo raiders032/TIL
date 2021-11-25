@@ -332,7 +332,7 @@ function FunctionName([parameters]) {public|private|internal|external} [pure|con
 
 * `[pure|constant|view|payable]` 은 함수의 동작을 설명한다.
 * constant or view : 상태를 변경하지 않음 솔리디티 v0.5 이상부터 constant 대신 view를 써야한다.
-* pure : 순수 함수. 인수에 대해서만 작동하고 데이터 반환.
+* pure : 순수 함수. 스토리지에서 변수를 읽거나 쓰지 않는다. 인수에 대해서만 작동하고 데이터 반환. 부작용 없음
 * payable : payable 선언에 따라 입금 여부 판별.
 
 
@@ -500,3 +500,161 @@ contract Faucet is Mortal {
 }
 ```
 
+
+
+## 5.6 에러 처리
+
+* 컨트랙트 호출은 중단되고 에러를 반환할 수 있다.
+* 솔리디티에서 에러 제어는 assert, require, revert, throw(현재 사용하지 않음) 네 가지 함수가 있다.
+* 에러로 컨트랙트가 중지 될 때 둘 이상의 컨트랙트가 호출된 경우 컨트랙트 호출 연결을 따라 모든 상태가 원래대로 되돌려진다.
+
+
+
+**assert**
+
+* 조건을 평가하고, 만약 조건이 거짓이면 에러로 실행을 중지시킨다.
+* 사용되지 않은 가스를 호출자한테 반환하지 않고 가스를 모두 소모한 후 상태만 원래대로 돌림
+* 제대로 짠 코드라면 assert가 거짓이면 안된다.
+  * 만약 거짓이라면 해당 컨트랙트를 반드시 수정해야 한다.
+
+
+
+**require**
+
+* 조건을 평가하고, 만약 조건이 거짓이면 에러로 실행을 중지시킨다.
+* 입력값(함수 파라미터, 트랜잭션 필드값)을 테스트할 때 사용한다.
+* 에러 메시지를 포함할 수 있다.
+  * 에러 메시지는 트랜잭션 로그로 기록된다.
+*  사용하지 않은 가스는 호출자에게 반환되며 상태 역시 되돌아감
+* assert는 false가 나오면 절대 안되는 조건인 경우 사용하고 그게 아니라면 require를 사용한다.
+
+```solidity
+require(msg.sender == owner, "Only the contract owner can call this function");
+```
+
+
+
+**revert**
+
+* 컨트랙트 실행을 중지하고 모든 변경 상태를 되돌린다.
+* 사용하지 않은 가스는 호출자에게 반환되며 상태 역시 되돌아감
+* **require** 를 사용하는데 조건식이 복잡한 경우 **revert**를 사용한다.
+
+
+
+**throw**
+
+* 더 이상 사용되지 않음
+
+
+
+**차이점**
+
+* require : 사용하지 않은 가스는 호출자에게 반환되며 상태 역시 되돌아감
+* assert: 사용되지 않은 가스를 호출자한테 반환하지 않고 가스를 모두 소모한 후 상태만 원래대로 돌림
+* revert: 미사용가스 반환하며 상태 역시 되돌림
+
+```solidity
+if(msg.sender != owner) { throw; }
+if(msg.sender != owner) { revert(); }
+assert(msg.sender == owner);
+require(msg.sender == owner);
+```
+
+
+
+
+
+## 5.7 이벤트
+
+* Solidity에서 이벤트는 스마트 컨트랙트가 발생시킬 수 있다
+* DApp, 또는 이더리움 JSON-RPC API와 연결된 모든 것이 이러한 이벤트를 듣고 그에 따라 행동할 수 있습니다. 
+* 이벤트 history을 나중에 검색할 수 있도록 이벤트를 인덱싱할 수 있다.
+* 트랜잭션 영수증은 로그 엔트리를 가지고 있다.
+
+
+
+**이벤트 시그니처 선언 및 이벤트 보내기**
+
+```solidity
+// The event signature are declared inside of the contract code
+event ValueChanged(uint oldValue, uint256 newValue);
+
+// event can be emitted with the emit keyword.
+emit ValueChanged(count - 1, count);
+```
+
+
+
+**예시**
+
+* 아래의 컨트랙트를 배포하고 increment를 호출해보자
+
+```solidity
+pragma solidity 0.5.17;
+
+contract Counter {
+
+    event ValueChanged(uint oldValue, uint256 newValue);
+
+    // Private variable of type unsigned int to keep the number of counts
+    uint256 private count = 0;
+
+    // Function that increments our counter
+    function increment() public {
+        count += 1;
+        emit ValueChanged(count - 1, count);
+    }
+
+    // Getter to get the count value
+    function getCount() public view returns (uint256) {
+        return count;
+    }
+
+}
+```
+
+* 리믹스에서 새로운 컨트랙트를 클릭하면 아래와 같이 로그 배열을 볼 수 있다.
+
+![Remix screenshot](https://d33wubrfki0l68.cloudfront.net/621e1a8914c1103701badf5dcf1464ab906821d0/abdd1/static/807405efa63815f643b111b0a927d0a3/a13c9/remix-screenshot.png)
+
+
+
+**indexed**
+
+```solidity
+contract Tracker  {
+    event numberTracker(uint256 num, string str);
+    event numberTracker2(uint256 indexed num, string str);
+
+    uint256 num =0;
+    function PushEvent(string memory _str) public {
+        emit numberTracker(num,_str);
+        emit numberTracker2(num,_str);
+        num ++;
+    }
+}
+```
+
+* 3개의 파라미터까지 indexed 키워드 적용 가능
+  * indexed 키워드는 event의 파라미터에서만 사용 가능
+* 인덱싱된 매개 변수를 사용하면 인덱싱된 매개 변수로 로그를 필터링할 수 있다.
+
+```javascript
+myContract.getPastEvents('numberTracker2',{ filter:{num:[2,1]},fromBlock: 1, toBlock:'latest'});
+myContract.getPastEvents('numberTracker',{ filter:{num:[2,1]},fromBlock: 1, toBlock:'latest'});
+```
+
+
+
+## 5.8 컨트랙트 호출
+
+* send, call, callcode, delegatecall 함수를 이용해서 컨트랙트 내에서 다른 컨트랙트를 호출할 수 있다.
+
+
+
+### 5.8.1 send
+
+### 5.8.2 call
+
+* 
