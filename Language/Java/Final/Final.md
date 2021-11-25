@@ -29,6 +29,19 @@
 
 
 
+**예시**
+
+```java
+package java.lang;
+
+public final class Math {
+  public static final double PI = 3.14159265358979323846;
+  ...
+}
+```
+
+
+
 # 3 final 클래스
 
 * 클래스에 `final` 키워드를 붙이면 해당 클래스는 최종적인 클래스이므로 상속할 수 없는 클래스가 된다. 
