@@ -188,9 +188,176 @@ Thread thread = new Thread() {
 thread.start()
 ```
 
+# 4 Thread 상태
+
+* Thread 객체를 생성하고 start()메소드를 호출하면 바로 실행되는 것처럼 보이지만 사실 대기 상태가 된다.
+* 이처럼 Thread는 NEW, RUNNABLE, WATING, TIMED_WAITING, BLOCKED TERMINATED 상태를 가지고 있다
 
 
-# 4 Thread Scheduling
+
+| 상태      | 열거 상수     | 설명                                                         |
+| --------- | ------------- | ------------------------------------------------------------ |
+| 객체 생성 | NEW           | 스레드 객체가 생성되고 아직 `.start()` 메소드가 호출되지 않은 상태 |
+| 실행 대기 | RUNNABLE      | `.start()`가 호출된 후, 스케줄링에 의해 선택될 때까지 실행 대기 |
+| 일시 정지 | WATING        | 다른 스레드가 실행 대기 상태로 가라고 명령할 때까지 기다리는 상태 |
+| 일시 정지 | TIMED_WAITING | 주어진 시간만큼 대기하고 있는 상태                           |
+| 일시 정지 | BLOCKED       | 사용하고자 하는 객체의 락이 풀릴 때까지 기다리는 상태        |
+| 종료      | TERMINATED    | 실행을 마친 상태                                             |
+
+
+
+**예시**
+
+```java
+public class StatePrintThread extends Thread {
+	private Thread targetThread;
+
+	public StatePrintThread(Thread targeThread) {
+		this.targetThread = targeThread;
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			Thread.State state = targetThread.getState();
+			System.out.println("타겟 스레드 상태 : " + state);
+
+			if(state == Thread.State.NEW) {
+				targetThread.start();
+			}
+
+			if(state == Thread.State.TERMINATED) {
+				break;
+			}
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) { }
+		}
+	}
+}
+
+public class TargetThread extends Thread {
+	@Override
+	public void run() {
+		for(long i=0; i<1000000000; i++) {}
+
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) { }
+
+		for(long i=0; i<1000000000; i++) {}
+	}
+}
+
+public class ThreadStateExample {
+	public static void main(String[] args) {
+		StatePrintThread statePrintThread = new StatePrintThread(new TargetThread());
+		statePrintThread.start();
+	}
+}
+```
+
+
+
+**출력 결과**
+
+```
+타겟 스레드 상태 : NEW
+타겟 스레드 상태 : RUNNABLE
+타겟 스레드 상태 : RUNNABLE
+타겟 스레드 상태 : TIMED_WAITING
+타겟 스레드 상태 : TIMED_WAITING
+타겟 스레드 상태 : TIMED_WAITING
+타겟 스레드 상태 : RUNNABLE
+타겟 스레드 상태 : RUNNABLE
+타겟 스레드 상태 : RUNNABLE
+타겟 스레드 상태 : TERMINATED
+```
+
+
+
+## 4.1 Thread 상태 제어
+
+* Thread의 메소드를 통해 Thread의 상태를 제어할 수 있다.
+
+
+
+**sleep()**
+
+* `sleep(long millis)`
+* 주어진 시간 동안 스레드를 일시 정지 상태로 만든다. 
+* 주어진 시간이 지나면 자동적으로 실행 대기 상태가 된다.
+* 일시 정지 상태에서 주어진 시간을 다 기다리기 전에 `.interrupt()` 메소드가 호출되면 `InterruptedException`이 발생한다.
+
+```java
+import java.awt.Toolkit;
+
+public class SleepExample {
+	public static void main(String[] args) {
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		for(int i=0; i<10; i++) {
+			toolkit.beep();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) { }
+		}
+	}
+}
+```
+
+
+
+**yield()**
+
+* yield() 메소드를 호출한 스레드는 실행 대기 상태가 되고 우선순위가 동일하거나 높은 다른 스레드에게 실행을 양보한다.
+* 스레드에 무의미한 반복이 있는 시점에 .yield() 메소드를 사용하면 성능에 도움이 된다.
+
+
+
+**join()**
+
+* ThreadA가 ThreadB의 결과값을 사용할 경우 ThreadA는 ThreadB가 종료될 때 까지 기다려야한다.
+* 이러한 경우 ThreadA가 `threadB.join()` 을 호출하면 ThreadB의 run() 메소드가 종료될 때까지 일시정지 상태가 된다. 
+
+```java
+public class SumThread extends Thread {
+	private long sum;
+
+	public long getSum() {
+		return sum;
+	}
+
+	public void setSum(long sum) {
+		this.sum = sum;
+	}
+
+	@Override
+	public void run() {
+		for(int i=1; i<=100; i++) {
+			sum += i;
+		}
+	}
+}
+
+public class JoinExample {
+	public static void main(String[] args) {
+		SumThread sumThread = new SumThread();
+		sumThread.start();
+
+		try {
+      // sumThread가 종료될 때가지 메인 스레드를 일시 정지시킴
+			sumThread.join();
+		} catch (InterruptedException e) { }
+		
+		System.out.println(sumThread.getSum());
+	}
+}
+```
+
+
+
+# 5 Thread Scheduling
 
 * Thread Scheduling은 스레드의 개수가 코어의 수보다 많을 경우 **스레드를 어떤 순서에 의해 동시성으로 실행**할 것인가 결정하는 것
 * 멀티 스레드
@@ -207,7 +374,7 @@ thread.start()
     * 시간 할당량 만큼 스레드를 실행하고 다시 다른 스레드를 실행하는 방식
     * JVM에 의해서 순서가 정해져 코드로 제어 불가
 
-# 5 Synchronization
+# 6 Synchronization
 
 * 스레드는 주로 필드 및 오브젝트 참조 필드에 대한 액세스를 공유하여 통신한다.
 * 이는 매우 효율적인 방법이지만 **thread interference** 와 **memory consistency errors** 두가지 문제점이 발생할 수 있다.
@@ -215,7 +382,7 @@ thread.start()
 
 
 
-## 5.1 Thread Interference
+## 6.1 Thread Interference
 
 * Thread Interference는 여러 스레드가 공유 변수를 사용할 때 스레드의 실행 순서에 따라 결과 값이 달라지는 상황을 의미한다.
 * Thread Interference의 원인
@@ -275,13 +442,13 @@ public void increment() {
 
 
 
-## 5.2 Memory Consistency Errors
+## 6.2 Memory Consistency Errors
 
 * [참고](https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html)
 
 
 
-## 5.3 Synchronized Methods
+## 6.3 Synchronized Methods
 
 
 
