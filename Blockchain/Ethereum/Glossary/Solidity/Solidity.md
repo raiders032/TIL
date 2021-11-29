@@ -508,6 +508,13 @@ contract Faucet is Mortal {
 * 솔리디티에서 에러 제어는 assert, require, revert, throw(현재 사용하지 않음) 네 가지 함수가 있다.
 * 에러로 컨트랙트가 중지 될 때 둘 이상의 컨트랙트가 호출된 경우 컨트랙트 호출 연결을 따라 모든 상태가 원래대로 되돌려진다.
 
+```solidity
+if(msg.sender != owner) { throw; }
+if(msg.sender != owner) { revert(); }
+assert(msg.sender == owner);
+require(msg.sender == owner);
+```
+
 
 
 **assert**
@@ -524,7 +531,7 @@ contract Faucet is Mortal {
 * 조건을 평가하고, 만약 조건이 거짓이면 에러로 실행을 중지시킨다.
 * 입력값(함수 파라미터, 트랜잭션 필드값)을 테스트할 때 사용한다.
 * 에러 메시지를 포함할 수 있다.
-  * 에러 메시지는 트랜잭션 로그로 기록된다.
+  * 에러 메시지는 트랜잭션 로그로 기록된다.?
 *  사용하지 않은 가스는 호출자에게 반환되며 상태 역시 되돌아감
 * assert는 false가 나오면 절대 안되는 조건인 경우 사용하고 그게 아니라면 require를 사용한다.
 
@@ -553,13 +560,6 @@ require(msg.sender == owner, "Only the contract owner can call this function");
 * require : 사용하지 않은 가스는 호출자에게 반환되며 상태 역시 되돌아감
 * assert: 사용되지 않은 가스를 호출자한테 반환하지 않고 가스를 모두 소모한 후 상태만 원래대로 돌림
 * revert: 미사용가스 반환하며 상태 역시 되돌림
-
-```solidity
-if(msg.sender != owner) { throw; }
-if(msg.sender != owner) { revert(); }
-assert(msg.sender == owner);
-require(msg.sender == owner);
-```
 
 
 
@@ -655,6 +655,74 @@ myContract.getPastEvents('numberTracker',{ filter:{num:[2,1]},fromBlock: 1, toBl
 
 ### 5.8.1 send
 
+* 
+
 ### 5.8.2 call
+
+```solidity
+contract add{
+    event JustFallback(string _str);
+    event JustReceive(string _str);
+    
+    function addNumber(uint256 _num1, uint256 _num2) public pure returns(uint256){
+        return _num1 + _num2;
+    }
+    
+    fallback() external payable  {
+     emit JustFallback("JustFallback is called");
+    }
+    
+    receive() external payable {
+     emit JustReceive("JustReceive is called");
+    }
+}
+
+contract caller{
+    event calledFunction(bool _success, bytes _output);
+   
+    //1. 송금하기 
+    function transferEther(address payable _to) public payable{
+        (bool success,) = _to.call{value:msg.value}("");
+        require(success,"failed to transfer ether");
+    }
+    
+    //2. 외부 스마트 컨트랙 함수 부르기 
+    function callMethod(address _contractAddr,uint256 _num1, uint256 _num2) public{
+        
+        (bool success, bytes memory outputFromCalledFunction) = _contractAddr.call(
+             abi.encodeWithSignature("addNumber(uint256,uint256)",_num1,_num2)
+            );
+              
+        require(success,"failed to transfer ether");
+        emit calledFunction(success,outputFromCalledFunction);
+    }
+    
+    function callMethod3(address _contractAddr) public payable{
+        
+        (bool success, bytes memory outputFromCalledFunction) = _contractAddr.call{value:msg.value}(
+             abi.encodeWithSignature("Nothing()")
+            );
+              
+        require(success,"failed to transfer ether");
+        emit calledFunction(success,outputFromCalledFunction);
+    }
+}
+
+```
+
+![image-20211126102023655](/Users/YT/Library/Application Support/typora-user-images/image-20211126102023655.png)
+
+![image-20211126102034890](/Users/YT/Library/Application Support/typora-user-images/image-20211126102034890.png)
+
+
+
+### 5.8.3 callcode
+
+* callcode 위험한 방식으로 더이상 사용하지 않는다.
+* callcode 대신 delegatecall를 사용한다. 
+
+
+
+### 5.8.4 delegatecall
 
 * 
