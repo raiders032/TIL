@@ -280,6 +280,7 @@ public class ThreadStateExample {
 ## 4.1 Thread 상태 제어
 
 * Thread의 메소드를 통해 Thread의 상태를 제어할 수 있다.
+* https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html
 
 
 
@@ -390,7 +391,7 @@ public class JoinExample {
 
 **interleave**
 
-* 단일 명령어처럼 보이는 오퍼레이션이 JVM에서는 여러 단계를 거쳐 실행된다.
+* 단일 명령어처럼 보이는 오퍼레이션은 사실 JVM에서는 여러 단계를 거쳐 실행된다.
 * 두개의 스레드가 공유 변수를 동시에 조작에 오퍼레이션의 단계들이 서로 포개지는 현상을 **interleave**라 한다.
 
 
@@ -449,6 +450,127 @@ public void increment() {
 
 
 ## 6.3 Synchronized Methods
+
+* Java는 동기화 메소드와 동기화 statements 두 가지 기본 동기화 방식을 제공한다.
+* 메소드를 동기화하려면 메소드 선언에 synchronized 키워드를 추가한다.
+
+
+
+**Synchronized의 효과**
+
+* 한 스레드가 어떤 객체의 Synchronized 메소드를 호출한 후 다른 스레드가 같은 객체의 임의의 Synchronized 메소드 호출하면 블록된다.
+* synchronized 메소드가 종료될 때 자동적으로 happens-before 관계가 성립한다.
+  * 동일한 객체에 대해 synchronized 메소드 호출하면 앞선 스레드가 변화시킨 객체의 상태를 뒤에 스레드가 볼 수 있을 때 첫 번째 스레드와 두 번째 스레드가 happens-before 관계라고 한다.
+
+
+
+**Synchronized Methods 예시**
+
+```java
+public class SynchronizedCounter {
+    private int c = 0;
+
+    public synchronized void increment() {
+        c++;
+    }
+
+    public synchronized void decrement() {
+        c--;
+    }
+
+    public synchronized int value() {
+        return c;
+    }
+}
+```
+
+
+
+## 6.4 Intrinsic Locks
+
+* 모든 객체는 intrinsic lock을 가지고 있다. 
+* 객체의 필드에 대한 독점적인 접근이 필요한 스레드는 접근하기 전에 객체의 intrinsic lock을 획득하고, 작업이 완료되면 intrinsic lock을 해제해야 한다.
+* 스레드는 lock을 획득하고 해제하는 시간 동안  intrinsic lock을 소유한다고 한다.
+* 한 스레드가  intrinsic lock을 소유하고 있으면 다른 스레드 intrinsic lock을 획득할 수 없다.
+  * 다른 스레드는 lock을 획득하려고 할 때 블록된다.
+* 스레드가 lock을 해제하면 그 이후 동일한 lock을 획득하는 스레드와 happens-before 관계가 성립된다.
+
+
+
+**Locks In Synchronized Methods**
+
+* 스레드가 synchronized 메소드를 호출할 때 자동으로 메소드의 객체에 대한 intrinsic lock을 획득하고 메소드가 반환될 때 이를 해제한다. 
+  * 예외로 인해 return되는 경우에도 lock이 해제된다.
+* static 메소드는 객체가 아닌 클래스와 연결되기 때문에 이 경우 스레드는 클래스와 연결된 클래스 객체에 대한 intrinsic lock을 획득한다.
+  * 따라서 클래스의 static 필드에 대한 액세스는 클래스의 모든 인스턴스에 대한 lock과 구별되는 lock이다.
+
+
+
+## 6.5 Synchronized Statements
+
+* 동기화된 코드를 만드는 또 다른 방법은 Synchronized Statements를 사용하는 것이다
+* Synchronized 메소드와 달리 Synchronized Statements는 intrinsic lock을 제공하는 객체를 지정해야한다.
+
+
+
+**Synchronized Statements 예시**
+
+```java
+public void addName(String name) {
+    synchronized(this) {
+        lastName = name;
+        nameCount++;
+    }
+    nameList.add(name);
+}
+```
+
+
+
+**concurrency 향상**
+
+* 위에 코드보다 아래의 코드가 동시 실행에 좋다
+* c1, c2 필드에 대한 연산 `c1++`, `c2++` 이 interleave 되어도 무관한 상황이라 순전히 lock을 위한 객체를 생성
+
+```java
+public class MsLunch {
+    private long c1 = 0;
+    private long c2 = 0;
+
+    public void inc1() {
+        synchronized(this) {
+            c1++;
+        }
+    }
+
+    public void inc2() {
+        synchronized(this) {
+            c2++;
+        }
+    }
+}
+```
+
+```java
+public class MsLunch {
+    private long c1 = 0;
+    private long c2 = 0;
+    private Object lock1 = new Object();
+    private Object lock2 = new Object();
+
+    public void inc1() {
+        synchronized(lock1) {
+            c1++;
+        }
+    }
+
+    public void inc2() {
+        synchronized(lock2) {
+            c2++;
+        }
+    }
+}
+```
 
 
 
