@@ -277,7 +277,7 @@ public class ThreadStateExample {
 
 
 
-## 4.1 Thread 상태 제어
+## 4.1 Thread 상태 제어 메소드
 
 * Thread의 메소드를 통해 Thread의 상태를 제어할 수 있다.
 * https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html
@@ -453,6 +453,7 @@ public void increment() {
 
 * Java는 동기화 메소드와 동기화 statements 두 가지 기본 동기화 방식을 제공한다.
 * 메소드를 동기화하려면 메소드 선언에 synchronized 키워드를 추가한다.
+* `synchronized` 키워드를 사용하면 thread interference와 memory consistency errors를 방지할 수 있다.
 
 
 
