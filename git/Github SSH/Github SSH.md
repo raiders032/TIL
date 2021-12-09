@@ -18,8 +18,7 @@ ls -al ~/.ssh
 
 ## 2. SSH key 생성하기
 
-* Mac 기준
-* [linux 참조](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)
+**Mac**
 
 ```bash
 # 입력 후 계속 엔터입력하면 기본 위치에 SSH key가 생성된다 passphrase도 비워뒀다
@@ -30,17 +29,33 @@ Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 ```
 
+**리눅스**
+
+```bash
+ssh-keygen -t ed25519 -C "nameks@naver.com"
+```
+
 
 
 ## 3. Ssh-agent 실행
 
 * ssh-agent에 키 등록
 
+Mac
+
 ```bash
 eval "$(ssh-agent -s)"
 
 # ssh-agent에 키 등록
 ssh-add -K ~/.ssh/id_ed25519
+```
+
+리눅스
+
+```bash
+$ eval "$(ssh-agent -s)"
+> Agent pid 59566
+$ ssh-add ~/.ssh/id_ed25519
 ```
 
 
@@ -51,10 +66,22 @@ ssh-add -K ~/.ssh/id_ed25519
 vi ~/.ssh/config
 ```
 
+Mac
+
 ```
 Host *
   AddKeysToAgent yes
   UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+```
+
+리눅스
+
+```
+Host github.com
+  User git
+  Hostname github.com
+  PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_ed25519
 ```
 
