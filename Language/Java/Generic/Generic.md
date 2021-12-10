@@ -2,7 +2,7 @@
 
 * 자바 5부터 Generic이 추가되었다.
 * 제네릭은 컬렉션, 람다식, 스트림, NIO에서 널리 사용된다.
-* 제네릭은 클래스, 인터페이스, 메소드를 정의할 때 타입을 파라미터로 사용할 수 있도록한다.
+* 제네릭은 클래스, 인터페이스, 메소드를 정의할 때 **타입을 파라미터로 사용**할 수 있도록한다.
 * 타입 파라미터는 코드 작성 시 구체적인 타입으로 대체되어 다양한 코드를 생성하도록 한다.
 
 
@@ -36,6 +36,8 @@ String s = list.get(0);
 # 2 Generic Type
 
 * `Generic Type`은 타입을 파라미터로 가지는 클래스와 인터페이스를 말한다.
+  * 즉 `Type Parameter` 를 가진 클래스와 인터페이스를 말한다.
+
 * 선언시 클래스 또는 인터페이스 이름 뒤에 "< >"부호가 붙는다.
 * `< >` 사이에 `type parameter`가 위치한다.
 
@@ -48,8 +50,11 @@ public interface 인터페이스명<T> { ... }
 
 ## 2.1 Type Parameter(Type Variable)
 
-- 실제 사용 코드에서는 타입 파라미터 자리에 구체적인 타입을 지정해야 한다.
-  - 컴파일러가 지정된 구체적인 타입으로 클래스를 재구성해준다.
+- 실제 사용 코드에서는 Type Parameter 자리에 구체적인 타입을 인자로 주어야 한다.
+  - 메소드 정의시 파라미터를 선언하고 실제 메소드를 호출 할 때 인자를 넘겨주는 것과 같다.
+  - 제네릭과 비교하면 메소드의 파라미터가 제네릭의 Type Parameter와 상응하고 메소드의 인자는 제네릭의  `type argument` 와 상응된다.
+  - 컴파일러가  `type argument` 받은 타입으로 클래스를 재구성해준다.
+  
 - `Type Parameter`의 구체적인 타입은 기본 타입을 제외한 모든 종류가 가능하다
   - class type, interface type, array type, type variable 가능
 
@@ -61,7 +66,7 @@ public class Box<T> {
 }
 ```
 
-타입 파라미터로 String 지정
+**`type parameter` T에 `type argument`로 String 사용**
 
 ```java
 Box<String> box = new Box<>();
@@ -76,7 +81,7 @@ public class Box<String> {
 }
 ```
 
-타입 파라미터로 Integer 지정
+**`type parameter` T에 `type argument`로 Integer 사용**
 
 ```java
 Box<Integer> box = new Box<>();
@@ -143,6 +148,7 @@ Box<Integer> integerBox = new Box<>();
 # 4 Generic 메소드
 
 * 제네릭 메소드는 `Type Parameter`를 갖는 메소드를 말한다.
+* 클래스 혹은 인테페이스 전체 레벨에 `Type Parameter` 를 설정하는 것이 아니라 하나의 메소드에만 `Type Parameter` 를 지정하고 싶을 때 Generic 메소드 사용
 
 **제네릭 메소드 선언 방법**
 
@@ -170,6 +176,7 @@ Box<Integer> box = boxing(100);  //type argument 생략 가능 컴파일러가 �
 * `Type Parameter` 이 받는 `type argument`를 특정한 타입으로 제한하고 싶은 경우 Bounded Type Parameter를 사용한다.
   * 수와 관련된 일을 하는 메소드는 Number 클래스 또는 그 하위 클래스의 인스턴스를 받길 원한다.
   * 이러한 경우  `type argument`로 Number 클래스 또는 그 하위 클래스로 제한할 수 있다.
+
 
 
 ## 5.1 Bounded Type Parameter 정의
@@ -299,6 +306,9 @@ box.add(new Double(10.1));
 
 ```java
 public void boxTest(Box<Number> n) { /* ... */ }
+
+// 불가능 Box<Integer>는 Box<Number>의 서브 타입이 아니다
+box.boxTest(new Box<Integer>());
 ```
 
 * `Box<Integer>` 또는 `Box<Double>` 를  `type argument`로 사용할 수 있을까?
@@ -334,7 +344,7 @@ public void boxTest(Box<Number> n) { /* ... */ }
 
 * `List<Number>` 와 List<? extends Number>의 차이점
 * `List<Number>`는 오로지 `List<Number>`로만 초기화 가능
-* `List<? extends Number>` 는`List<Integer>`, `List<Double>` 로 초기화 가능
+* `List<? extends Number>` 는`List<Integer>`, `List<Double>`로 초기화 가능
 
 ```java
 public static double sumOfList(List<? extends Number> list) {
@@ -363,15 +373,49 @@ System.out.println("sum = " + sumOfList(ld));	// sum = 7.0
 
 
 
-**Unbounded Wildcard가 유용한 경우**
+**Unbounded Wildcard가 유용한 경우1**
 
-1. Object 클래스에 제공된 기능을 사용하여 메서드를 작성하는 경우.
-2. 제네릭 클래스의 메소드를 사용할 때 메소드가 type parameter의 의존적이지 않은 경우
-   * 예) `List.size()`, `List.clear()`
+* 순수하게 Object 클래스에 제공된 기능만을 사용하여 메서드를 작성하는 경우
+  * 아래의 코드는 리스트의 원소를 가지고 Object의 equals 메소드만 사용하기 때문에 Unbounded Wildcard를 사용할 수 있다.
+
+```java
+static <T> long frequency(List<T> list, T elem) {
+    return list.stream().filter(s -> s.equals(elem)).count();
+}
+```
+
+* 위에 코드를 아래와 같이 변경 가능하다
+
+```java
+static long frequency(List<?> list, Object elem) {
+  return list.stream().filter(s -> s.equals(elem)).count();
+}
+```
 
 
 
-**예시**
+**Unbounded Wildcard가 유용한 경우2**
+
+* 제네릭 클래스의 메소드를 사용할 때 메소드가 type parameter의 의존적이지 않은 경우 Unbounded Wildcard를 사용한다.
+  * 예) `List.size()`, `List.clear()`
+
+```java
+static <T> boolean isEmpty(List<T> list){
+  return list.size() == 0;
+}
+```
+
+* 위에 코드 대신 아래와 같이 Unbounded Wildcard를 사용하는 것이 좋다.
+
+```java
+static boolean isEmpty(List<?> list) {
+	return list.size() == 0;
+}
+```
+
+
+
+**예시2**
 
 * 임의의 타입의 리스트를 출력하는 메소드 printList를 만들고 싶다.
 * 아래의 예제로 `List<Integer>`, `List<String>`, `List<Double>` 등을 출력할 수 없다.
