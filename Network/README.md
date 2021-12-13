@@ -3,6 +3,6 @@
 * [Cookie Session](Cookie-Session/Cookie-Session.md)
 * [HTTP](HTTP/HTTP.md)
 * [JWT](JWT/JWT.md)
-* [OAuth 2.0](OAuth2/OAuth 2.0.md)
+* [OAuth2](OAuth2/OAuth2.md)
 * [REST](REST/REST.md)
 

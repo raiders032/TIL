@@ -8,7 +8,7 @@
 
 *  [OS](Computer-Science/OS/README.md)
 *  [Network](Network/README.md)
-   *  Cookie&Session, HTTP, JWT, OAuth 2.0, REST
+   *  Cookie&Session, HTTP, JWT, OAuth2, REST
 
 
 
