@@ -575,3 +575,9 @@ operator = PersonalRecord::compareTo
 // (a, b) -> { return new Pair(a, b) }
 function = Pair::new
 ```
+
+
+
+참고
+
+* 이것이 자바다(이상민 저)
