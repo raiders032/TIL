@@ -1,4 +1,4 @@
-## docker compose
+# 1 Docker Compose
 
 > 다중 컨테이너 도커 애플리케이션을 정의하고 실행하기 위한 도구입니다.
 >
@@ -82,14 +82,57 @@ volumes:
   logs:
 ```
 
-**build**
 
-* 
 
-**env_file**
+# build
+
+* Dockerfile을 이용해서 이미지를 빌드한다.
+
+```yml
+# Dockerfile이 있는 context 위치 지정
+version: "3.9"
+services:
+  webapp:
+    build: ./dir
+```
+
+```yml
+# Dockerfile이 있는 context 위치와 Dockerfile의 이름 그리고 빌드시 arguments 전달
+version: "3.9"
+services:
+  webapp:
+    build:
+    	# context: Dockerfile를 포함하고 있는 directory 경로 또는 git repository URL
+      context: ./dir
+      # Dockerfile의 이름이 Dockerfile이 아니라면 이름 지정
+      dockerfile: Dockerfile-alternate
+      args:
+        buildno: 1
+```
+
+```yml
+# build와 image를 같이 사용하면 ./dir 컨텍스트의 Dockerfile을 이용해 이미지를 만든다.
+# 만들어진 이미지의 이름은 webapp 태그는 tag
+build: ./dir
+image: webapp:tag
+```
+
+
+
+# container_name
+
+* 컨테이너의 이름 지정
+
+```yml
+container_name: my-web-container
+```
+
+
+
+# env_file
 
 * 파일로 작성된 환경변수를 추가한다.
-* `environment` 에서 추가된 환경변수보다 우선순위가 낮다.
+* `environment`에서 추가된 환경변수보다 우선순위가 낮다.
 * 경로는 docker-compose의 상대경로
 
 ```yml
@@ -114,23 +157,25 @@ MYSQL_ROOT_PASSWORD=secret
 
 
 
-### restart
+# restart
 
-* no : 재시작 안함
-
+* no : 재시작 안함(기본값)
 * always : 항상 재시작
-
 * on-failure : on-failure 에러 코드와 함께 컨테이너가 멈출 때만 재시작
-
 * unless-stopped : 개발자가 임의로 멈추려고 할 때를 제외하고 항상 재시작
 
-* ```yml
-  version: "3"
-  services:
-    nginx:
-      restart: always
-      build:
-        context: ./nginx
-        dockerfile: Dockerfile
-  ```
+```yml
+version: "3"
+services:
+  nginx:
+    restart: "no"
+    #restart: always
+    #restart: on-failure
+    #restart: unless-stopped
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+```
+
+
 

@@ -25,6 +25,12 @@
 1. 대부분의 객체는 금방 접근 불가능 상태(unreachable)가 된다.
 2. 오래된 객체에서 젊은 객체로의 참조는 아주 적게 존재한다.
 
+**가비지 컬렉션 과정(mark and sweep)**
+
+1. stack의 모든 변수를 스캔하면서 어떤 객체를 참조하고 있는지 찾아 마킹을한다.
+2. Reachable Object가 참조하고 있는 객체도 찾아서 마킹한다.
+3. Heap 영역에서 마킹되지 않은 객체를 제거한다.
+
 
 
 ## 1.3 GC와 Reachability
@@ -116,5 +122,4 @@ Old 영역은 기본적으로 데이터가 가득 차면 GC를 실행한다. GC 
 * https://d2.naver.com/helloworld/1329
 * https://d2.naver.com/helloworld/329631
   * Reachability, Soft, Weak, Phantom Reference
-
 

@@ -1,4 +1,4 @@
-# Set up
+# 1 Set up
 
 ## Git Config
 
@@ -76,7 +76,7 @@ git config --help #detail
 git config -h #short
 ```
 
-# Basic
+# 2 Basic
 
 ## git init
 
@@ -323,7 +323,7 @@ git checkout v1.0.0 #checkout certain tag
 git checkout -b branchName v1.0.0 #create a new bracnh with the given tag 
 ```
 
-# Branch
+# 3 Branch
 
 ## Creating branch
 
@@ -407,7 +407,7 @@ git remote prune origin
 git remote update --prune
 ```
 
-# Stashing
+# 4 Stashing
 
 * working directory에 변경사항이 있고 브랜치를 전환해야 할 때 변경사항을 잠시 저장해두고 브랜치를 전환할 수 있다.
 * 여러가지 시도를 할 때 잠시 저장하는데 사용하기도 한다.
@@ -446,7 +446,7 @@ git stash drop hash #deletes the given stash
 git stash clear #deletes all the stashes
 ```
 
-# Undo
+# 5 Undo
 
 ## Local Changes
 
@@ -478,6 +478,8 @@ git restore --source=hash file.txt
 git restore --source=HEAD~2 file.txt
 ```
 
+
+
 ## Commit
 
 **Amending the last commit**
@@ -485,6 +487,8 @@ git restore --source=HEAD~2 file.txt
 ```bash
 git commit --amend
 ```
+
+
 
 ## Reset
 
@@ -494,12 +498,16 @@ git reset --mixed HEAD #removes the commit and keep changes at working directory
 git reset --hard HEAD #removes the commit and don't keep the code
 ```
 
+
+
 ## Undo action - reflog
 
 ```bash
 git reflog
 git reset --hard hash
 ```
+
+
 
 ## Revert
 
@@ -511,6 +519,8 @@ git revert HEAD~1
 gut revert --no-commit hash #reverts the given commit without revert commit
 ```
 
+
+
 ## Interactive Rebasing
 
 ```bash
@@ -519,7 +529,7 @@ git rebase --continue
 git rebase --abort
 ```
 
-# Remote
+# 6 Remote
 
 ```bash
 git clone URL #cloning
@@ -554,7 +564,7 @@ git remote rename sec second
 git remote remove second
 ```
 
-# Tools
+# 7 Tools
 
 ## Basic Debugging
 

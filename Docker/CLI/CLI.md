@@ -115,7 +115,30 @@ ___
 docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 ```
 
-___
+
+
+---
+
+
+
+## docker cp
+
+> Copy files/folders between a container and the local filesystem
+
+```bash
+ docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+```
+
+**예시**
+
+```bash
+# 로컬 파일 시스템의 /Users/YT/Downloads/license.xml 파일을 tibero(컨테이너 이름) 컨테이너의 /usr/local/ 위치로 복사
+docker cp /Users/YT/Downloads/license.xml tibero:/usr/local/
+```
+
+
+
+---
 
 
 

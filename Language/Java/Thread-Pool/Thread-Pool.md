@@ -157,8 +157,6 @@ executorService.submit(() -> future.get());
 
 
 
-
-
 ## 5.1 반환값이 없는 작업 완료 통보
 
 * submit() 메소드의 아규먼트로 Runnable 객체를 전달할 수 있다. 

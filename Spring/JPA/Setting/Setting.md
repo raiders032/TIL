@@ -12,6 +12,10 @@
 
 `spring.jpa.hibernate.ddl-auto`
 
+* `true` : 스키마 자동 생성 활성화
+
+`spring.jpa.hibernate.ddl-auto`
+
 * `create`: 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
 
 

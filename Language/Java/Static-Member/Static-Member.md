@@ -31,17 +31,20 @@
 
 ```java
 public class Bicycle {
+    private final int id;
+    private static int numberOfBicycles = 0;
 
-  private int cadence;
-  private int gear;
-  private int speed;
+    public Bicycle(){
+        id = ++numberOfBicycles;
+    }
 
-  // add an instance variable for the object ID
-  private int id;
+    public int getId() {
+        return id;
+    }
 
-  // add a class variable for the
-  // number of Bicycle objects instantiated
-  private static int numberOfBicycles = 0;
+    public static int getNumberOfBicycles() {
+        return numberOfBicycles;
+    }
 }
 ```
 
@@ -53,9 +56,25 @@ public class Bicycle {
 ```java
 @Test
 void staticField(){
+  // when
+  Bicycle bicycle1 = new Bicycle();
+  Bicycle bicycle2 = new Bicycle();
+
+  // then
+  assertThat(bicycle1.getId()).isEqualTo(1);
+  assertThat(bicycle2.getId()).isEqualTo(2);
+}
+
+@Test
+void staticMethod() {
+  // given
+  assertThat(Bicycle.getNumberOfBicycles()).isEqualTo(0);
+
+  // when
   Bicycle bicycle = new Bicycle();
-  assertThat(bicycle.numberOfBicycles).isEqualTo(0);
-  assertThat(Bicycle.numberOfBicycles).isEqualTo(0);
+
+  // then
+  assertThat(Bicycle.getNumberOfBicycles()).isEqualTo(1);
 }
 ```
 
@@ -87,8 +106,14 @@ public class BedAndBreakfast {
 
 ```java
 // static initialization block은 클래스의 body 어디에나 위치할 수 있다.
-static {
+public class BedAndBreakfast {
+  public static int capacity;
+  private boolean full = false;
+  
+  // static initialization block
+  static {
     // 복잡한 초기화 로직
+	}
 }
 ```
 
@@ -103,8 +128,14 @@ static {
 
 ```java
 // initialization block은 클래스의 body 어디에나 위치할 수 있다.
-{
-     // 복잡한 초기화 로직
+public class BedAndBreakfast {
+  public static int capacity = 10;
+  private boolean full = false;
+  
+  // initialization block
+  {
+    // 복잡한 초기화 로직
+	}
 }
 ```
 
@@ -129,6 +160,24 @@ public static int getNumberOfBicycles() {
 }
 ```
 
+* 인스턴스 필드를 사용하지 않는 메소드
+
+```java
+package java.lang;
+
+public final class Math {
+  public static final double E = 2.7182818284590452354;
+  
+  public static final double PI = 3.14159265358979323846;
+  
+  public static int max(int a, int b) {
+    return (a >= b) ? a : b;
+  }
+}
+```
+
+* Math 클래스는 인스턴스 필드가 없고 상수와 static method만 가지고 있다.
+
 
 
 ## 2.1 Instance method와 비교
@@ -137,6 +186,38 @@ public static int getNumberOfBicycles() {
 * **static method**는 instance variables과 instance methods에 직접 접근 불가
   * 객체 참조를 통해 접근이 가능하다.
 * static method는 `this`키워드 사용이 불가능하다.
+
+```java
+public class StaticMember {
+    private int instanceField = 10;
+    private static int staticField = 10;
+    private int instanceMethod() { return 10; }
+    private static int staticMethod() { return 10; }
+
+    public int method1() {
+        int total = 0;
+        total += instanceField;
+        total += instanceMethod();
+        total += staticField;
+        total += staticMethod();
+
+        return total;
+    }
+
+    public static int method2() {
+        int total = 0;
+      	// static method에서 인스턴스 멤버 접근 불가
+        // total += instanceField;
+        // total += instanceMethod();
+        total += staticField;
+        total += staticMethod();
+
+        return total;
+    }
+}
+```
+
+
 
 |                     | instance variables | instance methods | class variables | class methods |
 | ------------------- | ------------------ | ---------------- | --------------- | ------------- |

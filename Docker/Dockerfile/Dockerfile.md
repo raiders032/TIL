@@ -18,21 +18,58 @@
 
 
 
-## [USER](https://docs.docker.com/engine/reference/builder/#user)
+## [RUN](https://docs.docker.com/engine/reference/builder/#run)
 
-* docker container를 실행할 user를 지정해준다.
-* 루트 권한이 필요하지 않다면 USER를 사용하는 것이 좋다
+* 도커 이미지가 생성되기 전에 수행할 쉘 명령어
 
-> 기본적으로 컨테이너 내부에서 루트 사용자를 사용하도록 설정된다. 이는 컨테이너가 호스트의 루트 권한을 가질 수 있다는 것을 의미한다. 이는 보안 측면에서 좋지않다. 예를 들면 루트가 소유한 호스트의 디렉토리를 컨테이너에 공유했을 때, 컨테이너 내부에서 공유된 루트 소유의 디렉토리를 마음대로 조작할 수 있다 때문에 최종 배포시에는 컨테이너 내부에 새로운 사용자를 만들어 사용하는 것이 좋다
+* 추가적으로 필요한 파일 다운 받기 위한 명령어 명시
+
+* 2가지 형태 가능
+
+  * ```
+    RUN <command> (shell form, the command is run in a shell, which by default is /bin/sh -c on Linux or cmd /S /C on Windows)
+    RUN ["executable", "param1", "param2"] (exec form)
+    ```
 
 
 
-## [WORKDIR](https://docs.docker.com/engine/reference/builder/#workdir)
+## [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
 
-* 작업 디렉토리를 지정한다.
-* 해당 디렉토리가 없으면 새로 생성한다.
-* 작업 디렉토리를 지정하면 그 이후 명령어는 해당 디렉토리를 기준으로 동작한다.
-  * `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD`
+* 컨테이너가 시작되었을 때 실행할 실행 파일 또는 쉘 스크립트
+
+* Dockerfile 파일 내에서 1번만 정의가 가능합니다.
+
+  * 여러개 정의 할 경우 마지막만 인식
+
+* Overwrite 가능
+
+  * 예) `docker run node npm init` npm init으로 CMD를 Overwrite할 수 있다.
+
+* 3가지 형태 가능
+
+```
+CMD ["executable","param1","param2"] (exec form, this is the preferred form)
+CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
+CMD command param1 param2 (shell form)
+```
+
+
+
+## [EXPOSE](https://docs.docker.com/engine/reference/builder/#expose)
+
+* docker container 외부에 노출할 포트를 지정한다.
+* 실제로 포트를 개방하는건 아니다.
+  * `docker run -p 3000:3000 node` 와 같이 -p 옵션으로 포트를 열어줘야한다.
+
+
+
+## [ENV](https://docs.docker.com/engine/reference/builder/#env)
+
+* 환경변수를 지정한다.
+* Dockerfile 과 애플리케이션 코드에서 사용 가능
+* 지정한 환경변수는 `$변수이름` 또는 `${변수이름}`으로 사용한다.
+* 다음과 같이 -e 옵션으로 기존 값을 덮어씌울 수 있다.
+  * `docker run -e FOO='/something-else' test `
 
 
 
@@ -71,7 +108,8 @@ ADD test.txt /absoluteDir/
 
 * `.dockerignore`를 사용해 카피 대상에서 제외할 수 있다.
 
-  
+
+
 
 ## [VOLUME](https://docs.docker.com/engine/reference/builder/#volume)
 
@@ -80,71 +118,60 @@ ADD test.txt /absoluteDir/
 
 
 
+## [USER](https://docs.docker.com/engine/reference/builder/#user)
+
+* docker container를 실행할 user를 지정해준다.
+* 루트 권한이 필요하지 않다면 USER를 사용하는 것이 좋다
+
+> 기본적으로 컨테이너 내부에서 루트 사용자를 사용하도록 설정된다. 이는 컨테이너가 호스트의 루트 권한을 가질 수 있다는 것을 의미한다. 이는 보안 측면에서 좋지않다. 예를 들면 루트가 소유한 호스트의 디렉토리를 컨테이너에 공유했을 때, 컨테이너 내부에서 공유된 루트 소유의 디렉토리를 마음대로 조작할 수 있다 때문에 최종 배포시에는 컨테이너 내부에 새로운 사용자를 만들어 사용하는 것이 좋다
+
+
+
+## [WORKDIR](https://docs.docker.com/engine/reference/builder/#workdir)
+
+* 작업 디렉토리를 지정한다.
+* 해당 디렉토리가 없으면 새로 생성한다.
+* 작업 디렉토리를 지정하면 그 이후 명령어는 해당 디렉토리를 기준으로 동작한다.
+  * `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD`
+
+
+
 ## [ARG](https://docs.docker.com/engine/reference/builder/#arg)
 
 * `docker build` 로 이미지를 빌드할 때 설정 할 수 있는 옵션을 지정해준다.
-* dockerfile 안에서만 사용 가능
-* `CMD` 나 애플리케이션 코드에서 사용 불가
+  * 사용자가 빌드 시 `--build-arg <varname>=<value>` 플래그를 사용하여 argument 정의
+  * 사용자가 도커 파일에 정의되지 않은 빌드 argument를 지정하면 빌드가 경고를 출력
+
 
 ```bash
 # dockerfile 내부에서 사용할 ARG로 user=what_user를 설정
 docker build --build-arg user=what_user .
 ```
 
-
-
-## [ENV](https://docs.docker.com/engine/reference/builder/#env)
-
-* 환경변수를 지정한다.
-* Dockerfile 과 애플리케이션 코드에서 사용 가능
-* 지정한 환경변수는 `$변수이름` 또는 `${변수이름}`으로 사용한다.
-* 다음과 같이 -e 옵션으로 기존 값을 덮어씌울 수 있다.
-  * `docker run -e FOO='/something-else' test `
+* argument는 Dockerfile 안에서만 사용 가능
+  * `CMD` 나 애플리케이션 코드에서 사용 불가
 
 
 
-## [RUN](https://docs.docker.com/engine/reference/builder/#run)
 
-* 도커 이미지가 생성되기 전에 수행할 쉘 명령어
+**Dockerfile**
 
-* 추가적으로 필요한 파일 다운 받기 위한 명령어 명시
+```dockerfile
+FROM busybox
 
-* 2가지 형태 가능
+# default 값 설정 빌드시 argument를 전달받지 못하면 기본적으로 사용하는 값
+ARG user1=someuser
+ARG buildno
+ARG gitcommithash
 
-  * ```
-    RUN <command> (shell form, the command is run in a shell, which by default is /bin/sh -c on Linux or cmd /S /C on Windows)
-    RUN ["executable", "param1", "param2"] (exec form)
-    ```
-
-
-
-## [EXPOSE](https://docs.docker.com/engine/reference/builder/#expose)
-
-* docker container 외부에 노출할 포트를 지정한다.
-* 실제로 포트를 개방하는건 아니다.
-  * `docker run -p 3000:3000 node` 와 같이 -p 옵션으로 포트를 열어줘야한다.
-
-
-
-## [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
-
-* 컨테이너가 시작되었을 때 실행할 실행 파일 또는 쉘 스크립트
-
-* Dockerfile 파일 내에서 1번만 정의가 가능합니다.
-
-  * 여러개 정의 할 경우 마지막만 인식
-
-* Overwrite 가능
-
-  * 예) `docker run node npm init` npm init으로 CMD를 Overwrite할 수 있다.
-
-* 3가지 형태 가능
-
+RUN echo "USER number: $user1"
+RUN echo "Build number: $buildno"
+RUN echo "Based on commit: $gitcommithash"
 ```
-CMD ["executable","param1","param2"] (exec form, this is the preferred form)
-CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
-CMD command param1 param2 (shell form)
-```
+
+
+
+
 
 
 

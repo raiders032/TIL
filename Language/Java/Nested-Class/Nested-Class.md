@@ -58,7 +58,6 @@
 
 
 
-
 **이너 클래스 객체 생성하기**
 
 * 이너 클래스의 인스턴스를 만들기 위해선 먼저 외부 클래스의 인스턴스를 생성해야한다.
@@ -72,18 +71,22 @@ OuterClass.InnerClass innerObject = outerObject.new InnerClass();
 
 **Inner Classes 셍성**
 
-```java
-class OuterClass {
-    class InnerClass {
-      	// 선언 가능
-        InnerClass() {}
-        int instanceField;
-        void instanceMethod() {}
+* InnerClass는 바깥 클래스의 인스턴스와 연결되어 있다.
+* 따라서 InnerClass에는 static 키워드 사용 불가
 
-      	// 아래와 같이 static 멤버 선언 불가능
-        // static int staticField;
-        // static void staticMethod() {}
-    }
+```java
+public class OuterClass {
+  public class InnerClass {
+    // 생성자
+    public InnerClass() { }
+    // 인스턴스 멤버
+    public int instanceField;
+    public int instanceMethod() { return 10; }
+
+    // static 멤버 선언 불가능
+    // public static int staticField;
+    // public static void staticMethod() {}
+  }
 }
 ```
 
@@ -91,11 +94,26 @@ class OuterClass {
 
 **사용 예시**
 
+* 바깥 클래스의 인스턴스를 만들어야만 Inner Class의 인스턴스를 만들 수 있다.
+
 ```java
-OuterClass outerClass = new OuterClass();
-OuterClass.InnerClass innerClass = outerClass.new InnerClass();
-innerClass.instanceField = 10;
-innerClass.instanceMethod();
+public class InnerClassTest {
+
+    @Test
+    void testInnerClass() {
+        //given
+        OuterClass outerClass = new OuterClass();
+        OuterClass.InnerClass innerClass = outerClass.new InnerClass();
+
+        //when
+        innerClass.instanceField = 10;
+        int result = innerClass.instanceMethod();
+
+        // then
+        assertThat(innerClass.instanceField).isEqualTo(10);
+        assertThat(result).isEqualTo(10);
+    }
+}
 ```
 
 
@@ -204,35 +222,65 @@ class OuterClass {
 
 ```java
 class OuterClass {
-
-    static class StaticClass {
-      	// 생성자, 인스턴스 멤버, static 멤버 모두 선언 가능
-        StaticClass() {}
-        int instanceField;
-        void instanceMethod() {}
-        static int staticField;
-        static void staticMethod() {}
+    public static class StaticClass {
+        // 생성자, 인스턴스 멤버, static 멤버 모두 선언 가능
+        public StaticClass() {}
+        public int instanceField;
+        public int instanceMethod() { return 10; }
+        public static int staticField;
+        public static int staticMethod() { return 10; }
     }
 }
 ```
 
 
 
-**사용 예시**
+**테스트**
 
 ```java
-OuterClass.StaticClass staticClass = new OuterClass.StaticClass();
-// 인스턴스 멤버 접근 가능
-staticClass.instanceField = 10;
-staticClass.instanceMethod();
+class StaticNestedClassTest {
 
-// static 멤버 접근 가능 그러나 클래스 이름으로 직접 접근하는 것이 좋다
-staticClass.staticField = 10;
-staticClass.staticMethod();
+    @Test
+    void testInstanceMember() {
+        // given
+        OuterClass.StaticClass staticClass = new OuterClass.StaticClass();
 
-// static 멤버는 아래와같이 클래스 이름을 사용하여 접근하자
-OuterClass.StaticClass.staticField = 10;
-OuterClass.StaticClass.staticMethod();
+        // when
+        staticClass.instanceField = 10;
+        int result = staticClass.instanceMethod();
+
+        // then
+        assertThat(staticClass.instanceField).isEqualTo(10);
+        assertThat(result).isEqualTo(10);
+    }
+
+    @Test
+    void testStaticMemberByInstance() {
+        // given
+        OuterClass.StaticClass staticClass = new OuterClass.StaticClass();
+
+        // when
+        // 객체 참조를 통해 static 멤버 접근 가능 그러나 클래스 이름으로 직접 접근하는 것이 좋다
+        staticClass.staticField = 10;
+        int result = staticClass.staticMethod();
+
+        // then
+        assertThat(staticClass.staticField).isEqualTo(10);
+        assertThat(result).isEqualTo(10);
+    }
+
+    @Test
+    void testStaticMemberByClass() {
+        // when
+        OuterClass.StaticClass.staticField = 10;
+        int result = OuterClass.StaticClass.staticMethod();
+
+        // then
+        assertThat(OuterClass.StaticClass.staticField).isEqualTo(10);
+        assertThat(result).isEqualTo(10);
+    }
+
+}
 ```
 
 
@@ -248,8 +296,8 @@ OuterClass.StaticClass.staticMethod();
   * 바깥 클래스에서 인스턴스 필드나 인스턴스 메소드에서 이너 클래스 객체 생성 가능
   * 바깥 클래스에서 static 필드나 static 메소드에서 이너 클래스 객체 생성 불가능
 * 바깥 클래스 -> static 클래스
-  * 외부 클래스에서 인스턴스 필드나 인스턴스 메소드에서 정적 멤버 클래스 객체 생성 가능
-  * 외부 클래스에서 정적 필드나 정적 메소드에서 정적 멤버 클래스 객체 생성 가능
+  * 외부 클래스에서 인스턴스 필드나 인스턴스 메소드에서 static 클래스 객체 생성 가능
+  * 외부 클래스에서 정적 필드나 정적 메소드에서 static 클래스 객체 생성 가능
 
 ```java
 public class A {
@@ -263,13 +311,13 @@ public class A {
     C var2 = new C(); // static 클래스 객체 생성 가능
   }
  	
-  // 정적 필드 
+  // static 필드 
   static B f3 = new B(); // 이너 클래스 클래스 객체 생성 불가능
   static C f4 = new C(); // static 클래스 객체 생성 가능
   
-  // 정적 메소드
+  // static 메소드
   static void method2(){
-    B var1 = new B();	// 이너 클래스 클래스 객체 생성 가능
+    B var1 = new B();	// 이너 클래스 클래스 객체 생성 불가능
     C var2 = new C(); // static 클래스 객체 생성 가능
   }
   
@@ -290,38 +338,38 @@ public class A {
 * 모든 필드와 메소드 접근가능
 
 ```java
-class OuterClass {
-  // 바깥 클래스에 인스턴스 멤버 선언
-  private int outerInstanceField = 10;
-  private static int outerStaticField = 10;
-  
-  // 바깥 클래스에 static 멤버 선언
-  static int outerStaticField = 10;
-  static int outerStaticMethod() { return 10; }
+class OuterClass2 {
+    private int outerInstanceField = 10;
+    private static int outerStaticField = 10;
+    public int outerInstanceMethod() { return 10; }
+    public static int outerStaticMethod() { return 10; }
 
-  public OuterClass(int outerInstanceField) {
-    this.outerInstanceField = outerInstanceField;
-  }
-  
-  class InnerClass {
-    InnerClass() {}
-    
-    // 이너 클래스에 정적 멤버 선언 불가
-    // static int staticField;
-    // static void staticMethod() { }
-    
-    // 이너 클래스에 인스턴스 필드와 메소드 선언가능
-    int instanceField;
-    int instanceMethod() {
-      int total = 0;
-      // 바깥 클래스의 모든 멤버 접근 가능
-      total += outerInstanceField;
-      total += outerStaticField;
-      total += outerInstanceMethod();
-      total += outerStaticMethod();
-      return total;
+    class InnerClass {
+        int getTotal() {
+            int total = 0;
+            // 바깥 클래스의 모든 멤버 접근 가능
+            total += outerInstanceField;
+            total += outerStaticField;
+            total += outerInstanceMethod();
+            total += outerStaticMethod();
+            return total;
+        }
     }
-  }
+}
+```
+
+```java
+@Test
+void testInnerClass() {
+  // given
+  OuterClass2 outerClass2 = new OuterClass2();
+  OuterClass2.InnerClass innerClass = outerClass2.new InnerClass();
+
+  // when
+  int result = innerClass.getTotal();
+
+  // then
+  assertThat(result).isEqualTo(40);
 }
 ```
 
@@ -329,54 +377,38 @@ class OuterClass {
 
 **static class -> 바깥 클래스**
 
-* 외부 클래스의 정적 필드와 정적 메소드 접근 가능
-* 외부 클래스의 인스턴스 필드와 인스턴스 메소드 접근 불가능
+* 바깥 클래스의 static 필드와 static 메소드 접근 가능
+* 바깥 클래스의 인스턴스 필드와 인스턴스 메소드 접근 불가능
 
 ```java
-class OuterClass {
-  // 바깥 클래스에 인스턴스 멤버 선언
+class OuterClass2 {
   private int outerInstanceField = 10;
   private static int outerStaticField = 10;
-
-  // 바깥 클래스에 static 멤버 선언
-  static int outerStaticField = 10;
-  static int outerStaticMethod() { return 10; }
-
-  public OuterClass(int outerInstanceField) {
-    this.outerInstanceField = outerInstanceField;
-  }
+  public int outerInstanceMethod() { return 10; }
+  public static int outerStaticMethod() { return 10; }
 
   static class StaticClass {
-    // 인스턴스 멤버 선언 가능
-    int instanceField;
-    void instanceMethod() {
-      OuterClass outerClass = new OuterClass(10);
+    int getTotal() {
       int total = 0;
-      // 바깥 클래스의 static 멤버 접근 가능
       total += outerStaticField;
       total += outerStaticMethod();
-
       // 바깥 클래스의 인스턴스 멤버 접근 불가능
       // total += outerInstanceField;
       // total += outerInstanceMethod();
-    }
-
-    // static 멤버 선언 가능
-    static int staticField;
-    static int staticMethod() {
-      OuterClass outerClass = new OuterClass(10);
-      int total = 0;
-      // 바깥 클래스의 static 멤버 접근 가능
-      total += outerStaticField;
-      total += outerStaticMethod();
-
-      // 바깥 클래스의 인스턴스 멤버 접근 불가능
-      // total += outerInstanceField;
-      // total += outerInstanceMethod();
-      
-      return total
+      return total;
     }
   }
+}
+```
+
+```java
+@Test
+void testStaticClass() {
+  // when
+  int result = OuterClass2.StaticClass.getTotal();
+
+  // then
+  assertThat(result).isEqualTo(20);
 }
 ```
 

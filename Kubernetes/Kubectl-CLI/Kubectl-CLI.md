@@ -62,6 +62,8 @@ kubectl get pods -o wide
 # 네임스페이스 내 모든 서비스의 목록 조회
 kubectl get services
 kubectl get svc
+
+kubectl get pod --all-namespaces
 ```
 
 
@@ -124,6 +126,8 @@ kubectl rollout undo deployment/frontend --to-revision=2
 ```bash
 # Start a nginx pod.
 kubectl run nginx --image=nginx
+
+kubectl run redis --image=redis --namespace=finance
 ```
 
 

@@ -147,7 +147,7 @@ $ curl hostname-svc-clusterip:8080 --silent | grep Hello
   * SSL 인증서 적용, 라우팅 등과 같은 복잡한 설정을 서비스에 적용하기 어렵기 때문
   * NodePort 서비스 그 자체를 사용하기 보다 인그레스 오브젝트를 통해 간접적으로 사용하는 경우가 많다
 
-
+![image-20211005222123301](./images/nodeport.png)
 
 ## 3.1 yaml 작성
 
@@ -159,13 +159,14 @@ kind: Service
 metadata:
   name: hostname-svc-nodeport
 spec:
+  type: NodePort
+	selector:
+    app: webserver
   ports:
     - name: web-port
       port: 8080
       targetPort: 80
-  selector:
-    app: webserver
-  type: NodePort
+      #nodePort: 30008
 ```
 
 

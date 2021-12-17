@@ -421,6 +421,12 @@
 
 
 
+## Orcle
+
+* [Oracle.md](Oracle/Oracle.md)
+
+
+
 ## PoW
 
 * 작업증명(PoW, Proof of Work)이란 목표값 이하의 해시를 찾는 과정을 무수히 반복함으로써 해당 작업에 참여했음을 증명하는 방식의 합의 알고리즘이다.
