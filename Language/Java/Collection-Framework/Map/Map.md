@@ -1,65 +1,166 @@
 
 
-# 1.Map 인터페이스
+# 1.Map Interface
 
-> Map은 키와 값으로 구성된 Entity 객체를 저장하는 구조를 가지고 있다. 여기서 키와 값은 모두 객체이다. 키는 중복 저장될 수 없지만 값은 중복 저장될 수 있다. 만약 기존에 저장된 키와 동일한 키로 값을 저장하면 기존의 값은 없어지고 새로운 값으로 대치된다.
+* Map은 키와 값을 매핑한다.
+  * 여기서 키와 값은 모두 객체이다
 
-**특징**
+* Map은 중복되는 키를 가질 수 없다.
+  * 만약 기존에 저장된 키와 동일한 키로 값을 저장하면 기존의 값은 없어지고 새로운 값으로 대치된다.
 
-* 키와 값의 쌍으로 저장
-* 키는 중복 저장이 안 됨
+* Map은 중복된 값을 가질 수 있다
+* 각각의 키는 최대 하나의 값과 매핑된다.
 
-**구현체**
+
+
+## 1.1 메소드
+
+* [참고](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html)
+
+
+
+**기본 값을 가지는 맵 만들기**
+
+```java
+static <K, V> Map<K, V> newAttributeMap(Map<K, V>defaults, Map<K, V> overrides) {
+    Map<K, V> result = new HashMap<K, V>(defaults);
+    result.putAll(overrides);
+    return result;
+}
+```
+
+
+
+## 1.2 구현체
 
 * HashMap
-* HashTable
 * TreeMap
+* LinkedHashMap
+* HashTable
 * Properties
 
-**모든 객체 조회**
+
+
+## 1.3 aggregate operation
+
+* JDK8의 aggregate operation 사용해서 Map으로 결과 받기 예시
+
+
+
+**부서별 직원 리스트**
 
 ```java
-Map<String,Integer> map = new HashMap<>();
-Iterator<String> iterator = map.keySet().iterator();
+Map<Department, List<Employee>> byDept = employees.stream()
+.collect(Collectors.groupingBy(Employee::getDepartment));
+```
 
-while (iterator.hasNext()){
-  String key = iterator.next();
-  Integer value = map.get(key);
+**부서별 총 봉급**
+
+```java
+Map<Department, Integer> totalByDept = employees.stream()
+.collect(Collectors.groupingBy(Employee::getDepartment,
+Collectors.summingInt(Employee::getSalary)));
+```
+
+**도시별 사람**
+
+```java
+Map<String, List<Person>> peopleByCity = personStream
+  .collect(Collectors.groupingBy(Person::getCity));
+```
+
+
+
+## 1.4 Map 순회하기
+
+* Map의 메소드 중 Collection 타입을 반환하는 메소드를 이용해 맵을 순회하는 것이 가능하다
+* 대표적으로 keySet, values, entrySet이 있다
+* keySet: Map이 가진 Key의 Set을 반환한다.
+* values: Map이 가진 Value의 Collection을 반환한다.
+* entrySet: Map이 가진 Key-Value 쌍의 Set을 반환한다.
+
+**Map Interface**
+
+```java
+public interface Map<K, V> {
+  Set<K> keySet();
+  Collection<V> values();
+  Set<Map.Entry<K, V>> entrySet();
 }
 ```
 
-```java
-Map<String,Integer> map = new HashMap<>();
-Set<Map.Entry<String, Integer>> entries = map.entrySet();
-Iterator<Map.Entry<String, Integer>> iterator = entries.iterator();
 
-while (iterator.hasNext()){
-  Map.Entry<String, Integer> entry = iterator.next();
-  String key = entry.getKey();
-  Integer value = entry.getValue();
-}
+
+**예시1**
+
+```java
+for (KeyType key : m.keySet())
+    System.out.println(key);
 ```
 
-**[메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html)**
+```java
+for (Iterator<Type> it = m.keySet().iterator(); it.hasNext(); )
+  if (it.next().isBogus())
+    it.remove();
+```
 
-| Modifier and Type     | Method                        | Description                                                  |
-| :-------------------- | :---------------------------- | :----------------------------------------------------------- |
-| `void`                | `clear()`                     | Removes all of the mappings from this map (optional operation). |
-| `boolean`             | `containsKey(Object key)`     | Returns `true` if this map contains a mapping for the specified key. |
-| `boolean`             | `containsValue(Object value)` | Returns `true` if this map maps one or more keys to the specified value. |
-| `Set<Map.Entry<K,V>>` | `entrySet()`                  | Returns a [`Set`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html) view of the mappings contained in this map. |
-| `V`                   | `get(Object key)`             | Returns the value to which the specified key is mapped, or `null` if this map contains no mapping for the key. |
-| `boolean`             | `isEmpty()`                   | Returns `true` if this map contains no key-value mappings.   |
-| `Set<K>`              | `keySet()`                    | Returns a [`Set`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html) view of the keys contained in this map. |
-| `V`                   | `put(K key, V value)`         | Associates the specified value with the specified key in this map (optional operation). |
-| `V`                   | `remove(Object key)`          | Removes the mapping for a key from this map if it is present (optional operation). |
+```java
+for (Map.Entry<KeyType, ValType> e : m.entrySet())
+    System.out.println(e.getKey() + ": " + e.getValue());
+```
 
-# 2.HashMap 클래스
+
+
+# 2.HashMap Class
 
 * Map 인터페이스를 구현한 클래스
 * HashMap의 키로 사용할 객체는 `hasCode()` 와  `equals()` 메소드를 재정의해서 동등 객체가 될 조건을 정해야한다.
 * 주로 키 타입은 `String` 을 많이 사용하는데 문자열이 같을 경우 동등 객체가 될 수 있도록 `hasCode()` 와  `equals()` 메소드가 재정의되어 있다.
 * 키와 값의 타입은 기본 타입을 사용할 수 없고 클래스 및 인터페이스 타입만 가능하다.
+
+
+
+**예시1**
+
+* 키의 순서
+* HashMap: 무작위
+* TreeMap: 키의 값을 기준으로 정렬 됨
+* linkedHashMap: 삽입 순서로 정렬 됨
+
+```java
+@Test
+void testMap() {
+  List<String> strings = Arrays.asList("if", "it", "is", "to", "be", "it", "is", "up", "to", "me", "to", "delegate");
+  Map<String, Integer> hashMap = new HashMap<>();
+  Map<String, Integer> treeMap = new TreeMap<>();
+  Map<String, Integer> linkedHashMap = new LinkedHashMap<>();
+
+  for (String a : strings) {
+    Integer freq = hashMap.get(a);
+    hashMap.put(a, (freq == null) ? 1 : freq + 1);
+
+    freq = treeMap.get(a);
+    treeMap.put(a, (freq == null) ? 1 : freq + 1);
+
+    freq = linkedHashMap.get(a);
+    linkedHashMap.put(a, (freq == null) ? 1 : freq + 1);
+  }
+
+  Assertions.assertThat(hashMap.size()).isEqualTo(8);
+  Assertions.assertThat(treeMap.size()).isEqualTo(8);
+  Assertions.assertThat(linkedHashMap.size()).isEqualTo(8);
+
+  System.out.println("hashMap: " + hashMap);
+  System.out.println("treeMap: " + treeMap);
+  System.out.println("linkedHashMap: " + linkedHashMap);
+}
+```
+
+```java
+hashMap: {delegate=1, be=1, me=1, is=2, it=2, to=3, up=1, if=1}
+treeMap: {be=1, delegate=1, if=1, is=2, it=2, me=1, to=3, up=1}
+linkedHashMap: {if=1, it=2, is=2, to=3, be=1, up=1, me=1, delegate=1}
+```
 
 
 
@@ -81,14 +182,14 @@ while (iterator.hasNext()){
 * HashMap은 보조 해시 함수(Additional Hash Function)를 사용하기 때문에 보조 해시 함수를 사용하지 않는 HashTable에 비하여 해시 충돌(hash collision)이 덜 발생할 수 있어 상대으로 성능상 이점이 있다. 
 * HashTable 구현에는 거의 변화가 없는 반면, HashMap은 지속적으로 개선되고 있다. 
 
-# 3.HashTable 클래스
+# 3.HashTable Class
 
 * `HashMap` 과  동일한 내부 구조를 가지고있다. 
 * `HashMap` 과  차이점:  `HashTable  `은 동기화된 메소드로 구성되어 있기 때문에 멀티 스레드가 동시에 이 메소드를 실행 할 수 없다. 따라서 `Thread Safe`하다
 
 
 
-# 4.TreeMap 클래스
+# 4 TreeMap Class
 
 * TreeMap은 이진 트리를 기반으로 한 Map 콜렉션이다. 
 * TreeMap에 객체를 저장하면 자동으로 정렬된다.
@@ -102,7 +203,10 @@ while (iterator.hasNext()){
 
  
 
+# 5 LinkedHashMap Class
+
 참조
 
+* https://docs.oracle.com/javase/tutorial/collections/interfaces/map.html
 * https://d2.naver.com/helloworld/831311
 
