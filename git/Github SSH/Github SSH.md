@@ -68,12 +68,27 @@ vi ~/.ssh/config
 
 Mac
 
+* multiple GitHub account
+  * `git remote add origin git@github.com:work_user1/repo_name.git`
+  * `git remote add origin git@github.com-tmax:work_user1/repo_name.git` 
+
 ```
-Host *
+# default 계정
+Host github.com
+  HostName github.com
   AddKeysToAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
+
+# 회사 계정
+Host github.com-tmax
+  HostName github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519_tmax
 ```
+
+
 
 리눅스
 
@@ -110,3 +125,8 @@ pbcopy < ~/.ssh/id_ed25519.pub
 
 ![Sudo mode dialog](https://docs.github.com/assets/images/help/settings/sudo_mode_popup.png)
 
+
+
+참고
+
+* https://www.freecodecamp.org/news/manage-multiple-github-accounts-the-ssh-way-2dadc30ccaca/
