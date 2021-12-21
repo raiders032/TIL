@@ -75,7 +75,6 @@ Mac
 ```
 # default 계정
 Host github.com
-  HostName github.com
   AddKeysToAgent yes
   UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
