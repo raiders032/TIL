@@ -44,8 +44,8 @@
 
 ## 1.2 구현체
 
-* ArrayList
-* LinkedList
+* [ArrayList](#2-arraylist)
+* [LinkedList](#3-linkedlist)
 
 
 
@@ -148,6 +148,94 @@ void testListIterator() {
 
 
 
+# 2 ArrayList Class
+
+* List Interface의 구현체
+* ArrayList에는 초기 용량이라는 튜닝 매개 변수가 하나 있다.
+  * 초기 용량은 ArrayList가 초기에 보유할 수 있는 요소의 수를 나타낸다.
+* 용량을 초과하는 원소가 들어오면 자동적으로 용량이 늘어난다.
+
+
+
+**ArrayList Class**
+
+* 생성자에서 initialCapacity라는 튜닝 파라미터가 정의되어 있다.
+
+```java
+public class ArrayList<E> ...{
+  public ArrayList(int initialCapacity) {
+    if (initialCapacity > 0) {
+      this.elementData = new Object[initialCapacity];
+    }
+    ...
+  }
+}
+```
+
+
+
+**예시**
+
+* 초기 용량이 30인 ArrayList 생성
+
+```java
+ArrayList<Integer> integers = new ArrayList<>(30);
+```
+
+
+
+# 3 LinkedList Class
+
+* List Interface의 구현체
+  * 또한 Queue interface의 구현체이기도 하다.
+* LinkedList에는 튜닝 매개 변수가 없다.
+
+
+
+# 4 어떤 구현체를 사용해야 될까?
+
+* 대부분의 경우 ArrayList를 사용하게 될 것이다.
+  * ArrayList는 원소 접근이 O(1)이기 때문에
+* List의 맨 앞에 원소를 추가하는 경우가 또는 중간에 원소를 삽입하거나 삭제하는 일이 빈번하다면 LinkedList를 사용하는 것이 좋다
+  * 이러한 연산은 LinkedList는 O(1)이지만  ArrayList는 O(N)이기 때문이다.
+* 보통 ArrayList가 더 빠르기 때문에 LinkedList를 사용하기 전 performance를 측정하는 편이 좋다.
+
+
+
+**성능 비교 예시**
+
+* List의 앞쪽에 삽입하는 연산은 LinkedList가 더 빠르다
+
+```java
+@Test
+void testPerformance() {
+  List<String> list1 = new ArrayList<>();
+  List<String> list2 = new LinkedList<>();
+
+  long startTime;
+  long endTime;
+
+  startTime = System.nanoTime();
+  for(int i = 0; i < 10000; i++) list1.add(0, String.valueOf(i));
+  endTime = System.nanoTime();
+  System.out.println("ArrayList 걸린 시간: " + (endTime - startTime) + " ns");
+
+  startTime = System.nanoTime();
+  for(int i = 0; i < 10000; i++) list2.add(0, String.valueOf(i));
+  endTime = System.nanoTime();
+  System.out.println("LinkedList 걸린 시간: " + (endTime - startTime) + " ns");
+}
+```
+
+```
+ArrayList 걸린 시간: 5335161 ns
+LinkedList 걸린 시간: 1938724 ns
+```
+
+
+
 참고
 
 * https://docs.oracle.com/javase/tutorial/collections/interfaces/list.html
+* https://docs.oracle.com/javase/tutorial/collections/implementations/list.html
+* 이것이 자바다(이상민 저)
