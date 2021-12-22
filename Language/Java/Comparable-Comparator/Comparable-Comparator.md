@@ -1,15 +1,17 @@
-# 1 Comparable
+# 1 Comparable Interface
 
 * 어떠한 클래스를 정렬하려면 `Comparable` 인터페이스를 구현해야한다
   * `Integer`, `String`, `Doulble` 모두 `Comparable` 인터페이스를 구현했다
   * 사용자 정의 클래스도 정렬이 필요하다면 `Comparable` 인터페이스를 구현하면 된다
 * Comparable을 구현하지 않은 원소의 리스트를 정렬하는 경우 ClassCastException이 발생한다.
   * Collections.sort(list)
+* Comparable은 구현한 클래스의 자연스러운 순서를 의미한다.
+  * 예) String 클래스는 Comparable를 사전순으로 구현했다.
 
 
 
 
-## 1.1 Comparable Interface
+**Comparable Interface**
 
 ```java
 public interface Comparable<T> {
@@ -49,7 +51,7 @@ public class Person implements Comparable<Person> {
 
 
 
-# 2 Comparator
+# 2 Comparator Interface
 
 * `Comparator`는 `Comparable` 를 구현하지 않은 객체를 정렬할 때 사용된다
   * **정렬자**를 제공하면 된다
@@ -60,8 +62,7 @@ public class Person implements Comparable<Person> {
 
 
 
-
-## 2.1 Comparator 인터페이스
+**Comparator 인터페이스**
 
 ```java
 @FunctionalInterface
@@ -79,7 +80,7 @@ public interface Comparator<T> {
 
 
 
-## 2.2 정렬자
+## 2.1 정렬자
 
 * 정렬자는 `Comparator` 인터페이스를 구현한 객체를 말한다
 
