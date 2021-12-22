@@ -1,17 +1,19 @@
 # 1 도커 네트워크
 
+
+
+## 1.1 컨테이너 가상 IP
+
 * 컨테이너는 가상 IP주소를 할당받는다.
 * 기본적으로 도커 컨테이너는 172.17.0.x 의 IP 주소를 순차적으로 할당 받는다.
-  * IP 주소는 컨테이너를 재시작할 때마다 변경될 수 있다
-  * 이 IP 주소는 도커가 설치된 호스트에서만 접근 가능하다
-* 외부와 연결이 필요한 경우 컨테이너를 시작할 때 `veth`라는 네트워크 인터페이스를 생성해야한다.
-  * `veth`: 외부와의 네트워크를 제공하기 위해 필요한 가상 네트워크 인터페이스
-  * `veth` 는 사용자가 직접 생성할 필요가 없으며 컨테이너를 생성할 때 도커 엔진이 자동 생성한다.
+* IP 주소는 컨테이너를 **재시작할 때마다 변경**될 수 있다
+* **이 IP 주소는 도커가 설치된 호스트에서만 접근 가능**하다
 
 ```bash
+$ docker run -it --name network_test ubuntu:14.04
+
 # 컨테이너의 IP 주소 확인 172.17.0.2를 할당 받았다
-docker run -it --name network_test ubuntu:14.04
-root@8b597aa63feb:/# ifconfig
+$ root@8b597aa63feb:/# ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:02
           inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
@@ -29,44 +31,50 @@ lo        Link encap:Local Loopback
           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
 ```
 
+
+
+## 1.2 veth 네트워크 인터페이스
+
+* 외부와 연결이 필요한 경우 컨테이너를 시작할 때 `veth`라는 네트워크 인터페이스를 생성해야한다.
+* `veth`: 외부와의 네트워크를 제공하기 위해 필요한 가상 네트워크 인터페이스
+* `veth` 는 사용자가 직접 생성할 필요가 없으며 컨테이너를 생성할 때 도커 엔진이 자동 생성한다.
+
+
+
+**veth 네트워크 인터페이스 확인**
+
 ```bash
-#도커가 설치된 호스트에서 컨테이너의 수만큼 veth를 확인할 수 있다
-ifconfig
-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+# 도커가 설치된 호스트에서 현재 2개의 컨테이너가 실행 중
+$ docker ps
+CONTAINER ID   IMAGE                                   COMMAND                  CREATED          STATUS          PORTS                                           NAMES
+80e9f140fecc   neptunes032/ra-backend:0.0.1-SNAPSHOT   "java -jar /app.jar"     9 minutes ago    Up 9 minutes    0.0.0.0:8080->8080/tcp, :::8080->8080/tcp       RA-Backend
+10e55ed604e1   mongo                                   "docker-entrypoint.s…"   12 minutes ago   Up 12 minutes   0.0.0.0:27017->27017/tcp, :::27017->27017/tcp   mongodb
+
+#도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth를 확인할 수 있다
+$ ifconfig
 ...
-
-lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
-        inet 127.0.0.1  netmask 255.0.0.0
-        inet6 ::1  prefixlen 128  scopeid 0x10<host>
-        loop  txqueuelen 1000  (Local Loopback)
-        RX packets 7359720  bytes 1351610610 (1.2 GiB)
+veth8f01bdc: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::9849:66ff:fe77:4054  prefixlen 64  scopeid 0x20<link>
+        ether 9a:49:66:77:40:54  txqueuelen 0  (Ethernet)
+        RX packets 161  bytes 54223 (54.2 KB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 7359720  bytes 1351610610 (1.2 GiB)
+        TX packets 299  bytes 29533 (29.5 KB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-veth2594e34: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet6 fe80::c47a:25ff:fedc:e912  prefixlen 64  scopeid 0x20<link>
-        ether c6:7a:25:dc:e9:12  txqueuelen 0  (Ethernet)
-        RX packets 360104  bytes 37952038 (36.1 MiB)
+veth8f5dad1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::501f:a5ff:fec2:3a1  prefixlen 64  scopeid 0x20<link>
+        ether 52:1f:a5:c2:03:a1  txqueuelen 0  (Ethernet)
+        RX packets 309  bytes 44270 (44.2 KB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 306360  bytes 33669366 (32.1 MiB)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
-docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
-        inet6 fe80::42:d8ff:fe3d:93ac  prefixlen 64  scopeid 0x20<link>
-        ether 02:42:d8:3d:93:ac  txqueuelen 0  (Ethernet)
-        RX packets 13639200  bytes 3422487848 (3.1 GiB)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 16286850  bytes 9921645320 (9.2 GiB)
+        TX packets 271  bytes 85651 (85.6 KB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
 
 
-# 2. 도커 네트워크 구조
+# 2 도커 네트워크 구조
 
-![image-20210615215557871](./images/network)
+<img src="./images/network" alt="image-20210615215557871" style="zoom:50%;" />
 
 **host의 `eth0`**
 
@@ -74,7 +82,7 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 **veth**
 
-* 도커 엔진이 컨테이를 실행할 때 자동으로 만드는 인터페이스
+* 도커 엔진이 컨테이너를 실행할 때 자동으로 만드는 인터페이스
 * 각 컨테이너의 `eth0`와 연결되어 있다.
 
 **`docker0`**
@@ -88,12 +96,12 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-# 3. Docker Networking Drivers
+# 3 Docker Networking Drivers
 
 * 컨테이너를 생성하면 기본적으로 `docker0` 브리지를 통해 외부와 통신할 수 있는 환경이 제공된다
 * 사용자의 선택에 따라 다른 네트워크 드라이브를 사용할 수 있다
-  * Bridge, Host, Overlay, Macvlan, None
-  * weave, flannel, openvswitch
+  * 도커 자체 제공: Bridge, Host, Overlay, Macvlan, None
+  * 서드파티: weave, flannel, openvswitch
 
 
 
@@ -217,7 +225,7 @@ lo        Link encap:Local Loopback
 * 사용자 정의 Bridge는 컨테이너의 이름 또는 IP 주소로 통신할 수 있다.
 * 컨테이너를 재시작하면 IP 주소가 변한다. 따라서 Default Bridge Network를 사용하면 변한 IP 주소로 설정을 다시 해야한다.
   * 이런 경우 사용자 정의 Bridge를 사용해서 변하지 않는 컨테이너 이름으로 통신하는 편이 좋다. 
-* Default Bridge Network를 사용하는 컨테이너는 중지후 다른 네트워크로 설정할 수 있다.
+* Default Bridge Network를 사용하는 컨테이너는 중지 후 다른 네트워크로 설정할 수 있다.
   * 사용자 정의 Bridge를 사용하는 컨테이너를 재시작 없이 네트워크를 변경할 수 있다.
 * **프로덕션에서는 Default Bridge Network 대신 항상 사용자 정의 Bridge를 사용하는 편이 좋다.**
 
