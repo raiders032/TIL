@@ -40,3 +40,67 @@
 
 * ArrayDeque
 * LinkedList
+
+
+
+## 1.3 원소 순회
+
+* LinkedList는 iterate하기에 좋은 구조가 아니므로 ArrayDeque를 예시로 들겠다.
+
+### foreach
+
+```java
+ArrayDeque<String> aDeque = new ArrayDeque<String>();
+
+. . .
+for (String str : aDeque) {
+    System.out.println(str);
+}
+```
+
+### Iterator
+
+```java
+ArrayDeque<String> aDeque = new ArrayDeque<String>();
+. . .
+for (Iterator<String> iter = aDeque.iterator(); iter.hasNext();  ) {
+    System.out.println(iter.next());
+}
+```
+
+
+
+# 2 ArrayDeque Class
+
+* ArrayDeque를 size 조절이 가능한 Deque Interface의 구현체이다.
+  * 용량 제한이 없다
+* 원소로 null을 허용하지 않는다.
+* thread-safe하지 않다.
+* ArrayDeque를 스택처럼 사용할 때 Stack보다 성능이 좋다.
+* ArrayDeque를 큐처럼 사용할 때 LinkedList보다 성능이 좋다.
+* 대부분의 오퍼레이션이 O(1) 시간복잡도를 가진다.
+  *  remove, removeFirstOccurrence, removeLastOccurrence, contains, iterator.remove() 메소드는 O(N)
+
+
+
+# 3 LinkedList Class
+
+* Deque Interface의 구현체
+  * List Interface의 구현체이기도 하다
+* 원소로 null을 허용한다.
+* thread-safe하지 않다.
+
+
+
+# 4 어떤 구현체를 사용할까?
+
+* 성능면에서 ArrayDeque가 LinkedList 보다 좋다.
+* LinkedList는 iterate하기에 좋은 구조가 아니다.
+* LinkedList이 ArrayDeque 보다 메모리를 더 차지한다.
+
+
+
+참고
+
+* https://docs.oracle.com/javase/tutorial/collections/interfaces/deque.html
+* https://docs.oracle.com/javase/tutorial/collections/implementations/deque.html

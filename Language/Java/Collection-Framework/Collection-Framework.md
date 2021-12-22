@@ -21,7 +21,9 @@
 
 
 
-# 2 Interface
+# 2 Interface & Implementation
+
+![Two interface trees, one starting with Collection and including Set, SortedSet, List, and Queue, and the other starting with Map and including SortedMap.](https://docs.oracle.com/javase/tutorial/figures/collections/colls-coreInterfaces.gif)
 
 * [Collection](Collection/Collection.md)
 * [Set](Set/Set.md)
@@ -31,10 +33,6 @@
 * [Map](Map/Map.md)
 * [SortedSet](SortedSet/SortedSet.md)
 * [SortedMap](SortedMap/SortedMap.md)
-
-
-
-# 3 Implementation
 
 
 

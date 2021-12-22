@@ -34,10 +34,15 @@
 
 ## 1.2 구현체
 
+| Interfaces | Hash table Implementations | Tree Implementations | Hash table + Linked list  Implementations |
+| ---------- | -------------------------- | -------------------- | ----------------------------------------- |
+| `Set`      | `HashSet`                  | `TreeSet`            | `LinkedHashSet`                           |
+
 * [HashSet](#2-HashSet-Class)
   * 원소를 해시 테이블에 저장
   * 순서 보장 안함
-
+  * [Hash-Table.md](../../../../Computer-Science/Data-Structure/Hash-Table/Hash-Table.md)
+  
 * [TreeSet](#3-TreeSet-Class)
   * 원소를 red-black tree에 저장한다.
   * 원소가 값을 기준으로 순서가 있다.
@@ -162,13 +167,17 @@ void removeDuplicateElement5() {
 
 * 원소를 해시 테이블에 저장한다.
 * TreeSet, LinkedHashSet과 비교하면 가장 성능이 좋다
+  * 대신 원소의 순서를 보장하지 않는다.
+  * HashSet의 대부분의 메소드가 O(1)
+  * 반면 TreeSet은 대부분의 메소드가 O(logN)
+
 * HashSet의 중복 판단
   * 객체를 저장하기 전 먼저 객체의 `hasCode()` 메소드를 호출해서 이미 저장된 객체들의 해시코드와 비교한다.
   * 동인한 해시코드가 있다면 다시 `equals()` 메소드로 두 객체를 비교해서 `true` 가 나오면 동일한 객체로 판단한다.
 
 
 
-**HashSetdms 원소의 순서를 보장하지 않는다.**
+**HashSet은 원소의 순서를 보장하지 않는다.**
 
 * iterator() 메소드의 설명을 보면 원소의 순서를 보장하지 않는 Iterator를 반환한다.
 
@@ -237,9 +246,8 @@ public class TreeSet<E> ...{
 
 * 원소를 해시 테이블에 저장
 * 원소의 삽입 순서를 유지
-* HashSet과 비교하면 순서를 유지하는 대신 약간 느리다는 단점이 있다.
-
-
+* LinkedHashSet은 HashSet과 TreeSet의 중간 단계라고 생각할 수 있다
+* 성능상 HashSet 보다 아주 조금 느리고 TreeSet 보다 빠르다
 
 
 
@@ -265,3 +273,4 @@ for(String str:set){
 참고
 
 * https://docs.oracle.com/javase/tutorial/collections/interfaces/set.html
+* https://docs.oracle.com/javase/tutorial/collections/implementations/set.html
