@@ -84,16 +84,28 @@ volumes:
 
 
 
-# 2 설치
+# 2 [설치](https://docs.docker.com/compose/install/)
+
+* Mac 또는 Window 용 Docker Desktop을 설치했다면 docker-compose도 설치된 상태이다
+
+
+
+**Linux**
 
 ```bash
+# install
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
+
+# Uninstall
+$ sudo rm /usr/local/bin/docker-compose
 ```
 
 
 
-# build
+# 3 [Compose file version 3 reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+
+## build
 
 * Dockerfile을 이용해서 이미지를 빌드한다.
 
