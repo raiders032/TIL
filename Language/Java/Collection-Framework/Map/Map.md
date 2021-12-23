@@ -155,12 +155,29 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 
 # 4 TreeMap Class
 
-* TreeMap은 이진 트리를 기반으로 한 Map 콜렉션이다. 
+* TreeMap은 이진 트리(Red-Black tree)를 기반으로 한 Map 콜렉션이다. 
 * TreeMap에 객체를 저장하면 자동으로 정렬된다.
 * TreeMap은 정렬을 위해 엔트리의 키가 Comparable을 구현해야 한다.
   * [Comparable-Comparator.md](../../Comparable-Comparator/Comparable-Comparator.md)
 * Comparable를 구현하지 않은 객체를 키로 사용하려면 TreeMap 생성시 정렬자(Comparator의 구현체)를 제공하면 된다.
 * 기본적으로 부모 키값과 비교해서 키 값이 낮은 것은 왼쪽 자식노드에, 키 값이 높은 것은 오른쪽 자식 노드에 객체를 저장한다.
+* thread-safe하지 않다
+
+
+
+## 4.1 [메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeMap.html)
+
+* Map은 순서가 없지만 TreeMap은 순서가 있기 때문에 순서와 관련된 메소드를 사용하려면 참조 변수의 타입을 Map 대신 TreeMap을 사용하자
+* 아래는 순서와 관련된 메소드 일부이다.
+
+| Modifier and Type | Method                | Description                                                  |
+| :---------------- | :-------------------- | :----------------------------------------------------------- |
+| `Map.Entry<K,V>`  | `firstEntry()`        | Returns a key-value mapping associated with the least key in this map, or `null` if the map is empty. |
+| `Map.Entry<K,V>`  | `lastEntry()`         | Returns a key-value mapping associated with the greatest key in this map, or `null` if the map is empty. |
+| `Map.Entry<K,V>`  | `lowerEntry(K key)`   | Returns a key-value mapping associated with the greatest key strictly less than the given key, or `null` if there is no such key. |
+| `Map.Entry<K,V>`  | `higherEntry(K key)`  | Returns a key-value mapping associated with the least key strictly greater than the given key, or `null` if there is no such key. |
+| `Map.Entry<K,V>`  | `floorEntry(K key)`   | Returns a key-value mapping associated with the greatest key less than or equal to the given key, or `null` if there is no such key. |
+| `Map.Entry<K,V>`  | `ceilingEntry(K key)` | Returns a key-value mapping associated with the least key greater than or equal to the given key, or `null` if there is no such key. |
 
 
 

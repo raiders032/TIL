@@ -36,6 +36,42 @@
 
 
 
+# 3 Synchronization Wrappers
+
+* Synchronization Wrappers 컬렉션은 멀티 스레드 환경에서 하나의 스레드가 요소를 안전하게 처리하게 도와준다.
+* 위에 소개한 인터페이스들의 대부분의 구현체들은 싱글 스레드 환경에서 사용할 수 있도록 설계되었다.
+  * 즉 thread-safe하지 않다
+* 따라서 여러 스레드가 동시에 컬렉션에 접근하면 의도하지 않게 요소가 변결될수 있다.
+* 이러한 경우 비동기화된 컬렉션을 동기화된 컬렉션을로 바꿔주는 기능을 하는 Collections의 static 메소드가 있다.
+
+
+
+**Collections Class**
+
+* 아래의 메소드들은 thread-safe하지 않은 컬렉션을 받아 thread-safe한 컬렉션을 반환한다.
+
+```java
+public class Collections {
+  public static <T> Collection<T> synchronizedCollection(Collection<T> c);
+  public static <T> Set<T> synchronizedSet(Set<T> s);
+  public static <T> List<T> synchronizedList(List<T> list);
+  public static <K,V> Map<K,V> synchronizedMap(Map<K,V> m);
+  public static <T> SortedSet<T> synchronizedSortedSet(SortedSet<T> s);
+  public static <K,V> SortedMap<K,V> synchronizedSortedMap(SortedMap<K,V> m);
+}
+```
+
+
+
+# 4 병렬 처리를 위한 컬렉션
+
+* Synchronization Wrappers 컬렉션은 멀티 스레드 환경에서 하나의 스레드가 요소를 안전하게 처리하게 도와주지만 전체 요소를 빠르게 처리하지 못한다.
+  * 하나의 스레드가 요소를 처리할 때 전체 잠금이 발생하기 때문
+* 자바는 멀티 스레드가 컬렉션의 요소를 병렬적으로 처리할 수 있도록 특별한 컬렉션을 제공함
+* `java.util.concurrent` 패키지의 ConcurrentHashMap 과 ConcurrentLinkedQueue이다
+
+
+
 참고
 
 * https://docs.oracle.com/javase/tutorial/collections/index.html

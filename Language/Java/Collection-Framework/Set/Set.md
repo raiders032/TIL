@@ -242,6 +242,22 @@ public class TreeSet<E> ...{
 
 
 
+## 3.1 [메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html)
+
+* Set으로부터 상속 받은 메소드 이외에 추가적인 메소드를 알아보자
+* Set과 다르게 TreeSet은 원소의 순서가 있기 때문에 순서와 관련된 메소드를 쓰려면 참조 변수의 타입을 TreeSet으로 하자
+
+| Modifier and Type | Method         | Description                                                  |
+| :---------------- | :------------- | :----------------------------------------------------------- |
+| `E`               | `ceiling(E e)` | Returns the least element in this set greater than or equal to the given element, or `null` if there is no such element. |
+| `E`               | `floor(E e)`   | Returns the greatest element in this set less than or equal to the given element, or `null` if there is no such element. |
+| `E`               | `higher(E e)`  | Returns the least element in this set strictly greater than the given element, or `null` if there is no such element. |
+| `E`               | `lower(E e)`   | Returns the greatest element in this set strictly less than the given element, or `null` if there is no such element. |
+| `E`               | `first()`      | Returns the first (lowest) element currently in this set.    |
+| `E`               | `last()`       | Returns the last (highest) element currently in this set.    |
+
+
+
 # 4 LinkedHashSet Class
 
 * 원소를 해시 테이블에 저장
