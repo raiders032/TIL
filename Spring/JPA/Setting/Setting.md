@@ -1,4 +1,19 @@
-# 1 기본 설정
+# 1 Dependencies
+
+```groovy
+dependencies {
+  // h2 database
+  runtimeOnly 'com.h2database:h2'
+  // mysql driver
+  runtimeOnly 'mysql:mysql-connector-java'
+  // Spring Data JPA
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+```
+
+
+
+# 2 기본 설정
 
 **datasource 설정**
 
@@ -94,7 +109,7 @@ logging:
 
 
 
-# 2 쿼리 파라미터 로그 남기기
+# 3 쿼리 파라미터 로그 남기기
 
 **의존성 추가**
 
@@ -108,7 +123,7 @@ implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 
 
 
-# 3 IntelliJ Gradle 대신에 자바로 바로 실행하기
+# 4 IntelliJ Gradle 대신에 자바로 바로 실행하기
 
 * 최근 IntelliJ 버전은 Gradle로 실행을 하는 것이 기본 설정이다. 
 * 이렇게 하면 실행속도가 느리다. 다음과 같이 변경하면 자바로 바로 실행하므로 좀 더 빨라진다.
@@ -119,42 +134,84 @@ implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 
 
 
-# 4 롬복 적용
+# 5 롬복 적용
 
 1. Preferences plugin lombok 검색 실행 (재시작)
 2. Preferences Annotation Processors 검색 Enable annotation processing 체크 (재시작)
 3. 임의의 테스트 클래스를 만들고 @Getter, @Setter 확인
 
-# 5 Querydsl 설정
+# 6 Querydsl 설정
 
 **build.gradle**
 
 ```groovy
 plugins {
-  id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'org.springframework.boot' version '2.6.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+group = 'kr.co.tmax'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'com.querydsl:querydsl-jpa'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-apt'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
-  jpa = true
-  querydslSourcesDir = querydslDir
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslDir]
+        }
+    }
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 configurations {
-	querydsl.extendsFrom compileClasspath
-}
-
-compileQuerydsl {
-  options.annotationProcessorPath = configurations.querydsl
+    querydsl.extendsFrom compileClasspath
 }
 ```
 
