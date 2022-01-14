@@ -1,8 +1,8 @@
-# SSH 사용해서 GitHub 접속하기
+# 1 SSH 사용해서 GitHub 접속하기
 
 
 
-## 1. SSH key 존재 유무 확인
+# 2 SSH key 존재 유무 확인
 
 * SSH key를 생성하기전 이미 생성된 SSH key가 있는지 확인해보자
 * 터미널에서 아래 명령어 입력하고 아래와 같은 파일이 있다며 이미 존재하는 것이다
@@ -16,7 +16,7 @@ ls -al ~/.ssh
 
 
 
-## 2. SSH key 생성하기
+# 3 SSH key 생성하기
 
 **Mac**
 
@@ -35,32 +35,22 @@ Enter same passphrase again:
 ssh-keygen -t ed25519 -C "nameks@naver.com"
 ```
 
-
-
-## 3. Ssh-agent 실행
-
-* ssh-agent에 키 등록
-
-Mac
+# 4 ssh-agent에 SSH Key 등록
 
 ```bash
-eval "$(ssh-agent -s)"
-
-# ssh-agent에 키 등록
-ssh-add -K ~/.ssh/id_ed25519
-```
-
-리눅스
-
-```bash
+# ssh-agent 실행 확인
 $ eval "$(ssh-agent -s)"
-> Agent pid 59566
+
+# ssh-agent에 키 등록(맥)
+$ ssh-add -K ~/.ssh/id_ed25519
+
+# ssh-agent에 키 등록(리눅스)
 $ ssh-add ~/.ssh/id_ed25519
 ```
 
 
 
-## 4. config 파일 생성
+# 5 config 파일 생성
 
 ```bash
 vi ~/.ssh/config
@@ -101,7 +91,7 @@ Host github.com
 
 
 
-## 5. GitHub 설정
+# 6 GitHub 설정
 
 * 생성한 키를 깃허브 계정에 추가하기
 * 아래 명령어로 키를 복사해서 아래 key 부분에 붙여넣기 해준다
