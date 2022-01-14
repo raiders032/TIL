@@ -1,11 +1,13 @@
 # MongoDB CRUD Operations
 
-
-
 # 1 Insert Documents
 
 * 만약 document의 _id가 명시되지 않으면 MongoDB가 자동 할당
-* 존재하지 않는 collection에 삽입하면 자동으로 만들어진다.
+* 존재하지 않는 collection에 document를 삽입하면 collection이 자동으로 만들어진다.
+* 두 가지의 삽입 메소드를 제공
+  * db.collection.insertOne()
+  * db.collection.insertMany()
+
 
 
 
@@ -31,24 +33,40 @@ db.inventory.insertMany([
 
 
 
+> 참고
+>
+> https://docs.mongodb.com/manual/crud/#create-operations
+>
+> https://docs.mongodb.com/manual/tutorial/insert-documents/
+
+
+
 # 2 Query Documents
 
-`inventory` collection에 아래와 같은 document가 있음을 가정
+* collection에서 documents 조회하기
+* MongoDB은 아래와 같은 조회 메소드를 제공한다.
+  * db.collection.find()
+
+![The components of a MongoDB find operation.](https://docs.mongodb.com/manual/images/crud-annotated-mongodb-find.bakedsvg.svg)
+
+
+
+> 참고
+>
+> https://docs.mongodb.com/manual/crud/#read-operations
+
+
 
 ```
-[
-   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
-   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "A" },
-   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
-   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
-   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
-]
+db.KOSPI.find({"DATE" : { $gte : new ISODate("2021-12-20T00:00:00Z") }});
 ```
 
 
 
 
 
-참고
+
+
+**참고**
 
 * https://docs.mongodb.com/manual/crud/
