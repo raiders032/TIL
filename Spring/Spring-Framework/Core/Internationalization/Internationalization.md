@@ -2,18 +2,33 @@
 
 > `ApplicationContext` 인터페이스는 `MessageSource`라는 인터페이스를 상속하므로 국제화 기능을 제공합니다. 이 인터페이스는 스프링이 메세지를 가져오는 기반을 제공합니다. 
 
-* 하드 코딩된 문자열들이 별도의 파일로 관리할 때 `MessageSource`를 사용한다.
+* 하드 코딩된 문자열을 사용하는 것보다 문자열들을 별도의 파일로 관리하는 것이 유지 보수에 좋다 이때 `MessageSource`를 사용한다.
+  * 수정이 필요한 경우 하드 코딩된 문자열을 모두 찾아 고쳐야한다
+  * 별도의 파일로 관리할 경우 해당 파일에서 문자열을 한 번만 수정하면 해당 문자열을 사용하는 모든 곳이 업데이트된다.
+
 * 메시지 파일을 각 나라별로 별도로 관리하면 서비스를 국제화 할 수 있다.
 
 
 
 # 2 스프링 메시지 소스 설정
 
-> 메시지 관리 기능을 사용하려면 스프링이 제공하는 `MessageSource` 를 스프링 빈으로 등록하면 되는데, `MessageSource` 는 인터페이스이다. 따라서 구현체인 `ResourceBundleMessageSource` 를 스프링 빈으로 등록하면 된다
+* 메시지 관리 기능을 사용하려면 스프링이 제공하는 `MessageSource` 를 스프링 빈으로 등록하면 된다.
+* `MessageSource` 는 인터페이스이다. 따라서 구현체인 `ResourceBundleMessageSource` 를 스프링 빈으로 등록하면 된다
 
 
 
-## 2.1 직접 등록
+**MessageSource 인터페이스**
+
+```java
+public interface MessageSource {
+  String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale);
+  String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
+}
+```
+
+
+
+## 2.1 직접 등록(스프링)
 
 ```java
 @Bean
@@ -29,44 +44,52 @@ public MessageSource messageSource() {
   * `messages` 로 지정하면 `messages.properties` 파일을 읽어서 사용한다.
 * 국제화 기능을 적용하려면 `basenames` 뒤에 언어 정보를 표시한다.
   * 예시) `messages_en.properties` , `messages_ko.properties`
-* `messages.properties`를 기본으로 사용한다.
+  * 만약 찾을 수 있는 국제화 파일이 없으면 `messages.properties` (언어정보가 없는 파일명)를 기본으로 사용한다.
 * 파일의 위치는 `/resources/messages.properties`이다
 * 여러 파일을 한번에 지정할 수 있다.
-* 여기서는 `messages` , `errors` 둘을 지정했다.
+  * 여기서는 `messages` , `errors` 둘을 지정했다.
+
 * `defaultEncoding` : 인코딩 정보를 지정한다. utf-8 을 사용하면 된다.
 
 
 
 ## 2.2 스프링 부트
 
->  스프링 부트를 사용하면 스프링 부트가 MessageSource 를 자동으로 스프링 빈으로 등록한다.
-
-**메세지 소스 설정**
-
+* 스프링 부트를 사용하면 스프링 부트가 MessageSource 를 자동으로 스프링 빈으로 등록한다.
 * 스프링 부트에서는 아래와 같이 메세지 소스를 설정할 수 있다.
+
+
+
+**application.properties**
+
 * `/resources/config/i18n/messages.properties`를 메시지 파일로 사용한다.
 
 ```properties
 spring.messages.basename=config.i18n.messages
+spring.messages.encoding=utf-8
 ```
+
+
 
 **스프링 부트 메시지 소스 기본 값**
 
 * `MessageSource`를 스프링 빈으로 등록하지 않고, 스프링 부트와 관련된 별도의 설정을 하지 않으면 `messages` 라는 이름으로 기본 등록된다.
-* 따라서 `messages_en.properties` , `messages_ko.properties` , `messages.properties` 파일만 등록하면 자동으로 인식된다.
+* 따라서 `messages_en.properties` , `messages_ko.properties` , `messages.properties` 파일을 `/resources` 디렉토리에 만들면 자동으로 인식된다.
 
 
 
 ## 2.3 메시지 파일 만들기
 
-**messages.properties 작성**
+*  `/resources` 디렉토리에 `messages.properties` 와 `messages_en.properties` 를 작성
+
+**messages.properties**
 
 ```properties
 hello=안녕
 hello.name=안녕 {0}
 ```
 
-**messages_en.properties 작성**
+**messages_en.properties**
 
 ```properties
 hello=hello
@@ -77,6 +100,8 @@ hello.name=hello {0}
 
 # 3 스프링 메시지 소스 사용
 
+* 스프링 부트를 사용하면 스프링 부트가 MessageSource 를 자동으로 스프링 빈으로 등록한다
+
 
 
 ## 3.1 **MessageSource 인터페이스**
@@ -84,18 +109,20 @@ hello.name=hello {0}
 ```java
 public interface MessageSource {
     String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale);
-
     String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
 }
 ```
 
 `String getMessage(String code, Object[] args, String default, Locale loc)`
 
-* `MessageSource`에서 메시지를 검색하는 데 사용되는 기본 방법이다. 지정된 로케일에 대한 메시지를 찾을 수 없는 경우 `defaultMessage`가 사용된다. 전달된 `args`는 표준 라이브러리에서 제공하는 `MessageFormat` 기능을 사용하여 메세지의 값을 대체한다.
+* `MessageSource`에서 메시지를 검색하는 데 사용되는 기본 방법이다. 
+* 지정된 로케일에 대한 메시지를 찾을 수 없는 경우 `defaultMessage`가 사용된다. 
+* 전달된 `args`는 표준 라이브러리에서 제공하는 `MessageFormat` 기능을 사용하여 메세지의 값을 대체한다.
 
 `String getMessage(String code, Object[] args, Locale loc)`
 
-* 본질적으로 이전 방법과 동일하지만 다음과 한 가지 차이점이 있다. `defaultMessage`를 지정하지 않았기 때문에 메시지를 찾을 수 없는 경우 `NoSuchMessage`예외를 던진다.
+* 본질적으로 이전 방법과 동일하지만 다음과 한 가지 차이점이 있다.
+*  `defaultMessage`를 지정하지 않았기 때문에 메시지를 찾을 수 없는 경우 `NoSuchMessage`예외를 던진다.
 
 
 

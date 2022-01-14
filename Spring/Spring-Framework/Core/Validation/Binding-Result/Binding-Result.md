@@ -1,18 +1,53 @@
 # 1 BindingResult
 
 * 객체에 대한 유효성 검사 및 데이터 바인딩 오류(@ModelAttribute, @RequestBody, @RequestPart)에 대한 접근을 위해 사용된다.
-  * 스프링이 제공하는 검증 오류를 보관하는 객체이다. 검증 오류가 발생하면 여기에 보관하면 된다.
-* validated method argument 바로 뒤에 BindingResult를 선언해야한다.
+  * 스프링이 제공하는 검증 오류를 보관하는 객체이다. 
+  * 검증 오류가 발생하면 여기에 보관하면 된다.
+* 검증할 메소드 아규먼트 바로 뒤에 BindingResult를 선언해야한다.
 * 검증 오류가 발생하면, `FieldError` , `ObjectError` 를 생성해서 `BindingResult`에 담아준다.
-* BindingResult 가 있으면 @ModelAttribute 에 데이터 바인딩 시 오류가 발생해도 컨트롤러가 호출된다
-  * BindingResult 가 없으면 400 오류가 발생하면서 컨트롤러가 호출되지 않고, 오류 페이지로 이동한다.
-  * BindingResult 가 있으면 오류 정보( FieldError )를 BindingResult 에 담아서 컨트롤러를 정상 호출한다.
+* BindingResult가 있으면 @ModelAttribute 에 데이터 바인딩 시 오류가 발생해도 컨트롤러가 호출된다
+  * BindingResult가 없으면 400 오류가 발생하면서 컨트롤러가 호출되지 않고, 오류 페이지로 이동한다.
+  * BindingResult가 있으면 오류 정보( FieldError )를 BindingResult 에 담아서 컨트롤러를 정상 호출한다.
+
+
+
+**Errors 인터페이스**
+
+```java
+package org.springframework.validation;
+
+public interface Errors {
+  void reject(String errorCode);
+  void reject(String errorCode, String defaultMessage);
+  void reject(String errorCode, @Nullable Object[] errorArgs, @Nullable String defaultMessage);
+  void rejectValue(@Nullable String field, String errorCode);
+  void rejectValue(@Nullable String field, String errorCode, String defaultMessage);
+  void rejectValue(@Nullable String field, String errorCode,
+                   @Nullable Object[] errorArgs, @Nullable String defaultMessage);
+}
+```
+
+
+
+**BindingResult 인터페이스**
+
+```java
+package org.springframework.validation;
+
+public interface BindingResult extends Errors {
+}
+```
 
 
 
 ## 1.1 rejectValue(), reject()
 
-* BindingResult 가 제공하는 rejectValue() , reject() 를 사용하면 FieldError , ObjectError 를 직접 생성하지 않고, 깔끔하게 검증 오류를 다룰 수 있다.
+* 검증 오류가 발생하면, `FieldError` , `ObjectError` 를 생성해서 `BindingResult`에 담아야한다.
+* `BindingResult` 가 제공하는 `rejectValue()` , `reject()` 를 사용하면 `FieldError` , `ObjectError` 를 직접 생성하지 않고, 깔끔하게 검증 오류를 다룰 수 있다.
+* 객체 검증시 특정 필드 오류에는 `rejectValue()` 사용 : `BindingResult`에 `FieldError` 를 등록
+* 객체 검증시 글로벌 오류(하나의 필드에 속하지 않는)는 `reject()` 사용: `BindingResult`에 `ObjectError` 를 등록
+
+
 
 # 2 사용법
 
@@ -46,7 +81,7 @@ public String addItem(@Validated @ModelAttribute Item item, BindingResult bindin
 
 # 3 FieldError
 
-* 필드에 오류가 있으면 FieldError 객체를 생성해서 bindingResult 에 담아둔다
+* 필드에 오류가 있으면 `FieldError` 객체를 생성해서 `BindingResult` 에 담아둔다
 
 **생성자**
 
@@ -70,7 +105,7 @@ public FieldError(String objectName, String field, @Nullable Object rejectedValu
 
 # 4 ObjectError
 
-* 특정 필드를 넘어서는 오류가 있으면 ObjectError 객체를 생성해서 bindingResult 에 담아둔다
+* 특정 필드를 넘어서는 오류가 있으면 `ObjectError` 객체를 생성해서 `BindingResult` 에 담아둔다
 
 **생성자**
 

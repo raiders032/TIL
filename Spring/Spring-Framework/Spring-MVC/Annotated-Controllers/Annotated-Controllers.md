@@ -184,3 +184,28 @@ public String modelAttributeV1(@ModelAttribute HelloData helloData) {
   return "ok";
 }
 ```
+
+
+
+## 3.3 UriComponentsBuilder
+
+* 현재 요청의 호스트, 포트, 프로토콜, 컨텍스트 패스를 이용해서 URL을 만들 때 사용한다.
+
+**예시**
+
+```java
+@PostMapping("/users/{userId}/simulations")
+public ResponseEntity<CommonResponse> registerSimulation(@PathVariable String userId,
+                                                         @RequestBody RegisterSimulationRequest request,
+                                                         UriComponentsBuilder uriComponentsBuilder){
+	...
+
+  CommonResponse<Object> commonResponse = CommonResponse.success("시뮬레이션 생성 요청 확인", null);
+  URI location = uriComponentsBuilder
+    .path(String.format("/users/%s/simulations", userId))
+    .build().toUri();
+  
+  return ResponseEntity.created(location).body(commonResponse);
+}
+```
+

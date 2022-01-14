@@ -1,6 +1,6 @@
 참고
 
-* [Servlet Exception](../../etc/Servlet-Exception/Servlet-Exception.md) 
+* [Servlet Exception](../../../etc/Servlet-Exception/Servlet-Exception.md) 
 
 # 1 Exception
 
