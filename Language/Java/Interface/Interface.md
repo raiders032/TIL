@@ -5,6 +5,8 @@
 * 자바8에서는 람다식으로 함수적 인터페이스의 구현 객체를 생성한다.
 * 인터페이스의 모든 메소드는 기본적으로 public 접근 제한자를 갖기 때문에 더 낮은 접근 제한자를 사용할 수 없다.
 
+
+
 # 2 Interface의 구성
 
 * 인터페이스는 `Constant Field`, `Astract Method`, `Default Method`, `Static Method` 로 구성된다.
@@ -112,6 +114,10 @@ public interface Iterable<T> {
 }
 ```
 
+
+
+**Default Method 예시2**
+
 ```java
 public interface WebMvcConfigurer {
 	default void configurePathMatch(PathMatchConfigurer configurer) {
@@ -137,6 +143,32 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 * WebMvcConfigurer의 디폴트 메서드가 선언되어 있어 WebMvcConfigurer를 구현한 WebMvcConfig 클래스에서 모든 메서드를 정의하지 않아도 된다.
   * 필요한 메서드 addCorsMappings만 재정의 했다.
+
+
+
+**Default Method 예시3**
+
+> 디폴트 메서드없던 시절엔 WebMvcConfigurer 인터페이스 구현한 WebMvcConfigurerAdapter 추상 클래스를 상속받아 사용했다. WebMvcConfigurerAdapter는 WebMvcConfigurer의 모든 메소드를 재정의 했지만 메소드의 바디는 비어있다. 따라서 개발자들은WebMvcConfigurerAdapter를 상속받아 필요한 메소드만 재정의해서 WebMvcConfigurer의 모든 메소드를 재정의하지 않고 사용이 가능했다. 그러나 디폴트 메소드가 생기고 WebMvcConfigurer의 모든 메소드가 디폴트 메소드가 되면서 WebMvcConfigurerAdapter는 더이상 쓸모가 없어져 Deprecated 됐다
+
+```java
+@Deprecated
+public abstract class WebMvcConfigurerAdapter implements WebMvcConfigurer {
+
+	/**
+	 * {@inheritDoc}
+	 * <p>This implementation is empty.
+	 */
+	@Override
+	public void configurePathMatch(PathMatchConfigurer configurer) {
+	}
+  
+  @Override
+	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	}
+  
+  ...
+}
+```
 
 
 
@@ -180,15 +212,16 @@ public class 구현클래스이름 implements 인터페이스명 {
 
 
 
-## 3.2 익명 구현 객체
+## 3.2 Anonymous Class
 
-* 익명 구현 객체란 **소스 파일을 만들지 않고 구현 객체를 만들 수 있는 방법**
+* 익명 클래스란 **소스 파일을 만들지 않고 구현 객체를 만들 수 있는 방법**
 * 구현 클래스를 만드는 것이 클래스를 재사용하기 때문에 일반적이지만 일회성 구현 객체를 만들기 위해 소스 파일을 만들고 클래스를 선언하는 것은 비효율적이다.
 * 모든 객체는 클래스로부터 생성되는데 익명 구현 객체도 예외는 아니다.
   * 자바 컴파일러가 자동으로 클래스 파일을 만들어준다.
   * 자동으로 만들어진 클래스 이름: `인터페이스이름$1`
     * 인터페이스 이름 뒤에 $가 붙고 생성 번호가 붙는다
-    * 생성 번호는 1부터 시작 두번째 익명 구현 객체를 만들면 생성번호는 2가 된다.
+    * 생성 번호는 1부터 시작 두번째 익명 클래스를 만들면 생성번호는 2가 된다.
+* [Anonymous-Class.md](../Anonymous-Class/Anonymous-Class.md)
 
 
 
@@ -196,6 +229,17 @@ public class 구현클래스이름 implements 인터페이스명 {
 
 * 인터페이스 구현 객체를 사용하려면 인터페이스 변수를 선언하고 구현 객체를 대입해야한다.
 * 인터페이스 변수는 참조 타입이기 때문에 구현 객체의 번지를 저장한다.
+
+
+
+# 5 Functional Interface
+
+* 모든 인터페이스를 람다식의 타겟 타입으로 사용할 수 없다
+  * 두 개 이상의 추상 메서드가 선언된 인터페이스는 람다식을 이용해서 구현 객체를 생성할 수 없다.
+* 하나의 추상 메서드가 선언된 인터페이스만이 람다식의 타켓 타입이 될 수 있다
+  * 이러한 인터페이스를 함수적 인터페이스(functional interface)라고 한다.
+* `@FunctionalInterface` 를 인터페이스에 적용하면 두 개 이상의 추상 메서드가 선언되지 않도록 컴파일 시점에 체킹할 수 있다.
+* [Lambda.md](../Lambda/Lambda.md) 
 
 
 
