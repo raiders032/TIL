@@ -144,6 +144,39 @@ blue
 
 
 
+**Collection 인터페이스**
+
+* Iterable 인터페이스를 상속받음
+
+```java
+package java.util;
+
+public interface Collection<E> extends Iterable<E> {
+	... 
+}
+```
+
+
+
+**Iterable 인터페이스**
+
+* Iterable 인터페이스의 iterator() 메소드를 통해  Iterator를 얻을 수 있다.
+
+```java
+public interface Iterable<T> {
+  Iterator<T> iterator();
+  
+	default void forEach(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (T t : this) {
+            action.accept(t);
+        }
+    }
+}
+```
+
+
+
 **Iterator 인터페이스**
 
 * remove 메소드는 next 메소드로 조회한 가장 최근 원소를 제거한다.
