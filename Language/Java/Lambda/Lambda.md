@@ -502,78 +502,76 @@ public class UsingThis {
 # 6 메소드 참조
 
 * 메소드 참조란 말 그대로 메소드를 참조해서 매개 변수의 정보 및 리턴 타입을 알아내어 람다식에서 불필요한 변수를 제거하는 것이 목적이다.
+* 이미 정의된 메소드를 참조해서 사용한다.
+* 메소드 참조에는 아래와 같이 4가지의 종류가 있다.
 
 
 
-## 6.1 정적 메소드와 인스턴스 메소드 참조
+## 6.1 정적 메소드 참조
 
-**정적 메소드 참조**
-
-* `클래스::메소드`
-* `(x, y) -> Calculator.staticMethod(x, y)`  == `Calculator::staticMethod`
-
-**인스턴스 메소드 참조**
-
-* `참조변수::메소드`
-* `(x, y) -> calculator.instanceMethod(x, y)` == `calculator::instanceMethod`
-
-**예시**
-
-```java
-static class Calculator {
-  public static int staticMethod(int x, int y) {
-    return x + y;
-  }
-
-  public int instanceMethod(int x, int y) {
-    return x + y;
-  }
-}
-
-@Test
-void testStaticMethodReference() {
-  IntBinaryOperator operator = (x, y) -> Calculator.staticMethod(x, y);
-  IntBinaryOperator operator2 = Calculator::staticMethod;
-
-  int result1 = operator.applyAsInt(10, 20);
-  int result2 = operator2.applyAsInt(10, 20);
-
-  Assertions.assertThat(result1).isEqualTo(result2);
-}
-
-@Test
-void testInstanceMethodReference() {
-  Calculator calculator = new Calculator();
-  IntBinaryOperator operator = (x, y) -> calculator.instanceMethod(x, y);
-  IntBinaryOperator operator2 = calculator::instanceMethod;
-
-  int result1 = operator.applyAsInt(10, 20);
-  int result2 = operator2.applyAsInt(10, 20);
-
-  Assertions.assertThat(result1).isEqualTo(result2);
-}
-```
+* `ContainingClass::staticMethodName`
 
 
 
-## 6.2 매개변수의 메소드 참조
+## 6.2 인스턴스 메소드 참조
 
-* `클래스::instanceMethod`
+* `containingObject::instanceMethodName`
+
+
+
+## 6.3 임의 인스턴스 메소드 참조
+
+* `ContainingType::methodName`
+* 람다식에 매개변수로 주어진 객체의 메소드를 참조하는 것
+
+
+
+## 6.4 생성자 참조
+
+* `ClassName::new`
+
+
+
+## 6.5 예시
 
 ```java
-// personalRecord1.compareTo(personalRecord2)
-operator = PersonalRecord::compareTo
-```
+import java.util.function.BiFunction;
 
+public class MethodReferencesExamples {
+    
+    public static <T> T mergeThings(T a, T b, BiFunction<T, T, T> merger) {
+        return merger.apply(a, b);
+    }
+    
+    public static String appendStrings(String a, String b) {
+        return a + b;
+    }
+    
+    public String appendStrings2(String a, String b) {
+        return a + b;
+    }
 
+    public static void main(String[] args) {
+        
+        MethodReferencesExamples myApp = new MethodReferencesExamples();
 
-## 6.3 생성자 참조
+        // Calling the method mergeThings with a lambda expression
+        System.out.println(MethodReferencesExamples.
+            mergeThings("Hello ", "World!", (a, b) -> a + b));
+        
+        // Reference to a static method
+        System.out.println(MethodReferencesExamples.
+            mergeThings("Hello ", "World!", MethodReferencesExamples::appendStrings));
 
-* `클래스::new`
-
-```java
-// (a, b) -> { return new Pair(a, b) }
-function = Pair::new
+        // Reference to an instance method of a particular object        
+        System.out.println(MethodReferencesExamples.
+            mergeThings("Hello ", "World!", myApp::appendStrings2));
+        
+        // Reference to an instance method of an arbitrary object of a particular type
+        System.out.println(MethodReferencesExamples.
+            mergeThings("Hello ", "World!", String::concat));
+    }
+}
 ```
 
 
@@ -581,3 +579,4 @@ function = Pair::new
 참고
 
 * 이것이 자바다(이상민 저)
+* https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html
