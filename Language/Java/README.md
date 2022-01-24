@@ -11,7 +11,7 @@
 * [Anonymous Class](Anonymous-Class/Anonymous-Class.md)
 * [Collection Framework](Collection-Framework/Collection-Framework.md)
   * Collection, Set, List, Queue, Deque, Map, SortedSet, SortedMap
-
+* [Comparable & Comparator](Comparable-Comparator/Comparable-Comparator.md)
 * [Data Type](Data-Type/Data-Type.md)
 * [Enumeration](Enumeration/Enumeration.md)
 * [Exception](Exception/Exception.md)
@@ -29,8 +29,10 @@
 * [Multi Thread](Multi-Thread/Multi-Thread.md)
   * Process, Thread, Runnable, Lock, synchronized
 * [Nested Class](Nested-Class/Nested-Class.md)
+* [Optional](Optional/Optional.md) 
 * [Static Member](Static-Member/Static-Member.md)
   * static field, static method, static initialization block, initializer block
+* [Stream](Stream/Stream.md) 
 * [String](String/String.md)
   * String, StringTokenizer, StringBuilder, StringBuffer
 * [this](This/This.md)
