@@ -1,4 +1,4 @@
-# 1. Lambda
+# 1 Lambda
 
 * 하나의 메소드를 가진 인터페이스를 구현할 때 별도의 클래스 파일을 만들어서 구현해야 될까?
 
@@ -67,6 +67,8 @@ void testRunnableAnonymousClass() {
 ## 1.3 람다 사용
 
 * 만약 FunctionalInterface라면 Anonymous Class보다 람다식을 이용하는 것이 훨씬 간편하다
+* 그러나 람다가 몇 줄 이상으로 길어진다면 람다 보다는 코드가 수행하는 일을 잘 설명하는 이름을 가진 메서드를 정의하고 메소드 참조를 활용하는 것이 좋다
+  * 코드의 명확성이 우선!
 
 **Runnable 인터페이스의 익명 구현 객체를 람다식으로 생성하는 코드**
 
@@ -83,7 +85,17 @@ void testRunnableLambda() {
 
 
 
-# 2. Lambda의 기본 문법
+## 1.4 람다의 특징
+
+* 람다 표현식은 익명 함수를 단순화한 것
+* 익명: 보통의 메서드와 달리 이름이 없으므로 익명이라 표현한다
+* 함수: 람다는 메소드 처럼 특정 클래스에 종속되지 않으므로 함수라고 부른다
+* 전달: 람다 표현식을 메서드 인수로 전달하거나 변수로 지정할 수 있다
+* 간결성: 익명 클래스처럼 많은 자질구레한 코드를 구현할 필요가 없다
+
+
+
+# 2 Lambda의 기본 문법
 
 ```java
 (타입 매개변수, ...) -> {실행문; ...}
@@ -107,7 +119,7 @@ void testRunnableLambda() {
 
 
 
-# 3. Functional Interface
+# 3 Functional Interface
 
 * 모든 인터페이스를 람다식의 타겟 타입으로 사용할 수 없다
   * 두 개 이상의 추상 메서드가 선언된 인터페이스는 람다식을 이용해서 구현 객체를 생성할 수 없다.
@@ -130,17 +142,91 @@ public interface Runnable {
 }
 ```
 
-# 4. 표준 API의 함수형 인터페이스
+
+
+# 4 형식 검사, 형식 추론
+
+* 람다 표현식은 Functional Interface의 인스턴스를 만든다. 그러나 람다식 자체에는 어떤 함수형 인터페이스를 구현하는지 정보가 포함되어 있지 않다.
+
+
+
+## 4.1 형식 검사
+
+* 람다가 사용되는 컨텍스트를 이용해서 람다의 형식을 추론할 수 있다.
+* 컨텍스트: 람다가 전달될 메서드 파라미터, 람다가 할당되는 변수
+
+
+
+**형식 검사 과정 예시**
+
+```java
+public static List<Apple> filter(List<Apple> inventory, Predicate<Apple> p) {
+  List<Apple> result = new ArrayList<>();
+  for (Apple apple : inventory) {
+    if (p.test(apple)) {
+      result.add(apple);
+    }
+  }
+  return result;
+}
+```
+
+```java
+List<Apple> greenApples = filter(inventory, (Apple a) -> a.getColor() == Color.GREEN);
+```
+
+1. filter 메소드의 선언을 확인한다
+2. filter 메소드는 두 번째 파라미터로 `Predicate<Apple>` 형식(대상 형식)을 기대한다
+3. `Predicate<Apple>`은 test라는 한 개의 추상 메서드를 정의하는 함수형 인터페이스다
+4. test 메서드는 Apple을 받아 boolean을 반환하는 함수 디스크립터를 묘사한다
+5. filter 메서드로 전달된 인수는 이와 같은 요구 사항을 만족해야 한다
+   * 함수 디스크립터: Apple -> boolean
+   * 람다의 시그니처와 일치하므로 형식 검사 성공
+     * (`Apple a) -> a.getColor() == Color.GREEN)`
+     * Apple -> boolean
+
+> **함수 디스크립터**
+>
+> 함수형 인터페이스의 추상 메서드 시그니처를 함수 디스크립터라고 한다.
+
+
+
+## 4.2 형식 추론
+
+* 위에 코드를 더 단순화하는 방법이 있다
+* 자바 컴파일러는 람다 표현식인 사용된 컨텍스트(대상 형식)를 이용해 람다 표현식과 관련된 함수형 인터페이스를 추론할 수 있다
+  * 대상 형식: `Comparator<Apple>`
+* 대상 형식을 알기 때문에 함수형 인터페이스의 추상 메서드 시그니처(함수 디스크립터)를 알 수 있다
+* 따라서 함수형 인터페이스의 파라미터 형식에 접근할 수 있으므로 람다 문법에서 이를 생략할 수 있다. 
+* 상황에 따라 명시적으로 표현하는 것이 좋고 형식을 배제하는 것이 가독성을 향상시킬 때도 있다. 규칙은 없다
+
+**예시**
+
+```java
+// 형식 명시
+Comparator<Apple> c = (Apple a, Apple b) -> a.getWeight().compareTo(b.getWeight());
+// 형식 추론
+Comparator<Apple> c = (a, b) -> a.getWeight().compareTo(b.getWeight());
+```
+
+
+
+# 5 표준 API의 함수형 인터페이스
 
 * Java가 기본으로 제공하는 함수형 인터페이스
 * java.lang.funcation 패키지
   * 자바에서 미리 정의해둔 자주 사용할만한 함수 인터페이스
   * Function, BiFunction, Consumer, Supplier, Predicate, UnaryOperator, BinaryOperator이 있다
 * 구분 기준은 인터페이스에 선언된 추상 메서드의 매개값과 리턴값의 유무이다.
+* 참조형이 아닌 기본형 특화 함수형 인터페이스도 제공한다.
+  * 기본형 특화 함수형 인터페이스를 사용하면 오토 박싱 동작을 피할 수 있다
+  * 예) `IntPredicate`:
+    *  `Predicate<Integer>` 와 달리 `1000(int)` 이라는 값을 `Integer로` 박싱하지 않는다
 
 
 
-## 4.1 Function
+
+## 5.1 Function
 
 ```java
 @FunctionalInterface
@@ -161,7 +247,6 @@ public interface Function<T, R> {
 
 * `R apply(T t)`: T 타입을 받아서 R 타입을 리턴하는 함수 인터페이스
   * 주로 매개값을 리턴값으로 매핑(타입변환)하는데 사용
-
 
 
 
@@ -196,7 +281,7 @@ public class FunctionAndThenTest {
 
 
 
-## 4.2 BiFunction
+## 5.2 BiFunction
 
 ```java
 @FunctionalInterface
@@ -210,7 +295,7 @@ public interface BiFunction<T, U, R> {
 
 
 
-## 4.3 Consumer
+## 5.3 Consumer
 
 ```java
 @FunctionalInterface
@@ -281,7 +366,7 @@ public class ConsumerAndThenTest {
 
 
 
-## 4.4 Supplier
+## 5.4 Supplier
 
 ```java
 @FunctionalInterface
@@ -294,7 +379,13 @@ public interface Supplier<T> {
 
 
 
-## 4.5 Predicate
+## 5.5 Predicate
+
+* 수학에서는 인수로 값을 받아 true나 false를 반환하는 함수를 Predicate이라고 한다.
+* `Function<Object, Boolean>`과 같이 코드를 구현할 수 있지만 `Predicate<Object>`를 사용하는 것이 더 표준적인 방식이다
+  * 또한 `boolean`을 `Boolean`으로 변환하는 과정도 없다
+
+**Predicate 인터페이스**
 
 ```java
 @FunctionalInterface
@@ -321,9 +412,9 @@ public interface Predicate<T> {
 
 * `boolean test(T t)`:  타입을 받아서 boolean을 리턴하는 함수 인터페이스
 
+**Predicate 사용 예시**
 
-
-**Predicate의 순차적 연결**
+* and(), or() 메소드를 이용해 Predicate를 순차적으로 연결할 수 있다
 
 ```java
 import org.assertj.core.api.Assertions;
@@ -360,7 +451,7 @@ public class PredicateTest {
 
 
 
-## 4.6 UnaryOperator 
+## 5.6 UnaryOperator 
 
 ```java
 @FunctionalInterface
@@ -373,7 +464,7 @@ public interface UnaryOperator<T> extends Function<T, T> {
 
 
 
-## 4.7 BinaryOperator 
+## 5.7 BinaryOperator 
 
 ```java
 @FunctionalInterface
@@ -386,13 +477,13 @@ public interface BinaryOperator<T> extends BiFunction<T,T,T> {
 
 
 
-# 5 클래스 멤버와 로컬 변수 사용
+# 6 클래스 멤버와 로컬 변수 사용
 
 
 
-## 5.1 클래스의 멤버 사용
+## 6.1 클래스의 멤버 사용
 
-- 클래스 멤버인 필드와 메소드를 제약없이 사용할 수 있다.
+- 람다 안에서 클래스 멤버인 필드와 메소드를 제약없이 사용할 수 있다.
 - 단,`this`의 사용에 주의해야 한다.
   - 람다식 내부의 `this` 는 내부적으로 생성되는 익명 객체의 참조가 아니라 람다식을 실행한 객체의 참조이다 
   - 외부 객체의 `this`를 사용하고 싶다면, `외부 객체명.this`를 이용하면 된다.
@@ -428,7 +519,7 @@ public class UsingThis {
 
 
 
-## 5.2 로컬 변수 사용
+## 6.2 로컬 변수 사용
 
 * 람다식은 메소드 내부에 작성되기 때문에 이름이 없는 Local Class라고 생각할 수 있다.
 * 따라서  Local Class 같이 바깥 클래스의 모든 멤버(인스턴스, static 멤버)에 접근이 가능하다
@@ -443,6 +534,8 @@ public class UsingThis {
 * 로컬 클래스의 객체는 메소드 실행이 끝나도 힙 메모리에 존재해서 계속 사용할 수 있다. 
 * 그러나 로컬 변수와 매개 변수는 메소드 실행이 끝나면 스택 메모리에서 사라져 로컬 객체에서 사용할 경우 문제가 된다.
 * 로컬 클래스에서 사용하는 매개 변수나 로컬 변수의 값을 로컬 클래스 내부에 복사해 두고 사용한다.
+  * 이와 같은 동작을 람다 캡처링이라고 부른다
+
 * 매개 변수나 로컬 변수가 수정되어 값이 변경되면 로컬 클래스에 복사해둔 값과 달라지는 문제를 해결하기 위해 매개 변수나 로컬 변수를 final로 선언해서 수정을 막는다.
 * 자바 8이후 final로 선언하지 않아도 로컬 변수가 `effectively final`이라면 접근 가능하다.
   * `effectively final`: 변수 혹은 파라미터가 초기화 이후 변하지 않은 경우
@@ -499,40 +592,41 @@ public class UsingThis {
 
 
 
-# 6 메소드 참조
+# 7 메소드 참조
 
 * 메소드 참조란 말 그대로 메소드를 참조해서 매개 변수의 정보 및 리턴 타입을 알아내어 람다식에서 불필요한 변수를 제거하는 것이 목적이다.
 * 이미 정의된 메소드를 참조해서 사용한다.
+* 때로는 람다 표현식보다 메서드 참조를 사용하는 것이 더 가독성이 좋다
 * 메소드 참조에는 아래와 같이 4가지의 종류가 있다.
 
 
 
-## 6.1 정적 메소드 참조
+## 7.1 정적 메소드 참조
 
 * `ContainingClass::staticMethodName`
 
 
 
-## 6.2 인스턴스 메소드 참조
+## 7.2 인스턴스 메소드 참조
 
 * `containingObject::instanceMethodName`
 
 
 
-## 6.3 임의 인스턴스 메소드 참조
+## 7.3 임의 인스턴스 메소드 참조
 
 * `ContainingType::methodName`
 * 람다식에 매개변수로 주어진 객체의 메소드를 참조하는 것
 
 
 
-## 6.4 생성자 참조
+## 7.4 생성자 참조
 
 * `ClassName::new`
 
 
 
-## 6.5 예시
+## 7.5 예시
 
 ```java
 import java.util.function.BiFunction;
@@ -579,4 +673,5 @@ public class MethodReferencesExamples {
 참고
 
 * 이것이 자바다(이상민 저)
+* 모던 자바 인 액션
 * https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html
