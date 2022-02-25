@@ -52,9 +52,16 @@
 
 
 
+## Effective Java
+
+* [Effective Java](Effective-Java/README.md)
+
+
+
 ## 참고 자료
 
 * [이것이 자바다](http://www.kyobobook.co.kr/product/detailViewKor.laf?ejkGb=KOR&mallGb=KOR&barcode=9788968481475&orderClick=LEa&Kc=)
 * [모던 자바 인 액션](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791162242025)
 * [Oracle The Java™ Tutorials](https://docs.oracle.com/javase/tutorial/index.html)
 * [Standard Edition & Java Development Kit Version 11 API Specification](https://docs.oracle.com/en/java/javase/11/docs/api/index.html)
+* [이펙티브 자바 3/E](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788966262281)
