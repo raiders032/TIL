@@ -329,9 +329,11 @@ Map<Dish.Type, List<Dish>> dishesByType2 = menu.stream()
   .collect(
   groupingBy(Dish::getType, filtering(dish -> dish.getCalories() > 500, toList())));
 System.out.println("dishesByType2 = " + dishesByType2);
+```
 
-// dishesByType1 = {MEAT=[pork, beef], OTHER=[french fries, pizza]}
-// dishesByType2 = {MEAT=[pork, beef], FISH=[], OTHER=[french fries, pizza]}
+```
+dishesByType1 = {MEAT=[pork, beef], OTHER=[french fries, pizza]}
+dishesByType2 = {MEAT=[pork, beef], FISH=[], OTHER=[french fries, pizza]}
 ```
 
 
@@ -342,12 +344,80 @@ System.out.println("dishesByType2 = " + dishesByType2);
 Map<Dish.Type, List<String>> dishNameByType = menu.stream()
   .collect(groupingBy(Dish::getType, mapping(Dish::getName, toList())));
 System.out.println("dishNameByType = " + dishNameByType);
-// dishNameByType = {OTHER=[french fries, rice, season fruit, pizza], MEAT=[pork, beef, chicken], FISH=[prawns, salmon]}
+```
+
+```
+dishNameByType = {OTHER=[french fries, rice, season fruit, pizza], MEAT=[pork, beef, chicken], FISH=[prawns, salmon]}
 ```
 
 
 
 # 5 분할
+
+* 분할은 분할 함수라 불리는 프레디케이트를 **분류 함수**로 사용하는 특수한 그룹화 기능이다
+* 분할 함수가 불리언을 반환하므로 맵의 키 형식은 Boolean이며 결과적으로 그룹화 맵은 최대 두 개의 그룹으로 분류된다
+
+
+
+## 5.1 분할의 장점
+
+* 분할 함수가 반환하는 참, 거짓 두 가지 요소의 스트림 리스트를 모두 유지한다는 장점이 있다
+
+
+
+**예시**
+
+* filter를 두번 적용하는 대신 분할을 사용하면 참, 거짓 두 가지 요소를 한번에 얻을 수 있다
+
+```java
+@DisplayName("filter와 partitioningBy 비교")
+@Test
+public void test() {
+  //when
+  List<Dish> isVegetarianList = menu.stream().filter(Dish::isVegetarian).collect(Collectors.toList());
+  List<Dish> isNotVegetarianList = menu.stream().filter(Predicate.not(Dish::isVegetarian)).collect(Collectors.toList());
+  Map<Boolean, List<Dish>> partitionByVegeterian = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+
+  //then
+  assertThat(partitionByVegeterian.get(true)).isEqualTo(isVegetarianList);
+  assertThat(partitionByVegeterian.get(false)).isEqualTo(isNotVegetarianList);
+}
+```
+
+
+
+**예시**
+
+```java
+@DisplayName("채식 요리의 개수 구하기")
+@Test
+public void partitionByVegeterian() {
+  //when
+  Map<Boolean, List<Dish>> partitionByVegeterian = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+
+  //then
+  assertThat(partitionByVegeterian.get(true).size()).isEqualTo(4);
+}
+```
+
+
+
+**예시**
+
+```java
+@DisplayName("채식 요리와 채식이 아닌 요리를 각각 그룹화해서 가장 칼로리가 높은 요리 찾기")
+@Test
+public void mostCaloricPartitionedByVegetarian() {
+  //when
+  Map<Boolean, Optional<Dish>> mostCaloricPartitionedByVegetarian = menu.stream()
+    .collect(partitioningBy(Dish::isVegetarian,
+                            maxBy(Comparator.comparingInt(Dish::getCalories))));
+
+  //then
+  assertThat(mostCaloricPartitionedByVegetarian.get(true).get().getName()).isEqualTo("pizza");
+  assertThat(mostCaloricPartitionedByVegetarian.get(false).get().getName()).isEqualTo("pork");
+}
+```
 
 
 
