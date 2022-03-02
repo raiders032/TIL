@@ -171,6 +171,7 @@ while (st.hasMoreTokens()){
 
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 
+* 클래스 내부 버퍼에 문자열을 저장해 두고 추가, 수정, 삭제 작업을 할 수 있도록 설계되어 있다.
 * StringBuilder와 StringBuffer의 사용법은 동일하다
 * **StringBuilder**는 단일 스레드 환경에서만 사용하도록 설계되어 있다.
   * **Thread Safe하지 않다.**
@@ -182,12 +183,13 @@ while (st.hasMoreTokens()){
 **초기화**
 
 ```java
+// 16개의 문자들을 저장할 수 있는 초기 버퍼를 가진 StringBuilder 생성
 StringBuilder sb = new StringBuilder();
+// 매개변수 capacity 만큼의 버퍼 크기를 가진 StringBuilder 생성
 StringBuilder sb = new StringBuilder(16);
+// 주어진 문자열 + 16 만큼의 버퍼 크기를 가진 StringBuilder 생성
 StringBuilder sb = new StringBuilder("Java");
 ```
-
-
 
 
 
@@ -209,11 +211,13 @@ StringBuilder sb = new StringBuilder("Java");
 > 문자열을 저장하는 String 내부의 문자열을 수정할 수 없다. 예를 들어 String의 replace() 메소드는 내부의 문자를 대치하는 것이 아니라 대치된 새로운 문자열을 리턴한다. 문자열을 더하는 연산도 마찬가지다. 문자열을 결합하는 + 연산자를 많이 사용하면 그만큼 String 객체의 수도 늘어나기에 성능 저하의 요인이된다. 따라서 문자를 변경하는 작업이 많을 경우 String 클래스보다 StringBuffer 클래스 또는 StringBuilder 클래스를 사용하는 것이 좋다.
 >
 
+* 클래스 내부 버퍼에 문자열을 저장해 두고 추가, 수정, 삭제 작업을 할 수 있도록 설계되어 있다.
+
 
 
 **StringBuilder와 차이점**
 
-* 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 Thread safe하다
+* 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 **Thread Safe**하다
 
 
 
