@@ -37,6 +37,26 @@
 
 
 
+### 2.2.1 uniqueConstraints
+
+* @Column의 unique 속성은 한 컬럼에 간단한 유니크 제약 조건을 걸 때 사용한다
+* @Table의 uniqueConstraints 속성은 두 컬럼 이상을 이용해 유니크 제약 조건을 걸 수 있다.
+  * 또한 유니크 제약 조건에 이름을 부여할 수 있다
+
+```java
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "open_banking_accounts", uniqueConstraints = {
+  @UniqueConstraint(name = "FINTECH_USE_NUM_UNIQUE", columnNames = {"fintech_use_num"})
+})
+@Entity
+public class OpenBankingAccount extends BaseTimeEntity {
+  @Column
+  private String fintechUseNum;
+}
+```
+
+
+
 # 3. 기본 키 매핑
 
 * 기본키 매핑 방법은 두가지 방법이 있다. ID를 직접 할당하는 직접 할당 방법과 ID를 자동으로 할당하는 자동 생성 방법이 있다.
@@ -164,12 +184,29 @@ public class Member {
 
 * 엔티티의 필드를 테이블의 컬럼에 매핑한다.
 
-| 속성                   | 설명                                                         | 기본값                                                   |
-| ---------------------- | ------------------------------------------------------------ | -------------------------------------------------------- |
-| name                   | 필드와 매핑할 테이블의 컬럼 이름                             | 객체의 필드 이름                                         |
-| insertable, updatable  | 등록, 변경 가능 여부                                         | TRUE                                                     |
-| nullable(DDL)          | null 값의 허용 여부를 설정한다. false로 설정하면 DDL 생성 시에 not null 제약조건이 붙는다. |                                                          |
-| unique(DDL)            | @Table의 uniqueConstraints와 같지만 한 컬럼에 간단히 유니크 제 약조건을 걸 때 사용한다. |                                                          |
+| 속성                  | 설명                                                         | 기본값           |
+| --------------------- | ------------------------------------------------------------ | ---------------- |
+| name                  | 필드와 매핑할 테이블의 컬럼 이름                             | 객체의 필드 이름 |
+| insertable, updatable | 등록, 변경 가능 여부                                         | TRUE             |
+| nullable(DDL)         | null 값의 허용 여부를 설정한다. false로 설정하면 DDL 생성 시에 not null 제약조건이 붙는다. |                  |
+| unique(DDL)           | @Table의 uniqueConstraints와 같지만 한 컬럼에 간단히 유니크 제약조건을 걸 때 사용한다. |                  |
+
+
+
+### 4.1.1 unique
+
+* 유니크 제약조건과 생성된 DDL
+
+```java
+@Column(unique=true)
+private Long personNumber;
+```
+
+```sql
+alter table Person add constraint UK_d44q5lfa9xx370jv2k7tsgsqt unique (personNumber)
+```
+
+
 
 
 
