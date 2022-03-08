@@ -244,21 +244,64 @@ int memberSize = findTeam.getMembers().size();
 
 ## 3.1 조인 전략
 
-> 엔티티 각각을 테이블로 만들고 자식 테이블이 부모 테이블의 기본 키를 받아서 기본 키 + 외래 키로 사용하는 전략이다. 따라서 조회 할 때 조인을 사용한다.
+* 엔티티 각각을 테이블로 만들고 자식 테이블이 부모 테이블의 기본 키를 받아서 기본 키 + 외래 키로 사용하는 전략이다. 
+* 조회 할 때 조인을 사용한다.
+* 객체는 타입으로 구분할 수 있지만 테이블은 타입의 개념이 없다
+  * 따라서 타입을 구분하는 컬럼 DTYPE 컬럼을 추가해야한다
 
 ![image-20210316193119451](./images/image-20210316193119451.png)
 
-장점
+**장점**
 
 * 테이블 정규화
 * 외래 키 참조 무결성 제약조건 활용가능
 * 저장공간 효율
 
-단점
+**단점**
 
 * 조회시 조인을 많이 사용해 성능이 저하된다.
 * 조회 쿼리가 복잡하다
 * 데이터 저장시 INSERT SQL 2번 호출된다.
+
+**예시**
+
+* `@DiscriminatorColumn(name = "DTYPE")`: 부모 클래스에서 구분 컬럼을 지정
+
+```java
+@DiscriminatorColumn(name = "DTYPE")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
+public abstract class Item {
+
+  @Id
+  @GeneratedValue
+  @Column(name = "ITEM_ID")
+  private Long id;
+
+  private String name;
+  private int price;
+}
+```
+
+* `@DiscriminatorValue("A")` : 엔티티를 저저아할 때 구분 컬럼에 입력할 값을 지정함
+  * Album 엔티티를 저장하면 구분 컬럼 DTYPE에 값 `A`가 저장됨
+
+```java
+@DiscriminatorValue("A")
+@Entity
+public class Album extends Item {
+  private String artist;
+}
+```
+
+```java
+@DiscriminatorValue("M")
+@Entity
+public class Movie extends Item {
+  private String director;
+  private String actor;
+}
+```
 
 
 
@@ -301,6 +344,9 @@ public abstract class Item {
     private List<Category> categories = new ArrayList<Category>();
 }
 ```
+
+* `@DiscriminatorValue("B")`
+  * 자식 엔티티에서 @DiscriminatorValue를 지정하지 않으면 기본으로 엔티티 이름(Book, Movie)을 사용한다
 
 ```java
 @Entity
