@@ -24,6 +24,9 @@
 * [Spring Data JPA](Spring-Data-JPA/Spring-Data-JPA.md)
   * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 네이티브 쿼리
 * [Querydsl](Querydsl/README.md)
+* [락](Lock/Lock.md)
+  * Silent Data Loss, Optimistic Lock, Pessimistic Lock, @Version
+
 
 
 
