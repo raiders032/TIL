@@ -19,10 +19,15 @@
 * [값 타입](Value-Type/Value-Type.md)
 * [JPQL](JPQL/JPQL.md)
 * [지연 로딩과 조회 성능 최적화](Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)
+  * ToOne 관계 N + 1 문제
+
 * [컬렉션 조회 최적화](Optimized-Collection-Inquiry/Optimized-Collection-Inquiry.md)
+  * ToMany 관계 N + 1 문제
+
 * [OSIV](OSIV/OSIV.md)
 * [Spring Data JPA](Spring-Data-JPA/Spring-Data-JPA.md)
   * JpaRepository, 쿼리 메소드, @Query, 페이징, 벌크 수정 쿼리, @EntityGraph, JPA hint/lock, 네이티브 쿼리
+  * 사용자 정의 리포지토리, JPA Auditing, Web 확장
 * [Querydsl](Querydsl/README.md)
 * [락](Lock/Lock.md)
   * Silent Data Loss, Optimistic Lock, Pessimistic Lock, @Version
@@ -35,7 +40,7 @@
 *  [JPA Auditing](JPA-Auditing/JPA-Auditing.md)
 * [Annotation](Annotation/Annotation.md)
 * [Test](Test/Test.md)
-* [사용자 정의 리포지토리](Custom-Repository/Custom-Repository.md) 
+* [사용자 정의 리포지토리](Custom-Repository/Custom-Repository.md)
 
 
 
