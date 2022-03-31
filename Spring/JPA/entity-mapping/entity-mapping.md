@@ -50,7 +50,7 @@
 })
 @Entity
 public class OpenBankingAccount extends BaseTimeEntity {
-  @Column
+  @Column(name = "fintech_use_num")
   private String fintechUseNum;
 }
 ```
@@ -177,6 +177,48 @@ public class Member {
 * 키 생성 전용 테이블을 하나 만들어서 데이터베이스 시퀀스를 흉내 내는 전략이다.
 * 모든 데이터베이스에 적용 가능하다는 장점이 있으나 성능이 좋지 못하다는 단점이 있디.
 * TABLE 전략은 잘 사용하지 않는다.
+
+
+
+### 3.3.1 주의사항
+
+* 엔티티를 영속화 할 때 새로운 엔티티인지 아닌지 판단해서 새로운 엔티티라면 save()를 호출하고 아니면 merge()를 호출한다
+* JPA 식별자 생성 전략이 @GenerateValue 면 save() 호출 시점에 식별자가 없으므로 새로운 엔티티로 인식해서 정상 동작한다. 
+* JPA 식별자 생성 전략이 @Id 만 사용해서 직접 할당이면 이미 식별자 값이 있는 상태로 save() 를 호출한다. 
+  * 이 경우 merge() 가 호출된다.
+  * merge() 는 우선 DB를 호출해서 값을 확인하고, DB에 값이 없으면 새로운 엔티티로 인지하므로 매우 비효율 적이다. 
+  * 따라서 Persistable 를 사용해서 새로운 엔티티 확인 여부를 직접 구현하게는 효과적이다.
+
+> 참고로 등록시간( @CreatedDate )을 조합해서 사용하면 이 필드로 새로운 엔티티 여부를 편리하게 확인할 수 있다. (@CreatedDate에 값이 없으면 새로운 엔티티로 판단)
+
+```java
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Item implements Persistable<String> {
+  @Id
+  private String id;
+  
+  @CreatedDate
+  private LocalDateTime createdDate;
+  
+  public Item(String id) {
+    this.id = id;
+  }
+  
+  @Override
+  public String getId() {
+    return id; 
+  }
+  
+  @Override
+  public boolean isNew() {
+    return createdDate == null;
+  }
+}
+```
+
+
 
 # 4.필드와 컬럼 매핑
 
