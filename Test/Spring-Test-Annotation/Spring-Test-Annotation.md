@@ -36,6 +36,42 @@
 >
 > * [Testing MVC Web Controllers with Spring Boot and @WebMvcTest](https://reflectoring.io/spring-boot-web-controller-test/)
 
+
+
+# [@DataJpaTest](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/autoconfigure/orm/jpa/DataJpaTest.html)
+
+* `org.springframework.boot.test.autoconfigure.orm.jpa` 패키지
+* @DataJpaTest 애노테이션은 auto-configuration하지 않고 JPA 테스트와 관련된 configuration만 스캔한다
+  * DataSource, Spring Data JPA Repository Interface, JdbcTemplate, EntityManager 등등
+* 기본적으로 Transactional이 적용되어 각각의 테스트 메소드가 끝나면 롤백된다
+* embedded in-memory database를 사용한다
+  * DataSource를 대체함
+
+
+
+**DataJpaTest.java**
+
+```java
+...
+@Transactional
+...
+public @interface DataJpaTest {
+	...
+}
+```
+
+
+
+**테스트 실행 시 로그**
+
+```
+Finished Spring Data repository scanning in 61 ms. Found 7 JPA repository interfaces.
+Replacing 'dataSource' DataSource bean with embedded version
+Starting embedded database: url='jdbc:h2:mem:d1d81c63-a190-49e4-b63d-ae027d6ce935;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+```
+
+
+
 # [@MockBean](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/mock/mockito/MockBean.html)
 
 * `org.springframework.boot.test.mock.mockito.MockBean`
