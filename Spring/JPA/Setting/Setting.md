@@ -13,7 +13,7 @@ dependencies {
 
 
 
-# 2 기본 설정
+# 2 데이터베이스 설정
 
 **datasource 설정**
 
@@ -35,7 +35,7 @@ dependencies {
 
 
 
-**h2 관련**
+## 2.1 h2 데이터베이스 설정
 
 `spring.h2.console.enabled`
 
@@ -70,8 +70,6 @@ logging:
       hibernate:
         type: trace
 ```
-
-
 
 
 
@@ -204,9 +202,11 @@ Hibernate:
 
 
 
-# 3 쿼리 파라미터 로그 남기기
+## 3.1 쿼리 파라미터 로그 남기기
 
 **의존성 추가**
+
+* 스프링 부트를 사용하면 이 라이브러리만 추가하면 된다.
 
 ```groovy
 implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
@@ -360,6 +360,12 @@ public class MemberJpaRepository {
 ```
 
 > 동시성 문제는 걱정하지 않아도 된다. 왜냐하면 여기서 스프링이 주입해주는 엔티티 매니저는 실제 동작 시점에 진짜 엔티티 매니저를 찾아주는 프록시용 가짜 엔티티 매니저이다. 이 가짜 엔티티 매니저는 실제 사용 시점에 트랜잭션 단위로 실제 엔티티 매니저(영속성 컨텍스트)를 할당해준다.
+
+
+
+참고
+
+* [Spring Boot Data Jpa 프로젝트에 Querydsl 적용하기 - 기억보단 기록을](https://jojoldu.tistory.com/372)
 
 
 
