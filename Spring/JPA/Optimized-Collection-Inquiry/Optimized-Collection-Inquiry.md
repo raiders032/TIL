@@ -1,4 +1,4 @@
-# 1.컬렉션 조회 최적화
+# 1 컬렉션 조회 최적화
 
 *  [지연로딩과 조회 성능 최적화](../Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)에서 ToOne 관계에 대해서 알아봤다면 이번엔 ToMany관계에 대해서 알아보자
 * `Order` 와 `Member` 일대일 관계이다.
@@ -7,11 +7,11 @@
 * `OrderItem` 과 `Item` 은 다대일 관계이다.
 * 연관 관계는 모두 `fetch = FetchType.LAZY` 로 설정되어 있다.
 
-# 2. 엔티티 조회
+# 2 엔티티 조회
 
 
 
-## 2.1엔티티 직접 노출 버전
+## 2.1 엔티티 직접 노출 버전
 
 * **엔티티 직접 노출하는 것은 피하자**
   * 엔티티가 변하면 API 스펙이 변한다
@@ -43,7 +43,7 @@ public class OrderApiController {
 
 
 
-## 2.2엔티티를 DTO로 변환 버전
+## 2.2 엔티티를 DTO로 변환 버전
 
 * SQL 실행 횟수
   * `Order` 조회 1회 -> N개의 `Order` 가 조회됨
@@ -112,7 +112,7 @@ class OrderItemDto {
 
 
 
-## 2.3엔티티를 DTO로 변환 + 페치 조인 최적화 버전
+## 2.3 엔티티를 DTO로 변환 + 페치 조인 최적화 버전
 
 * `Order` 와 `OrderItem` 일대다 관계이다. 
 * `Order` 와 `OrderItem` 을 페치 조인한다
@@ -122,7 +122,7 @@ class OrderItemDto {
   * JPA의 `distinct`는 SQL에 distinct를 추가하고, 더해서 같은 엔티티가 조회되면, 애플리케이션에서 중복을 걸러준다. 
 * 결과적으로 SQL 실행 횟수는 1회이다.
 * 단점
-  * 컬렉션을 페치 조인하게되면 페이징이 불가능하다.
+  * **컬렉션을 페치 조인하게되면 페이징이 불가능하다.**
 * 페이징이 불가능한 이유    
   * 일다대에서 일(1)을 기준으로 페이징을 하는 것이 목적이다. 
   * 그런데 데이터는 다(N)를 기준으로 row 가 생성된다.
@@ -137,18 +137,17 @@ class OrderItemDto {
 @RequiredArgsConstructor
 public class OrderApiController {
 
-    private final OrderRepository orderRepository;
+  private final OrderRepository orderRepository;
 
+  @GetMapping("/api/v3/orders")
+  public List<OrderDto> ordersV3() {
+    List<Order> orders = orderRepository.findAllWithItem();
 
-    @GetMapping("/api/v3/orders")
-    public List<OrderDto> ordersV3() {
-        List<Order> orders = orderRepository.findAllWithItem();
+    List<OrderDto> result = orders.stream()
+      .map(o -> new OrderDto(o)).collect(toList());
 
-        List<OrderDto> result = orders.stream()
-                .map(o -> new OrderDto(o)).collect(toList());
-
-        return result;
-    }
+    return result;
+  }
 }
 ```
 
@@ -156,39 +155,46 @@ public class OrderApiController {
 @Repository
 @RequiredArgsConstructor
 public class OrderSimpleQueryRepository {
-    private final EntityManager em;
+  private final EntityManager em;
 
-    public List<Order> findAllWithItem() {
-        return em.createQuery(
-                "select distinct o from Order o" + 
-          			" join fetch o.member m" +
-                " join fetch o.delivery d" +
-                " join fetch o.orderItems oi" +
-                " join fetch oi.item i", Order.class)
-                .getResultList();
-    }
+  public List<Order> findAllWithItem() {
+    // Order와 일대다 관계인 orderItems을 페치 조인함으로써 orderItems을 기준으로 row가 생성되고 이로인해 페이징이 불가능해진다
+    return em.createQuery(
+      "select distinct o from Order o" + 
+      " join fetch o.member m" +
+      " join fetch o.delivery d" +
+      " join fetch o.orderItems oi" +
+      " join fetch oi.item i", Order.class)
+      .getResultList();
+  }
 }
  ```
 
 
 
-## 2.4엔티티를 DTO로 변환 + 페치 조인 최적화 + 페이징 버전
+## 2.4 엔티티를 DTO로 변환 + 페치 조인 최적화 + 페이징 버전
 
 * 앞선 버전에서는 컬렉션을 페치 조인하면서 페이징이 불가능했다.
 * 페이징 + 컬렉션 엔티티를 함께 조회하는 방법을 알아보자.
-* 해결 방법!!!
-  * 먼저 ToOne(OneToOne, ManyToOne) 관계를 모두 페치조인 한다
-    * ToOne 관계는 row수를 증가시 키지 않으므로 페이징 쿼리에 영향을 주지 않는다.
-  * 컬렉션은 지연 로딩으로 조회한다.
-  * 지연 로딩 성능 최적화를 위해 `hibernate.default_batch_fetch_size` , `@BatchSize` 를 적용한다.
-    * `hibernate.default_batch_fetch_size`: 글로벌 설정
-    * `@BatchSize`: 개별 최적화
-    * 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
-* 장점
-  * 쿼리호출수가`1+N` 에서 `1+1`로최적화된다.
-  * 컬렉션 페치 조인은 페이징이 불가능 하지만 이 방법은 페이징이 가능하다.
-  * 조인보다 DB 데이터 전송량이 최적화 된다.
-    * `Order`와 `OrderItem`을 조인하면 `Order`가 `OrderItem` 만큼 중복해서 조회된다.
+
+
+
+**컬렌션 조회 최적화 방법**
+
+* 먼저 ToOne(OneToOne, ManyToOne) 관계를 모두 페치조인 한다
+  * ToOne 관계는 row수를 증가시 키지 않으므로 페이징 쿼리에 영향을 주지 않는다.
+* 컬렉션은 지연 로딩으로 조회한다.
+* 지연 로딩 성능 최적화를 위해 `hibernate.default_batch_fetch_size` , `@BatchSize` 를 적용한다.
+  * `hibernate.default_batch_fetch_size`: 글로벌 설정
+  * `@BatchSize`: 개별 최적화
+  * 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
+
+**장점**
+
+* 쿼리호출수가`1+N` 에서 `1+1`로최적화된다.
+* 컬렉션 페치 조인은 페이징이 불가능 하지만 이 방법은 페이징이 가능하다.
+* 조인보다 DB 데이터 전송량이 최적화 된다.
+  * `Order`와 `OrderItem`을 조인하면 `Order`가 `OrderItem` 만큼 중복해서 조회된다.
 
 > 참고
 >
@@ -218,17 +224,21 @@ public class OrderApiController {
 @Repository
 @RequiredArgsConstructor
 public class OrderRepository {
-    private final EntityManager em;
+  private final EntityManager em;
 
-    public List<Order> findAllWithMemberDelivery() {
-        return em.createQuery(
-                "select o from Order o" + 
-          			" join fetch o.member m" +
-                " join fetch o.delivery d", Order.class)
-                .getResultList();
-    }
+  public List<Order> findAllWithMemberDelivery() {
+    // Order와 ToOne 관계인 member와 delivery는 페치 조인한다
+    return em.createQuery(
+      "select o from Order o" + 
+      " join fetch o.member m" +
+      " join fetch o.delivery d", Order.class)
+      .getResultList();
+  }
 }
 ```
+
+* 컬렉션의 지연 로딩 성능 최적화를 위해 `hibernate.default_batch_fetch_size` 로 글로벌한 배치 사이즈를 설정한다
+* 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
 
 ```properties
 # application.properties
