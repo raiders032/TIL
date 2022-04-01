@@ -638,6 +638,26 @@ public interface Collector<T, A, R> {
 
 ## 6.5 combiner 메소드
 
+* 두 결과 컨테이너 병합
+* combiner는 스트림의 서로 다른 서브파트를 병렬로 처리할 때 누적자가 이 결과를 어떻게 처리할지 정의한다
+* toList의 combiner는 비교적 쉽게 구현할 수 있다
+  * 두 전째 서브 파트에서 수집한 항목 리스트를 첫 번째 서브파트 결과 리스트의 추가하면 된다
+
+```java
+public BinaryOperator<List<T>> combiner() {
+  return (list1, list2) -> {
+    list1.addAll(list2);
+    return list1;
+  };
+}
+```
+
+
+
+## 6.6 characteristics 메소드s
+
+* 
+
 # 7 커스텀 컬렉터 구현
 
 
