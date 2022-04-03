@@ -30,6 +30,7 @@
 
 * 구문은 라인 커버리지라고 부르기도 한다
 * 코드 한줄이 한 번이상 실행되면 충족된다
+* `코드 커버리지 = 실행 코드 라인 수 / 전체 라인 수`
 
 
 
@@ -47,6 +48,7 @@
 
 * 브랜치 커버리지라고 부른다
 * 모든 조건식이 true/false를 가지게 되면 충족된다
+* `브랜치 커버리지 = 통과 분기 / 전체 분기 수`
 
 
 
@@ -91,7 +93,139 @@
 
 
 
-# 4 Java Code Coverage
+# 4 Code Coverage와 테스트 스위트의 품질
+
+* 일반적으로 커버리지 숫자가 높을수록 더 좋다. 
+* 하지만 그렇게 간단하지만은 않다 커버리지 지표는 중요한 피드백을 주더라도 테스트 스위트의 품질을 효과적으로 측정하는데 사용할 수 없다
+* 코드 커버리지가 10%라면 테스트가 충분하지 않다는 좋은 증거다
+* 그러나 100% 커버리지라고 해서 반드시 양질의 테스트 스위트라고 보장하지 않는다
+* 높은 커버리지의 테스트 스위트도 품질이 떨어질 수 있다
+
+
+
+## 4.1 커버리지 지표에 관한 문제점
+
+* 테스트 대상 시스템의 모든 가능한 결과를 검증한다고 보장할 수 없다
+* 외부 라이브러리의 코드 경로를 고려할 수 잇는 커버리지 지표는 없다
+
+
+
+**테스트 대상 시스템의 모든 가능한 결과를 검증한다고 보장할 수 없다**
+
+아래와 같은 코드를 테스트해보자
+
+```java
+public static boolean isStringLong(String input) {
+  boolean result = input.length() > 5;
+  boolean wasLastStringLong = result;
+  return result;
+}
+```
+
+아래와 같이 테스트 코드를 작성했다
+
+```java
+@Test
+void test() {
+  boolean result = isStringLong("abc");
+  Assertions.assertThat(result).isFalse();
+}
+```
+
+* isStringLong 메소드가 반환하는 명시적 결과와 isStringLong 메소드 내부에 wasLastStringLong에 저장되는 암묵적 결과가 있다
+* 위에 테스트 코드는 명시적 결과는 검증 했지만 wasLastStringLong(암묵적 결과)는 테스트 하지 않았다
+* 하지만 구문 기준 테스트 커버리지 100% 브랜치 기준 테스트 커버리지 50%의 결과를 보여준다
+
+더 극단적으로 테스트를 작성해보면 아래와 같다
+
+```java
+@Test
+void test2() {
+  isStringLong("abc");
+  isStringLong("abcdef");
+}
+```
+
+* 위 테스트 코드는 구문 기준 테스트 커버리지 100% 브랜치 기준 테스트 커버리지 100%의 결과를 보여준다
+* 이렇듯 테스트 커버리지가 테스트 스위트의 품질까지는 보장해주지 못한다는 것을 알아봤다
+
+
+
+**외부 라이브러리의 코드 경로를 고려할 수 잇는 커버리지 지표는 없다**
+
+* 모든 커버리지 지표가 테스트 대상 시스템이 메서드를 호출할 때 외부 라이브러리가 통과하는 코드 경로를 고려하지 않는 다는 것
+
+아래의 코드를 테스트 해보자
+
+```java
+public static int parse(String input) {
+  return Integer.parseInt(input);
+}
+```
+
+아래와 같이 테스트 코드를 작성했다
+
+```java
+@Test
+void test3() {
+  int result = parse("5");
+  Assertions.assertThat(result).isEqualTo(5);
+}
+```
+
+브랜치 기준 커버리지 100%인 테스트이다 하지만 이 테스트 코드는 완벽하지 않다. 
+
+Integer.parse 메서드의 입력 매개변수를 변경하면 다른 결과로 이어질 수 있고 테스트로부터 숨어 있는 분기가 있다
+
+* null 값
+* 빈 문자열
+* "정수가 아님 문자열"
+* 너무 긴 문자열
+
+```java
+@Test
+void test4() {
+  Throwable throwable = catchThrowable(() -> parse(""));
+  assertThat(throwable).isInstanceOf(NumberFormatException.class);
+}
+
+@Test
+void test5() {
+  Throwable throwable = catchThrowable(() -> parse(null));
+  assertThat(throwable).isInstanceOf(NumberFormatException.class);
+}
+
+@Test
+void test6() {
+  Throwable throwable = catchThrowable(() -> parse("abc"));
+  assertThat(throwable).isInstanceOf(NumberFormatException.class);
+}
+```
+
+위와 같은 숨어 있는 분기를 테스트 하더라고 똑같이 브랜치 기준 커버리지 100%인 테스트이다 따라서 수많은 예외 상황에 빠질 수 있지만 테스트에서 모든 예외 상황을 다루는지 확인할 방법이 없다
+
+따라서 커버리지 지표로 테스트가 철저한지 또는 테스트가 충분한지 알 수는 없다
+
+
+
+## 4.2 특정 커버리지 숫자를 목표로 하기
+
+* 테스트 스위트 품질을 결정하기에 코드 커버리지 지표로는 충분하지 않다는것을 알게되었다
+* 코드 커버리지 100%, 90% 숫자를 목표로 삼기 시작하면 위험 영역으로 이어질 수 있다
+* 커버리지 숫자를 강요하면 개발자들은 테스트 대상에 신경쓰지 못하고 결국 적절한 단위 테스트는 더욱 달성하기 어려워 진다
+* 커버리지 지표는 낮은 경우 문제 징후로 받아 들이고 높은 숫자는 큰 의미가 없다고 생각해야 한다
+
+
+
+## 4.3 좋은 테스트 스위트의 특성
+
+* 개발 주기에 통합돼 있다
+* 코드베이스 중 가장 중요한 부분만을 대상으로 한다
+* 최소한의 유지비로 최대의 가치를 끌어낸다
+
+
+
+# 5 Java Code Coverage
 
 * **자바 코드 커버리지 분석 도구**는 여러가지가 존재하는데, 대표적으로 **Cobertura, Jacoco, Clover** 등이 있다
 * [Jacoco.md](../Jacoco/Jacoco.md)
