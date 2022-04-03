@@ -84,6 +84,8 @@ public class BaseEntity {
 
 
 
+## 3.1 등록자 수정자 처리
+
 **`AuditorAware` 빈 등록 예시**
 
 * 스프링 부트 설정 클래스에 `@EnableJpaAuditing` 을 적용했다.
@@ -114,3 +116,29 @@ public class JpaConfig {
     }
 }
 ```
+
+* 실무에서 대부분의 엔티티는 등록시간, 수정시간이 필요하지만, 등록자, 수정자는 없을 수도 있다. 
+* 그래서 다음과 같이 Base 타입을 분리하고, 원하는 타입을 선택해서 상속한다.
+
+```java
+public class BaseTimeEntity {
+  @CreatedDate
+  @Column(updatable = false)
+  private LocalDateTime createdDate;
+  @LastModifiedDate
+  private LocalDateTime lastModifiedDate;
+}
+```
+
+```java
+public class BaseEntity extends BaseTimeEntity {
+  @CreatedBy
+  @Column(updatable = false)
+  private String createdBy;
+  @LastModifiedBy
+  private String lastModifiedBy;
+}
+```
+
+
+
