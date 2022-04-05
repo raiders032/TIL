@@ -148,6 +148,7 @@ Hibernate:
 **spring.jpa.properties.hibernate.use_sql_comments**
 
 * 추가적인 주석 표시하기
+* Querydsl를 사용할 때 생성되는 jpql을 보고싶다면 이 옵션을 상용하자
 
 ```
 [Hibernate] 
@@ -257,6 +258,10 @@ insert into user_book (created_at, updated_at, balance, version) values ('2022-0
 # 6 Querydsl 설정
 
 **build.gradle**
+
+* dependencies
+  * querydsl-apt: Querydsl 관련 코드 생성 기능 제공 
+  * querydsl-jpa: querydsl 라이브러리
 
 ```groovy
 plugins {
