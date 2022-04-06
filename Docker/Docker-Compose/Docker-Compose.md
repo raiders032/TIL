@@ -200,3 +200,26 @@ services:
 
 
 
+# 4 [Docker Compose CLI](https://docs.docker.com/compose/reference/)
+
+
+
+# [docker-compose down](https://docs.docker.com/compose/reference/down/)
+
+```bash
+Usage: docker-compose down [options]
+
+Options:
+    --rmi type              Remove images. Type must be one of:
+                              'all': Remove all images used by any service.
+                              'local': Remove only images that don't have a
+                              custom tag set by the `image` field.
+    -v, --volumes           Remove named volumes declared in the `volumes`
+                            section of the Compose file and anonymous volumes
+                            attached to containers.
+    --remove-orphans        Remove containers for services not defined in the
+                            Compose file
+    -t, --timeout TIMEOUT   Specify a shutdown timeout in seconds.
+                            (default: 10)
+```
+
