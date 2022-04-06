@@ -133,9 +133,17 @@ mockMvc response body 한글 깨짐
     String contentAsString = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
     ```
 
-    
+
+
+
+
 
 참고
 
 * https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
 
+
+
+관련 자료
+
+* [Mockito, 이대로 괜찮은가?](https://tecoble.techcourse.co.kr/post/2020-10-16-is-ok-mockito/)

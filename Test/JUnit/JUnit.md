@@ -4,7 +4,7 @@
 * 자바8 이상을 필요로함.
 * 대체제: TestNG, Spock, ...
 
-## 
+
 
 ## 1.1 build
 
@@ -87,8 +87,13 @@ dependencies {
 ## 2.2 @BeforeAll / @AfterAll
 
 - `@BeforeAll` 주석이 달린 메서드가 모든`@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory` 보다 먼저 실행되어야 함을 나타냄
+- 한 클래스의 모든 테스트 메서드가 실행되기 전에 특정작업을 수행해야할 때 @BeforeAll 애노테이션 사용
+- 한 클래스의 모든 테스트 메서드가 실행한 뒤에 특정작업을 수행해야할 때 @AfterAll 애노테이션 사용
+- 두 애노테이션 모두 정적 메서드에 적용가능
+  - @BeforeAll : 모든 테스트 메서드를 실행하기 전에 한 번 실행된다
+  - @AfterAll : 모든 테스트 메서드를 실행한 뒤에 한 번 실행된다
+
 - JUNit 4의 `@BeforeClass`와 유사합니다.
-- `static` 이어야 합니다.
 
 ```java
 @AfterAll
@@ -110,6 +115,15 @@ void afterEach(){
 	...
 }
 ```
+
+
+
+**라이프사이클**
+
+1. 테스트 메소드를 포함한 객체 생성
+2. @BeforeEach 애노테이션이 붙은 메서드 실행
+3. @Test 애노테이션 붙은 메서드 실행
+4. @AfterEach 애노테이션이 붙은 메서드 실행
 
 
 
