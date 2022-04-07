@@ -1,8 +1,24 @@
-# 1. Gradle 설정
 
-* jacoco 설정
+
+# 1 Test coverage visualization
+
+* Gitlab CI/CD를 사용하면 Jacoco 등 테스트 커버리지 분석 툴의 정보를 Gitlab 상에 시각화할 수 있다
+* 아래와 같이 머지 리퀘스트의 diff를 확인해보면 테스트된 코드인지 아닌지 시각화된 정보를 볼 수 있다
+
+![Test Coverage Visualization Diff View](https://docs.gitlab.com/ee/user/project/merge_requests/img/test_coverage_visualization_v12_9.png)
+
+
+
+# 2 Gradle 설정
+
+* 테스트 커버리지 리포트를 만들기 위한 Jacoco 설정
+* Jacoco가 생성한 리포트를  Gitlab CI/CD에 전달한다
+
+
 
 **build.gradle**
+
+* csv 형태의 리포트를 만든다 
 
 ```groovy
 plugins {
