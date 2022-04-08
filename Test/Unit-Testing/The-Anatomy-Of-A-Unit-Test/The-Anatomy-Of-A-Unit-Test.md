@@ -57,7 +57,9 @@ void sum_of_two_numbers() {
 * **실행 구절에서는 SUT에서 메서드를 호출하고 준비된 의존성을 전달하며 출력 값을 캡쳐한다**
 * 보통 실행 구절은 코드 한 줄이다
 * 실행 구절이 두 줄 이상인 경우 SUT의 공개 API에 문제가 있음을 시사한다
+  * 클라이언트가 항상 이러한 작업을 같이 수행해야 하고, 이로 인해 잠재적으로 모순으로 이어질 수 있다
   * 한번의 메서드 호출로 같은 기능을 하도록 캡슐화를 생각해보자
+  
 * 실행 구절을 한줄로 하는 지침은 비즈니스 로직을 포함하는 대부분의 코드에 적용된다
   * 하지만 유틸리티나 인프라 코드에는 덜 적용되므로 절대 두 줄 이상 두지 말라고 할 수 없다
   * 따라서 각각의 사례에서 캡슐화 위반이 있을 수 있는지 검토해보자
@@ -157,6 +159,7 @@ void sum_of_two_numbers() {
 * **준비 구절에서 코드를 재사용**하는 것이 테스트를 줄이면서 단순화하기 좋은 방법이다
   * 준비 구절은 코드가 많아지기 쉽다
   * 재사용을 위해 별도의 메서드나 클래스로 도출한 후 테스트 간에 재사용하는 것이 좋다
+* 테스트 픽스쳐 재사용에는 생성자를 이용한 방법과 비공개 팩토리 메서드를 이용하는 방법이 있는데 후자를 선택해야한다
 
 
 
@@ -238,3 +241,162 @@ class CustomerTest {
 ## 3.2 비공개 팩토리 메서드
 
 * 생성자로 테스트 픽스처를 초기화하는 방법보다 비공개 팩토리 메서드를 사용하는 것이 좋다
+
+
+
+**CustomerTestV2.java**
+
+* 생성자로 테스트 픽스처를 초기화하는 코드를 비공개 팩토리 메서드를 사용하는 버전으로 수정했다
+* 공통 초기화 코드를 비공개 팩토리 메서드로 추출해 테스트 **코드를 짧게 하면서 동시에 전체 맥락을 유지**할 수 있다
+* 게다가 비공개 메서드를 충분히 일반화하면 **테스트가 서로 결합되지 않는다**
+* 또한 팩토리 메서드 명으로 상점에 샴푸 열개를 추가하라고 명시하므로 굳이 메서드 내부를 알아볼 필요가 없기 때문에 가독성이 좋다
+  * `Store store = createStoreWithInventory(Product.Shampoo, 10);`
+
+```java
+class CustomerTestV2 {
+
+  @Test
+  void purchase_succeeds_when_enough_inventory() {
+    // Arrange
+    Store store = createStoreWithInventory(Product.Shampoo, 10);
+    Customer sut = createCustomer();
+
+    // Act
+    boolean success = sut.purchase(store, Product.Shampoo, 5);
+
+    // Assert
+    assertThat(success).isTrue();
+    assertThat(store.getInventory(Product.Shampoo)).isEqualTo(5);
+  }
+
+  @Test
+  void purchase_fails_when_not_enough_inventory() {
+    // Arrange
+    Store store = createStoreWithInventory(Product.Shampoo, 10);
+    Customer sut = createCustomer();
+
+    // Act
+    boolean success = sut.purchase(store, Product.Shampoo, 15);
+
+    // Assert
+    assertThat(success).isFalse();
+    assertThat(store.getInventory(Product.Shampoo)).isEqualTo(10);
+  }
+
+  private static Store createStoreWithInventory(Product product, int quantity) {
+    Store store = new Store();
+    store.addInventory(product, quantity);
+    return store;
+  }
+
+  private static Customer createCustomer() {
+    return new Customer();
+  }
+}
+```
+
+
+
+## 3.3 테스트 픽스처 재사용 규칙 예외
+
+* 테스트 픽스처 재사용 규칙에 한 가지 예외가 있다
+* 모든 테스트에, 또는 거의 대부분의 테스트에 사용되는 경우 생성자에 픽스처를 인스턴스화할 수 있다
+* 데이터베이서와 작동하는 통합테스트가 종종 여기에 해당된다
+* 이런 경우 부모 클래스를 둬서 개별 클래스가 아니라 클래스 생성자에서 데이터베이스 연결을 초기화하는 것이 합리적이다
+
+
+
+# 4 단위 테스트 명명법
+
+* 테스트에 표현력 있는 이름을 붙이는 것은 중요하다
+
+
+
+## 4.1 좋지 않은 관습
+
+* 가장 유명하지만 가장 도움이 되지 않는 방법 중 하나가 아래와 같은 관습이다
+* `[테스트 대상 메서드]_[시나리오]_[예상결과]`
+  * 테스트 대상 메서드: 메스트 중인 메서드의 이름
+  * 시나리오: 메서드를 테스트하는 조건
+  * 예상결과: 현재 시나리오에서 테스트 대상 메서드에 기대하는 것
+* 이러한 관습은 동작 대신 세부 구현 사항에 집중하게끔 부추기기 때문에 도움이 되지 않는다
+
+
+
+**쉬운 영어 이름 테스트**
+
+```java
+@Test
+void sum_of_two_numbers() {
+  // Arrange
+  int first = 10;
+  int second = 20;
+  Calculator calculator = new Calculator();
+
+  // Act
+  double result = calculator.sum(first, second);
+
+  // Assert
+  Assertions.assertThat(result).isEqualTo(30);
+}
+```
+
+
+
+**좋지 않은 관습**
+
+* 프로그래머의 눈에는 논리적으로 보일지 몰라도 테스트 가독성이 떨어진다
+
+```java
+@Test
+void sum_twoNumbers_returnsSum() {
+  // Arrange
+  int first = 10;
+  int second = 20;
+  Calculator calculator = new Calculator();
+
+  // Act
+  double result = calculator.sum(first, second);
+
+  // Assert
+  Assertions.assertThat(result).isEqualTo(30);
+}
+```
+
+
+
+## 4.2 단위 테스트 명명 지침
+
+* **엄격한 명명 정책을 따르지 않는다**
+  * 복잡한 동작에 대한 높은 수준의 설명을 이러한 정책의 좁은 상자에 넣을 수 없다
+  * 표현의 자유를 허용하자
+* **도메인에 익숙한 비개발자들에게 시나리오를 설명하는 것처럼 테스트 이름을 짓자**
+* **단어를 및줄 표시로 구분한다**
+* **테스트 이름에 SUT의 메서드 이름을 포함하지 않는다**
+  * 코드를 테스트하는 것이 아니라 동작을 테스트 해야 한다
+  * SUT의 메서드 이름은 중요하지 않으며 이름을 수정해도 동작에는 아무런 영향을 미치지 않는다
+  * 테스트 이름에 메서드를 포함하면 메서드 이름을 수정하면 테스트 이름도 수정해야한다
+  * 동작 대신에 코드를 테스트하면 테스트가 구현 세부 사항과 결합도가 높아져 리팩터링 내성이 없어진다
+  * 이 지침의 유일한 예외는 유틸리티 코드를 작업할 때다. 여기는 SUT 메서드 이름을 사용해도 괜찮다
+
+
+
+## 4.4 테스크 클래스 명명
+
+* 테스트 클래스의 이름을 지을 때 `[클래스명]Tests` 패턴을 사용하지만 테스트가 해당 클래만 검증하는 것으로 제한하는 것은 아니다
+  * 단위 테스트에서 단위는 동작의 단위지 클래스 단위가 아니라는 것을 명심하자
+* 단위(동작)은 하나 이상의 클래스에 걸쳐 있을 수 있다. 
+* 그래도 동작이 어딘가에서 시작해야하는데 `[클래스명]Tests` 의 클래스를 동작의 진입점 또는 API로 여기자
+
+
+
+# 5 매개변수화된 테스트
+
+* 매개변수화된 테스트로 유사한 테스트에 필요한 코드의 양을 줄일 수 있다
+* 단점은 테스트 이름을 더 포괄적으로 만들수록 테스트 이름을 읽기 어렵게 된다
+
+
+
+참고
+
+* [단위 테스트](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791161755748)
