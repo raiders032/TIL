@@ -1,7 +1,7 @@
 # Test
 
 * [Code Coverage](Code-Coverage/Code-Coverage.md)
-* [Integration Testing](Integration-Testing/Integration-Testing.md) 
+* [Integration Testing](Integration-Testing/Integration-Testing.md)
 * [Jacoco](Jacoco/Jacoco.md)
 * [JUnit](JUnit/JUnit.md)
 * [Mockito](Mockito/Mockito.md)
@@ -11,8 +11,7 @@
   * @MockBean, @SpyBean
 * [TDD](TDD/TDD.md)
 * [Test Double](Test-Double/Test-Double.md)
-* [Unit Testing](Unit-Testing/README.md) 
-  * 학파(런던파, 고전파)에 따른 Unit Testing 정의
+* [Unit Testing](Unit-Testing/README.md)
 
 
 
