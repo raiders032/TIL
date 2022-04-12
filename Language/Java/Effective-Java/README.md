@@ -2,7 +2,7 @@
 
 
 
-## chapter 2 객체 생성과 파괴
+## Chapter 2 객체 생성과 파괴
 
 * [Item1 생성자 대신 정적 팩토리 메소드를 고려하라](Chapter2/Item1/Item1.md)
 * [Item2 생성자에 매개변수가 많다면 빌더를 고려하라](Chapter2/Item2/Item2.md)
@@ -15,7 +15,7 @@
 
 
 
-## chapter 3 모든 객체의 공통 메서드
+## Chapter 3 모든 객체의 공통 메서드
 
 * [Item10 equals는 일반 규약을 지켜 재정의하라](Chapter3/Item10/Item10.md)
 * [Item11 equals를 재정의하려거든 hashCode도 재정의하라 ](Chapter3/Item11/Item11.md)
@@ -25,7 +25,7 @@
 
 
 
-## chapter 4 클래스와 인터페이스
+## Chapter 4 클래스와 인터페이스
 
 * [Item15 클래스 멤버의 접근 권한을 최소화하라](Chapter4/Item15/Item15.md)
 * [Item16 public 클래스에서는 public 필드가 아닌 접근자 메서드를 사용하라](Chapter4/Item16/Item16.md)
@@ -36,3 +36,25 @@
 * [Item22 인터페이스는 타입을 정의하는 용도로만 사용하라](Chapter4/Item22/Item22.md)
 * [Item23 태그 달린 클래스보다는 클래스 계층구조를 활용하라](Chapter4/Item23/Item23.md)
 * [Item24 멤버 클래스는 되도록 static으로 만들라](Chapter4/Item24/Item24.md)
+
+
+
+## Chapter 5 제네릭
+
+* [Item26 로 타입은 사용하지 말라](Chapter5/Item26/Item26.md)
+* [Item27 비검사 경고를 제거하라](Chapter5/Item27/Item27.md)
+* [Item28 배열보다는 리스트를 사용하라](Chapter5/Item28/Item28.md)
+* [Item31 한정적 와일드카드를 사용해 API 유연성을 높이라](Chapter5/Item31/Item31.md)
+
+
+
+## Chapter 6 열거 타입과 애너테이션
+
+* [Item34 int 상수 대신 열거 타입을 사용하라](Chapter6/Item34/Item34.md)
+* [Item38 확장할 수 있는 열거 타입이 필요하면 인터페이스를 사용하라](Chapter6/Item38/Item38.md)
+
+
+
+## Chapter 7 람다와 스트림
+
+*  [Item42 익명 클래스보다는 람다를 사용하라](Chapter7/Item42/Item42.md) 
