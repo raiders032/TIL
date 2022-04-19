@@ -3,6 +3,8 @@
 * JaCoCo는 Java 코드의 커버리지를 체크하는 라이브러리입니다.
 * 테스트코드를 돌리고 그 커버리지 결과를 눈으로 보기 좋도록 html이나 xml, csv 같은 리포트로 생성합니다
 
+
+
 # 2 플러그인 추가
 
 ```groovy
@@ -19,13 +21,16 @@ plugins {
 * `toolVersion`: 사용할 JaCoCo의 jar 버전 지정
 * `reportsDir`: 테스트 리포트가 저장될 경로를 지정
   * 기본적으로 `$buildDir/reports/jacoco` 위치에 저장
+  * `$buildDir`를 기준으로 상대경로 지정
 
 ```groovy
 jacoco {
-  toolVersion = "0.8.7"
-  reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+	toolVersion = "0.8.7"
+	reportsDirectory = layout.buildDirectory.dir('jacoco')
 }
 ```
+
+![image-20220419095232573](./images/image1.png)
 
 
 
@@ -62,8 +67,8 @@ jacocoTestReport {
     xml.required = false
     csv.required = false
     
-    //  각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있다
-    html.outputLocation = layout.buildDirectory.dir('test-coverage/jacocoHtml')
+    //  각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있다 buildDir를 기준으로 상대경로 지정
+    html.outputLocation = layout.buildDirectory.dir('jacoco/jacocoHtml')
   }
   
   // jacocoTestReport 태스크는 test 태스크에 의존한다
@@ -74,6 +79,10 @@ jacocoTestReport {
   finalizedBy 'jacocoTestCoverageVerification'
 }
 ```
+
+아래와 같은 경로 `buildDir/jacoco/jacocoHtml`에 html 형태의 리포트가 만들어진다
+
+![image-20220419095232573](./images/image1.png)
 
 
 
@@ -223,8 +232,6 @@ jacocoTestCoverageVerification {
 
 
 
-
-
 # 6 느려지는 테스트 시간
 
 * 테스트 케이스가 늘어남에 따라 테스트 시간이 증가한다
@@ -234,8 +241,6 @@ jacocoTestCoverageVerification {
 
 
 # 7 테스트하기 어려운 코드
-
-
 
 
 
