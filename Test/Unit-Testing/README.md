@@ -1,6 +1,8 @@
 ## Unit Testing
 
 * [단위 테스트 목표](Goal-Of-Unit-Testing/Goal-Of-Unit-Testing.md)
+  * 코드 커버리지, 좋은 테스트 스위트의 특성
+
 * [단위 테스트란 무엇인가?](What-Is-A-Unit-Test/What-Is-A-Unit-Test.md)
 * [단위 테스트 구조](The-Anatomy-Of-A-Unit-Test/The-Anatomy-Of-A-Unit-Test.md)
   * AAA 패턴, 테스트 픽스쳐, 단위 테스트 명명법, 매개변수화된 테스트
@@ -17,7 +19,7 @@
 
 * [목 처리에 대한 모범 사례](Mocking-Best-Practices/Mocking-Best-Practices.md)
 * 10 ¦ Testing the database
-* 11 ¦ Unit testing anti-patterns
+* [단위 테스트 안티 패턴](Unit-Testing-Anti-Patterns/Unit-Testing-Anti-Patterns.md) 
 
 
 
