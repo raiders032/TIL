@@ -149,7 +149,7 @@
   * 실제로는 GET, HEAD 정도만 캐시로 사용
 * POST, PATCH는 본문 내용까지 캐시 키로 고려해야 하는데, 구현이 쉽지 않음
 
-# 4 HTTP 상태 코드
+# 4 [HTTP 상태 코드](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
 ## 4.1 정보 응답(1XX)
 
@@ -288,6 +288,18 @@
 * 서버는 요청받은 리소스를 찾을 수 없습니다.
 * 브라우저에서는 알려지지 않은 URL을 의미합니다.
 * 또는 클라이언트가 권한이 부족한 리소스에 접근할 때 해당 리소스를 숨기고 싶을 때
+
+`406 Not Acceptable`
+
+* 클라이언트가 서버에 요청을 보낼 때 content negotiation header를 사용해 클라이언트가 선호하는 응답의 representation을 설정할 수 있다
+* 이 때 클라이언트가 사용하는 content negotiation header에는 아래와 같이 세 가지가 있다
+  * [`Accept`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept)
+  * [`Accept-Encoding`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
+  * [`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)
+* 서버는 위에 헤더를 힌트로 하여 클라이언트가 요청한 resource의 알맞은 representation으로 응답한다
+* `406 Not Acceptable`은 만약 서버가 클라이언트가 원하는 representations을 제공하지 못하는 경우 발생하는 에러 코드이다
+* 서버가 `406 Not Acceptable` 응답을 반환할 때는 메시지 바디로 이용 가능한 representations of the resources의 목록을 담고 있어야 한다
+* [Content negotiation 더보기](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation)
 
 
 
