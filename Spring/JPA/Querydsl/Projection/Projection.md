@@ -9,11 +9,11 @@
 * 프로젝션 대상이 하나면 타입을 명확하게 지정할 수 있음 
 * 프로젝션 대상이 둘 이상이면 튜플이나 DTO로 조회
 
-```
+```java
 List<String> result = queryFactory
-.select(member.username)
-.from(member)
-.fetch();
+  .select(member.username)
+  .from(member)
+  .fetch();
 ```
 
 
@@ -27,6 +27,11 @@ List<String> result = queryFactory
 # 2 튜플 조회
 
 * 프로젝션 대상이 둘 이상일 때 사용
+* 튜플은 리포지토리 계층에서만 쓰길 권장한다
+  * 서비스나 컨트롤러 계층까지 넘기지 말자
+  * 하부 구현 기술을 밖으로 드러내지 말자
+  * 따라서 나갈 떄 DTO로 변환해서 내보내자
+
 
 ```java
 List<Tuple> result = queryFactory
@@ -55,13 +60,15 @@ for (Tuple tuple : result) {
 
 ## 2.1 프로퍼티 접근 - Setter
 
+* DTO는 기본 생성자와 Setter가 있어야 한다
+
 ```java
-  List<MemberDto> result = queryFactory
-          .select(Projections.bean(MemberDto.class,
-                  member.username,
-                  member.age))
-          .from(member)
-          .fetch();
+List<MemberDto> result = queryFactory
+  .select(Projections.bean(MemberDto.class,
+                           member.username,
+                           member.age))
+  .from(member)
+  .fetch();
 ```
 
 
@@ -69,12 +76,12 @@ for (Tuple tuple : result) {
 ## 2.2 필드 직접 접근
 
 ```java
-  List<MemberDto> result = queryFactory
-          .select(Projections.fields(MemberDto.class,
-                  member.username,
-                  member.age))
-          .from(member)
-          .fetch();
+List<MemberDto> result = queryFactory
+  .select(Projections.fields(MemberDto.class,
+                             member.username,
+                             member.age))
+  .from(member)
+  .fetch();
 ```
 
 **프로퍼티나, 필드 접근 생성 방식에서 이름이 다를 때 해결 방안**
