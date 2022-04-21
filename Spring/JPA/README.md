@@ -41,6 +41,9 @@
 * [Annotation](Annotation/Annotation.md)
 * [Test](Test/Test.md)
 * [사용자 정의 리포지토리](Custom-Repository/Custom-Repository.md)
+*  [Soft Delete](Soft-Delete/Soft-Delete.md)
+   *  @SQLDelete, @Where, @FilterDef,  @Filter
+
 
 
 
