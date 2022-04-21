@@ -343,14 +343,15 @@
 
 
 
-### 6.1.1 Content-Type
+### 6.1.1 [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
 
-* 표현 데이터의 형식 설명
-* 미디어 타입, 문자 인코딩
-* 예시
-  * text/html; charset=utf-8
-  * application/json 
-  * image/png
+* Content-Type은 representation 헤더이다
+* Content-Type은 리소스의 미디어 타입을 나타내는데 사용된다
+* 응답과 요청에서 모두 사용된다
+
+
+
+**응답 예시**
 
 ```http
 HTTP/1.1 200 OK
@@ -368,6 +369,39 @@ Content-Type: application/json
 Content-Length: 16
 
 {"data":"hello"}
+```
+
+
+
+**요청 예시**
+
+* HTML form을 사용한 POST 요청의 Content-Type은 form 엘리먼트의 enctype 속성으로 지정할 수 있다
+
+```html
+<form action="/" method="post" enctype="multipart/form-data">
+  <input type="text" name="description" value="some text">
+  <input type="file" name="myFile">
+  <button type="submit">Submit</button>
+</form>
+```
+
+* 실제 HTTP POST 요청은 아래와 같다
+
+```http
+POST /foo HTTP/1.1
+Content-Length: 68137
+Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
+
+-----------------------------974767299852498929531610575
+Content-Disposition: form-data; name="description"
+
+some text
+-----------------------------974767299852498929531610575
+Content-Disposition: form-data; name="myFile"; filename="foo.txt"
+Content-Type: text/plain
+
+(content of the uploaded file foo.txt)
+-----------------------------974767299852498929531610575--
 ```
 
 
