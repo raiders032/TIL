@@ -2,9 +2,10 @@
 
 **Core**
 
+*  [Dependency Injection](Spring-Framework/Core/Dependency-Injection/Dependency-Injection.md)
+*  [Type Converter](Spring-Framework/Core/Type-Converter/Type-Converter.md)
 *  [Internationalization](Spring-Framework/Core/Internationalization/Internationalization.md)
 *  [Validation](Spring-Framework/Core/Validation/README.md)
-*  [Type Converter](Spring-Framework/Core/Type-Converter/Type-Converter.md)
 
 **Spring MVC**
 

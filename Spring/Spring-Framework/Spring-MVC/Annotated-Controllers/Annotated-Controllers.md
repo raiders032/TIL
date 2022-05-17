@@ -51,18 +51,13 @@ public @interface RestController {
 
 # 2 Request Mapping
 
-* `@RequestMapping` 애노테이션을 사용하여 요청을 컨트롤러 메서드에 매핑할 수 있다 
+* `@RequestMapping` 애노테이션을 사용하여 요청을 컨트롤러 메서드에 매핑할 수 있다
+
+* `@RequestMapping` 은 주로 클래스 레벨로 사용하여 모든 메서드의 공통된 매핑을 제공한다.
 
 * URL, HTTP 메서드, 요청 파라미터, 헤더, 미디어 타입을 사용해 요청을 컨트롤러 메서드에 매핑한다.
 
 * HTTP method 별로 축얀된 애노테이션을 지원한다
-
-  * ```java
-    @RequestMapping(value = "/mapping-get-v1", method = RequestMethod.GET)
-    // 축약된 버전
-    @GetMapping(value = "/mapping-get-v1")
-    ```
-
   * `@GetMapping`
 
   * `@PostMapping`
@@ -73,7 +68,12 @@ public @interface RestController {
 
   * `@PatchMapping`
 
-* `@RequestMapping` 은 주로 클래스 레벨로 사용하여 모든 메서드의 공통된 매핑을 제공한다.
+
+```java
+@RequestMapping(value = "/mapping-get-v1", method = RequestMethod.GET)
+// 축약된 버전
+@GetMapping(value = "/mapping-get-v1")
+```
 
 **예시**
 
@@ -209,3 +209,8 @@ public ResponseEntity<CommonResponse> registerSimulation(@PathVariable String us
 }
 ```
 
+
+
+참고
+
+* https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-controller

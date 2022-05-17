@@ -862,3 +862,8 @@ public Object addItem(@RequestBody @Validated ItemSaveForm form, BindingResult b
   * `@RequestBody`는 HttpMessageConverter 단계에서 JSON 데이터를 객체로 변경하지 못하면 이후 단계 자체가 진행되지 않고 예외가 발생한다.
   * 컨트롤러도 호출되지 않고, Validator도 적용할 수 없다.
 
+
+
+관련자료
+
+* [How to mock dependencies when unit testing custom validators](https://codemadeclear.com/index.php/2021/01/26/how-to-mock-dependencies-when-unit-testing-custom-validators/)

@@ -1,12 +1,13 @@
-# Type-safe Configuration Properties
+# 1 Type-safe Configuration Properties
 
 > @Value("${property}") 주석을 사용하여 properties를 주입하는 것은 번거로우며, 특히 여러 속성을 사용 중이거나 데이터가 계층 구조인 경우에는 더욱 그렇습니다. Spring Boot는 strongly typed Bean이 애플리케이션 properties를 관리하고 유효성을 검사 할 수 있도록하는 대체 방법을 제공합니다.
 
 
 
-##  application.yml
+#  2 application.yml 작성
 
-* 아래 application.yml을 사용해서 프로퍼티들을 빈에 바인딩해보자.
+* 아래 application.yml에 애플리케이션 프로퍼티를 정의한다
+* 정의된 프로퍼티를 자바 객체에 바인딩 해보자
 
 **예시1**
 
@@ -17,8 +18,6 @@ aws:
       access-key: sadfsadf
       secret-key: qsdxzsd
 ```
-
-
 
 **예시2**
 
@@ -32,12 +31,22 @@ web-client:
 
 
 
-
-
-## JavaBean properties binding
+# 3 JavaBean properties binding
 
 * 다음 예제와 같이 표준 JavaBean 속성을 선언하는 Bean을 바인딩 할 수 있습니다.
-* setter가 필요합니다.
+
+
+
+**JavaBean**
+
+* 자바빈즈 클래스로서 작동하기 위해서, 객체 클래스는 명명법, 생성법 그리고 행동에 관련된 일련의 관례를 따라야만 한다.
+* 지켜야 할 관례에는 다음과 같은 것이 있다
+  - 클래스는 직렬화되어야 한다.(클래스의 상태를 지속적으로 저장 혹은 복원 시키기 위해)
+  - 클래스는 기본 생성자를 가지고 있어야 한다.
+  - 클래스의 속성들은 *get*, *set* 혹은 표준 명명법을 따르는 메서드들을 사용해 접근할 수 있어야 한다.
+  - 클래스는 필요한 이벤트 처리 메서드들을 포함하고 있어야 한다.
+
+
 
 **예시1**
 
@@ -78,25 +87,47 @@ public class WebClientProperties {
 
 
 
-## Constructor binding
+# 4 Constructor binding
 
-* `@ConstructorBinding`를 추가하면 생성자 바인딩이 가능합니다.
-* Setter가 필요없다. 대신 생성자가 필요하다.
+* JavaBean binding은 Setter를 사용해서 값을 바인딩 하지만 생성자를 이용해 값을 바인딩하면 immutable한 방식으로 같은 일을 할 수 있다
+* `@ConstructorBinding`를 사용해 생성자 바인딩을 사용할 수 있다
+* `@DefaultValue` 애노테이션을 사용해 기본 값을 설정할 수 있다
 
 ```java
-@Getter
 @ConstructorBinding
-@RequiredArgsConstructor
-@ConfigurationProperties(prefix = "aws.ses.credentials")
-public class AwsSesProperties {
-    private final String accessKey;
-    private final String secretKey;
+@ConfigurationProperties("my.service")
+public class MyProperties {
+
+  // fields...
+
+  public MyProperties(boolean enabled, InetAddress remoteAddress, Security security) {
+    this.enabled = enabled;
+    this.remoteAddress = remoteAddress;
+    this.security = security;
+  }
+
+  // getters...
+
+  public static class Security {
+
+    // fields...
+
+    public Security(String username, String password, @DefaultValue("USER") List<String> roles) {
+      this.username = username;
+      this.password = password;
+      this.roles = roles;
+    }
+
+    // getters...
+
+  }
+
 }
 ```
 
 
 
-## Property Class 빈으로 등록하기
+# 5 Property Class 빈으로 등록하기
 
 * Spring Boot는 `@ConfigurationProperties` 클래스를 바인딩하고 bean으로 등록할 수 있는 인프라를 제공한다.
 * 클래스별로 Property Class를 활성화 하거나 @ComponentSacn과 같은 방식으로 pakage를 중심으로 `@ConfigurationProperties`가 설정된 클래스들을 모두 빈으로 등록할 수 있다.
@@ -161,7 +192,7 @@ public class AmazonConfig {
 
 
 
-## Configuration annotationProcessor 추가
+# 6 Configuration annotationProcessor 추가
 
 * configuration annotationProcessor를 추가하면 IDE 자동 완성 및 메타 데이터 활용을 지원해준다.
 
