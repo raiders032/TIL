@@ -98,9 +98,26 @@
 
 
 
-## 2.5 DELETE
+## 2.5 [DELETE](https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/DELETE)
 
 * `DELETE` 메서드는 특정 리소스를 삭제합니다.
+
+| Request has body                                             | May  |
+| :----------------------------------------------------------- | ---- |
+| Successful response has body                                 | May  |
+| [Safe](https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP) | No   |
+| [Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent) | Yes  |
+| [Cacheable](https://developer.mozilla.org/en-US/docs/Glossary/cacheable) | No   |
+| Allowed in [HTML forms](https://developer.mozilla.org/en-US/docs/Learn/Forms) | No   |
+
+
+
+**응답**
+
+* `DELETE` 를 성공적으로 처리했을 때 사용 가능한 status code는 아래와 같다
+* 202 (Accepted): 요청이 접수되었으나 처리가 완료되지 않았음
+* 204 (No Content): 요청이 성공적으로 처리되었고 메시지 바디 없음
+* 200 (OK): 요청이 성공적으로 처리되었고 리소스의 상태 표현을 메시지 바디에 담고 있음
 
 
 
@@ -162,13 +179,14 @@
 
 * 2xx (Successful): 요청 정상 처리
 
-`200 OK`
+[`200 OK`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)
 
 * 요청이 성공적으로 되었습니다. 성공의 의미는 HTTP 메소드에 따라 달라집니다:
 * `GET`: 리소스를 불러와서 메시지 바디에 전송되었습니다.
-* `HEAD`: 개체 해더가 메시지 바디에 있습니다.
-* `PUT` 또는 `POST`: 수행 결과에 대한 리소스가 메시지 바디에 전송되었습니다.
-* `TRACE`: 메시지 바디는 서버에서 수신한 요청 메시지를 포함하고 있습니다.
+* `HEAD`: 응답에 The representation headers가 포함되어 있습니다(메시지 바디는 없음)
+* `POST`: 수행 결과에 대한 리소스가 메시지 바디에 전송되었습니다.
+* `TRACE`: 서버가 요청받은 메시지가 메시지 바디에 포함되어있다.
+* `PUT` 또는 `DELETE` 는 종종 성공적인 응답으로 `200 OK` 보다  `204 No Content` 을 많이 사용함
 
 
 
@@ -288,6 +306,11 @@
 * 서버는 요청받은 리소스를 찾을 수 없습니다.
 * 브라우저에서는 알려지지 않은 URL을 의미합니다.
 * 또는 클라이언트가 권한이 부족한 리소스에 접근할 때 해당 리소스를 숨기고 싶을 때
+
+[`405 Method Not Allowed`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405)
+
+* 타겟 리소스가 HTTP 요청 메서드를 지원히지 않을 때를 의미한다
+* 이 경우 서버는 `Allow` 헤더를 이용해 타겟 리소스가 지원하는 메서드의 목록을 포함해 응답해야한다
 
 `406 Not Acceptable`
 
