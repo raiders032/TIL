@@ -57,4 +57,19 @@
 
 ## Chapter 7 람다와 스트림
 
-*  [Item42 익명 클래스보다는 람다를 사용하라](Chapter7/Item42/Item42.md) 
+*  [Item42 익명 클래스보다는 람다를 사용하라](Chapter7/Item42/Item42.md)  
+*  [Item46 스트림에서는 부작용 없는 함수를 사용하라](Chapter7/Item46/Item46.md)
+
+
+
+## Chapter 8 메서드
+
+
+
+## Chapter 9 일반적인 프로그래밍 원칙
+
+* [아이템 63. 문자열 연결은 느리니 주의하라](Chapter9/Item63/Item63.md)
+
+
+
+## Chapter 10 예외
