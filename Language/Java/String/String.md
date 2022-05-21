@@ -6,7 +6,6 @@
 
 
 
-
 **String Literal**
 
 * 소스 코드에 작성된 문자열
@@ -218,6 +217,37 @@ StringBuilder sb = new StringBuilder("Java");
 **StringBuilder와 차이점**
 
 * 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 **Thread Safe**하다
+
+# 9 StringBuilder, StringBuffer 비교
+
+* 메서드에 synchronized 키워드를 적용 멀티 스레드 환경에서도 thread-safe하다
+
+
+
+**StringBuilder의 append 메서드**
+
+```java
+@Override
+@HotSpotIntrinsicCandidate
+public StringBuilder append(String str) {
+  super.append(str);
+  return this;
+}
+```
+
+**StringBuffer의 append 메서드**
+
+```java
+@Override
+@HotSpotIntrinsicCandidate
+public synchronized StringBuffer append(String str) {
+  toStringCache = null;
+  super.append(str);
+  return this;
+}
+```
+
+
 
 
 
