@@ -24,7 +24,7 @@ dependencies {
 
 
 
-# 2 [@EqualsAndHashCode](https://projectlombok.org/features/EqualsAndHashCode)
+# [@EqualsAndHashCode](https://projectlombok.org/features/EqualsAndHashCode)
 
 * 클래스에 `@EqualsAndHashCode` 애노테이션을 적용하면 롬복이 `equals(Object other)` 와 `hashCode()`를 생성해준다
 * 기본적으로 모든 non-static 필드를 이용한다
@@ -32,7 +32,7 @@ dependencies {
 
 
 
-## 2.1 of
+## of
 
 * 특정 필드 지정
 
@@ -45,7 +45,7 @@ public class UserAccount extends BaseTimeEntity {
 
 
 
-## 2.2 onlyExplicitlyIncluded
+## onlyExplicitlyIncluded
 
 * 특정 필드 지정
 
@@ -62,7 +62,7 @@ public class OpenBankingAccount extends BaseTimeEntity {
 
 
 
-## 2.3 callSuper
+## callSuper
 
 * callSuper 속성을 통해 eqauls와 hashCode 메소드 자동 생성 시 부모 클래스의 필드까지 감안할지의 여부를 설정할 수 있다.
 * 기본 값 false
@@ -76,6 +76,103 @@ public class OpenBankingAccount extends BaseTimeEntity {
   @EqualsAndHashCode.Include
   private String fintechUseNum;
 }
+```
+
+
+
+# [@Builder](https://projectlombok.org/features/Builder)
+
+
+
+## builderMethodName
+
+* 빌더 인스턴스를 만드는 메서드의 이름을 지정
+* 기본 값: `builder`
+
+**예시**
+
+```java
+@Builder(builderMethodName = "testBuilder")
+public Person(Long id, String name, Integer age) {
+  log.info("builderMethodName: testBuilder");
+  this.id = id;
+  this.name = name;
+  this.age = age;
+}
+```
+
+```java
+Person person1 = Person.testBuilder()
+  .id(1L)
+  .age(10)
+  .name("홍길동")
+  .build();
+```
+
+
+
+## buildMethodName
+
+* @Builder 애노테이션이 붙은 인스턴스를 생성하는 메서드의 이름을 지정
+* 기본 값: `build`
+
+**예시**
+
+```java
+@Builder(buildMethodName="execute")
+public Person(Long id, String name, Integer age) {
+  log.info("builderMethodName: testBuilder");
+  this.id = id;
+  this.name = name;
+  this.age = age;
+}
+```
+
+```java
+Person person1 = Person.builder()
+  .id(1L)
+  .age(10)
+  .name("홍길동")
+  .execute();
+```
+
+
+
+## builderClassName
+
+* 빌더 클래스의 이름을 지정
+* 빌더를 여러개 사용할 떄 사용하면 유용하다
+
+
+
+**예시**
+
+```java
+@Builder
+public Person(String name, Integer age) {
+  this.name = name;
+  this.age = age;
+}
+
+@Builder(builderClassName = "testBuilder", builderMethodName = "testBuilder")
+public Person(Long id, String name, Integer age) {
+  this.id = id;
+  this.name = name;
+  this.age = age;
+}
+```
+
+```java
+Person person1 = Person.testBuilder()
+  .id(1L)
+  .age(10)
+  .name("홍길동")
+  .build();
+
+Person person2 = Person.builder()
+  .name("홍길동2")
+  .age(20)
+  .build();
 ```
 
 
