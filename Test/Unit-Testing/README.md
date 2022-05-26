@@ -5,7 +5,7 @@
 
 * [단위 테스트란 무엇인가?](What-Is-A-Unit-Test/What-Is-A-Unit-Test.md)
   * 단위 테스트, 고전파와 런던파
-  * 공유 의존성, 비공개 의존성
+  * 공유 상태, 공유 의존성, 비공개 의존성
 
 * [단위 테스트 구조](The-Anatomy-Of-A-Unit-Test/The-Anatomy-Of-A-Unit-Test.md)
   * AAA 패턴, 테스트 픽스쳐, 단위 테스트 명명법, 매개변수화된 테스트
@@ -15,8 +15,7 @@
   * 테스트 피라미드, 블랙박스 테스트, 화이트박스 테스트
 
 * [목과 테스트 취약성](Mocks-And-Test-Fragility/Mocks-And-Test-Fragility.md)
-  * 
-
+  
 * [단위 테스트 스타일](Styles-Of-Unit-Testing/Styles-Of-Unit-Testing.md)
 * 7 ¦ Refactoring toward valuable unit tests
 * [통합 테스트를 하는 이유](Why-Integration-Testing/Why-Integration-Testing.md)

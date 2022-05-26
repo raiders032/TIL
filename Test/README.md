@@ -6,8 +6,9 @@
 * [JUnit](JUnit/JUnit.md)
 * [Mockito](Mockito/Mockito.md)
 * [Test Code Snipet](Snipet/Snipet.md)
-* [Spring Test Annotation](Spring-Test-Annotation/Spring-Test-Annotation.md)
-  * @WebMvcTest
+* [Spring Test](Spring-Test/Spring-Test.md)
+  * @SpringBootTest
+  * 슬라이싱 테스트, @WebMvcTest, @WebFluxTest, @DataJpaTest
   * @MockBean, @SpyBean
 * [TDD](TDD/TDD.md)
 * [Test Double](Test-Double/Test-Double.md)
