@@ -60,8 +60,9 @@
 **코드 복잡도와 코드의 도메인 유의성**
 
 * 복잡한 비즈니스 로직을 나타내는 코드가 보일러플레이트 코드 보다 훨씬 중요하다
-* 비즈니스에 중요한 기능에서 발생한 버그가 가증 큰 피해를 입히기 때문이다
+* 비즈니스에 중요한 기능에서 발생한 버그가 가장 큰 피해를 입히기 때문이다
 * 반면 단순한 코드를 테스트하는 것은 거의 가치가 없다
+* 단순한 코드에서는 버그가 많이 발생하지 않기 때문
 
 
 
@@ -94,6 +95,8 @@
 
 ## 3.2 거짓 양성의 원인
 
+![image-20220528145635146](./images/5.png)
+
 * 리팩터링 과정은 애플리케이션의 식별 가능한 동작에 영향을 주지 않으면서 구현을 변경하는 것이다
 * 따라서 리팩터링 후 테스트가 실패하는 것의 **원인은 테스트가 구현 세부 사항과 결합되었기 때문이다**
 * **테스트와 SUT(테스트 대상 시스템)의 구현 세부 사항이 많이 결합할수록 거짓 양성(허위 경보)가 더 많이 생긴다**
@@ -102,16 +105,207 @@
 
 ## 3.3 거짓 양성 해결
 
-* **거짓 양성을 줄이기 위해 구현 세부 사항에서 테스트를 분리하는 것뿐이다**
+* **거짓 양성을 줄이는 방법은 구현 세부 사항에서 테스트를 분리하는 것뿐이다**
 * **결합도를 낮추려면** 테스트는 SUT가 수행한 단계가 아니라 **최종 결과를 검증**해야 한다
 * 테스트는 **최종 사용자 관점**에서 SUT를 검증해야 하고 의미 있는 결과만 확인해야 한다
 * SUT의 메서드를 진입점으로 하고 최종 결과만 검증하는 블랙박스 테스트를 해야한다
 
 
 
+## 3.4 예시
+
+* MessageRenderer는 머리글, 본문, 바닥글을 포함하는  Message의 HTML 표현을 생성하는 역할을 한다
+
+
+
+**Message.java**
+
+* Message는 머리글, 본문, 바닥글을 가지고 있다
+
+```java
+@Setter
+@Getter
+public class Message {
+  private String header;
+  private String body;
+  private String footer;
+}
+```
+
+
+
+**Renderer.java**
+
+* Message를 가지고 HTML 표현을 생성하는 render 메서드를 가진 인터페이스
+
+```java
+public interface Renderer {
+  String render(Message message);
+}
+```
+
+
+
+**MessageRenderer.java**
+
+* Renderer 인터페이스의 구현체
+* 서브 Renderer 구현체들을 가지고 있어 HTML 표현을 생성하는 일을 위임하고 생성된 결과를 HTML 문서로 결합한다
+
+```java
+@Getter
+public class MessageRenderer implements Renderer {
+
+  private List<Renderer> subRenderer = Arrays.asList(
+    new HeaderRenderer(),
+    new BodyRenderer(),
+    new FooterRenderer());
+
+  @Override
+  public String render(Message message) {
+    return subRenderer.stream()
+      .map(renderer -> renderer.render(message))
+      .collect(Collectors.joining(""));
+  }
+}
+```
+
+
+
+**HeaderRenderer.java**
+
+```java
+class HeaderRenderer implements Renderer {
+  @Override
+  public String render(Message message) {
+    return String.format("<header>%s</header>", message.getHeader());
+  }
+}
+```
+
+
+
+**BodyRenderer.java**
+
+```java
+class BodyRenderer implements Renderer {
+  @Override
+  public String render(Message message) {
+    return String.format("<b>%s</b>", message.getBody());
+  }
+}
+```
+
+
+
+**FooterRenderer.java**
+
+```java
+class FooterRenderer implements Renderer {
+  @Override
+  public String render(Message message) {
+    return String.format("<footer>%s</footer>", message.getFooter());
+  }
+}
+```
+
+
+
+**깨지기 쉬운 테스트**
+
+* 아래 테스트는 하위 렌더링 클래스가 예상하는 모든 유형이고 올바른 순서로 나타나는지를 확인한다
+* 하위 렌더링 클래스를 재배열하거나 그중 하나를 새 것으로 교체하면 어떻게 될까?
+* 많은 경우 테스트를 수행하면 빨간색으로 변할 것이다
+  * 이는 테스트가 가  SUT가 생성한 결과가 아니라 SUT의 구현 세부 사항에 결합했기 때문이다
+* 구현 세부 사항에 결합한 테스트를 **깨지기 쉬운 테스트**라고 한다
+
+```java
+@Test
+void MessageRenderer_uses_correct_sub_renderers() {
+  // Arrange
+  Message message = new Message("h", "b", "f");
+  MessageRenderer sut = new MessageRenderer();
+
+  // Act
+  List<Renderer> renderers = sut.getSubRenderer();
+
+  // Assert
+  assertThat(renderers.size()).isEqualTo(3);
+
+  assertThat(renderers.get(0)).isInstanceOf(HeaderRenderer.class);
+  assertThat(renderers.get(0).render(message)).isEqualTo("<header>h</header>");
+
+  assertThat(renderers.get(1)).isInstanceOf(BodyRenderer.class);
+  assertThat(renderers.get(1).render(message)).isEqualTo("<b>b</b>");
+
+  assertThat(renderers.get(2)).isInstanceOf(FooterRenderer.class);
+  assertThat(renderers.get(2).render(message)).isEqualTo("<footer>f</footer>");
+}
+```
+
+
+
+**테스트 개선**
+
+* 깨지기 쉬운 테스트를 개선하는 방법은 SUT의 구현 세부 사항과 테스트 간의 결합도를 낮춰 리팩터링 내성을 갖추는 것이다
+* MessageRenderer의 최종 결과는 메시지의  HTML 표현이다
+* 이는 클래스에서 얻을 수 있는 관찰 가능한 결과로 검증하는 것이 마땅하다
+* HTML 표현이 그대로 유지되는 한 정확히 어떻게 생성되는지는 알 필요가 없다
+* 아래 테스트는 SUT의 수행 절차를 검증하지 않고 오로지 최종 결과만을 검증한다
+
+```java
+@Test
+void rendering_a_message() {
+  // Arrange
+  Message message = new Message("header", "body", "footer");
+  MessageRenderer sut = new MessageRenderer();
+
+  // Act
+  String html = sut.render(message);
+
+  // Assert
+  assertThat(html).isEqualTo("<header>header</header><b>body</b><footer>footer</footer>");
+}
+```
+
+
+
+**리팩터링**
+
+* 현재 깨지기 쉬운 테스트와 개선된 테스트 두 가지가 있을 때 MessageRenderer를 리팩터링하면 어떻게 될까?
+* MessageRenderer를 아래와 같이 하위 Renderer에 일을 위임하지 않고 직접하도록 리팩터링했다
+
+```java
+public class MessageRenderer implements Renderer {
+  @Override
+  public String render(Message message) {
+    return "<header>" + message.getHeader() + "</header>"
+      + "<b>" + message.getBody() + "</b>"
+      + "<footer>" + message.getFooter() + "</footer>";
+  }
+}
+```
+
+
+
+**리팩터링 후 깨지는 깨지기 쉬운 테스트**
+
+![image-20220528135542819](./images/2.png)
+
+
+
+**리팩터링 후 깨지지 않는 리팩터링 내성이 있는 테스트**
+
+* 리팩터링 후에도 여전히 초록불이 뜨는 테스트
+
+![image-20220528135656368](./images/3.png)
+
+![image-20220528143701731](./images/4.png)
+
+
+
 # 4 회귀 방지와 리팩터링 내성
 
-* 둘 다 정반대의 관점에서도 테스트 스위트의 정확도에 기여한다
+* 회귀 방지와 리팩터링 내성은 테스트 스위트의 정확도에 기여한다
 * 프로젝트가 시작한 직후에는 회귀 방지를 훌륭히 갖추는 것이 중요한데 반해 리팩터링 내성은 바로 필요하지 않다
   * 프로젝트 초기에는 코드 정리를 많이 할 필요가 없기 때문에 허위 경보가 발생하더라도 쉽게 리팩터링할 수 있다
 
@@ -179,9 +373,9 @@
 
 # 7 이상적인 테스트
 
-* 좋은 단위 테스트의 가치는 네 가지 특성에서 각각 얻은 점수의 곱이다
-  * 즉 어떤 특성이라도 0이되면 전체는 0이 되는 것이다
-  * 따라서 테스트가 가치가 있으려면 네 가지 범주 모두에서 점수를 내야한다
+* 테스트의 가치는 네 가지 특성에서 각각 얻은 점수의 곱으로 추정된다
+* 즉 어떤 특성이라도 0이되면 테스트의 가치는 0이 되는 것이다
+* 따라서 테스트가 가치가 있으려면 네 가지 범주 모두에서 점수를 내야한다
 
 
 
@@ -216,7 +410,7 @@
 * 간단한 테스트란 너무나도 단순해서 고장이 없을 것 같은 작은 코드 조각을 테스트하는 것이다
 * 간단한 테스트는 빠르게 실행되고 **빠른 피드백**을 제공한다
 * 거짓 양성이 생길 가능성이 낮아 **리팩터링 내성도 우수**하다
-* 그러나 기반 코드에 실수할 여지가 많지 않기 때문에 **회귀 방지가 없다** 
+* 그러나 기반 코드에 실수할 여지가 많지 않기 때문에 **회귀를 나타내지 않는다** 
 
 **User.java**
 
@@ -282,7 +476,7 @@ void getById_execute_correct_SQl_code() {
 
   User user = sut.getById(5);
 
-  Assertions.assertThat(sut.getLastExecutedSqlStatement()).isEqualTo("조회 SQL A");
+  assertThat(sut.getLastExecutedSqlStatement()).isEqualTo("조회 SQL A");
 }
 ```
 
@@ -293,7 +487,7 @@ void getById_execute_correct_SQl_code() {
 ![image-20220419210503834](./images/image3.png)
 
 * 회귀 방지, 리펙터링 내성, 빠른 피드백 세가지 특성 모두 완벽한 점수를 얻어 이상적인 테스트를 만드는 것은 불가능하다
-* 네 번째 특성인 유지보수성을 엔드 투 엔드 테스트르 제외하면 모든 테스트에서 처음 세가지 특성과 상관관계가 없다
+* 네 번째 특성인 유지보수성을 엔드 투 엔드 테스트를 제외하면 모든 테스트에서 처음 세가지 특성과 상관관계가 없다
   * 엔드 투 엔트 테스트는 유지비 측면에서 더 비싸다
   * 관련 의존성을 계속 운영하려면 추가적인 노력이 필요하다
 * 그렇다면 도대체 어떤 특성을 희생시켜야 할까?
@@ -382,7 +576,9 @@ void getById_execute_correct_SQl_code() {
 
 * **리팩터링 내성을 희생할 수 없는 특성이므로 화이트박스 테스트 대신 블랙박스 테스트를 기본으로 선택하라**
 * 테스트를 작성할 때 블랙박스 테스트가 바람직하지만 **테스트를 분석할 때는 화이트박스 방법을 사용**할 수 있다
-* **코드 커버리지 툴을 사용해서 어떤 코드 분기를 실행하지 않았는지를 확인하고 코드 내구 구조에 대해 전혀 모르는 것처럼 테스트하라**
+* **코드 커버리지 툴을 사용해서 어떤 코드 분기를 실행하지 않았는지를 확인하고 코드 내부 구조에 대해 전혀 모르는 것처럼 테스트하라**
+  * 어떤 코드 브랜치를 실행하지 않았는지 확인하고 해당 브랜치를 실행하도록 블랙박스 테스트를 작성
+
 * 이렇게 화이트박스 방법과 블랙박스 방법의 조합이 가장 효과적이다
 
 
