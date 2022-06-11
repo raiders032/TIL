@@ -163,9 +163,15 @@ public class ExampleTests {
 
 * 애플리케이션에 요청을 날리는 WebTestClient 인스턴스를 생성한다
 
-**WebTestClient**
 
+
+[**WebTestClient**](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/reactive/server/WebTestClient.html)
+
+* WebTestClient는 웹 서버를 테스트할 때 사용하는 클라이언트다
+* 내부적으로 [`WebClien`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html)를 사용한다
 * WebTestClient에는 단언 기능이 포함되어 있다
+
+
 
 **예시**
 
@@ -210,7 +216,7 @@ class CashReceiptControllerIntegrationTest {
 * @WebMvcTest애노테이션은 스프링 웹 컨트롤러를 테스팅 할 때 필요한 빈을 가진 application context를 만든다
 * Spring MVC 컴포넌트에 집중해 테스트를 가능하게 해준다
 * 기본적으로 스프링 시큐리티와 MockMvc를 설정해줌
-  * MockMvc에 대한 정교한 설정이 필요하다면 [`@AutoConfigureMockMvc`](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/autoconfigure/web/servlet/AutoConfigureMockMvc.html를 이용
+  * MockMvc에 대한 정교한 설정이 필요하다면 [`@AutoConfigureMockMvc`](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/autoconfigure/web/servlet/AutoConfigureMockMvc.html)를 이용
 * 일반적으로 @MockBean과 같이 사용되며 테스트할 `@Controller` bean가 협력하는 객체를 모킹함
 
 
@@ -274,7 +280,7 @@ Starting embedded database: url='jdbc:h2:mem:d1d81c63-a190-49e4-b63d-ae027d6ce93
 
 # 3 리액티브 단위 테스트
 
-* 
+
 
 
 
