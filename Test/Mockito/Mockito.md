@@ -42,6 +42,10 @@ testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version:
 
 # 2 Mock 객체 만들기
 
+* Mockito의 Mock은 Class의 타입으로 부터 껍데기 인스턴스를 만든다
+
+
+
 **Mockito.mock() 메소드로 만드는 방법**
 
 ```java
@@ -134,6 +138,60 @@ mockMvc response body 한글 깨짐
     ```
 
 
+
+# 4 Annotation
+
+
+
+## 4.1 [@InjectMocks](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/InjectMocks.html)
+
+* 테스트 대상 시스템의 협력자를 Mock 또는 Spy로 대체하는 작업을 자동으로 해준다
+* 의존성 주입은 생성자 주입, 필드 주입, 세터 주입을 사용함
+
+
+
+**예시**
+
+* sut의 협력자를 @Mock 애노테이션으로 Mock으로 대체하고 이를 자동으로 sut에 주입해준다
+
+```java
+@ExtendWith(MockitoExtension.class)
+class CashReceiptServiceUnitTest {
+
+  @InjectMocks
+  private CashReceiptService sut;
+
+  @Mock
+  WpayUserRepository wpayUserRepository;
+
+  @Mock
+  CashReceiptInfoRepository cashReceiptInfoRepository;
+}
+```
+
+
+
+
+
+## 4.2 @Mock
+
+* 
+
+
+
+## 4.2 @Spy
+
+* Mockito의 Mock
+
+
+
+> 참고
+>
+> * https://www.baeldung.com/mockito-spy
+
+
+
+---
 
 
 
