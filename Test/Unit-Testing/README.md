@@ -16,6 +16,9 @@
   * 테스트 피라미드, 블랙박스 테스트, 화이트박스 테스트
 
 * [목과 테스트 취약성](Mocks-And-Test-Fragility/Mocks-And-Test-Fragility.md)
+  * 테스트 대역(목, 스파이, 스텁, 더미, 페이크)
+  * 식별할 수 있는 동작, 구현 세부 사항
+  * 육각형 아키텍처, 시스템 내부 통신, 시스템 외부 통신, 애플리케이션 데이터베이스
   
 * [단위 테스트 스타일](Styles-Of-Unit-Testing/Styles-Of-Unit-Testing.md)
 * 7 ¦ Refactoring toward valuable unit tests
