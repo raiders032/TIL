@@ -525,6 +525,12 @@ void getById_execute_correct_SQl_code() {
 
 
 
+> 관련 자료
+>
+> * [The Practical Test Pyramid - Ham Vocke(martinfowler.com)](https://martinfowler.com/articles/practical-test-pyramid.html#TheConfusionAboutTestingTerminology)
+
+
+
 # 9 블랙박스 테스트와 화이트박스 테스트
 
 
