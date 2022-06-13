@@ -68,8 +68,10 @@
 
 ## Chapter 9 일반적인 프로그래밍 원칙
 
-* [아이템 63. 문자열 연결은 느리니 주의하라](Chapter9/Item63/Item63.md)
+* [Item 63 문자열 연결은 느리니 주의하라](Chapter9/Item63/Item63.md)
 
 
 
 ## Chapter 10 예외
+
+*  [Item72 표준 예외를 사용하라](Chapter10/Item72/Item72.md) 
