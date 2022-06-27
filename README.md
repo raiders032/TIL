@@ -6,6 +6,7 @@
 
 ## CS
 
+*  [Algorithm](Computer-Science/Algorithm/README.md)
 *  [OS](Computer-Science/OS/README.md)
 *  [Network](Network/README.md)
    *  Cookie&Session, HTTP, JWT, OAuth2, REST
@@ -58,6 +59,12 @@
 
 
 
+## Message Queue
+
+* [Kafka](Message-Queue/Kafka/README.md)
+
+
+
 ## Blockchain
 
-* [Blockchain](Blockchain/README.md) 
+* [Blockchain](Blockchain/README.md)
