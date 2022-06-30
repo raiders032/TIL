@@ -7,5 +7,4 @@
 * [Process Synchronization](Process-Synchronization/Process-Synchronization.md)
 * [Deadlocks](Deadlocks/Deadlocks.md)
 * [Memory Management](Memory-Management/Memory-Management.md)
-* [Virtual Memory](Virtual-Memory/Virtual-Memory.md) 
-
+* [Virtual Memory](Virtual-Memory/Virtual-Memory.md)
