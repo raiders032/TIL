@@ -436,7 +436,7 @@ do {
 
 ## 6.3 Dining Philosophers Problem
 
-![image-20210805092029807](./images/Dining Philosophers Problem.png)
+![image-20210805092029807](./images/6-3.png)
 
 * Deadlock 발생 가능성이 있다
   * 모든 철학자가 동시에 왼쪽 젓가락울 집는 경우
@@ -450,7 +450,7 @@ do {
 
 **젓가락을 둘다 집을 수 있을 때만 젓가락을 집을 수 있게 하는 방법**
 
-![image-20210805093108141](./images/Dining Philosophers Problem2.png)
+![image-20210805093108141](./images/6-3-2.png)
 
 
 
@@ -462,10 +462,10 @@ do {
 
 ## 7.1 Bounded Buffer Problem
 
-![image-20210805095553763](./images/모니터 유한 버퍼 문제.png)
+![image-20210805095553763](./images/7-1.png)
 
 
 
 ## 7.2 Dining Philosophers Problem
 
-![image-20210805095852849](./images/모니터 식사하는 철학자 문제.png)
+![image-20210805095852849](./images/7-2.png)
