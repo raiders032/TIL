@@ -1,35 +1,43 @@
-# Deadlock
+# 1 Deadlock
 
 * 일련의 프로세스들이 서로 가진 자원을 기다리며 bolck된 상태
-* Recource
+* 자원(Recource)
   * 하드웨어, 소프트웨어 등을 포함하는 개념
   * 예시) I/O device, memory space, semaphore
 
 
 
-## 1. Deadlock 발생 조건
+# 2 Deadlock 발생 조건
 
 * Deadlock이 발생하려면 아래 4가지 조건을 모두 만족해야한다
 
-### 1.1 Mutual Exclusion
+
+
+## 2.1 Mutual Exclusion
 
 * **매 순간 하나의 프로세스**만이 자원을 사용할 수 있다
 
-### 1.2 No Preemption
+
+
+## 2.2 No Preemption
 
 * 프로세스는 자원을 스스로 내어놓을 뿐 **강제로 빼앗기지 않는다**
 
-### 1.3 Hold and Wait
+
+
+## 2.3 Hold and Wait
 
 * 자원을 가진 프로세스가 다른 자원을 기다릴 때 보유 **자원을 놓지 않고 계속 가지고 있는다**
 
-### 1.4 Circular Wait
+
+
+## 2.4 Circular Wait
 
 * 자원을 기다리는 프로세스간에 **사이클**이 형성되어야한다
 
 
 
-## 2. Deadlock 처리 방법
+# 3 Deadlock 처리 방법
 
 * Deadlock을 처리하난 방법에는 아래와 같이 4가지 방법이 있다
 * **Deadlock Prevention, Deadlock Avoidance**는 Deadlock을 **미연에 방지**하는 방식이다
@@ -37,7 +45,7 @@
 
 
 
-### 2.1 Deadlock Prevention
+## 3.1 Deadlock Prevention
 
 * Deadlock 발생 조건 4가지 중 어느 하나가 만족되지 않도록 하는 방법
 * Deadlock Prevention 방식은 Utilization 저하, Throughtput 감소, Starvation 문제 등이 있다
@@ -49,15 +57,18 @@
   * 방법2: 자원이 필요한 경우 보유 자원을 모두 놓고 다시 요청한다
 * **No Preemption**
   * 프로세스가 어떤 자원을 기다려야 하는 경우 이미 보유한 자원이 선점될 수 있다
+  * 모든 필요한 자원을 얻을 수 있을 때 그 프로세스는 다시 시작된다
+  * State를 쉽게 저장하고 복구할 수 있는 자원에서 주로 사용된다
+    * 예) CPU, Memory
 * **Circular Wait**
   * 모든 자원 유형에 할당 순서를 정하여 정해진 순서대로만 자원을 할당한다
 
 
 
-### 2.2 Deadlock Avoidance
+## 3.2 Deadlock Avoidance
 
 * 자원 요청에 대한 부가적인 정보를 이용해서 deadlock의 가능성이 없는 경우만 자원을 할당하는 방법
-  * 각 프로세스가 한 시점에서 최대로 사용하는 자원의 수를 이용한다
+* 각 프로세스가 한 시점에서 최대로 사용하는 자원의 수를 이용한다
 
 
 
@@ -79,7 +90,7 @@
 
  
 
-### 2.3 Deadlock Detection and revovery
+## 3.3 Deadlock Detection and revovery
 
 * Deadlock 발생은 허용하되 이를 감지하여 회복시키는 방법
 
@@ -99,7 +110,7 @@
 
 
 
-### 24 Deadlock Ignorance
+## 3.4 Deadlock Ignorance
 
 * Deadlock을 시스템이 책임지지 않는 방법
 * Deadloc은 매우 드물게 발생하므로 Deadlock에 대한 조치 자체가 overhead일 수 있다
