@@ -46,13 +46,14 @@ Set-Cookie: tasty_cookie=strawberry
 
 **쿠키의 생명주기**
 
-* Set-Cookie: expires=Sat, 26-Dec-2020 04:39:21 GMT(만료일 지정 만료일 지나면 쿠키 삭제)
+* `Set-Cookie: id=a3fWa; Expires=Thu, 31 Oct 2021 07:28:00 GMT;`(만료일 지정 만료일 지나면 쿠키 삭제)
 * Set-Cookie: max-age=3600(3600초)
 * 세션 쿠키: 만료 날짜를 생략하면 브라우저 종료시 까지만 유지
 * 영속 쿠키: 만료 날짜를 입력하면 해당 날짜까지 유지
 
 **Domain**
 
+* Domain을 명시하면 클라이언트가 명시된 Domain에만 쿠키를 전송한다 
 * Domain 명시
   * 명시한 문서 기준 도메인 + 서브 도메인 포함
   * Ex) `domain=example.org` 지정 -> `example.org` , `dev.example.org` 
@@ -62,7 +63,7 @@ Set-Cookie: tasty_cookie=strawberry
 
 **Path**
 
-* 이 경로를 포함한 하위 경로 페이지만 쿠키를 접근
+* Path을 명시하면 클라이언트가 명시된 Path에만 쿠키를 전송한다 
 * 일반적으로 `path=/` 로 지정
 * 예시) `path=/home` -> 
   * /home, home/level1, home/level1/level2 -> 전부 가능

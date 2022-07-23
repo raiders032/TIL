@@ -21,7 +21,11 @@
 ## 1.1 Encapsulation
 
 * 각 계층은 상위 계층의 페이로드에 헤더를 추가해서 하위 계층으로 전달한다
-* 페이로드의 헤더는 peer의 정보를 담고있다
+* 헤더에 포함되는 가장 중요한 두 가지 정보
+  * 각 계층에서 정의하는 정보
+  * **상위 프로토콜 지시자 정보**
+  * Decapsulation 과정에서 헤더에 상위 프로토콜 지시자 정보가 없으면 페이로드를 어떻게 해석해야 되는지 모르기 때문
+
 * 예시
   * IP Protocol(Internet Layer)은 Transport Layer에서 받은 페이로드에 헤더를 추가하여 Data Link Layer로 전달한다
   * IP Protocol이기 때문에 헤더에는 받는 노드의 IP 주소와 같은 정보들이 있다
@@ -55,13 +59,21 @@
 
 # 3 Transport Layer
 
-* process-to-process 전달을 담당
+* 송신자의 프로세스와 수신자의 프로세스를 연결하는 통신 서비스를 제공한다
 
 
 
 ## 3.1 프로토콜
 
 * TCP, UDP
+
+
+
+## 3.2 주소체계
+
+* 특정 프로세스와 특정 프로세스가 통신하기 위해서는 포트 번호가 필요하다
+* 하나의 포트는 하나의 프로세스에 할당되고 하나의 프로세스는 여러 개의 포트 번호를 사용할 수 있다
+* [Port-Numbers.md](../Port-Numbers/Port-Numbers.md) 참고
 
 
 
@@ -77,6 +89,11 @@
 
 
 
+## 4.2 주소체계
+
+* IP Address
+* [IP.md](../Protocol/IP/IP.md) 참고
+
 # 5 Data Link Layer
 
 * 비트 스트림을 조직화하여 프레임으로 만들고 이 프레임을 이웃한 시스템으로 전달하는 기능을 담당한다
@@ -86,6 +103,7 @@
 ## 5.1 주소체계
 
 * 1계층에서 쓰이는 주소체계는 MAC 주소다
+* [MAC-Address.md](../MAC-Address/MAC-Address.md) 참고
 
 
 
