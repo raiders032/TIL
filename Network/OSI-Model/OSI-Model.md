@@ -23,6 +23,16 @@
 
 ![image-20220722100609724](images/image-20220722100609724.png)
 
+
+
+## 1.1 PDU
+
+* 각 계층에서 헤더와 페이로드를 합친 부분을 PDU(Protocol Data Unit)이라고 부른다
+
+![image-20220723135914578](images/image-20220723135914578.png)
+
+
+
 # 2 Layer7: Application layer
 
 * 애플리케이션 프로세스를 정의하고 
