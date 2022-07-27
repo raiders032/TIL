@@ -7,6 +7,7 @@
 ## CS
 
 *  [Algorithm](Computer-Science/Algorithm/README.md)
+*  [Data Structure](Computer-Science/Data-Structure/README.md)
 *  [OS](Computer-Science/OS/README.md)
 *  [Network](Network/README.md)
 *  [Database](DB/README.md)
