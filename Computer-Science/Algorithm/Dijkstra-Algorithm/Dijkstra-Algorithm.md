@@ -43,6 +43,12 @@
 
 
 
+# 4 문제
+
+* https://www.acmicpc.net/problem/1504
+
+
+
 참고 
 
 * https://www.youtube.com/watch?v=acqm9mM1P6o&list=PLRx0vPvlEmdAghTr5mXQxGpHjWqSz0dgC&index=7
