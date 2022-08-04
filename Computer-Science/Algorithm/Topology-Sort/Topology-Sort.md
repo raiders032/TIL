@@ -26,7 +26,7 @@
 
 
 
-**예제 코드**
+## 2.2 예제 코드
 
 * https://www.acmicpc.net/problem/2252
 * `N, M` : 노드의 개수, 간선의 개수
@@ -48,25 +48,32 @@ inDegree = [0] * (N + 1)
 queue = deque()
 result = []
 
+# 진입 차수를 초기화하는 과정
 for _ in range(M):
     v1, v2 = map(int, input().split())
     graph[v1].append(v2)
     inDegree[v2] += 1
 
+# 진입 차수가 0인 정점을 우선 순위 큐에 넣는다
 for i in range(1, N + 1):
     if inDegree[i] == 0:
         queue.append(i)
 
+# 총 정점의 개수만큼 반복한다.
 for _ in range(N):
+  	# 반복문 도중 큐가 비었다면 사이클이 발생했다는 것
     if not queue:
         print('사이클 발생')
         break
-
+		
+    # 큐에서 꺼내진 정점의 순서가 위상 정렬된 순서다
     vertex = queue.popleft()
     result.append(vertex)
 
+    # 현재 정점가 연결된 모든 정점의 진입차수를 1 감소시킨다.
     for next_vertex in graph[vertex]:
         inDegree[next_vertex] -= 1
+        # 연결된 정점의 집인 차수가 0이 되면 우선 순위 큐에 넣어준다
         if inDegree[next_vertex] == 0:
             queue.append(next_vertex)
 
@@ -75,9 +82,10 @@ print(*result)
 
 
 
-# 3 대표 문제
+# 3 관련 문제
 
 * https://www.acmicpc.net/problem/2252
+* https://www.acmicpc.net/problem/14567
 
 
 
