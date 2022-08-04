@@ -2,7 +2,7 @@
 
 * 그래프에는 여러 Spanning Tree가 존재하는데 그중 간선의 합이 최소인 트리를 Minimum Spanning Tree라고 한다
 
-## 
+
 
 # 2 Spanning Tree
 
@@ -17,7 +17,3 @@
 ## 3.1 Kruskal algorithm
 
 * [Kruskal-algorithm.md](../../Algorithm/Kruskal-algorithm/Kruskal-algorithm.md) 참고
-
-
-
-## 3.2 

@@ -29,7 +29,7 @@
 def uinon(disjoint_set, a, b):
   root_a = find(disjoint_set, a)
   root_b = find(disjoint_set, b)
-  if root_a < root_b:
+  if root_a <= root_b:
     disjoint_set[root_b] = root_a
   else:
     disjoint_set[root_a] = root_b
