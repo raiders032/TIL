@@ -18,6 +18,8 @@
 
 
 
+
+
 ## 2.1 사이클 발생 유무
 
 * 사이클 발생 유무를 알기 위해 서로소 집합 자료구조를 이용한다
@@ -25,9 +27,65 @@
 
 
 
+## 2.2 예제 코드
+
+* https://www.acmicpc.net/problem/1922
+* 사이클 판별을 위해 Disjoint Set 자료구조를 먼저 구현한다
+  * 집합을 나타내는 disjoint_set 배열과 find, union 연산을 구현
+* `V` : 정점의 개수
+* `E` : 간선의 개수
+* `answer` : 최소 간선의 합
+
+```python
+import sys
+input = sys.stdin.readline
+
+
+def find(node):
+    if disjoint_set[node] != node:
+        disjoint_set[node] = find(disjoint_set[node])
+    return disjoint_set[node]
+
+
+def union(node1, node2):
+    root1 = find(node1)
+    root2 = find(node2)
+
+    if root1 <= root2:
+        disjoint_set[root2] = root1
+    else:
+        disjoint_set[root1] = root2
+
+
+V = int(input())
+E = int(input())
+edge = []
+disjoint_set = [i for i in range(V + 1)]
+for _ in range(E):
+    vertex1, vertex2, weight = map(int, input().split())
+    edge.append((weight, vertex1, vertex2))
+
+# 간선의 비용을 기준으로 오름차순 정렬
+edge.sort()
+answer = 0
+for weight, vertex1, vertex2 in edge:
+  	# 루트 노드가 같으면 사이클이 발생한다는 의미
+    if find(vertex1) == find(vertex2):
+        continue
+    # 사이클을 발생시키지 않는 최소 비용 간선을 최소 신장 트리에 포함시키기
+    union(vertex1, vertex2)
+    answer += weight
+
+print(answer)
+```
+
+
+
 # 3 문제
 
 * https://www.acmicpc.net/problem/1197
+
+
 
 참고
 
