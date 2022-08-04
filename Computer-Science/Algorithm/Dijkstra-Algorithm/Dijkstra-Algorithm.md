@@ -26,6 +26,58 @@
 
 
 
+## 2.1 예제 코드
+
+* https://www.acmicpc.net/problem/1753
+* 방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택하기 위해 우선순위 큐를 사용한 다익스트라 구현
+* `V, E` : 정점의 개수, 간선의 개수
+* `source_vertex`: 출발 정점
+* `graph` : 그래프의 인접 리스트 표현
+* `min_distance` : 출발 정점으로부터 다른 모든 정점까지의 최단 거리를 나타내는 배열
+
+```python
+import sys
+import heapq
+input = sys.stdin.readline
+
+V, E = map(int, input().split())
+source_vertex = int(input())
+graph = [list() for _ in range(V + 1)]
+
+for _ in range(E):
+    vertex1, vertex2, weight = map(int, input().split())
+    graph[vertex1].append((vertex2, weight))
+
+# 최단 거리 배열 초기화
+min_distance = [sys.maxsize] * (V + 1)
+# 출발 정점의 최단 거리는 0으로 설정
+min_distance[source_vertex] = 0
+# 우선순위 큐에 (최단거리, 출발정점) 삽입
+min_heap = [(0, source_vertex)]
+
+while min_heap:
+  	# 우선순위 큐에서 최단 거리가 가장 짧은 정점 선택
+    distance, vertex = heapq.heappop(min_heap)
+ 		
+    # 현재 정점을 이미 방문 했으면 무시하기
+    if min_distance[vertex] < distance:
+        continue
+		
+    # 현재 정점에서 방문할 수 있는 다른 정점까지의 최단 거리 갱신 
+    for next_vertex, weight in graph[vertex]:
+        if distance + weight < min_distance[next_vertex]:
+            min_distance[next_vertex] = distance + weight
+            heapq.heappush(min_heap, (min_distance[next_vertex], next_vertex))
+
+for distance in min_distance[1:]:
+    if distance == sys.maxsize:
+        print("INF")
+        continue
+    print(distance)
+```
+
+
+
 # 3 시간 복잡도
 
 **선형탐색 이용**
