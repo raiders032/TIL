@@ -3,6 +3,7 @@
 * [Builder](Builder/Builder.md)
 * [Decorator](Decorator/Decorator.md)
 * [Factory Method](Factory-Method/Factory-Method.md)
+* [Observer](Observer/Observer.md)
 * [Proxy](Proxy/Proxy.md)
 * [Singleton](Singleton/Singleton.md)
 * [Strategy](Strategy/Strategy.md)
