@@ -143,8 +143,9 @@ Content-Type: text/plain
 
 
 
-참고
+참고자료
 
 * https://developer.mozilla.org/ko/docs/Web/HTTP/CORS
 * https://fetch.spec.whatwg.org/#http-cors-protocol
 * https://www.youtube.com/watch?v=bW31xiNB8Nc
+* https://evan-moon.github.io/2020/05/21/about-cors/
