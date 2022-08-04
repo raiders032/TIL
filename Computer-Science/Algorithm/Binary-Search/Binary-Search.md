@@ -63,6 +63,12 @@ def my_bisect_right(array, target):
 
 
 
+**예제**
+
+* https://www.acmicpc.net/problem/1654
+
+
+
 참고자료
 
 * https://www.acmicpc.net/blog/view/109
