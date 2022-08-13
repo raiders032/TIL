@@ -21,18 +21,57 @@ dependencies {
 ```
 
 
+# 2 Annotation
+
+## @NonNull
+* 필드와 메소드와 생성자의 파라미터에 적용할 수 있다
+* 롬복이 null을 체크하는 코드를 생성해준다
+
+**with Lombok**
+
+```java 
+import lombok.NonNull;
+
+public class NonNullExample extends Something {
+  private String name;
+  
+  public NonNullExample(@NonNull Person person) {
+    super("Hello");
+    this.name = person.getName();
+  }
+}
+```
+
+**Vanilla Java**
+* 롬복이 파라미터의 null 체크하는 코드를 생성해준다
+
+```java
+import lombok.NonNull;
+
+public class NonNullExample extends Something {
+  private String name;
+  
+  public NonNullExample(@NonNull Person person) {
+    super("Hello");
+    if (person == null) {
+      throw new NullPointerException("person is marked non-null but is null");
+    }
+    this.name = person.getName();
+  }
+}
+```
 
 
+## @EqualsAndHashCode
 
-# [@EqualsAndHashCode](https://projectlombok.org/features/EqualsAndHashCode)
-
+* [레퍼런스](https://projectlombok.org/features/EqualsAndHashCode)
 * 클래스에 `@EqualsAndHashCode` 애노테이션을 적용하면 롬복이 `equals(Object other)` 와 `hashCode()`를 생성해준다
 * 기본적으로 모든 non-static 필드를 이용한다
-* 특정 필드를 지정하고 싶다면 @EqualsAndHashCode.Include 또는 @EqualsAndHashCode.Exclude를 필드에 사용한다
+* 특정 필드를 지정하고 싶다면 @EqualsAndHashCode.Include 또는@EqualsAndHashCode.Exclude를 필드에 사용한다
 
 
 
-## of
+### of
 
 * 특정 필드 지정
 
@@ -44,15 +83,14 @@ public class UserAccount extends BaseTimeEntity {
 ```
 
 
-
-## onlyExplicitlyIncluded
+### onlyExplicitlyIncluded
 
 * 특정 필드 지정
 
 ```java
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class OpenBankingAccount extends BaseTimeEntity {
-  @EqualsAndHashCode.Include
+  
   private Long id;
   
   @EqualsAndHashCode.Include
@@ -62,7 +100,7 @@ public class OpenBankingAccount extends BaseTimeEntity {
 
 
 
-## callSuper
+### callSuper
 
 * callSuper 속성을 통해 eqauls와 hashCode 메소드 자동 생성 시 부모 클래스의 필드까지 감안할지의 여부를 설정할 수 있다.
 * 기본 값 false
@@ -80,12 +118,10 @@ public class OpenBankingAccount extends BaseTimeEntity {
 
 
 
-# [@Builder](https://projectlombok.org/features/Builder)
+## @Builder
+* [레퍼런스](https://projectlombok.org/features/Builder)
 
-
-
-## builderMethodName
-
+### builderMethodName
 * 빌더 인스턴스를 만드는 메서드의 이름을 지정
 * 기본 값: `builder`
 
@@ -110,8 +146,7 @@ Person person1 = Person.testBuilder()
 ```
 
 
-
-## buildMethodName
+### buildMethodName
 
 * @Builder 애노테이션이 붙은 인스턴스를 생성하는 메서드의 이름을 지정
 * 기본 값: `build`
@@ -138,7 +173,7 @@ Person person1 = Person.builder()
 
 
 
-## builderClassName
+### builderClassName
 
 * 빌더 클래스의 이름을 지정
 * 빌더를 여러개 사용할 떄 사용하면 유용하다
@@ -174,7 +209,6 @@ Person person2 = Person.builder()
   .age(20)
   .build();
 ```
-
 
 
 참고
