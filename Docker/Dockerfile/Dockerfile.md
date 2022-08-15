@@ -1,14 +1,15 @@
-# 1.Dockerfile
+# 1 Dockerfile
 
->  Dockerfile이란 docker image를 만들기 위한 설정파일입니다. 컨테이너가 어떻게 행동해야하는지 설정들을 정의할 수 있다. 완성된 이미지를 생성하기위해 컨테이너에 설치해야 하는 패키지, 추가해야 하는 소스코드, 실행해야 하는 명령어와 쉘 스크립트 등을 하나의 Dockerfile에 기록하면 도커는 이 파일을 읽고 컨테이너에서 작업을 수행하고 이를 이미지로 만들어 낸다
-
+* Dockerfile이란 docker image를 만들기 위한 설정파일이다
+* 완성된 이미지를 생성하기위해 컨테이너에 설치해야 하는 패키지, 추가해야 하는 소스코드, 실행해야 하는 명령어와 쉘 스크립트 등을 하나의 Dockerfile에 기록하면 도커는 이 파일을 읽고 컨테이너에서 작업을 수행하고 이를 이미지로 만들어 낸다
 * Dockerfile을 이용하면 직접 컨테이너를 생성하고 필요한 작업을 마친 뒤 이미지로 커밋하는 과정을 자동화할 수 있다
+* 이미지 자체를 도커 허브 등을 통해 배포하는 대신 이미지를 생성하는 방법을 기록해 놓은 Dockerfile을 배포할 수 있다
 
 > 빌드 컨텍스트
 >
 > 이미지 생성을 위해 필요한 각종 파일, 소스코드, 메타데이터를 담고 있는 디렉토리를 뜻하며 Dockerfile이 위치한 디렉토리가 빌드 컨텍스트가 된다
 
-# 2. Instruction
+# 2 Instruction
 
 ## [FROM](https://docs.docker.com/engine/reference/builder/#from)
 
@@ -76,7 +77,7 @@ CMD command param1 param2 (shell form)
 ## [ADD](https://docs.docker.com/engine/reference/builder/#add)
 
 * 파일을 이미지에 추가한다
-* 추가하는 파일은 Dockerfile이 위치한 디렉터리인 컨텍스트에서 가져온다\
+* 추가하는 파일은 Dockerfile이 위치한 디렉터리인 컨텍스트에서 가져온다
 * COPY와 달리 외부 url 및 tar 파일에서도 파일을 추가할 수 있다.
   * tar 파일을 추가하면 tar 파일을 자동으로 해제해서 추가한다.
 * 가급적 COPY를 사용하는 것이 좋다
@@ -182,12 +183,25 @@ RUN echo "Based on commit: $gitcommithash"
 * Overwrite 불가능
   * 예 ) `docker run node init` init이 **ENTRYPOINT** 뒤에 붙어서 실행된다.
 
-# 3. `.dockerignore`
+
+
+# 3 이미지 생성
+
+* Dockerfile을 사용이 이미지를 생성해 보자
+
+```bash
+# 현재 디렉토리에 있는 Dockerfile로 이미지를 만들며 이미지의 이름은 -t 옵션으로 지정
+docker build -t imagename ./
+```
+
+
+
+# 4 `.dockerignore`
 
 * dockerfile 빌드시 `.dockerignore` 파일에 명시된 파일을 컨텍스트에서 제거한다
 * `.dockerignore`의 위치는 컨텍스트 취상위 즉, build 명령어에서 dockerfile이 위치한 경로와 같아야한다.
 
-# 4. Multi Stage Docker Build
+# 5 Multi Stage Docker Build
 
 * 하나의 dockerfile안에 여러 개의 FROM이미지를 정의함으로써 빌드 완료 시 최종적으로 생성될 이미지의 크기를 줄일 수 있다
 * 멀티 스테이지 빌드는 반드시 필요한 실행 파일만 최종 이미지 결과물에 포함시켜 이미지 크기를 줄일 수 있다
@@ -219,7 +233,7 @@ ENTRYPOINT ["java","-cp","app:app/lib/*","com.emailservice.EmailServiceApplicati
 
 
 
-# 5. 예시
+# 6 예시
 
 ```dockerfile
 FROM node:alpine AS builder
