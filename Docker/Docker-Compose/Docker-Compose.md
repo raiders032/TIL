@@ -6,7 +6,7 @@
 
 * 하나의 호스트에서 다중 컨테이너를 다룰 때 용이하다.
 * dockerfile과 함께 사용된다.
-* 다중 컨테이너를 실행하기 위해 각각 build, run 과정을 해야했지만 docker compose를 이용하면  명령어 하나로 수행할 수 있다. 
+* 다중 컨테이너를 실행하기 위해 각각 build, run 과정을 해야했지만 docker compose를 이용하면  명령어 하나로 수행할 수 있다.
 * 도커 컴포즈에 명시된 서비스들은 하나의 디폴트 네트워크로 자동으로 묶인다.
 
 ```shell
@@ -84,8 +84,8 @@ volumes:
 
 
 
-# 2 [설치](https://docs.docker.com/compose/install/)
-
+# 2 설치
+* [레퍼런스](https://docs.docker.com/compose/install/)
 * Mac 또는 Window 용 Docker Desktop을 설치했다면 docker-compose도 설치된 상태이다
 
 
@@ -103,11 +103,18 @@ $ sudo rm /usr/local/bin/docker-compose
 
 
 
-# 3 [Compose file version 3 reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+# 3 Compose file version 3 reference
+* [레퍼런스](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+* 도커 컴포즈는 컨테이너의 설정이 정의된 컴포즈 파일(YAML)을 읽어 도커 엔진을 통해 컨테이너를 생성한다
+* 따라서 도커 컴포즈를 사용하려면 먼저 YAML 파일을 작성해야 한다
+
 
 ## build
 
+* [레퍼런스](https://docs.docker.com/compose/compose-file/build/)
 * Dockerfile을 이용해서 이미지를 빌드한다.
+
+**예시**
 
 ```yml
 # Dockerfile이 있는 context 위치 지정
@@ -123,7 +130,7 @@ version: "3.9"
 services:
   webapp:
     build:
-    	# context: Dockerfile를 포함하고 있는 directory 경로 또는 git repository URL
+      # context: Dockerfile를 포함하고 있는 directory 경로 또는 git repository URL
       context: ./dir
       # Dockerfile의 이름이 Dockerfile이 아니라면 이름 지정
       dockerfile: Dockerfile-alternate
@@ -139,8 +146,21 @@ image: webapp:tag
 ```
 
 
+## command
+* 컨테이너가 실행될 때 수행할 명령어를 설정
+* docker run 명령어에 마지막에 붙는 커맨드와 같다
 
-# container_name
+**예시**
+```yml
+services:
+  webapp:
+    image: ubuntu:18.04
+    command: [apachectl, -DFOREGROUND]
+
+```
+
+
+## container_name
 
 * 컨테이너의 이름 지정
 
@@ -149,8 +169,63 @@ container_name: my-web-container
 ```
 
 
+## depends_on
+* 특정 컨테이너에 대한 의존 관계를 나타낸다
+* 명시한 컨테이너가 먼저 생성되고 이후에 컨테이너가 실행된다
 
-# env_file
+
+**예시**
+* app 컨테이너 생성 전에 mysql 컨테이너가 먼저 생성된다
+
+```yml
+version: "3.9"  
+services:  
+  app:  
+    build:  
+      context: .  
+    depends_on:  
+      - mysql  
+  mysql:
+```
+
+
+## version
+* 도커 컴포즈 파일 포맷의 버전을 나타낸다
+* 도커 텀포즈 버전은 도커 엔진 버전의 의존성이 있으므로 가능한 최신 버전을 사용하는 것이 좋다
+
+
+## services
+* 생성될 컨테이너들을 묶어 놓는 단위
+* 바로 하위 레벨에 생성된 서비스의 이름을 지정한다
+
+**예시**
+* webapp, mysql 두개의 서비스 정의 
+
+```yml
+services:
+  webapp:
+  mysql:
+```
+
+
+## image
+* 서비스 컨테이너를 생성할 때 사용할 이미지를 설정한다
+
+```yml
+services:
+  webapp:
+    image: ubuntu:18.04
+  mysql:
+    image: mysql
+```
+
+
+
+
+
+
+
+## env_file
 
 * 파일로 작성된 환경변수를 추가한다.
 * `environment`에서 추가된 환경변수보다 우선순위가 낮다.
@@ -177,8 +252,57 @@ MYSQL_ROOT_PASSWORD=secret
 ```
 
 
+## environment
+* docker run의 --env, -e 옵션과 동일한 기능
+* 서비스의 컨테이너 내부에서 사용할 환경변수를 지정한다
 
-# restart
+```yml
+sevices:
+  web:
+    environment:
+      MYSQL_DATABASE=homestead
+      MYSQL_USER=homestead
+      MYSQL_PASSWORD=secret
+      MYSQL_ROOT_PASSWORD=secret
+```
+
+또는
+
+```yml
+sevices:
+  web:
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+```
+
+
+## networks
+* 도커 컴포즈는 생성된 컨테이너를 위해 기본적으로 브리지 타입의 네트워크를 생성한다
+	* `[프로젝트이름]_default_` 라는 이름으로 네트워크가 만들어진다
+
+
+**예시**
+```yml
+version: "3.9"  
+services:  
+  app:  
+    build:  
+      context: .  
+    networks:  
+      - myshop  
+  mysql:  
+    image: mysql  
+    networks:  
+      - myshop  
+networks:  
+  myshop:
+```
+
+
+## restart
 
 * no : 재시작 안함(기본값)
 * always : 항상 재시작
@@ -189,7 +313,7 @@ MYSQL_ROOT_PASSWORD=secret
 version: "3"
 services:
   nginx:
-    restart: "no"
+    restart: no
     #restart: always
     #restart: on-failure
     #restart: unless-stopped
@@ -200,14 +324,16 @@ services:
 
 
 
-# 4 [Docker Compose CLI](https://docs.docker.com/compose/reference/)
+# 4 Docker Compose CLI
+* [레퍼런스](https://docs.docker.com/compose/reference/)
 
 
 
-# [docker-compose down](https://docs.docker.com/compose/reference/down/)
+## docker compose down
+* [레퍼런스](https://docs.docker.com/engine/reference/commandline/compose_down/)
 
 ```bash
-Usage: docker-compose down [options]
+Usage: docker compose down [options]
 
 Options:
     --rmi type              Remove images. Type must be one of:
@@ -223,3 +349,10 @@ Options:
                             (default: 10)
 ```
 
+
+## docker compose up 
+* [레퍼런스](https://docs.docker.com/engine/reference/commandline/compose_up/)
+
+``` bash
+ docker compose up [SERVICE...]
+```
