@@ -91,3 +91,17 @@
 
 
 # 8 대표문제
+
+
+
+## 8.1 LCS(Longest Common Subsequence)
+
+**관련 강의**
+
+* https://www.youtube.com/watch?v=Ua0GhsJSlWM
+* https://www.youtube.com/watch?v=sSno9rV8Rhg
+
+**문제**
+
+* https://www.acmicpc.net/problem/9251
+* https://www.acmicpc.net/problem/1695

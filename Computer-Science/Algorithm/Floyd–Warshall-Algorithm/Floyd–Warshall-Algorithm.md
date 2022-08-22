@@ -19,6 +19,45 @@
 
 1. 먼저 2차원 테이블을 초기화
    * `D[a][b] = a에서 b까지의 거리` (a에서 b로 가는 경로가 없는 경우 INF 값으로 초기화)
+2. 인접 정점 간의 최소 거리로 테이블 갱신
+
+
+
+## 3.1 예제 코드
+
+* https://www.acmicpc.net/problem/11404
+* `V` : 정점의 개수
+* `E` : 간선의 개수
+* `distance` : 정점 간의 최소 거리를 나타내는 2차원 배열
+
+```python
+import sys
+
+input = sys.stdin.readline
+
+V = int(input())
+E = int(input())
+
+# 정점 간의 최소 거리는 나타내는 2차원 배열 초기화
+distance = [[sys.maxsize] * (V + 1) for _ in range(V + 1)]
+for i in range(V + 1):
+    distance[i][i] = 0
+
+# 인접한 정점의 최소 거리로 2차원 배열 갱신
+for _ in range(E):
+    vertex1, vertex2, weight = map(int, input().split())
+    distance[vertex1][vertex2] = min(distance[vertex1][vertex2], weight)
+
+# i: 거쳐 가는 정점
+for i in range(1, V + 1):
+    # j: 출발 정점
+    for j in range(1, V + 1):
+        # k: 도착 정점
+        for k in range(1, V + 1):
+            # j에서 k를 가는 비용 보다 j 에서 i를 거쳐 k로 가는 비용이 더 적다면 갱신
+            if distance[j][i] + distance[i][k] < distance[j][k]:
+                distance[j][k] = distance[j][i] + distance[i][k]
+```
 
 
 
