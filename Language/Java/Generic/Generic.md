@@ -311,10 +311,12 @@ public void boxTest(Box<Number> n) { /* ... */ }
 box.boxTest(new Box<Integer>());
 ```
 
-* `Box<Integer>` 또는 `Box<Double>` 를  `type argument`로 사용할 수 있을까?
-  * 정답은 NO!
-  * `Box<Integer>`와 `Box<Double>` 는 `Box<Number>`의 서브 타입이 아니므로 `type argument`로 사용할 수 없다.
-  * `Integer` 가 `Number` 의 서브타입 일지라도 `Box<Integer>`는 `Box<Number>`의 서브 타입이 아니다
+* boxTest 메소드는 어떤 타입의 아규먼트를 허용할까?
+  * `Box<Integer>` 또는 `Box<Double>` 를  아규먼트로로 사용할 수 있을까?
+  * 정답은  No!
+
+* `Box<Integer>`와 `Box<Double>` 는 `Box<Number>`의 서브 타입이 아니므로 아규먼트로 사용할 수 없다
+* `Integer` 와 `Double`이  `Number` 의 서브타입 일지라도 `Box<Integer>`와   `Box<Double>`이 `Box<Number>`의 서브 타입이 아니다
 
 ![generics-subtypeRelationship](https://docs.oracle.com/javase/tutorial/figures/java/generics-subtypeRelationship.gif)
 
@@ -323,7 +325,7 @@ box.boxTest(new Box<Integer>());
 # 7 Wildcard
 
 * 제네릭 코드에서 `?` 를 와일드 카드라고 부른다.
-* `Generic Type` 을 매개 변수라 리턴 타입으로 사용할 때 구체적인 타입 대신 와일드 카드를 사용한다.
+* `Generic Type` 을 매개 변수나 리턴 타입으로 사용할 때 구체적인 타입 대신 와일드 카드를 사용한다.
 * 와일드 카드는 세 가지 형태로 사용된다.
   * Upper Bounded Wildcard, Unbounded Wildcard, Lower Bounded Wildcard
   * Upper Bounded Wildcard: `<? extends 타입>`

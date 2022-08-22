@@ -1,6 +1,6 @@
 # 1 컬렉터
 
-* 스트림의 최종 연산  collect는 다양한 요소 누적 방식을 인수로 받아서 스트림을 최종 결과로 도출하는 리듀싱 연산을 수행한다
+* 스트림의 최종 연산 collect는 다양한 요소 누적 방식을 인수로 받아서 스트림을 최종 결과로 도출하는 리듀싱 연산을 수행한다
   * 다양한 요소 누적 방식은 Collector 인터페이스에 정의가 되어있다
   * 즉 Collector 인터페이스란 스트림의 요소를 어떤식으로 도출할지에 대한 명세서이다
 
@@ -35,8 +35,6 @@ public static final List<Dish> menu = asList(
   new Dish("salmon", false, 450, Dish.Type.FISH)
 );
 ```
-
-
 
 
 
@@ -117,8 +115,6 @@ avgCalories = 477.77777777777777
 
 
 
-
-
 ## 2.6 summarizingInt
 
 ```java
@@ -137,6 +133,8 @@ menuStatistics = IntSummaryStatistics{count=9, sum=4300, min=120, average=477.77
 
 
 ## 2.7 joining
+
+* 스트림 각 객체에 toString 메서드를 호출해서 추출한 모든 문자열을 하나의 문자열로 연결해서 반환한다
 
 ```java
 @Test
@@ -159,18 +157,27 @@ shortMenu = pork, beef, chicken, french fries, rice, season fruit, pizza, prawns
 * reducing은 세 개의 인자를 받는다
   * 첫 번째 인수는 리듀싱 연산의 **시작값** 또는 스트림의 요소가 없을 경우 반환값
   * 두 번째 인수는 **변환 함수**(요리를 칼로리 정수로 변환)
-  * 세 번째 인수는 같은 종류의 두 항목을 하나의 값으로 더하는 BinaryOperator다
-* reducing은 한 개의 인자를 받을 수 있다
-  * 리듀싱 연산의 시작값은 reducing 메서드에 스트림의 첫 번째 요소
-  * 자기 자신을 그대로 반환하는 항등 함수를 사용
+  * 세 번째 인수는 같은 종류의 두 항목을 받아 같은 종류의 하나의 값으로 반환하는 **BinaryOperator**다
+* reducing은 한 개의 인자만 받을 수 있게 다중정의 됨
+  * 첫 번째 인수는 같은 종류의 두 항목을 받아 같은 종류의 하나의 값으로 반환하는 **BinaryOperator**다
+  * **시작값**: 리듀싱 연산의 시작값은 reducing 메서드에 스트림의 첫 번째 요소로 사용
+  * **변환 함수**: 자기 자신을 그대로 반환하는 항등 함수를 사용
   * 한 개의 인수를 갖는 reducing을 호출하면  스트림의 요소가 없을 경우을 대비해 Optional 객체를 반환한다
+  
+
+
+
+**한개의 인자만 받는 reducing 사용 예시**
 
 ```java
 @Test
 public void testReducing() {
+  // when
   Optional<Dish> dish = menu.stream()
     .collect(reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
   Dish mostCalorieDish = dish.get();
+  
+  // then
   assertThat(mostCalorieDish.getName()).isEqualTo("pork");
 }
 ```
@@ -215,11 +222,14 @@ menu.stream().collect(summingInt(Dish::getCalories));
 
 ## 4.1 그룹화 명령형과 함수형 비교
 
+* 통화별로 트랜잭션 리스트 구하기
+
 ```java
 import static java.util.stream.Collectors.groupingBy;
 
 // 그룹화 명령형 코드
 Map<Currency, List<Transaction>> transactionsByCurrencies = new HashMap<>();
+
 for (Transaction transaction : transactions) {
   Currency currency = transaction.getCurrency();
   List<Transaction> transactionsForCurrency = transactionsByCurrencies.get(currency);
@@ -327,9 +337,14 @@ public class Dish {
 **Dish.Type으로 Dish 그룹화하기**
 
 ```java
-Map<Dish.Type, List<Dish>> dishesByType = menu.stream().collect(groupingBy(Dish::getType));
+Map<Dish.Type, List<Dish>> dishesByType = menu.stream()
+  .collect(groupingBy(Dish::getType));
+
 System.out.println("dishesByType = " + dishesByType);
-// dishesByType = {OTHER=[french fries, rice, season fruit, pizza], FISH=[prawns, salmon], MEAT=[pork, beef, chicken]}
+```
+
+```
+dishesByType = {OTHER=[french fries, rice, season fruit, pizza], FISH=[prawns, salmon], MEAT=[pork, beef, chicken]}
 ```
 
 * `Dish::getType`: 분류 함수(각 요소에 분류 함수를 적용해 키를 뽑아낸다)
@@ -654,7 +669,7 @@ public BinaryOperator<List<T>> combiner() {
 
 
 
-## 6.6 characteristics 메소드s
+## 6.6 characteristics 메소드
 
 * 
 

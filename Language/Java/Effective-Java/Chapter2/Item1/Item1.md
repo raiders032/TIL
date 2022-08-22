@@ -63,6 +63,8 @@ public final class Boolean implements java.io.Serializable, Comparable<Boolean> 
 
 **인스턴스 통제**
 
+* 반복되는 요청에 같은 객체를 반환하는 식으로 정적 팩토리 방식의 클래스는 언제 어느 인스턴스를 살아 있게 할지를 철저히 통제할 수 있다
+* 이런 클래스를 인스턴스 통제 클래스라고 한다
 * 해당 인스턴스의 생명주기를 통제하는 것을 뜻한다.
 * 인스턴스를 통제하는 이유
   * 싱글턴을 만들기 위해

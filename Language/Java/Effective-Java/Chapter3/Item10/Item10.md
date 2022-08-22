@@ -453,37 +453,6 @@ x.equals(null) == false;
 
 
 
-
-
-
-
-1. ```
-   instanceof
-   ```
-
-    
-
-   연산자로 입력이 올바른 타입인지 확인한다
-
-   - 같은 인터페이스를 구현한 클래스끼리 비교하고 싶을 땐 equals에서 인터페이스를 사용해야 한다 ex) `List`, `Map`, `Map.Entry`
-
-2. 입력을 올바른 타입으로 형변환한다
-
-   - 2단계에서 `instanceof `검사를 했기 때문에 100% 통과함
-
-3. 입력 객체와 자기 자신의 대응되는 핵심 필드들이 모두 일치하는지 하나씩 검사한다
-
-   - 필드가 어떤 타입일때 어떻게 비교해야 할까?
-     - `float`, `double`을 제외한 기본 타입 : == 비교
-     - `float`, `double` : 각각 `Float.compare(float, float)`, `Double.compare(double, double)`으로 비교
-     - 참조 타입 : 각각의 `equals`로 비교
-     - 배열 : 원소 각각을 지침대로 비교
-   - 뭐부터 비교해야 할까?
-     - 다를 가능성이 큰 것부터
-     - 객체의 전체 상태를 대표하는 필드가 있다면 그 필드 먼저 비교하는게 효율적일 수도 있음
-
-
-
 참고
 
 * [이펙티브 자바 3/E](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788966262281)

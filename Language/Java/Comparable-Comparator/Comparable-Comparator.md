@@ -10,7 +10,6 @@
 
 
 
-
 **Comparable Interface**
 
 ```java

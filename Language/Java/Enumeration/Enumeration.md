@@ -109,3 +109,10 @@ for(Week day : days){
 참조
 
 * 이것이 자바다(신용권 저)
+
+관련 자료
+
+* [Enum 활용사례 3가지 - jojoldu](https://jojoldu.tistory.com/137)
+* [Enum 활용 & Enum 리스트 가져오기 - jojoldu](https://jojoldu.tistory.com/122)
+* [Java Enum 활용기 - 우아한형제들 기술 블로그](https://techblog.woowahan.com/2527/)
+

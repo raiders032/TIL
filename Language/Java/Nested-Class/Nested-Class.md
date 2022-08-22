@@ -26,25 +26,23 @@
 
 ## 1.2 Nested Class의 종류
 
-* Nested Class는 `static` 키워드의 유무로 두 가지의 종류가 있다.
-  * **Non-static nested class(inner class)**: `static` 키워드 없음
-  * **static nested class**: `static` 키워드 있음
+* Nested Class는 static의 유무로 static nested class 클래스와 non-static nested class로 나누어진다
+* non-static nested class는 이너 클래스라고 한다
+  * 이너 클래스의 특별한 경우로 익명 클래스와 지역 클래스가 있다
 
 
 
-**이너 클래스의 종류**
+**Nested Class의 종류**
 
-* **이너 클래스**: 클래스 내부에 선언된 클래스
-* **로컬 클래스**: 메서드의 바디 내에서 선언된 이너 클래스
-  * 로컬 클래스를 한번만 사용하는 경우 익명 클래스를 사용하는 것이 좋다
-* **익명 클래스**: 클래스 이름을 지정하지 않고 메서드 본문에 이너 클래스를 선언
-  * [Anonymous-Class.md](../Anonymous-Class/Anonymous-Class.md)
-  * 하나의 추상 메소드를 가진 인터페이스를 구현하는 경우 익명 클래스보다 람다식을 사용하는 것이 간결하다.
-
+1. 정적 멤버 클래스(static nested class)
+2. 이너 클래스(inner class, non-static nested class)
+   1. 이너 클래스(inner class): 클래스 내부에 선언된 클래스
+   2. 지역 클래스(local class): 메서드의 바디 내에서 선언된 이너 클래스
+   3. 익명 클래스(anonymous class): 이름이 없는 지역 클래스
 
 
 
-# 2 inner class(non-static nested class)
+# 2 Inner Class(non-static nested class)
 
 * `static` 키워드 없이 선언된 중첩 클래스를 말한다.
 * 이너 클래스는 **외부 클래스의 인스턴스와 연결**되어 있다
@@ -211,7 +209,13 @@ class OuterClass {
 
 
 
-# 3 static nested class
+# 4 Anonymous Class
+
+* 이름이 없는 Local Class
+* Local Class를 한번만 사용한다면 Anonymous Class를 사용하자
+* [Anonymous-Class.md](../Anonymous-Class/Anonymous-Class.md) 참고
+
+# 5 Static Nested Class
 
 * `static` 키워드로 선언된 중첩 클래스를 말한다.
 * static nested class는 바깥쪽 클래스와 연결되어있다.
@@ -285,11 +289,11 @@ class StaticNestedClassTest {
 
 
 
-# 4 중첩 클래스 접근 제한
+# 6 중첩 클래스 접근 제한
 
 
 
-## 4.1 바깥 클래스에서 내부 클래스 접근 제한
+## 6.1 바깥 클래스에서 내부 클래스 접근 제한
 
 * 바깥 클래스에서 내부 클래스에 대한 접근 제한을 알아보자
 * 바깥 클래스 -> 이너 클래스
@@ -329,7 +333,7 @@ public class A {
 
 
 
-## 4.2 내부 클래스에서 바깥 클래스 접근 제한
+## 6.2 내부 클래스에서 바깥 클래스 접근 제한
 
 * 내부 클래스에서 바깥 클래스의 필드와 메소드에 대한 접근 제한을 알아보자
 

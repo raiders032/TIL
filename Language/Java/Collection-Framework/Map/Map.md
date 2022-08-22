@@ -123,6 +123,7 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 
 ## 2.1 성능
 
+* 검색과 삽입에 O(1) 시간이 소요된다
 * 해시 테이블은 성능에 영향을 미치는 두 가지 파라미터를 가지고 있다
   * *initial capacity* 와 *load factor*
 * initial capacity
@@ -198,10 +199,20 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 
 
 
+## 4.2 성능
+
+* 검색과 삽입에 O(log N) 시간이 소요된다
+
 # 5 LinkedHashMap Class
 
 * Map Interface를 구현한 구현체
 * LinkedHashMap의 엔트리 순서는 삽입된 순서이다.
+
+
+
+## 5.1 성능
+
+* 검색과 삽입에 O(1) 시간이 소요된다
 
 
 

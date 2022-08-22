@@ -95,6 +95,64 @@ void testRunnableLambda() {
 
 
 
+## 1.5 Anonymous Class와 비교
+
+* 익명 클래스에서 `this`는 익명클래스 자신을 가리키지만 람다에서 `this`는 람다를 감싸는 클래스를 카리킨다
+* 익명 클래스는 감싸고 있는 클래스의 변수를 가릴수 있지만 람다는 그렇지 못하다
+* 익명 클래스를 람다 표현식으로 바꾸면 콘텍스트 오버로딩에 따른 모호함이 초래될 수 있다
+
+
+
+**예시**
+
+Runnable과 같은 시그니처를 가지는 함수형 인터페이스 Task를 선언한다
+
+```java
+interface Task {
+  void execute();
+}
+```
+
+아래와 같이 정적 메소드가 오버로딩 되어 있다
+
+```java
+public static void doSomething(Runnable r){
+  r.run();
+}
+
+public static void doSomething(Task t){
+  t.execute();
+}
+```
+
+Task를 구현한 익명 클래스 전달하기 
+
+```java
+doSomething(new Task() {
+  @Override
+  public void execute() {
+    System.out.println("Danger danger!");
+  }
+});
+```
+
+익명 클래스를 람다로 바꾸면
+
+* Runnable과 Task 모두 대상 형식이 되므로 문제가 생긴다
+* 즉 doSomething(Runnable r) 과 doSomething(Task t) 어느것을 가리키는지 알수 없다
+
+```java
+doSomething(() -> System.out.println("Danger danger!"));
+```
+
+따라서 아래와 같이 명시적 형변환을 이용한다
+
+```java
+doSomething((Task) () -> System.out.println("Danger danger!"));
+```
+
+
+
 # 2 Lambda의 기본 문법
 
 ```java
@@ -146,7 +204,8 @@ public interface Runnable {
 
 # 4 형식 검사, 형식 추론
 
-* 람다 표현식은 Functional Interface의 인스턴스를 만든다. 그러나 람다식 자체에는 어떤 함수형 인터페이스를 구현하는지 정보가 포함되어 있지 않다.
+* 람다 표현식은 Functional Interface의 인스턴스를 만든다. 
+* 그러나 람다식 자체에는 어떤 함수형 인터페이스를 구현하는지 정보가 포함되어 있지 않다.
 
 
 
@@ -597,6 +656,8 @@ public class UsingThis {
 * 메소드 참조란 말 그대로 메소드를 참조해서 매개 변수의 정보 및 리턴 타입을 알아내어 람다식에서 불필요한 변수를 제거하는 것이 목적이다.
 * 이미 정의된 메소드를 참조해서 사용한다.
 * 때로는 람다 표현식보다 메서드 참조를 사용하는 것이 더 가독성이 좋다
+  * 메소드명으로 코드의 의도를 명확히 알릴 수 있다
+
 * 메소드 참조에는 아래와 같이 4가지의 종류가 있다.
 
 
@@ -605,11 +666,21 @@ public class UsingThis {
 
 * `ContainingClass::staticMethodName`
 
+```
+(args) -> ClassName.staticMethod(args)
+ClassName::staticMethod
+```
+
 
 
 ## 7.2 인스턴스 메소드 참조
 
 * `containingObject::instanceMethodName`
+
+```
+(args) -> expr.instanceMethod(args)
+expr::instanceMethod
+```
 
 
 
@@ -617,6 +688,11 @@ public class UsingThis {
 
 * `ContainingType::methodName`
 * 람다식에 매개변수로 주어진 객체의 메소드를 참조하는 것
+
+```
+(arg0, rest) -> arg0.instanceMethod(rest)
+ClassName::instanceMethod
+```
 
 
 
