@@ -138,7 +138,7 @@
 * **entry section**
   * critical section으로 진입하기 위해서 진입 허가를 요청하는 코드 부분
   * 예) Lock 획득하기
-* **exit sectioc**
+* **exit section**
   * critical section을 빠져나오는 코드 부분
   * 예) Lock 반납하기
 
@@ -242,6 +242,8 @@ do{
 * 프로세스1이 `flag[1] = true`로 설정하고 곧바로 컨텍스트 스위칭 후 프로세스2가 flag[2] = true로 설정하면 어떠한 프로세스도 Critical Section에 들어갈 수 없다
 * Progress 조건 불만족
 
+
+
 # 3 Peterson's Solution
 
 * Critical Section Problem을 해결하는 대표적인 소프트웨어적 방법
@@ -289,7 +291,7 @@ do {
 
 # 5 Semaphores
 
-* Critical Section문제를 해결하기 위한 추상적인 자료형
+* Critical Section 문제를 해결하기 위한 추상적인 자료형
   * 추상적인 자료형이란 자료들과 그 자료들에 대한 연산들을 명기한 것이다
   * 아래에 Semaphores의 자료(value)와 그 자료에 대한 연산(P(), V())이 나온다
 

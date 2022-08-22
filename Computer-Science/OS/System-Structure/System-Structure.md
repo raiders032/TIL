@@ -1,4 +1,4 @@
-#   1. System Structure
+#   1 System Structure
 
 <img src="./images/system-structure.jpg" alt="System Structure" style="zoom:80%;" />
 
@@ -6,7 +6,7 @@
 
 
 
-# 2. CPU
+# 2 CPU
 
 ## 2.1 CPU의 구성
 
@@ -40,7 +40,12 @@
 
 **Interrupt**
 
-* Interrupt가 발생하면 해당 시점의 CPU 레지스터(Program Counter 등)를 저장한 후 CPU의 제어 인터럽트 처리 루틴에 넘긴다
+* 하드웨어는 어느 순간이든 시스템 버스를 통해 CPU에 신호를 보낼 수 있다
+* 이 신호를 Interrupt라고 부른다
+* 소프트웨어는 시스템 콜이라 불리는 특별한 연산을 실행하여 Interrupt를 발생시킬 수 있다
+* CPU가 Interrupt를 받으면 하던 일을 중단하고 즉시 고정된 위치로 실행을 옮긴다
+* 일반적으로 고정된 위치는 해당 인터럽트를 처리하는 인터럽트 처리 루틴의 주소를 가리킨다
+* 그리고 인터럽트 처리 루틴이 실행되고 완료되면 CPU는 인터럽트 된 연산을 재개한다
 
 **Trap**
 
@@ -68,22 +73,22 @@
 
 
 
-# 2. Timer
+# 2 Timer
 
 * 특정 프로세스가 CPU를 독점하는 것을 막기위해 사용되는 하드웨어
-  * 프로세스가 CPU에 할당될 때 타이머에 시간을 세팅되고 매 클락마다 시간이 줄어든다
-  * 시간을 다 쓰면 Timer가 인터럽트를 발생시키고 커널 모드로 전환되며 CPU 제어권이 운영체제로 넘어간다
+* 프로세스가 CPU에 할당될 때 타이머에 시간을 세팅되고 매 클락마다 시간이 줄어든다
+* 시간을 다 쓰면 Timer가 인터럽트를 발생시키고 커널 모드로 전환되며 CPU 제어권이 운영체제로 넘어간다
 
 
 
-# 3. Memory
+# 3 Memory
 
 * CPU는 실행할 인스트럭션을 오직 메모리에서만 가져올 수 있다. 따라서 어떤 프로그램이든 실행하기 위해선 메모리에 올라가야한다.
 * 메모리는 휘발성 저장소로 전원이 꺼지면 모든 내용이 손실된다.
 
 
 
-# 4. DMA Controller
+# 4 DMA Controller
 
 * direct memory access controller
 * 입출력 장치에서 바이트 단위로 인터럽트가 발생하면 CPU 너무 많은 인터럽트가 발생해 효율적이지 못하다. 이를 해결하기위해 DMA Controller가 사용된다.
@@ -92,7 +97,7 @@
 
 
 
-# 5. I/O device
+# 5 I/O device
 
 ## 5.1 device controller
 
