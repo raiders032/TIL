@@ -93,6 +93,7 @@ public class MemberService {
 # 5.Interface Segregation Principle
 
 * 큰 인터페이스 몇 개 보다 작은 인터페이스가 많은 것이 좋다.
+* 클라이언트가 오로지 자신이 필요로 하는 메서드만 알면 되도록 넓은 인터페이스를 특화된 인터페이스로 분리해야 한다
 * 인터페이스가 명확해지고, 대체 가능성이 높아진다.
 * 예시
   * 자동차 인터페이스 -> 운전 인터페이스, 정비 인터페이스로 분리
@@ -122,14 +123,3 @@ public class MemberService {
   private MemberRepository memberRepository = new MemoryMemberRepository();
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
