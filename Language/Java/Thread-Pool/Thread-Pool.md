@@ -6,13 +6,20 @@
 * 스레드풀은 작업 처리에 사용되는 스레드를 제한된 개수만큼 정해놓고 작업 큐에 들어오는 작업들을 하나씩 스레드가 맡아 처리한다.
 * 작업이 끝난 스레드는 다시 작업 큐에서 새로운 작업을 가져와 처리한다.
 * 자바는 스레드풀을 생성하고 사용할 수 있도록 java.util.concurrent 패키지에서 ExecutorService 인터페이스와 Executors 클래스를 제공한다.
-* Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀이다
+
+
+
+## 1.1 ExecutorService의 이점
+
+- 자바 프로그래머가 태스크 제출과 실행을 분리할 수 있는 기능을 제공한다.
+- 즉 스레드의 생성과 관리를 직접하는 것이 아니라 ExecutorService를 통해 스레드를 관리하는 것이 좋다.
 
 
 
 # 2 Thread Pool 생성
 
 * Executors로 ExecutorService의 구현 객체 만들기
+* Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀이다
 
 
 

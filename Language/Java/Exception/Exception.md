@@ -146,7 +146,7 @@ try {
 * finally 블록
   * 옵션으로 생략 가능하다
   * 예외 발생 여부와 상관없이 항상 실행할 내용이 있을 경우 사용한다.
-  * finally 블록은 try 블록이 종료되는 순간 실행된다.
+  * finally 블록은 try와 catch 블록 다음과, 통제권이 이전으로 다시 돌아가기 전 사이에 실행된다
   * try, catch 블록에서 return(continue, break, 예외)을 통해 블록을 벗어나도 finally 블록은 항상 실행된다.
   * finally 블록이 실행되지 않은 경우는 아래와 같다
     * try, catch 블록에서 JVM이 종료됨

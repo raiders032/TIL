@@ -23,7 +23,9 @@
 * [Interface](Interface/Interface.md)
   * constant field, astract method, default method, static method
   * 익명 구현 객체
-* [JDBC](JDBC/JDBC.md) 
+* [JDBC](JDBC/JDBC.md)
+  * DriverManager
+
 * [JVM](JVM/JVM.md)
   * Class Loader, Runtime Data Area, Execution Engine
 * [Lambda](Lambda/Lambda.md)

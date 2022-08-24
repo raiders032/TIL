@@ -188,6 +188,8 @@ Thread thread = new Thread() {
 thread.start()
 ```
 
+
+
 # 4 Thread 상태
 
 * Thread 객체를 생성하고 start()메소드를 호출하면 바로 실행되는 것처럼 보이지만 사실 대기 상태가 된다.
@@ -374,6 +376,8 @@ public class JoinExample {
   * round robin방식
     * 시간 할당량 만큼 스레드를 실행하고 다시 다른 스레드를 실행하는 방식
     * JVM에 의해서 순서가 정해져 코드로 제어 불가
+
+
 
 # 6 Synchronization
 

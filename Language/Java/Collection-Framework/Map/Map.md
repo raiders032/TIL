@@ -114,6 +114,8 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 # 2 HashMap Class
 
 * 해시 테이블을 기반으로 Map 인터페이스를 구현한 클래스
+  * 연결 리스트로 이루어진 배열을 가지고 있다
+
 * HashMap의 키로 사용할 객체는 `hasCode()` 와  `equals()` 메소드를 재정의해서 동등 객체가 될 조건을 정해야한다.
 * 주로 키 타입은 `String` 을 많이 사용하는데 문자열이 같을 경우 동등 객체가 될 수 있도록 `hasCode()` 와  `equals()` 메소드가 재정의되어 있다.
 * 키와 값의 타입은 기본 타입을 사용할 수 없고 클래스 및 인터페이스 타입만 가능하다.
@@ -202,6 +204,8 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 ## 4.2 성능
 
 * 검색과 삽입에 O(log N) 시간이 소요된다
+
+
 
 # 5 LinkedHashMap Class
 
