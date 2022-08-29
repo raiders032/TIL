@@ -20,7 +20,7 @@
 
 
 
-## 2.1 Encapsulation
+# 3 Encapsulation
 
 * 객체의 상태가 외부로부터 숨겨진 상황에서 이 상태에 접근하는 일련의 공개 메서드만 노출하는 기법을 `캡슐화`라고 합니다.
 * 캡슐화는 객체의 상태를 비공개로 유지할 때 성립한다.
@@ -30,8 +30,7 @@
 
 
 
-
-**캡슐화의 이점**
+## 2.1 캡슐화의 이점
 
 - 느스한 결합
 - 재사용성
@@ -39,7 +38,7 @@
 
 
 
-## 2.2 Inheritance
+# 4 Inheritance
 
 * 상속
 * 이미 존재하는 객체(클래스)를 기반으로 확장된 객체(클래스)를 만드는 방법
@@ -51,34 +50,36 @@
 
 
 
-**상속의 이점**
+## 4.1 상속의 이점
 
-* 코드 중복을 막는다.
+* 코드 중복을 막는다
 
 
 
-## 2.3 Polymorphism
+## 4.2 상속의 단점
 
-* 다형성
-* 많은 사람들이 OOP의 핵심이라고 여긴다.
-* **`같은 지시`를 내렸는데 다른 종류의 객체가 `동작을 달리`하는 것을 다형성이라고 한다.**
-* 만약 절차적 언어 였다면 if 문을 사용해 각각 동작을 달리 했을 것이다.
+- 부모 클래스와 자식 클래스 간의 캡슐화를 깨뜨린다.
+- 꼭 필요한 경우에만 상속을 사용하고 컴포지션을 대안으로 사용하는 것이 좋다.
+  - [Item18.md](../../Language/Java/Effective-Java/Chapter4/Item18/Item18.md) 상속보다는 컴포지션을 사용하라 참조
+
+
+
+# 5 Polymorphism
+
+* 다형성은 다른 유형의 엔티티에 단일 인터페이스를 제공하거나 여러 다른 유형을 나타내기 위해 단일 기호를 사용하는 것이다.
+* 여러가지 서로 다른 타입의 객체를 어떠한 하나의 타입에 담을 수 있다는 것이다.
+* 따라서 한 타입으로 된 리스트에 다른 여러 타입의 객체를 담고 리스트의 원소에 모두 같은 지시를 내리면 다른 타입의 객체는 동작을 달리할 것이다.
+  * 만약 절차적 언어 였다면 if 문을 사용해 각각 동작을 달리 했을 것이다.
+
 * 다형성은 컴파일 타임 다형성과 런타임 다형성 두 종류로 구분된다.
 
 
 
-**컴파일 타임 다형성**
+## 5.1 컴파일 타임 다형성
 
 - 컴파일 타임 다형성은 메서드 오버로딩으로 구현된다.
 - 메서드 오버로딩은 이름은 동일하지만 매개변수가 다른 메서드를 말한다.
 - 컴파일러가 오버로딩된 메서드 가운데 어떤 형식을 호출할지 컴파일 타임에 식별할 수 있으므로 `컴파일 타임 다형성`이라 부른다.
-
-
-
-**런타임 다형성**
-
-* 어떤 함수 구현이 실행될지는 실행중에 결정된다.
-* 런타임 다형성은 상속 또는 인터페이스 구현으로 달성할 수 있다
 
 
 
@@ -88,7 +89,75 @@
 
 
 
-## 2.4 Abstraction
+## 5.2 런타임 다형성
+
+* 어떤 함수 구현이 실행될지는 실행중에 결정된다.
+* 런타임 다형성은 상속 또는 인터페이스 구현으로 달성할 수 있다
+
+
+
+## 5.3 런타임 다형성 예시
+
+- Shape 인터페이스와 이를 구현한 구현체 Circle, Rectangle, Triangle이 있다
+
+```java
+public interface Shape {
+    public void draw();
+}
+```
+
+```java
+public class Circle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Draw a circle ...");
+    }
+}
+```
+
+```java
+public class Rectangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Draw a rectangle ...");
+    }
+}
+```
+
+```java
+public class Triangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Draw a triangle ...");
+    }
+}
+```
+
+**PolymorphismTest**
+
+- `draw`라는 같은 지시를 했는데 다른 종류의 객체가 동작을 달리한다.
+- Shape 타입의 리스트를 선언했지만 런타임에 포함된 실제 객체의 타입은 각각 Triangle, Rectangle, Circle이다.
+- 따라서 소스 코드에서 draw라는 추상 메서드를 호출하면 draw 메서드를 오버라이딩한 메서드가 실행되는 것이다.
+
+```java
+public class PolymorphismTest {
+    @Test
+    void test1() {
+        List<Shape> shapes = List.of(new Triangle(), new Rectangle(), new Circle());
+        shapes.forEach(Shape::draw);
+    }
+}
+```
+
+```
+Draw a triangle ...
+Draw a rectangle ...
+Draw a circle ...
+```
+
+
+
+# 6 Abstraction
 
 * 문헌에 따라 `데이터 추상화` 또는 `추상화` 라고 한다.
 * 추상화는 사용자와 관련 있는 내용만 노출하고 나머지 세부 내용은 숨기는 개념이다.
@@ -105,114 +174,69 @@
 
 
 
-## 2.5 Association
+# 7 Association
 
-* 연관은 서로 독립적인 두 클래스 간의 관계를 의미한다.
+* 한 객체가 다른 객체에게 메세지를 보낼 수 있으면 두 객체를 `연관` 관계라고 할 수 있다.
+* 한 객체가 다른 객체를 참조하므로써 연관 관계를 만들 수 있다.
+  * 참조변수
+  * 메서드의 아규먼트
+
 * 두 클래스는 독집적인 자체 수명을 가진다.
-* 연관에는 소유 관계가 없다.
+* 객체와 객체 사이에 **양방향** 또는 **단반향** 관계가 있다.
 
 
 
-**연관 관계 예시**
+## 7.1 Association 예시
 
-- 한 명의 Person이 여러개의 Address와 연관될 수 있으며 하나의 Address가 여러개의 Person과 연관될 수 있다
-- Person과 Address 객체는 양방향 다대다 관계가 있다.
-- Person는 Address 없이 존재할 수 있고 Address도 Person 없이 존재할 수 있다.
+- 한 명의 Person이 여러개의 Team와 연관될 수 있으며 하나의 Team가 여러개의 Person과 연관될 수 있다
+- Person과 와 Team 객체는 양방향 다대다 관계가 있다.
+- Person는 와 Team 없이 존재할 수 있고 Team도 Person 없이 존재할 수 있다.
   - 독립적인 자체 수명을 가짐
 
 
 
 **Person 클래스**
 
+- Person 객체가 Team를 참조하여 메세지를 보낼 수 있다.
+
 ```java
 public class Person {
     private String name;
-
-    public Person(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private List<Team> teams;
 }
 ```
 
 
 
-**Address 클래스**
+**Team 클래스**
+
+- Team 객체가 Person를 참조하여 메세지를 보낼 수 있다.
 
 ```java
-public class Address {
-    private String city;
-    private String zip;
-
-    public Address(String city, String zip) {
-        this.city = city;
-        this.zip = zip;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
+public class Team {
+    private String name;
+    private List<Person> people;
 }
 ```
 
 
 
-**Main 클래스**
-
-- 메인 클래스에서 Person과 Address의 연관 관계가 성립한다.
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        Person p1 = new Person("Andrei");
-        Person p2 = new Person("Marin");
-        Address a1 = new Address("Banesti", "107050");
-        Address a2 = new Address("Bucuresti", "229344");
-
-        // 메인 메서드에서의 두 클래스 간 연관(Association) 관계
-        System.out.println(p1.getName() + " lives at address "
-          + a2.getCity() + ", " + a2.getZip()
-          + " but it also has an address at "
-          + a1.getCity() + ", " + a1.getZip());
-        System.out.println(p2.getName() + " lives at address "
-          + a1.getCity() + ", " + a1.getZip()
-          + " but it also has an address at "
-          + a2.getCity() + ", " + a2.getZip());
-    }
-}
-```
-
-
-
-## 2.7 Aggregation
+# 8 Aggregation
 
 * Aggregation을 집약이라고 부른다.
 * Aggregation은 단방향 연관 관계이다.
+  * Association과 나머지 특성은 같지만 단 하나 다른점이다.
+  * Aggregation 관계를 이루는 객체는 트리를 구성한다.
+  * 부모에서 자식으로의 단방향 참조만 있기 때문에 사이클이 발생하지 않기 때문이다.
+  * 반면에 Association은 양뱡향 참조가 있을 수 있기 때문에 사이클이 발생할 수 있다.
+
+
 * 두 객체 사이에 소유 관계가 있으며 이를 `HAS-A` 관계가 있다라고 한다.
 * 두 객체는 자체 수명 주기를 가지고 있다.
 
 
 
-**Aggregation 예시**
+## 8.1 Aggregation 예시
 
 - TennisPlayer는 Racket을 소유하고 있다.
 - Racket이 TennisPlayer를 사용할 수 없으므로 단방향 연관관계다.
@@ -312,14 +336,14 @@ public class Main {
 
 
 
-## 2.6 Composition
+# 9 Composition
 
 * Composition은 더 제한적인 Aggregation 관계를 의미합니다.
 * Aggregation은 두 객체가 자체 생명 주기를 가지는 두 객체의 `HAS-A` 관계를 의미한다면, Composition은 단독으로 존재할 수 없는 객체를 포함하는 `HAS-A` 관계를 의미합니다.
 
 
 
-**Composition 예시**
+## 9.1 Composition 예시
 
 - Car가 파괴되면 Engine도 파괴된다고 했을 때 Car와 Engine은 Composition 관계입니다. 
 
@@ -397,6 +421,22 @@ public class Main {
 
 
 
+# 10 비교
+
+- Association, Aggregation, Composition을 비교해보자.
+- 먼저 Association이 가장 큰 범위로 Aggregation과 Composition을 포함한다.
+- Association과 나머지 둘을 나누는 기준은 객체 사이의 양방향 참조가 가능한지 여부다.
+- 단반향 참조만 가능하다면 Aggregation, Composition 범주로 좁아진다.
+- Aggregation과 Composition을 나누는 기준은 두 객체의 생명 주기다
+- 두 객체가 각자의 생명 주기를 가지면 Aggregation parent 객체가 children 객체의 생명주기를 관리하면 Composition이다.
+- 그림으로 나타내면 아래와 같다.
+
+![relations](images/jNyV5.jpg)
+
+
+
 **참고**
 
+- https://stackoverflow.com/questions/885937/what-is-the-difference-between-association-aggregation-and-composition
+- https://groups.google.com/g/comp.object/c/_j4g-I9jqVg/m/rouCJeVXzR4J
 - [자바 코딩 인터뷰 완벽 가이드](http://www.kyobobook.co.kr/product/detailViewKor.laf?ejkGb=KOR&mallGb=KOR&barcode=9791157688197&orderClick=&Kc=)

@@ -1,4 +1,4 @@
-# 1.SOLID
+# 1 SOLID
 
 * 클린코드로 유명한 로버트 마틴이 좋은 객체 지향 설계의 5가지 원칙을 정리함
 * 소프트웨어 설계를 이해하기 쉽고 유연하고 유지보수하기 쉽게 만들기 위해 사용되는 원칙 5가지를 뜻한다.
@@ -18,7 +18,7 @@
 
 
 
-# 2.Single Responsibility Principle
+# 2 Single Responsibility Principle
 
 > **한 클래스는 단 한기자의 변경 이유만을 가져야 한다**. 한 클래스를 변경하기 위한 한 가지 이상의 이유를 생각할 수 있다면, 그 클래스는 한 가지 이상의 책임을 맡고 있는 것이다. 
 
@@ -28,7 +28,7 @@
 
 
 
-# 3.Open-Closed Principle
+# 3 Open-Closed Principle
 
 > 소프트웨어 개체는 **확장에 대해 열려** 있어야 하고, **수정에 대해서는 닫혀** 있어야 한다.
 
@@ -77,7 +77,7 @@ public class MemberService {
 
 * 객체를 생성하고, 연관관계를 맺어주는 별도의 조립, 설정자가 필요하다.
 
-# 4.Liskov Substitution Principle
+# 4 Liskov Substitution Principle
 
 > 서브타입은 그것의 기반 타입으로 치환 가능해야 한다.
 
@@ -90,10 +90,11 @@ public class MemberService {
 
 
 
-# 5.Interface Segregation Principle
+# 5 Interface Segregation Principle
 
 * 큰 인터페이스 몇 개 보다 작은 인터페이스가 많은 것이 좋다.
 * 클라이언트가 오로지 자신이 필요로 하는 메서드만 알면 되도록 넓은 인터페이스를 특화된 인터페이스로 분리해야 한다
+* 클라이언트가 사용하지 않는 메서드를 강제로 구현하는 일이 없을 때까지 인터페이스를 분할해야한다.
 * 인터페이스가 명확해지고, 대체 가능성이 높아진다.
 * 예시
   * 자동차 인터페이스 -> 운전 인터페이스, 정비 인터페이스로 분리
@@ -102,7 +103,7 @@ public class MemberService {
 
 
 
-# 6.Dependency Inversion Principle
+# 6 Dependency Inversion Principle
 
 * 프로그래머는 “추상화에 의존해야지, 구체화에 의존하면 안된다.” 의존성 주입은 이 원칙 을 따르는 방법 중 하나다.
 * 구현 클래스에 의존하지 말고, 인터페이스에 의존하라는 뜻
@@ -123,3 +124,9 @@ public class MemberService {
   private MemberRepository memberRepository = new MemoryMemberRepository();
 }
 ```
+
+
+
+참고
+
+- 
