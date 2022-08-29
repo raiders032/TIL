@@ -105,3 +105,72 @@
 
 * https://www.acmicpc.net/problem/9251
 * https://www.acmicpc.net/problem/1695
+
+
+
+## 8.2 트리 DP
+
+- 트리의 지름을 DP를 사용해서 구해보자.
+- [문제](https://www.acmicpc.net/problem/1967)
+
+> 트리의 지름이란?
+>
+> - 트리(tree)는 사이클이 없는 무방향 그래프이다. 
+> - 트리에서는 어떤 두 노드를 선택해도 둘 사이에 경로가 항상 하나만 존재하게 된다.
+> - 트리의 지름은 트리에 존재하는 모든 경로들 중에서 가장 긴 것의 길이를 말한다.
+
+
+
+**풀이**
+
+- 트리의 높이는 해당 노드부터 리프까지의 거리를 말한다.
+
+```python
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10 ** 6)
+
+# 높이를 구하는 top-down 방식 DP
+def make_max_height(node):
+    if max_height[node] != -1:
+        return max_height[node]
+
+    max_height[node] = 0
+    for child, weight in tree[node]:
+        max_height[node] = max(max_height[node], make_max_height(child) + weight)
+
+    return max_height[node]
+
+
+# 트리의 지름을 구하는 top-down 방식 DP
+def get_tree_radius(node):
+    if tree_radius[node] != -1:
+        return tree_radius[node]
+
+    tree_radius[node] = 0
+    height = []
+    for child, weight in tree[node]:
+        # 트리의 지름은 해당 정점 node를 지나지 않는다면 서브 트리의 지름 중 가장 큰 것이다.
+        tree_radius[node] = max(tree_radius[node], get_tree_radius(child))
+        height.append(max_height[child] + weight)
+
+    height.sort(reverse=True)
+    # 트리의 지름은 해당 정점 node를 지난다면 해당 node를 기준으로 높이가 가장 큰 2개를 더한 것과 같다.
+    tree_radius[node] = max(tree_radius[node], sum(height[:2]))
+
+    return tree_radius[node]
+
+
+N = int(input())
+tree = [list() for _ in range(N + 1)]
+max_height = [-1] * (N + 1) # 각 노드의 최대 높이
+tree_radius = [-1] * (N + 1) # 트리의 지름
+for _ in range(N - 1):
+    parent, child, weight, = map(int, input().split())
+    tree[parent].append((child, weight))
+
+# 먼저 각각의 노드의 최대 높이를 구한다.
+make_max_height(1)
+print(get_tree_radius(1))
+```
+
