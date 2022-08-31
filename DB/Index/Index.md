@@ -136,6 +136,8 @@
 * 데이터 파일의 레코드의 순서와 인덱스의 엔트리와 일치하는 않는 인덱스를 non-clustered Index라고 한다
 * Clustered Index와 달리 한 데이터 파일에 여러개의 non-clustered Index를 생성할 수 있다
 
+
+
 # 5 구현 알고리즘
 
 * 대표적으로 B-Tree와 Hash 자료구조를 이용해 구현한다
