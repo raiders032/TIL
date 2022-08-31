@@ -10,6 +10,11 @@
   * Race Condition, The Critical-Section Problem
 * [Deadlocks](Deadlocks/Deadlocks.md)
 * [Memory Management](Memory-Management/Memory-Management.md)
+  * Logical Address & Physical Address
+  * MMU(Memory Management Unit)
+  * Swapping
+  * Segmentation, Paging
+
 * [Virtual Memory](Virtual-Memory/Virtual-Memory.md)
 * [Mass Storage Structure](Mass-Storage-Structure/Mass-Storage-Structure.md)
 * [File System](File-System/File-System.md)
