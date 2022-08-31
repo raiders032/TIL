@@ -149,11 +149,11 @@ public class BeanValidationTest {
 > ```java
 > @SpringBootApplication
 > public class ItemServiceApplication implements WebMvcConfigurer {
->   // 글로벌 검증기 추가
->   @Override
->   public Validator getValidator() {
->    return new ItemValidator();
->   }	
+>     // 글로벌 검증기 추가
+>     @Override
+>     public Validator getValidator() {
+>        return new ItemValidator();
+>     }	
 > }
 > ```
 
@@ -162,7 +162,7 @@ public class BeanValidationTest {
 **사용 예시**
 
 * 검증이 필요한 객체에 `@Validated` 또는 `@Valid`를 적용
-* 검증 오류가 발생하면, `FieldError` , `ObjectError` 가 `BindingResult` 에 담겨있다.
+* 검증 오류가 발생하면, `FieldError` , `ObjectError`가 `BindingResult`에 담겨있다.
 
 ```java
 @PostMapping("/add")

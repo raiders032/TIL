@@ -1,4 +1,4 @@
-# [Mockito](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html)
+# 1 [Mockito](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html)
 
 * Mock: 진짜 객체와 비슷하게 동작하지만 프로그래머가 직접 그 객체의 행동을 관리하는 객체.
 * Mockito: Mock 객체를 쉽게 만들고 관리하고 검증할 수 있는 방법을 제공한다.
@@ -6,7 +6,7 @@
 
 
 
-**디펜던시 추가**
+## 1.1 디펜던시 추가
 
 * 스프링 부트 2.2+ 프로젝트 생성시 spring-boot-starter-test에서 자동으로 Mockito 추가해 줌.
 * 의존성을 직접 추가하려면 아래와 같이 디펜던시를 추가한다.
@@ -28,7 +28,7 @@
 
 
 
-## Mock 객체 만들기
+# 2 Mock 객체 만들기
 
 **Mockito.mock() 메소드로 만드는 방법**
 
@@ -40,6 +40,7 @@ MemberService memberService = Mockito.mock.mock(MemberService.class); StudyRepos
 
 **@Mock 애노테이션으로 만드는 방법**
 
+* Mockito.mock() 메서드로 반복적으로 목을 만드는게 번거롭다면 `@Mock`을 사용한다
 * `@Mock` 을 사용하기 위해선 extension으로 MockitoExtension을 사용해야 한다.
 
 ```java
@@ -69,7 +70,7 @@ class StudyServiceTest {
 
 
 
-## [Mock 객체 Stubbing](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#stubbing)
+# 3 [Mock 객체 Stubbing](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#stubbing)
 
 * Mock이 어떻게 동작해야 하는지 관리하는 방법
 * Mock 객체의 기본 행동
@@ -106,7 +107,11 @@ void send() {
 
 
 
-# 호출 검증하기
+# 4 [Argument matchers](https://javadoc.io/static/org.mockito/mockito-core/4.5.1/org/mockito/Mockito.html#argument_matchers)
+
+
+
+# 5 호출 검증하기
 
 ```java
 //using mock
@@ -139,23 +144,26 @@ verify(mockedList, atMost(5)).add("three times");
 
 
 
+# 6 BDD
+
+* Behavior Driven Development
+* package: `org.mockito.BDDMockito`
+
+```java
+
+import static org.mockito.BDDMockito.*;
+
+given(seller.askForBread()).willReturn(new Bread());
+willDoNothing().given(wpayUserRepository).findByUserId(DEFAULT_USER_ID);
+```
 
 
-#### mockMvc response body 한글 깨짐
-
-* 요청 accept header에 charset=UTF-8을 추가
-
-  * ```java
-    this.mockMvc.perform( post("/someUrl") .accept(MediaType.APPLICATION_JSON_UTF8) .params(params) .cookie(getLoginCookie()) )
-    ```
-
-* .getContentAsString() 대신 .getContentAsString(StandardCharsets.UTF_8) 사용하기
-
-  * ```java
-    String contentAsString = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
-    ```
-
-    
 
 
+
+
+
+참고
+
+* https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
 

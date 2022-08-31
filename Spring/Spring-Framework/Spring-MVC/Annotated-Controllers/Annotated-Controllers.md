@@ -149,7 +149,13 @@ public String requestParamV2(@RequestParam("username") String memberName,
 
 
 
-## 3.2 @ModelAttribute
+## 3.2 @RequestPart
+
+
+
+
+
+## 3.3 @ModelAttribute
 
 * 클라이언트가 쿼리 파라미터나 HTML Form으로 데이터를 전달할 때 @ModelAttribute를 사용해 아규먼트에 바인딩할 수 있다.
 * 개발시 요청 파라미터를 받아 객체를 생성하는 일이 자주 발생한다.
@@ -187,7 +193,7 @@ public String modelAttributeV1(@ModelAttribute HelloData helloData) {
 
 
 
-## 3.3 UriComponentsBuilder
+## 3.4 UriComponentsBuilder
 
 * 현재 요청의 호스트, 포트, 프로토콜, 컨텍스트 패스를 이용해서 URL을 만들 때 사용한다.
 
@@ -208,6 +214,10 @@ public ResponseEntity<CommonResponse> registerSimulation(@PathVariable String us
   return ResponseEntity.created(location).body(commonResponse);
 }
 ```
+
+
+
+## 
 
 
 
