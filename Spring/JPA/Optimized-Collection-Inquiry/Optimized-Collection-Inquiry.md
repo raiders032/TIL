@@ -7,6 +7,8 @@
 * `OrderItem` 과 `Item` 은 다대일 관계이다.
 * 연관 관계는 모두 `fetch = FetchType.LAZY` 로 설정되어 있다.
 
+
+
 # 2 엔티티 조회
 
 
@@ -250,7 +252,7 @@ default_batch_fetch_size: 1000
 
 
 
-# 3. DTO 조회
+# 3 DTO 조회
 
 ## 3.1 DTO 직접 조회
 
@@ -511,7 +513,9 @@ public List<OrderQueryDto> ordersV6() {
   * 3.1은 N+1 문제 발생
 * 3.3은 쿼리 한번으로 최적화 되어 좋아보이지만 Order를 기준으로 페이징이 불가능하다
 
-# 4. 권장 순서
+
+
+# 4 권장 순서
 
 1. 엔티티 조회 방식으로 우선접근
    1. 페치조인으로 쿼리 수를 최적화

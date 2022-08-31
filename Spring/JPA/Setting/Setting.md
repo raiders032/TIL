@@ -81,10 +81,9 @@ logging:
     org:
       hibernate:
         SQL: trace # logger를 통해 하이버네이트 실행 SQL을 남긴다
-        type: trace # 바인딩된 파라미터를 보여준다 
-          type:
-            descriptor:
-            	sql: trace # 바인딩된 파라미터를 보여준다 
+        type:
+          descriptor:
+            sql: trace # 바인딩된 파라미터를 보여준다 
  spring:
    jpa:
      properties:

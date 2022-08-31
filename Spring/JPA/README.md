@@ -15,7 +15,14 @@
 * [영속성 관리](Persistence-Context-Management/Persistence-Context-Management.md)
 * [엔티티 매핑](entity-mapping/entity-mapping.md)
 * [연관관계 매핑](Relationship-Mapping/Relationship-Mapping.md)
+  * @ManyToOne, @OneToMany, @OneToOne
+  * @JoinColumn
+  * @Inheritance, @DiscriminatorColumn, @DiscriminatorValue
+  * @MappedSuperclass
+
 * [프록시와 연관관계 관리](Proxy-And-Relationship-Management/Proxy-And-Relationship-Management.md)
+  * 프록시, 즉시로딩, 지연로딩
+
 * [값 타입](Value-Type/Value-Type.md)
 * [JPQL](JPQL/JPQL.md)
 * [지연 로딩과 조회 성능 최적화](Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)

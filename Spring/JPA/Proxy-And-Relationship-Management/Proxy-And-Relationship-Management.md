@@ -57,10 +57,14 @@ member.getName();
 
 * `PersistenceUnitUtil.isLoaded(Object entity)`
 
+
+
 **프록시 클래스 확인 방법**  
 
 * entity.getClass().getName() 
 * 출력(..javasist.. or HibernateProxy...)
+
+
 
 **프록시 강제 초기화** 
 
@@ -68,14 +72,21 @@ member.getName();
 * JPA 표준은 강제 초기화 없음 
 * 강제 호출: `member.getName()`
 
-# 2 즉시로딩
+
+
+# 2 즉시 로딩
 
 * 엔티티를 조회할 때 연관된 엔티티도 조회한다.
+* 
 * 가급적 지연 로딩만 사용(특히 실무에서)
 * 즉시 로딩을 적용하면 예상하지 못한 SQL이 발생
 * 즉시 로딩은 JPQL에서 N+1 문제를 일으킨다.
 * @ManyToOne, @OneToOne은 기본이 즉시 로딩  -> LAZY로 설정
 * @OneToMany, @ManyToMany는 기본이 지연 로딩
+
+
+
+**Member.class**
 
 
 ```java
@@ -93,13 +104,26 @@ public class Member {
 }
 ```
 
-<img src="./images/image-20210316220330404.png" alt="image-20210316220330404" style="zoom:33%;" />
+
+
+**즉시 로딩 실행 코드**
+
+- 팀의 fetch 속성을 즉시 로딩으로 설정했다.
+- 따라서 멤버를 조회하면 연관된 팀도 함께 조회한다.
+- 대부분의 JPA 구현체는 즉시 로딩을 최적화하기 위해 조인 쿼리를 사용해 쿼리 한번에 멤버와 팀을 가져온다.
+
+```java
+Member member = em.find(Member.class, "member1");
+Team team = member.getTeam();
+```
 
 
 
-# 3. 지연로딩
 
-* 연관된 엔티티를 실제 사용할 때 조횐한다.
+
+# 3 지연 로딩
+
+* 연관된 엔티티를 항상 사용하는 것이 아니기 때문에 연관된 엔티티가 실제 사용될 때까지 데이터베이스 조회를 지연하는 방법은 `지연 로딩`이라 한다.
 
 ```java
 @Entity
@@ -132,7 +156,7 @@ public class Member {
 * JPQL fetch 조인이나, 엔티티 그래프 기능을 사용해라! 
 * 즉시 로딩은 상상하지 못한 쿼리가 나간다.
 
-# 4. 영속성 전이: CASCADE 
+# 4 영속성 전이: CASCADE 
 
 > 특정 엔티티를 영속 상태로 만들 때 연관된 엔티티도 함께 영속 상태로 만들도 싶을 때 사용한다.
 
@@ -167,7 +191,7 @@ public class Member {
 * REFRESH: REFRESH 
 * DETACH: DETACH
 
-# 5. 고아 객체
+# 5 고아 객체
 
 * 고아 객체 제거란 부모 엔티티와 연관관계가 끊어진 자식 엔티티를 자동으로 삭제하는 기능이다
 * 부모 엔티티의 컬렉션에서 자식 엔티티의 참조만 제거하면 자식 엔티티가 자동으로 삭제됨
