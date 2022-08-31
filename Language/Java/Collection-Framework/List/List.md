@@ -194,11 +194,32 @@ ArrayList<Integer> integers = new ArrayList<>(30);
 
 # 4 어떤 구현체를 사용해야 될까?
 
-* 대부분의 경우 ArrayList를 사용하게 될 것이다.
-  * ArrayList는 원소 접근이 O(1)이기 때문에
-* List의 맨 앞에 원소를 추가하는 경우가 또는 중간에 원소를 삽입하거나 삭제하는 일이 빈번하다면 LinkedList를 사용하는 것이 좋다
-  * 이러한 연산은 LinkedList는 O(1)이지만  ArrayList는 O(N)이기 때문이다.
-* 보통 ArrayList가 더 빠르기 때문에 LinkedList를 사용하기 전 performance를 측정하는 편이 좋다.
+* 보통 ArrayList가 더 빠르기 때문에 대부분의 경우 ArrayList를 사용하게 될 것이다. 
+* LinkedList를 사용하기 전에 performance를 측정하는 편이 좋다.
+
+
+
+**조회 성능**
+
+- ArrayList: O(1)
+
+* LinkedList: O(N)
+
+
+
+**맨 앞의 원소 삽입**
+
+- ArrayList: O(N)
+
+* LinkedList: O(1)
+
+
+
+**순회 도중 원소 삭제 및 삽입**
+
+- ArrayList: O(N)
+
+* LinkedList: O(1)
 
 
 

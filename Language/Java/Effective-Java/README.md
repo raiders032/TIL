@@ -69,6 +69,7 @@
 ## Chapter 9 일반적인 프로그래밍 원칙
 
 * [Item 63 문자열 연결은 느리니 주의하라](Chapter9/Item63/Item63.md)
+* [Item65 리플렉션보다는 인터페이스를 사용하라](Chapter9/Item65/Item65.md) 
 
 
 
