@@ -5,7 +5,8 @@
 ## 목록
 
 *  [도커란?](Docker/Docker.md)
-*  [이미지와 컨테이너](Image&Container/Image&Container.md)
+*  [Image](Image/Image.md) 
+*  [Container](Container/Container.md) 
 *  [볼륨](Volume/Volume.md)
 *  [네트워크](Network/Network.md)
 *  [Dockerfile](Dockerfile/Dockerfile.md)

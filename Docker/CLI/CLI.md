@@ -6,13 +6,22 @@
  docker attach [OPTIONS] CONTAINER
 ```
 
+
+
 ---
 
 
 
-## [docker build](https://docs.docker.com/engine/reference/commandline/build/)
+## docker build
 
 > Build an image from a Dockerfile
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/build/)
+- -t 옵션을 사용하지 않으면 16진수 형태의 이름으로 이미지가 만들어지므로 가급적 -t 옵션을 사용하자
+
+
+
+**Usage**
 
 ```shell
 docker build [OPTIONS] PATH | URL | -
@@ -20,41 +29,48 @@ docker build [OPTIONS] PATH | URL | -
 
 
 
+**Options**
+
 | Options     | Description                                             |
 | ----------- | ------------------------------------------------------- |
 | --build-arg | Set build-time variables                                |
 | --tag , -t  | Name and optionally a tag in the ‘name:tag’ format      |
 | --rm        | Remove intermediate containers after a successful build |
 | --file , -f | Name of the Dockerfile (Default is ‘PATH/Dockerfile’)   |
-|             |                                                         |
-|             |                                                         |
-|             |                                                         |
 
 
 
-예시
+**예시**
 
 ```shell
 docker build -t neptunes032/react-test-app -f ./frontend/Dockerfile.dev ./frontend
-
 docker build -t neptunes032/docker-frontend ./frontend
-
 docker build .
 ```
 
 
 
-___
+---
 
 
 
-## [docker commit](https://docs.docker.com/engine/reference/commandline/commit/)
+## docker commit
 
 > Create a new image from a container’s changes
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/commit/)
+
+
+
+**Usage**
 
 ```shell
 docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
 ```
+
+
+
+**Options**
 
 | Name, shorthand    | Default | Description                                                |
 | ------------------ | ------- | ---------------------------------------------------------- |
@@ -62,6 +78,8 @@ docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
 | `--change` , `-c`  |         | Apply Dockerfile instruction to the created image          |
 | `--message` , `-m` |         | Commit message                                             |
 | `--pause` , `-p`   | `true`  | Pause container during commit                              |
+
+
 
 **예시**
 
@@ -72,7 +90,9 @@ docker commit c3f279d17e0a  svendowideit/testimage:version3
 docker commit --change "ENV DEBUG=true" c3f279d17e0a  svendowideit/testimage:version3
 ```
 
-___
+
+
+---
 
 
 
@@ -84,7 +104,9 @@ ___
 docker container ls [OPTIONS]
 ```
 
-___
+
+
+---
 
 
 
@@ -103,7 +125,7 @@ docker container prune [OPTIONS]
 
 
 
-___
+---
 
 
 
@@ -114,6 +136,20 @@ ___
 ```
 docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 ```
+
+
+
+---
+
+
+
+## docker create
+
+> Create a new container
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/create/)
+- 새로운 컨테이너를 생성만 하며 시작하지 않는다.
+- 생성된 컨테이너는 `docker start` 명령어를 통해 시작시킨다.
 
 
 
@@ -183,6 +219,8 @@ ___
 docker images [OPTIONS] [REPOSITORY[:TAG]]
 ```
 
+
+
 ___
 
 
@@ -194,6 +232,8 @@ ___
 ```
 docker image ls [OPTIONS] [REPOSITORY[:TAG]]
 ```
+
+
 
 ___
 
@@ -212,6 +252,8 @@ docker image prune [OPTIONS]
 | --all , -a   | Remove all unused images, not just dangling ones |
 | --filter     | Provide filter values (e.g. ‘until=')            |
 | --force , -f | Do not prompt for confirmation                   |
+
+
 
 ___
 
@@ -233,6 +275,8 @@ docker image rm [OPTIONS] IMAGE [IMAGE...]
 # 모든 이미지 삭제
 docker image rm $(docker images -q) 
 ```
+
+
 
 ___
 
@@ -261,7 +305,29 @@ docker inspect [OPTIONS] NAME|ID [NAME|ID...]
 docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
 ```
 
-___
+
+
+---
+
+
+
+## docker load
+
+> Load an image from a tar archive or STDIN
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/load/)
+
+
+
+**Usage**
+
+```
+$ docker load [OPTIONS]
+```
+
+
+
+---
 
 
 
@@ -292,6 +358,8 @@ ___
 ```shell
 docker network ls [OPTIONS]
 ```
+
+
 
 ___
 
@@ -358,6 +426,8 @@ docker network disconnect [OPTIONS] NETWORK CONTAINER
 
 ---
 
+
+
 ## docker ps
 
 > List containers
@@ -395,7 +465,11 @@ ___
 docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 ```
 
-___
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/pull/)
+
+
+
+---
 
 
 
@@ -407,7 +481,9 @@ ___
 docker push [OPTIONS] NAME[:TAG]
 ```
 
-___
+
+
+---
 
 
 
@@ -415,9 +491,19 @@ ___
 
 > Run a command in a new container
 
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/run/)
+
+
+
+**Usage**
+
 ```
 docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 ```
+
+
+
+**Options**
 
 | Options            | Description                                        |
 | ------------------ | -------------------------------------------------- |
@@ -426,10 +512,10 @@ docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 | --env , -e         | Set environment variables                          |
 | --interactive , -i | Keep STDIN open even if not attached               |
 | --publish , -p     | Publish a container’s port(s) to the host          |
+| --publish-all , -P | Publish all exposed ports to random ports          |
 | --rm               | Automatically remove the container when it exits   |
 | --volume , -v      | Bind mount a volume                                |
 | --tty , -t         | Allocate a pseudo-TTY                              |
-|                    |                                                    |
 
 
 
@@ -450,7 +536,11 @@ docker run -p 3000:80 -d --name feedback-app --rm feedback-node
 docker run -p 127.0.0.1:80:8080/tcp ubuntu bash
 ```
 
+
+
 ___
+
+
 
 ## [docker rm](https://docs.docker.com/engine/reference/commandline/rm/)
 
@@ -477,7 +567,42 @@ docker rm $(docker ps -a -q)
 docker rm $(docker ps --filter status=exited -q)
 ```
 
-___
+
+
+---
+
+
+
+## docker save
+
+> Save one or more images to a tar archive (streamed to STDOUT by default)
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/save/)
+- 이미지를 단일 바이너리 파일로 저장하고 `docker load` 명령어를 통해 단일 바이너리 파일을 다시 도커에 로드한다. 
+
+
+
+**Usage**
+
+```
+$ docker save [OPTIONS] IMAGE [IMAGE...]
+```
+
+
+
+---
+
+
+
+## docker search
+
+> Search the Docker Hub for images
+
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/search/)
+
+
+
+---
 
 
 
@@ -489,7 +614,11 @@ ___
 docker start [OPTIONS] CONTAINER [CONTAINER...]
 ```
 
-___
+- [레퍼런스](https://docs.docker.com/engine/reference/commandline/start/)
+
+
+
+---
 
 
 
@@ -514,7 +643,9 @@ docker stop $(docker ps -a -q)
 
 
 
-___
+---
+
+
 
 ## docker tag
 

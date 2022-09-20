@@ -9,6 +9,12 @@
 * IP 주소는 컨테이너를 **재시작할 때마다 변경**될 수 있다
 * **이 IP 주소는 도커가 설치된 호스트에서만 접근 가능**하다
 
+
+
+**컨테이너 IP 확인**
+
+- 컨테이너 내부에서 ifconfig 명령어를 통해 컨테이너의 네트워크 인터페이스 eh0와 네트워크 인페이스 lo를 확인할 수 있다.
+
 ```bash
 $ docker run -it --name network_test ubuntu:14.04
 
@@ -38,10 +44,13 @@ lo        Link encap:Local Loopback
 * 외부와 연결이 필요한 경우 컨테이너를 시작할 때 `veth`라는 네트워크 인터페이스를 생성해야한다.
 * `veth`: 외부와의 네트워크를 제공하기 위해 필요한 가상 네트워크 인터페이스
 * `veth` 는 사용자가 직접 생성할 필요가 없으며 컨테이너를 생성할 때 도커 엔진이 자동 생성한다.
+* `veth`는 각 컨테이너의 `eth0`와 연결되어 있다.
 
 
 
 **veth 네트워크 인터페이스 확인**
+
+- 도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth가 존재한다.
 
 ```bash
 # 도커가 설치된 호스트에서 현재 2개의 컨테이너가 실행 중
@@ -50,7 +59,7 @@ CONTAINER ID   IMAGE                                   COMMAND                  
 80e9f140fecc   neptunes032/ra-backend:0.0.1-SNAPSHOT   "java -jar /app.jar"     9 minutes ago    Up 9 minutes    0.0.0.0:8080->8080/tcp, :::8080->8080/tcp       RA-Backend
 10e55ed604e1   mongo                                   "docker-entrypoint.s…"   12 minutes ago   Up 12 minutes   0.0.0.0:27017->27017/tcp, :::27017->27017/tcp   mongodb
 
-#도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth를 확인할 수 있다
+# 도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth를 확인할 수 있다
 $ ifconfig
 ...
 veth8f01bdc: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -151,6 +160,9 @@ lo        Link encap:Local Loopback
 * 드라이버로 `host`를 선택하면 별도의 포트 포워딩 없이 외부에서 접근할 수 있다
 * 여러개의 컨테이너를 실행하는 환경에서는 적합하지 않다.
   * 포트 충돌이 발생할 수 있다
+* 예를 들어 호스트 모드를 쓰는 컨테이너에서 아파치 웹 서버를 구동하면 호스트의 IP와 컨테이너의 아파치 웹 서버 포트인 80으로 바로 접근이 가능하다
+
+
 
 ```bash
 # 호스트와 컨테이너 내부에서 ifconfig 결과가 같다
@@ -241,3 +253,10 @@ lo        Link encap:Local Loopback
 3. 컨테이너에서 다른 컨테이너로
    * 같은 도커 네트워크에 있다면 컨테이너의 이름을 도메인으로 사용한다.
      * 도커에 의해 컨테이너의 ip address로 변환된다.
+
+
+
+참고
+
+* [Kubernetes and Docker - An Enterprise Guide](https://www.amazon.com/Kubernetes-Docker-Effectively-containerize-applications/dp/183921340X)
+* [시작하세요! 도커/쿠버네티스](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791158392291)
