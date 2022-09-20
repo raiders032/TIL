@@ -226,7 +226,9 @@ parent.getChildren().remove(0);
 >
 > 개념적으로 부모를 제거하면 자식은 고아가 된다. 따라서 고아 객체 제거 기능을 활성화 하면, 부모를 제거할 때 자식도 함께 제거된다. 이것은 CascadeType.REMOVE처럼 동작한다.
 
-# 6. 영속성전이+고아객체, 생명주기
+
+
+# 6 영속성전이+고아객체, 생명주기
 
 * CascadeType.ALL + orphanRemovel=true
 * 스스로 생명주기를 관리하는 엔티티는 em.persist()로 영속화, em.remove()로 제거

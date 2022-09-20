@@ -14,6 +14,9 @@
 
 * [영속성 관리](Persistence-Context-Management/Persistence-Context-Management.md)
 * [엔티티 매핑](entity-mapping/entity-mapping.md)
+  * @Entity, @Table, @Id, @Column, @Enumerated
+  * DDL 생성 기능
+
 * [연관관계 매핑](Relationship-Mapping/Relationship-Mapping.md)
   * @ManyToOne, @OneToMany, @OneToOne
   * @JoinColumn

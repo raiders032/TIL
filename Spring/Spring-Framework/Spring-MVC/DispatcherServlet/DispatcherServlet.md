@@ -6,8 +6,8 @@
 * `DispatcherServlet`은 설정 가능한 여러 요소들에게 일을 위임시키는 방식으로 동작한다. 
   * 이러한 방식은 유연성을 제공해 다양한 작업 방식을 지원한다.
 * DispacherServlet 도 부모 클래스에서 HttpServlet 을 상속 받아서 사용하고, 서블릿으로 동작한다.
-* `DispatcherServlet` 은 다른 `Servlet` 과 마찬가지로 Servlet specification에 따라 선언되고 매핑되어야 하는데 이때 specification으로 Java configuration 또는 `web.xml` 을 사용할 수 있다.
-* 스프링 부트는 DispacherServlet 을 서블릿으로 자동으로 등록하면서 **모든 경로**( urlPatterns="/" )에 대해서 매핑한다.
+* `DispatcherServlet`은 다른 `Servlet` 과 마찬가지로 Servlet specification에 따라 선언되고 매핑되어야 하는데 이때 specification으로 Java configuration 또는 `web.xml` 을 사용할 수 있다.
+* 스프링 부트는 `DispacherServlet`을 서블릿으로 자동으로 등록하면서 **모든 경로**( urlPatterns="/" )에 대해서 매핑한다.
 
 
 
@@ -169,6 +169,8 @@ public class SpringMemberFormControllerV1 {
    * HttpRequestHandler 처리
 3. SimpleControllerHandlerAdapter
    * Controller 인터페이스(애노테이션X, 과거에 사용)
+
+
 
 # 5 뷰 리졸버
 
