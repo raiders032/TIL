@@ -44,12 +44,16 @@ Set-Cookie: yummy_cookie=choco
 Set-Cookie: tasty_cookie=strawberry
 ```
 
+
+
 **쿠키의 생명주기**
 
 * `Set-Cookie: id=a3fWa; Expires=Thu, 31 Oct 2021 07:28:00 GMT;`(만료일 지정 만료일 지나면 쿠키 삭제)
 * Set-Cookie: max-age=3600(3600초)
 * 세션 쿠키: 만료 날짜를 생략하면 브라우저 종료시 까지만 유지
 * 영속 쿠키: 만료 날짜를 입력하면 해당 날짜까지 유지
+
+
 
 **Domain**
 
@@ -61,6 +65,8 @@ Set-Cookie: tasty_cookie=strawberry
   * 현재 문서 기준 도메인만 적용
   * Ex) example.org에서 Domain 생략하고 쿠키 생성 -> `example.org`
 
+
+
 **Path**
 
 * Path을 명시하면 클라이언트가 명시된 Path에만 쿠키를 전송한다 
@@ -68,6 +74,8 @@ Set-Cookie: tasty_cookie=strawberry
 * 예시) `path=/home` -> 
   * /home, home/level1, home/level1/level2 -> 전부 가능
   * /hello -> 불가능
+
+
 
 **Secure**
 
@@ -104,6 +112,8 @@ Cookie: yummy_cookie=choco; tasty_cookie=strawberry
 * 토큰은 해커가 임의의 값을 넣어도 찾을 수 없도록 예상 불가능 해야 한다.
 * 해커가 토큰을 털어가도 시간이 지나면 사용할 수 없도록 서버에서 해당 토큰의 만료시간을 짧게(예: 30분) 유지한다. 
 * 또는 해킹이 의심되는 경우 서버에서 해당 토큰을 강제로 제거하면 된다.
+
+
 
 # 2 Session
 
