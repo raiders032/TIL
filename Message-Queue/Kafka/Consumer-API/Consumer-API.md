@@ -1,41 +1,51 @@
-# 1. consumer 개념
+# 1 Consumer 개념
 
-* `topic` 의 `partition` 으로 부터 데이터를 가져가기 위해 `consumer`를 운영하는 방법은 크게 2가지다.
-
-1. 1개 이상의 `consumer`로 이루어진 `consumer` 그룹을 운영하는 방법
-2. `topic` 의 특정  `partition`만 구독하는 `consumer`를 운영하는 방법
+- 프로듀서가 토픽으로 메시지를 전송하면 해당 메시지들은 브로커들의 로컬 디스크에 저장된다.
+- 그리고 컨슈머는 토픽에 저장된 메시지를 가져올 수 있다.
 
 
 
-## 1.1 컨슈머 그룹을 운영하는 방법
+## 1.1 컨슈머 그룹
 
-* `consumer`그룹으로 묶인 `consumer`들은 `topic`의 1개 이상  `partition`들에 할당되어 데이터를 가져갈 수 있다.
-*  `partition`은 최대 1개의 `consumer`에게 할당이 가능하다.
-* 이러한 특징으로 `consumer` 그룹의 `consumer`의 수는 `topic`의 `partition`의 개수보다 작거나 같다.
-  * `consumer` 의 수가 `partition` 의 수를 넘어가면  `consumer의 수 - partition의 수` 만큼의 `consumer`가 유휴 상태가 된다. 
-
+- 컨슈머 그룹은 하나 이상의 컨슈머가 모여있는 그룹을 의미한다.
+- 컨슈머는 반드시 컨슈머 그룹에 속하게 된다.
+- 컨슈머 그룹은 각 파티션의 리더에게 카프카 토픽에 저장된 메시지를 가져오기 위한 요청을 보낸다.
 
 
-**컨슈머 그룹의 컨슈머에게 장애가 발생한다면?**
 
-* 장애간 발생한 `consumer`에 할당된 `partition`은 정상 작동하는 `consumer`에 소유권이 넘어간다.
+## 1.2 파티션과 컨슈머
+
+- 컨슈머 그룹으로 묶인 `컨슈머는 1개 이상의 파티션을 할당`받아 데이터를 가져갈 수 있다.
+- 반대로 `파티션은 최대 1개의 컨슈머에게 할당`이 가능하다.
+- 이러한 특징으로 컨슈머 그룹의 컨슈머의 수는 토픽의 파티션의 개수보다 작거나 같다.
+- 컨슈머의 수가 파티션의 수를 넘어가면 `컨슈머의 수 - 파티션의 수` 만큼의 컨슈머가 유휴 상태가 된다.
+- 따라서 파티션의 수와 컨슈머의 수가 일대일로 매핑되는 것이 이상적이다.
+- 컨슈머 그룹내에서 리밸런싱 동작을 통해 장애가 발생한 컨슈머의 역할을 동일한 그룹에 있는 다른 컨슈머에게 할당한다
+  - 따라서 굳이 장애 대비를 위해 파티션 보다 많은 컨슈머를 이용할 이유가 없다.
+
+
+
+## 1.3 Rebalancing
+
+- 컨슈머 그룹의 한 컨슈머에서 장애가 발생하면 어떤일이 벌어진까?
+
+* 장애간 발생한 컨슈머에 할당된 파티션은 정상 작동하는 같은 컨슈머 그룹의 다른 컨슈머로 소유권이 넘어간다.
 * 이를 `rebalancing`이라 한다.
+* rebalancing 은 자주 일어나서는 안 된다.
+  * rebalancing이 발생 할 때 컨슈머 그룹의 컨슈머들이 토픽의 데이터를 읽을 수 없기 때문
+* group coordinator는 rebalancing을 발동시키는 역할을 한다.
+  * broker중 하나가 group coordinator역할을 한다.
 
 
 
-## 1.2 Rebalancing
+**`rebalancing`은 두가지 상황에서 발생한다.**
 
-* `rebalancing`은 두가지 상황에서 발생한다.
-  1. 그룹에  `consumer`가 추가되는 상황
-  2. 그룹에  `consumer`가 제외되는 상황
-* `rebalancing` 은 자주 일어나서는 안 된다.
-  * `rebalancing`이 발생 할 때 `consumer` 그룹의 `consumer`들이 `topic`의 데이터를 읽을 수 없기 때문
-* `group coordinator`는 `rebalancing`을 발동시키는 역할을 한다.
-  * `broker중` 하나가 group coordinator역할을 한다.
+1. 그룹에  `consumer`가 추가되는 상황
+2. 그룹에  `consumer`가 제외되는 상황
 
 
 
-## 1.3 Commit
+## 1.4 Commit
 
 * `consumer`는 카프카 `broker`로부터 데이터를 어디까지 가져갔는지 `commit`을 통해 기록한다.
 * 특정 `topic`의 `partition`을 어떤 `consumer`그룹이 몇 번째 가져갔는지 `broker` 내부에 기록된다.
@@ -48,7 +58,7 @@
 
 
 
-# 2. 컨슈머 API
+# 2 컨슈머 API
 
 * `producer`가 전송한 데이터는 `broker`에 적재된다.
 * `consumer`는 적재된 데이터를 사용하기 위해 `broker`로부터 데이터를 가져와 처리한다.
@@ -142,67 +152,9 @@ public class SimpleConsumer {
 
 
 
-## 2.2 Consumer 옵션
-
-**필수 옵션**
-
-`bootstrap.servers` 
-
-* `consummer`가 데이터를 가져올 대상 카프카 클러스터에 속한 브로커의 호스트 이름
-* 포트를 1개 이상 작성한다.
-* 2개 이상 브로커 정보를 입력하여 일부 브로커에 이슈가 발생하더라도 접속하는 데에 이슈가 없도록 설정 가능하다.
-
-`key.serializer`
-
-* 레코드의 메시지 키를 역직렬화하는 클래스를 지정한다.
-
-`value.serializer`
-
-* 레코드의 메시지 값을 역직렬화하는 클래스를 지정한다.
-
-**선택 옵션**
-
-`group.id`
-
-* `consummer`의 그룹 아이디를 지정한다.
-* `subscribe()`메서드로 `topic`을 구독하여 사용할 때 이 옵션을 필수로 넣어야한다. 기본값은 `null`이다.
-
-`auto.offset.reset`
-
-* `consummer` 그룹이 특정 `partition` 을 읽을 때 저장된 오프셋이 없는 경우 어느 오프셋부터 읽을지 설정한다.
-* `auto.offset.reset=latest` : 가장 최근 오프셋부터 읽기 시작
-* `auto.offset.reset=earliest` : 가장 낮은 오프셋부터 읽기 시작
-* `auto.offset.reset=none` : `consummer` 그룹이 `commit` 한 기록이 있는지 확인 후 없다면 오류 반환 있으면 기존 `commit` 이후 오프셋부터 읽는다.
-
-`enable.auto.commit`
-
-* 자동 `commit` 을 설정한다.
-* 기본값 `true`
-
-`auto.commit.interval.ms`
-
-* 자동 `commit`일 경우 오프셋 `commit` 간격을 지정한다.
-* 기본값 5000(5초)
-
-`max.poll.records`
-
-* `poll()` 메서드를 통해 반환되는 `record` 의 개수를 설정한다.
-* 기본값 500
-
-`session.timeout.ms`
-
-* `consummer`가 `broker` 와 연결이 끊기는 최대 시간을 설정한다.
-* 이 시간 내에 하트 비트를 전송하지 않으면 `broker`는 `consumer`가 이슈가 발생했다고 가정하고 `rebalancing` 을 시작한다.
-* 기본값 10000(10초)
-
-`hartbeat.interval.ms`
-
-* 하트비트를 전송하는 간격을 설정한다.
-* 기본값 3000(3초)
 
 
-
-## 2.3 동기 오프셋 commit
+## 2.2 동기 오프셋 commit
 
 * `poll()` 메서드 이후에 `commitSync()` 메서드를 호출하여 오프셋을 명시적으로 `commit`할 수 있다.
 
@@ -249,7 +201,7 @@ public class ConsumerWithSyncCommit {
 
 
 
-## 2.4 비동기 오프셋 commit
+## 2.3 비동기 오프셋 commit
 
 * 동기 오프셋 커밋을 사용할 경우 커밋 응답을 기다리는 동안 데이터 처리가 일시적으로 중단되는 단점이있다.
 * 이 때 비동기 오프셋 커밋을 사용할 수 있다.
@@ -313,7 +265,7 @@ public class ConsumerWithASyncCommit {
 
 
 
-## 2.5 리밸런스 리스너를 가진 consumer
+## 2.4 리밸런스 리스너를 가진 consumer
 
 * `consumer` 그룹에서 `consumer`가 추가 또는 제거되면 `partition` 을 `consumer`에게 재할당하는 과정인 `rebalacing` 과정이 발생한다.
 * `poll()` 메서드를 통해 반환받은 데이터를 모두 처리하기 전에 `rebalacing` 이 일어나면 데이터를 중복 처리할 수 있다.
@@ -410,7 +362,7 @@ public class ConsumerWithRebalanceListener {
 
 
 
-## 2.6 Consumer의 안전한 종료
+## 2.5 Consumer의 안전한 종료
 
 * 정상적으로 종료되지 않은 `consumer` 는 세션 타임아웃이 발생할때가지 `consumer` 그룹에 남게된다.
   * 더는 동작하지 않는 `consumer` 때문에 파티션의 데이터는 소모되지 못하고 `consumer` 랙이 늘어나게 된다.
@@ -467,3 +419,72 @@ public class ConsumerWithSyncOffsetCommit {
   * 셧다운 훅이랑 사용자 또는 운영체제로부터 종료 요청을 받으면 실행되는 스레드를 뜻한다.
   * 셧다운 훅이 발생되면 사용자가 정의한 ShutdownThread 스레드가 실행되면서 `wakeup()` 메서드가 호출되어 컨슈머를 안전하게 종료할 수 있다.
 
+
+
+
+
+# 3 Consumer 옵션
+
+## 3.1 필수 옵션
+
+`bootstrap.servers` 
+
+* `consummer`가 데이터를 가져올 대상 카프카 클러스터에 속한 브로커의 호스트 이름
+* 포트를 1개 이상 작성한다.
+* 2개 이상 브로커 정보를 입력하여 일부 브로커에 이슈가 발생하더라도 접속하는 데에 이슈가 없도록 설정 가능하다.
+
+`key.serializer`
+
+* 레코드의 메시지 키를 역직렬화하는 클래스를 지정한다.
+
+`value.serializer`
+
+* 레코드의 메시지 값을 역직렬화하는 클래스를 지정한다.
+
+
+
+## 3.2 선택 옵션
+
+`group.id`
+
+* `consummer`의 그룹 아이디를 지정한다.
+* `subscribe()`메서드로 `topic`을 구독하여 사용할 때 이 옵션을 필수로 넣어야한다. 기본값은 `null`이다.
+
+`auto.offset.reset`
+
+* `consummer` 그룹이 특정 `partition` 을 읽을 때 저장된 오프셋이 없는 경우 어느 오프셋부터 읽을지 설정한다.
+* `auto.offset.reset=latest` : 가장 최근 오프셋부터 읽기 시작
+* `auto.offset.reset=earliest` : 가장 낮은 오프셋부터 읽기 시작
+* `auto.offset.reset=none` : `consummer` 그룹이 `commit` 한 기록이 있는지 확인 후 없다면 오류 반환 있으면 기존 `commit` 이후 오프셋부터 읽는다.
+
+`enable.auto.commit`
+
+* 자동 `commit` 을 설정한다.
+* 기본값 `true`
+
+`auto.commit.interval.ms`
+
+* 자동 `commit`일 경우 오프셋 `commit` 간격을 지정한다.
+* 기본값 5000(5초)
+
+`max.poll.records`
+
+* `poll()` 메서드를 통해 반환되는 `record` 의 개수를 설정한다.
+* 기본값 500
+
+`session.timeout.ms`
+
+* `consummer`가 `broker` 와 연결이 끊기는 최대 시간을 설정한다.
+* 이 시간 내에 하트 비트를 전송하지 않으면 `broker`는 `consumer`가 이슈가 발생했다고 가정하고 `rebalancing` 을 시작한다.
+* 기본값 10000(10초)
+
+`hartbeat.interval.ms`
+
+* 하트비트를 전송하는 간격을 설정한다.
+* 기본값 3000(3초)
+
+
+
+참고
+
+- [실전 카프카 개발부터 운영까지](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791189909345)
