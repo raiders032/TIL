@@ -7,8 +7,6 @@
 
 
 
-
-
 # 2 Instruction
 
 - 명령어는 소문자로 표기해도 상관은 없지만 일반적으로 대문자로 표기한다.
@@ -91,6 +89,16 @@ CMD command param1 param2 (shell form)
 
 
 
+**예시**
+
+```dockerfile
+ENV MY_NAME="John Doe"
+ENV MY_DOG=Rex\ The\ Dog
+ENV MY_CAT=fluffy
+```
+
+
+
 ## [ADD](https://docs.docker.com/engine/reference/builder/#add)
 
 * 파일을 이미지에 추가한다
@@ -99,6 +107,11 @@ CMD command param1 param2 (shell form)
   * tar 파일을 추가하면 tar 파일을 자동으로 해제해서 추가한다.
 * 가급적 COPY를 사용하는 것이 좋다
   * url이나 tar를 추가할 경우 정확히 어떤 파일이 추가되는지 알 수 없다
+  * 그에 비해 COPY는 컨텍스트로부터 파일을 직접 추가하기 때문에 빌드 시점에 어떤 파일이 추가될지 명확히 알 수 있다.
+
+
+
+**예시**
 
 ```dockerfile
 # “hom” 으로 시작하는 모든 파일을 이미지에 추가한다
@@ -111,7 +124,7 @@ ADD test.txt /absoluteDir/
 
 
 
-> 빌드 컨텍스트
+> **빌드 컨텍스트**
 >
 > 이미지 생성을 위해 필요한 각종 파일, 소스코드, 메타데이터를 담고 있는 디렉토리를 뜻하며 Dockerfile이 위치한 디렉토리가 빌드 컨텍스트가 된다
 
@@ -119,18 +132,23 @@ ADD test.txt /absoluteDir/
 
 ## [COPY](https://docs.docker.com/engine/reference/builder/#copy)
 
-* 파일이나 폴더를 이미지에 복사한다.
+**forms**
 
-* 로컬에서 도커 컨테이너로 복사한다.
+```bash
+COPY [--chown=<user>:<group>] <src>... <dest>
+COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
+```
 
-* <dest> 는 절대경로 또는 `WORKDIR` 으로부터 상대경로이다.
-
-  * ```dockerfile
-    #<WORKDIR>/relativeDir/ 로 복사된다.
-    COPY test.txt relativeDir/
-    ```
-
+* `<src>`의 로컬의 파일 또는 디렉토리를 컨테이너의 파일 시스템 `<dest>` 경로에 복사한다.
+* 여러개의 `<src>` 를 명시할 수 있으며 빌드 컨텍스트로부터 상대 경로다
+* `<dest>` 는 절대경로 또는 `WORKDIR`으로부터 상대경로이다.
 * `.dockerignore`를 사용해 카피 대상에서 제외할 수 있다.
+
+
+
+> **빌드 컨텍스트**
+>
+> 이미지 생성을 위해 필요한 각종 파일, 소스코드, 메타데이터를 담고 있는 디렉토리를 뜻하며 Dockerfile이 위치한 디렉토리가 빌드 컨텍스트가 된다
 
 
 
@@ -139,6 +157,23 @@ ADD test.txt /absoluteDir/
 
 * Anonymous  Volume을 지정할 수 있다.
 * 컨테이너 생성 시 호스트와 공유할 컨테이너 내부의 디렉토리를 설정한다
+* 표기 법으로 JSON 배열 방식과 plain 문자열 방식이 있다.
+  * JSON 배열 방식: `VOLUME ["/myvol", "/var/db"]`
+  * 플레인 문자열 방식: `VOLUME /myvol /var/db` 
+
+
+
+
+**예시**
+
+- 플레인 문자열 방식 예시
+
+```dockerfile
+FROM ubuntu
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol /var/db
+```
 
 
 
@@ -146,8 +181,18 @@ ADD test.txt /absoluteDir/
 
 * docker container를 실행할 user를 지정해준다.
 * 루트 권한이 필요하지 않다면 USER를 사용하는 것이 좋다
+* 일반적으로 RUN 명령어로 사용자의 그룹과 계정을 생성한 뒤 사용한다.
 
 > 기본적으로 컨테이너 내부에서 루트 사용자를 사용하도록 설정된다. 이는 컨테이너가 호스트의 루트 권한을 가질 수 있다는 것을 의미한다. 이는 보안 측면에서 좋지않다. 예를 들면 루트가 소유한 호스트의 디렉토리를 컨테이너에 공유했을 때, 컨테이너 내부에서 공유된 루트 소유의 디렉토리를 마음대로 조작할 수 있다 때문에 최종 배포시에는 컨테이너 내부에 새로운 사용자를 만들어 사용하는 것이 좋다
+
+
+
+**예시**
+
+```dockerfile
+RUN groupadd -r author && useradd -r -g author nys
+USER nys
+```
 
 
 
@@ -164,28 +209,24 @@ ADD test.txt /absoluteDir/
 
 ## [ARG](https://docs.docker.com/engine/reference/builder/#arg)
 
-* `docker build` 로 이미지를 빌드할 때 설정 할 수 있는 옵션을 지정해준다.
-  * 사용자가 빌드 시 `--build-arg <varname>=<value>` 플래그를 사용하여 argument 정의
-  * 사용자가 도커 파일에 정의되지 않은 빌드 argument를 지정하면 빌드가 경고를 출력
-
-
-```bash
-# dockerfile 내부에서 사용할 ARG로 user=what_user를 설정
-docker build --build-arg user=what_user .
-```
+* Dockerfile 내에서 사용될 변수 값을 설정한다.
+* `ARG <name>[=<default value>]` 형태로 지정
+* default 값을 설정하면 빌드시 argument를 전달받지 못했을 때 default 값을 사용한다.
+* `docker build --build-arg <varname>=<value>`명령으로 Dockerfile에서 사용할 argument를 설정한다.
+  * 사용자가 도커 파일에 정의되지 않은 빌드 argument를 지정하면 빌드가 경고를 출력한다
 
 * argument는 Dockerfile 안에서만 사용 가능
   * `CMD` 나 애플리케이션 코드에서 사용 불가
 
 
 
+**예시**
 
-**Dockerfile**
+- `user1`, `buildno`, `gitcommithash`라는 변수를 설정
 
 ```dockerfile
 FROM busybox
 
-# default 값 설정 빌드시 argument를 전달받지 못하면 기본적으로 사용하는 값
 ARG user1=someuser
 ARG buildno
 ARG gitcommithash
@@ -195,9 +236,10 @@ RUN echo "Build number: $buildno"
 RUN echo "Based on commit: $gitcommithash"
 ```
 
-
-
-
+```bash
+# dockerfile 내부에서 사용할 ARG로 user1=what_user를 설정
+docker build --build-arg user1=what_user .
+```
 
 
 
@@ -205,6 +247,7 @@ RUN echo "Based on commit: $gitcommithash"
 
 * 컨테이너가 시작되었을 때  실행할 실행 파일 또는 쉘 스크립트
 * Dockerfile 파일 내에서 1번만 정의가 가능합니다.
+* ENTRYPOINT와 CMD는 컨테이너가 시작될 때 수행할 명령을 지점한다는 공통점이 있다.
 * Overwrite 불가능
   * 예 ) `docker run node init` init이 **ENTRYPOINT** 뒤에 붙어서 실행된다.
 
@@ -213,6 +256,10 @@ RUN echo "Based on commit: $gitcommithash"
 # 3 이미지 생성
 
 * Dockerfile을 사용이 이미지를 생성해 보자
+* docker build 명령어는 Dockerfile에 기록된 대로 컨테이너를 실행한 뒤 완성된 이미지를 만들어 낸다.
+  * Dockerfile에 기록된 명령어를 하나 하나를 스텝이라고 한다.
+  * 하나의 스텝마다 이전 스텝에서 만들어진 이미지로 임시 컨테이너를 생성하고 명령어를 적용하고 이를 이미지로 커밋하고 컨테이너는 삭제한다.
+
 * -t 옵션을 사용하지 않으면 16진수 형태의 이름으로 이미지가 만들어지므로 가급적 -t 옵션을 사용하자
 
 ```bash

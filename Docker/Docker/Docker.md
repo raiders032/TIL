@@ -149,3 +149,33 @@ sudo usermod -a -G docker $USER
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
+
+
+
+# 5 Docker Daemon
+
+- 도커의 구조는 크게 클라이언트로서의 도커와 서버로서의 도커로 나누어진다.
+
+
+
+## 5.1 Docker Daemon이란?
+
+- 실제로 컨테이너를 생성하고 실행하며 이미지를 관리하는 주체는 도커 서버이고 이는 `dockerd` 라는 프로세스로서 동작한다.
+- 도커 엔진은 외부에서 API 입력을 받아 도커 엔진의 기능을 수행하는데 도커 프로세스가 실행되어 서버로서 입력을 받을 준비가 된 상태를 도커 데몬이라고 한다
+
+
+
+## 5.2 Docker 클라이언트
+
+- 도커 데몬에게 API를 입력하기 위해 CLI를 제공하는데 이것이 도커 클라이언트다
+- CLI에서 우리가 자주 사용하는 `docker`가 도커 클라이언트다 
+  -  `which docker` 명령어로 `docker` 명령어의 위치를 알 수 있다.
+
+
+
+**Docker 클라이언트 동작과정**
+
+1. 사용자가 docker version과 같은 도커 명령어를 입력한다
+2. /user/bin/docker(도커 클라이언트)는 var/run/docker.sock 유닉스 소켓을 사용해 도커 데몬에게 명령어를 전달한다.
+3. 도커 데몬은 이 명령어를 파싱하고 작업을 수행항 뒤 결과를 반환한다.
+4. 결과를 받은 도커 클라이언트는 사용자에게 결과를 출력한다.
