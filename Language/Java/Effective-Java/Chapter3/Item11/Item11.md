@@ -17,7 +17,7 @@
 
 
 
-## 1.1 Object 명세 규약
+## 1.1 Object의 hashCode 메서드 명세 규약
 
 ![image-20220306114648863](./images/hashCode.png)
 

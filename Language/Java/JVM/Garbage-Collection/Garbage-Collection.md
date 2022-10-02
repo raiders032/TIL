@@ -128,4 +128,7 @@ Old 영역은 기본적으로 데이터가 가득 차면 GC를 실행한다. GC 
 * https://d2.naver.com/helloworld/1329
 * https://d2.naver.com/helloworld/329631
   * Reachability, Soft, Weak, Phantom Reference
+* https://d2.naver.com/helloworld/37111
+* https://d2.naver.com/helloworld/6043
+* https://d2.naver.com/helloworld/184615
 

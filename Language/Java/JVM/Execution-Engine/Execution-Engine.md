@@ -40,6 +40,13 @@
 
 
 
+**프로파일러**
+
+- 인터프리트 모드로 실행하는 동안 애플리케이션을 모니터링하면서 가장 자주 실행되는 코드 파트를 발견해 JIT 컴파일을 수행한다
+- 특정 메서드가 어느 한계치(임계점)을 넘어가면 프로파일러가 특정 코드 섹션을 컴파일한다.
+
+
+
 # 4 Garbage Collector
 
 * [Garbage-Collection.md](../../Garbage-Collection/Garbage-Collection.md)

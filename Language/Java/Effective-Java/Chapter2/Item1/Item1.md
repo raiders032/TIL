@@ -135,6 +135,8 @@ public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> elementType) {
 
 ## 2.5 정적 팩터리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 된다.
 
+
+
 # 3 정적 팩터리 메서드의 단점
 
 
@@ -150,6 +152,8 @@ public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> elementType) {
 
 - 생성자는 이름이 클래스의 이름과 같아서 명확히 알 수 있다.
 - 하지만 정적 팩터리 메서드는 다른 메서드와 섞여 찾기 어려울 수 있다.
+
+
 
 # 4 정적 팩터리 메서드의 네이밍
 

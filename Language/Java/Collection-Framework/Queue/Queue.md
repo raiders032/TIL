@@ -33,7 +33,7 @@ public interface Queue<E> extends Collection<E> {
 
 * Queue의 메소드는 두 가지의 형태
   * 오퍼레이션 실패 시 예외 발생
-    * `add(e)`, `remove()`, element()
+    * `add(e)`, `remove()`, `element()`
   * 오페리이션 실패 시 특정 값 반환
     * `offer(e)` return `false` 
     * `poll()`, `peek()` return `null`
