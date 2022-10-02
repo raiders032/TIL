@@ -58,6 +58,17 @@
 
 
 
+
+
+# 2 컨슈머 오프셋 관리
+
+- 컨슈머의 동작 중 가장 핵심은 오프셋 관리다.
+- 컨슈머가 메시지를 어디까지 가져왔는지 표시하기 위해 읽은 메시지의 바로 다음 위치를 나타내는 오프셋을 사용한다.
+- 오프셋은 숫자 형태로 나타낸다
+- 컨슈머 그룹은 자신의 오프셋 정보를 카프카에서 가장 안전한 저장소인 토픽에 저장한다.
+
+
+
 # 2 컨슈머 API
 
 * `producer`가 전송한 데이터는 `broker`에 적재된다.
@@ -152,11 +163,12 @@ public class SimpleConsumer {
 
 
 
-
-
 ## 2.2 동기 오프셋 commit
 
 * `poll()` 메서드 이후에 `commitSync()` 메서드를 호출하여 오프셋을 명시적으로 `commit`할 수 있다.
+* 동기 방식은 속도는 느리지만 메시지 손실을 거의 발생하지 않는다.
+* 메시지 손실이란 실제 토픽에는 메시지가 존재하지만 잘못된 오프세 커밋으로 인한 위치 변경으로 컨슈머가 메시지를 가져오지 못하는 경우를 말한다.
+* 메시지 손실을 용납할 수 없는 중요한 처리라면 동기 방식을 권장한다.
 
 
 
@@ -448,7 +460,13 @@ public class ConsumerWithSyncOffsetCommit {
 `group.id`
 
 * `consummer`의 그룹 아이디를 지정한다.
-* `subscribe()`메서드로 `topic`을 구독하여 사용할 때 이 옵션을 필수로 넣어야한다. 기본값은 `null`이다.
+* `subscribe()`메서드로 `topic`을 구독하여 사용할 때 이 옵션을 필수로 넣어야한다. 
+* 기본값은 `null`이다.
+
+`fetch.min.bytes`
+
+- 한 번에 가져올 수 있는 최소 데이터 크기를 지정한다
+- 지정한 크기보다 작은 경우 요청에 응답하지 않고 데이터가 누적될 때까지 기다린다
 
 `auto.offset.reset`
 
@@ -459,7 +477,7 @@ public class ConsumerWithSyncOffsetCommit {
 
 `enable.auto.commit`
 
-* 자동 `commit` 을 설정한다.
+* 백그라운드로 주기적으로 오프셋을  `commit`하도록 설정한다.
 * 기본값 `true`
 
 `auto.commit.interval.ms`
@@ -481,7 +499,16 @@ public class ConsumerWithSyncOffsetCommit {
 `hartbeat.interval.ms`
 
 * 하트비트를 전송하는 간격을 설정한다.
+* `session.timeout.ms` 값과 밀전한 관계가 있으며 `session.timeout.ms` 보다 낮은 값으로 설정해야 한다.
 * 기본값 3000(3초)
+* 일반적으로 `session.timeout.ms`의 1/3으로 설정한다.
+
+
+
+# 4 컨슈머 그룹
+
+- 하나의 컨슈머 그룹 안에 여러개의 컨슈머가 구성될 수 있다.
+- 컨슈머들은 하나의 컨슈머 그룹에 속해 그룹 내의 컨슈머들은 서로의 정보를 공유한다.
 
 
 
