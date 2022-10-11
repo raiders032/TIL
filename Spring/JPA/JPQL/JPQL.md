@@ -1,4 +1,4 @@
-# 1. JPQL
+# 1 JPQL
 
 * JPQL은 객체지향 쿼리 언어이다
 * JPA는 다양한 쿼리 방법을 지원한다.
@@ -24,6 +24,8 @@ String jpql = "select m from Member m where m.age > 18";
 List<Member> result = em.createQuery(jpql, Member.class).getResultList();
 ```
 
+
+
 **실제 실행된 SQL**
 
 ```sql
@@ -40,7 +42,7 @@ where
 
 
 
-# 2.기본 문법과 기능
+# 2 기본 문법과 기능
 
 * 엔티티와 속성은 대소문자 구분
   * member, Member
@@ -280,7 +282,7 @@ List<String> resultList = em.createQuery(query, String.class).getResultList();
 
 
 
-# 3.페치 조인 
+# 3 페치 조인 
 
 * JPQL에서 성능 최적화를 위해 제공하는 기능이다
 * 연관된 엔티티나 컬렉션을 SQL 한 번에 함께 조회하는 것이 가능하다
@@ -416,7 +418,7 @@ WHERE T.NAME = '팀A'
 
   
 
-# 4.경로 표현식
+# 4 경로 표현식
 
 * 경로 표현식이란 jpql에서 `.`으로 객체 그래프를 탐색하는 것
 
@@ -491,7 +493,9 @@ where t.name = '팀A'
   * 즉 **연관 필드(association field)**를 사용하지 말자
 * JPQL에 join을 직접 입력하는 명시적 조인을 항상 사용하자.
 
-# 5.다형성 쿼리
+
+
+# 5 다형성 쿼리
 
 * 조회 대상을 특정 자식으로 한정할 수 있다
 
@@ -517,7 +521,9 @@ select i.* from Item i
 where i.DTYPE = ‘B’ and i.auther = ‘kim’
 ```
 
-# 6.엔티티 직접 사용
+
+
+# 6 엔티티 직접 사용
 
 * JPQL에서 엔티티를 직접 사용하면 SQL에서 해당 엔티티의 기본키 값을 사용
 
@@ -549,7 +555,7 @@ List resultList = em.createQuery(jpql)
 
 
 
-# 7.Named 쿼리
+# 7 Named 쿼리
 
 * 미리 정의해서 이름을 부여해두고 사용하는 JPQL
 * 정적 쿼리

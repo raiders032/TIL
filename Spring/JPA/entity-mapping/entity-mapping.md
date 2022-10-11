@@ -233,6 +233,7 @@ public class Item implements Persistable<String> {
 | insertable, updatable | 등록, 변경 가능 여부                                         | TRUE             |
 | nullable(DDL)         | null 값의 허용 여부를 설정한다. false로 설정하면 DDL 생성 시에 not null 제약조건이 붙는다. |                  |
 | unique(DDL)           | @Table의 uniqueConstraints와 같지만 한 컬럼에 간단히 유니크 제약조건을 걸 때 사용한다. |                  |
+| length                | 문자열을 갖는 컴럼의 경우 문자열의 최대 길이를 지정한다.     | 255              |
 
 
 

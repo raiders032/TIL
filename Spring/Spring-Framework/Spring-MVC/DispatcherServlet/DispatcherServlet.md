@@ -89,11 +89,20 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 ![image-20211016144658997](./images/spring-mvc.png)
 
 1. 핸들러 조회
-   * 매핑되는 핸들러를 찾아온다 즉 uri가 매핑되는 핸들러(컨트롤러) 객체를 찾아서 반환한다.
+   * 디스페처 서블릿은 내부에 HandlerMapping 목록을 가지고 있다.
+   * HandlerMapping을 사용해서 매핑되는 핸들러를 찾는다.
+   * HandlerMapping을 순서대로 사용해 매핑되는 핸들러를 찾으면 바로 반환한다.
+   * 즉 uri가 매핑되는 핸들러(컨트롤러) 객체를 찾아서 반환한다.
+   * DispacherServlet이 가지고 있는 HandlerMapping 목록들
+     * RequestMappingHandlerMapping: 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
+     * BeanNameUrlHandlerMapping: 스프링 빈의 이름으로 핸들러를 찾는다.
 2. 핸들러 어댑터 목록 조회
-   * 핸들러를 실행할 수 있는 핸들러 어댑터를 조회한다.
+   * DispacherServlet은 핸들러 어댑터 리스트를 가지고 있다
+   * 핸들러를 찾았으니 해당 핸들러를 실행시켜줄 핸들러 어댑터를 찾는다.
+   * 가지고 있는 어댑터 목록을 하나씩 조회하며 `adapter.supports()` 메서드를 호출한다.
+   * `adapter.supports()`가 true를 반환하면 해당 어댑터가 핸들러를 실행할 수 있다는 것이다.
 3. 핸들러 어댑터 실행: 
-   * 핸들러 어댑터를 실행한다.
+   * 핸들러 어댑터를 찾았으니 핸들러 어댑터를 통해 핸들러를 실행한다.
 4. 핸들러 실행: 
    * 핸들러 어댑터가 실제 핸들러를 실행한다.
 5. ModelAndView 반환: 
