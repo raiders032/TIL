@@ -42,6 +42,104 @@
 
 
 
+## 3.1 commands
+
+
+
+### 3.1.1 **APPEND**
+
+- key가 이미 존재하고 value가 문자열이면 아래 커먼드의  `value` 를 문자열 끝에 붙인다.
+- 만약  key가 존재하지 않으면 만들고 value로 빈 문자열로 설정한다.
+- [레퍼런스](https://redis.io/commands/append/)
+
+
+
+**Syntax**
+
+```bash
+APPEND key value
+```
+
+
+
+**Examples**
+
+```bash
+redis> EXISTS mykey
+(integer) 0
+redis> APPEND mykey "Hello"
+(integer) 5
+redis> APPEND mykey " World"
+(integer) 11
+redis> GET mykey
+"Hello World"
+```
+
+
+
+### 3.1.2 GET
+
+- key와 쌍이되는 value를 가져온다.
+- key가 존재하지 않으면 `nil` 이 반환된다.
+- [레퍼런스](https://redis.io/commands/get/)
+
+
+
+**Syntax**
+
+```bash
+GET key
+```
+
+
+
+**Examples**
+
+```
+redis> GET nonexisting
+(nil)
+redis> SET mykey "Hello"
+"OK"
+redis> GET mykey
+"Hello"
+```
+
+
+
+### 3.1.3 SET
+
+- key와 쌍이되는 value의 값을 지정한다.
+- 만약 이미 값을 가지고 있는 경우 값의 타입과 관계없이 값을 덮어쓴다
+- [레퍼런스](https://redis.io/commands/set/)
+
+
+
+**Syntax**
+
+```bash
+SET key value [NX | XX] [GET] [EX seconds | PX milliseconds |
+  EXAT unix-time-seconds | PXAT unix-time-milliseconds | KEEPTTL]
+```
+
+
+
+**Examples**
+
+```
+redis> SET mykey "Hello"
+"OK"
+redis> GET mykey
+"Hello"
+redis> SET anotherkey "will expire in a minute" EX 60
+"OK"
+```
+
+
+
+# 4 List
+
+
+
 참고
 
 * https://redis.io/topics/data-types-intro#strings
