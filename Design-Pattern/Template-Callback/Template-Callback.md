@@ -64,6 +64,8 @@ public class TimeLogTemplate {
 }
 ```
 
+
+
 # 3 사용
 
 * Context에 실행 시점에 여러 전략을 인수로 전달해 유연한 사용이 가능 하다
