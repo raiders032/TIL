@@ -93,21 +93,54 @@ strVar3과 strVar4는 문자열이 같음.
 
 # 4 immutable의 장점
 
-**Security**
 
-* 
 
-**Synchronization**
+## 4.1 Caching
 
-* immutable하면 thread safe하다고 말할 수 있다. 그 이유는 객체의 내부 상태가 생성 후 변하지 않기 때문이다.
+- String의 hash 값은 빈번히 사용된다.
+  - HashMap, HashTable, HashSet 등에서
+  - String의 hashCode() 메서드는 빈번히 호출된다는 의미다.
+- String은 immutable하기 때문에 값이 변하지 않는다. 
+  - 따라서 hashCode()를 캐싱을 사용하도록 구현할 수 있다.
 
-**Hashcode Caching**
 
-* 객체의 내부 상태가 생성 후 변하지 않기 때문에 hashCode() 메소드의 결과를 캐싱할 수 있다.
 
-**Performance**
+## 4.2 Security
 
-* *String* pool의 존재로 메모리를 절약할 수 있다.
+**예시**
+
+```java
+void criticalMethod(String userName) {
+  // perform security checks
+  if (!isAlphaNumeric(userName)) {
+    throw new SecurityException(); 
+  }
+
+  // do some secondary tasks
+  initializeDatabase();
+
+  // critical task
+  connection.executeUpdate("UPDATE Customers SET Status = 'Active' " +
+                           " WHERE UserName = '" + userName + "'");
+}
+```
+
+- 만약 스트링이 mutable하다면 executeUpdate() 메서드를 실행할 시점에 보안 점검이 안전한지 확실할 수 없다.
+- userName에 대한 레퍼런스를 criticalMethod를 호출한 메서드가 가지고 있기 때문에 보안 점검 이후에 userName의 값을 바꿀 수 있기 때문이다
+
+
+
+## 4.3 Synchronization
+
+* immutable하면 thread safe하다고 말할 수 있다. 
+* 그 이유는 객체의 내부 상태가 생성 후 변하지 않기 때문이다.
+* 따라서 immutable한 객체는 멀티 스레드가 동시에 접근해도 문제가 되지 않는다.
+
+
+
+## 4.4 Performance
+
+- 오직 하나의 String객체를 String Pool에 생성하고 여러개의 다른 변수들이 하나의 같은 String 객체를 가르키게하여 메모리 자원을 절약할 수 있다.
 
 
 
@@ -173,8 +206,8 @@ while (st.hasMoreTokens()){
 * 클래스 내부 버퍼에 문자열을 저장해 두고 추가, 수정, 삭제 작업을 할 수 있도록 설계되어 있다.
 * StringBuilder와 StringBuffer의 사용법은 동일하다
 * **StringBuilder**는 단일 스레드 환경에서만 사용하도록 설계되어 있다.
-  * **Thread Safe하지 않다.**
-  * **StringBuffer는 Thread Safe**하다
+  * `StringBuilder는 Thread Safe하지 않다.`
+  * `StringBuffer는 Thread Safe하다`
 * 버퍼가 부족할 경우 자동으로 버퍼의 크기를 늘리기 때문에 초기 버퍼의 크기는 그다지 중요하지 않다
 
 
@@ -218,6 +251,8 @@ StringBuilder sb = new StringBuilder("Java");
 
 * 멀티 스레드 환경에서 사용할 수 있도록 동기화가 적용되어 있어 **Thread Safe**하다
 
+
+
 # 9 StringBuilder, StringBuffer 비교
 
 * 메서드에 synchronized 키워드를 적용 멀티 스레드 환경에서도 thread-safe하다
@@ -246,8 +281,6 @@ public synchronized StringBuffer append(String str) {
   return this;
 }
 ```
-
-
 
 
 

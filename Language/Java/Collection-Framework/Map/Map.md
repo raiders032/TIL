@@ -147,6 +147,38 @@ for (Map.Entry<KeyType, ValType> e : m.entrySet())
 
 
 
+**HashTable 클래스**
+
+- method에 synchronized 키워드가 적용되어 한 스레드만 메소드를 실행할 수 있다.
+
+```java
+public class Hashtable<K,V>
+  extends Dictionary<K,V>
+  implements Map<K,V>, Cloneable, java.io.Serializable {
+
+  public synchronized int size() {
+    return count;
+  }
+
+  public synchronized boolean isEmpty() {
+    return count == 0;
+  }
+
+  public synchronized Enumeration<K> keys() {
+    return this.<K>getEnumeration(KEYS);
+  }
+
+  public synchronized Enumeration<V> elements() {
+    return this.<V>getEnumeration(VALUES);
+  }
+
+}
+```
+
+
+
+
+
 **Thread Safe Map**
 
 * Thread Safe한 Map이 필요하다면 HashTable 대신 ConcurrentHashMap을 사용하는 것이 권장된다.

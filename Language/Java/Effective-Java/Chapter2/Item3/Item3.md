@@ -5,7 +5,7 @@
 # 1 싱글턴(Singleton)
 
 * 싱글턴이란 인스턴스를 오직 하나만 생성할 수 있는 클래스
-* [Singleton.md](../../../../Design-Pattern/Singleton/Singleton.md) 참고
+*  [Singleton.md](../../../../../Design-Pattern/Singleton/Singleton.md) 참고
 
 
 
