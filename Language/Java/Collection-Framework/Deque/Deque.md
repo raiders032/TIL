@@ -1,5 +1,6 @@
 # 1 Deque Interface
 
+* Deque는 double-ended-queue를 의미한다.
 * Deque는 Queue와 유사하지만 양쪽 끝에서 삽입과 삭제가 가능한 Collection이다.
 * 보통 덱이라고 발음한다.
 * Deque는 Stack과 Queue의 추상화된 인터페이스라고 생각할 수 있다.
@@ -12,19 +13,27 @@
 **Insert**
 
 * 원소의 수의 제한이 있는 Deque를 사용해 원소를 삽입 하는 경우 `offerFirst(e)` 와 `offerLast(e)` 를 사용한다.
-  * `addFirst(e)`와 `addLast(e)`는 예외를 던지기 때문
+  * `addFirst(e)`와 `addLast(e)`는 용량이 가득차면 예외를 던지기 때문
+
+
 
 **Remove**
 
 * Deque가 비어있는 상태에서 아래 메소드 호출 시
-* `removeFirst()`, `removeLast()`  throw `Exception`
-* `pollFirst()`,  `pollLast()` return ``NULL`.`
+  * `removeFirst()`, `removeLast()`  throw `Exception`
+  * `pollFirst()`,  `pollLast()` return `NULL`
+
+
+
 
 **Retrieve**
 
 * Deque가 비어있는 상태에서 아래 메소드 호출 시
-* `getFirst()`, `getLast()` throw an exception
-* `peekFirst()`,  `peekLast()` return `NULL`.
+  * `getFirst()`, `getLast()` throw an exception
+  * `peekFirst()`,  `peekLast()` return `NULL`.
+
+
+
 
 **Deque 메소드**
 
@@ -47,6 +56,8 @@
 
 * LinkedList는 iterate하기에 좋은 구조가 아니므로 ArrayDeque를 예시로 들겠다.
 
+
+
 ### foreach
 
 ```java
@@ -57,6 +68,8 @@ for (String str : aDeque) {
     System.out.println(str);
 }
 ```
+
+
 
 ### Iterator
 
@@ -72,7 +85,7 @@ for (Iterator<String> iter = aDeque.iterator(); iter.hasNext();  ) {
 
 # 2 ArrayDeque Class
 
-* ArrayDeque를 size 조절이 가능한 Deque Interface의 구현체이다.
+* ArrayDeque는 size 조절이 가능한 Circular Array로 Deque Interface를 구현한 구현체다.
   * 용량 제한이 없다
 * 원소로 null을 허용하지 않는다.
 * thread-safe하지 않다.
@@ -87,6 +100,7 @@ for (Iterator<String> iter = aDeque.iterator(); iter.hasNext();  ) {
 
 * Deque Interface의 구현체
   * List Interface의 구현체이기도 하다
+* ArrayDeque는 Array로 구현했다면 LinkedList는 List로 Deque를 구현했다.
 * 원소로 null을 허용한다.
 * thread-safe하지 않다.
 
@@ -97,6 +111,12 @@ for (Iterator<String> iter = aDeque.iterator(); iter.hasNext();  ) {
 * 성능면에서 ArrayDeque가 LinkedList 보다 좋다.
 * LinkedList는 iterate하기에 좋은 구조가 아니다.
 * LinkedList이 ArrayDeque 보다 메모리를 더 차지한다.
+
+
+
+> 성능 비교 참고
+>
+> - https://www.happycoders.eu/algorithms/array-vs-linked-list/
 
 
 

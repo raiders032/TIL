@@ -40,16 +40,18 @@
 
 * [HashSet](#2-HashSet-Class)
   * 원소를 해시 테이블에 저장
-  * 순서 보장 안함
+  * 원소의 순서를 보장하지 않는다.
+  * 가장 성능이 좋은 구현체
   * [Hash-Table.md](../../../../Computer-Science/Data-Structure/Hash-Table/Hash-Table.md)
   
 * [TreeSet](#3-TreeSet-Class)
   * 원소를 red-black tree에 저장한다.
-  * 원소가 값을 기준으로 순서가 있다.
-
+  * 원소가 값을 기준으로 정렬되어 있다.
+  * 정렬 기능이 추가되어 HashSet가 비교하면 느리다.
+  
 * [LinkedHashSet](#4-LinkedHashSet-Class)
   * 원소를 해시 테이블에 저장
-  * 원소의 삽입 순서를 유지
+  * 원소가 삽입 순서대로 정렬되어 있다.
 
 
 
@@ -61,7 +63,13 @@
 * 원소의 순서가 없는 Set, HashSet은 containsOnly()을 이용해 순서와 관계없이 원소를 가지고 있는지 확인
 * 원소의 순서가 있는 TreeSet, LinkedHashSet은 containsExactly()을 이용해 순서대로 원소를 가지고 있는지 확인
 
-**예시1**
+
+
+**HashSet 사용하기**
+
+- Colletion의 구현체들은 생성자의 인자로 Colletion을 받는다.
+- HashSet도 Collection이기 때문에 Colletion을 인자로 받는 생성자가 있다.
+- 아래와 같이 Colletion의 중복을 제거할 수 있다.
 
 ```java
 @Test
@@ -75,7 +83,11 @@ void removeDuplicateElement1() {
 }
 ```
 
-**예시2**
+
+
+**aggregate operations 사용하기**
+
+- Collection을 Stream으로 변환한후 collect 메서드를 통해 중복을 제거할 수 있다.
 
 ```java
 @Test
@@ -89,9 +101,12 @@ void removeDuplicateElement2() {
 }
 ```
 
-**예시3**
+
+
+**aggregate operations + TreeSet 사용하기**
 
 * TreeSet은 원소의 값을 기준으로 원소들이 순서를 가지고 있다.
+* 순서를 정확이 확인하기 위해 containsExactly 메서드를 사용했다.
 
 ```java
 @Test
@@ -105,9 +120,13 @@ void removeDuplicateElement3() {
 }
 ```
 
-**예시4**
 
-* LinkedHashSet을 이용해 중복 제거 원소의 순서가 삽입 순서이다.
+
+**LinkedHashSet 사용하기**
+
+* LinkedHashSet을 이용해 중복 제거를 할 수 있다
+* 또한 원본 Collection의 순서를 그대로 유지할 수 있다.
+* 아래와 같이 containsExactly 메서드를 사용해 원본 Collection의 원소 순서가 유지되는 것을 볼 수 있다.
 
 ```java
 @Test
@@ -115,26 +134,6 @@ void removeDuplicateElement4() {
   Collection<Integer> collection = Arrays.asList(5, 4, 3, 2, 2, 1);
 
   Collection<Integer> noDups = new LinkedHashSet<>(collection);
-
-  assertThat(noDups.size()).isEqualTo(5);
-  assertThat(noDups).containsExactly(5, 4, 3, 2, 1);
-}
-```
-
-**예시5**
-
-* LinkedHashSet을 이용해 중복 제거 원소의 순서가 삽입 순서이다.
-
-```java
-public static <E> Set<E> removeDups(Collection<E> c) {
-  return new LinkedHashSet<E>(c);
-}
-
-@Test
-void removeDuplicateElement5() {
-  Collection<Integer> collection = Arrays.asList(5, 4, 3, 2, 2, 1);
-
-  Set<Integer> noDups = removeDups(collection);
 
   assertThat(noDups.size()).isEqualTo(5);
   assertThat(noDups).containsExactly(5, 4, 3, 2, 1);
@@ -171,9 +170,13 @@ void removeDuplicateElement5() {
   * HashSet의 대부분의 메소드가 O(1)
   * 반면 TreeSet은 대부분의 메소드가 O(logN)
 
-* HashSet의 중복 판단
-  * 객체를 저장하기 전 먼저 객체의 `hasCode()` 메소드를 호출해서 이미 저장된 객체들의 해시코드와 비교한다.
-  * 동인한 해시코드가 있다면 다시 `equals()` 메소드로 두 객체를 비교해서 `true` 가 나오면 동일한 객체로 판단한다.
+
+
+
+**HashSet의 중복 판단**
+
+* 객체를 저장하기 전 먼저 객체의 `hasCode()` 메소드를 호출해서 이미 저장된 객체들의 해시코드와 비교한다.
+* 동인한 해시코드가 있다면 다시 `equals()` 메소드로 두 객체를 비교해서 `true` 가 나오면 동일한 객체로 판단한다.
 
 
 
@@ -283,6 +286,33 @@ for(String str:set){
   ...
 }
 ```
+
+
+
+
+
+# 5 어떤 구현체를 사용해야 될까?
+
+**HashSet을 사용하는 경우**
+
+- 3가지 구현체 중 성능이 가장 좋기 때문에 원소의 순서가 상관없는 경우 HashSet을 사용하자.
+- 대부분의 연산에서 HashSet은 constant-time TreeSet은 log-time의 성능을 가진다.
+
+
+
+**TreeSet을 사용하는 경우**
+
+- TreeSet은 HashSet보다 느리다
+- 원소의 순서가 필요한 경우 TreeSet을 사용하자
+- 또한 SortedSet 인터페이스의 기능을 사용하고 싶을 때 TreeSet을 사용하자.
+
+
+
+**LinkedHashSet을 사용하는 경우**
+
+- LinkedHashSet의 경우 HashSet과 TreeSet의 중간이라고 할 수 있다.
+- 성능은 HashSet과 비슷하며 원소가 삽입 순서대로 정렬되는 특징이 있다.
+- 성능을 살리며 원소의 삽입 순서를 유지하고 싶은 경우 LinkedHashSet을 사용하자.
 
 
 

@@ -34,6 +34,16 @@ public class EmployeePojo {
 
 
 
+**POJO가 아닌 것**
+
+
+
+```java
+public class Foo extends javax.servlet.http.HttpServlet { ...
+```
+
+
+
 # 2 JavaBean
 
 - JavaBean은 POJO가 되기 위한 조건에 몇 가지 추가적인 조건을 만족한 경우를 의미한다.
