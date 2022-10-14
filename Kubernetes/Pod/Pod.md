@@ -1,4 +1,4 @@
-# 1. pod
+# 1 pod
 
 * 하나 이상의 어플리케이션 컨테이너와 그들의 리소스(volumes, IP, run config)를 가지고있다.
 
@@ -13,7 +13,7 @@
   * 클러스터 밖에서 접근 할 수 없다.
   * pod가 교체되면 IP 주소 또한 바뀐다.
 
-* 한 pod에 포함된 container끼리  localhost를 통해 통신할 수 있다.
+* 한 pod에 포함된 container끼리 localhost를 통해 통신할 수 있다.
 
 * pod는 수명이 짧다. 
 
@@ -31,7 +31,7 @@
 
 
 
-# 2. pod 생성하기
+# 2 pod 생성하기
 
 * pod를 아래처럼 직접 정의해서 사용하는 일은 없다.
 * deployment를 이용해 pod를 관리한다

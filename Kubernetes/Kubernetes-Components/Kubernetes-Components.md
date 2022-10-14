@@ -1,4 +1,4 @@
-# 1. Kubernetes Components
+# 1 Kubernetes Components
 
 ![image-20210930203721871](./images/components.png)
 
@@ -12,7 +12,7 @@
 
 
 
-# 2.Control Plane Components
+# 2 Control Plane Components
 
 > 전체 쿠버네티스 시스템을 관리하고 통제하는 쿠버네티스 컨트롤 플레인을 관장
 
@@ -26,6 +26,7 @@
 ## 2.1 API Server
 
 * Worker Node의 kubelet과 커뮤니케이션 한다.
+* 오직 API Server만이 etcd와 직접적인 커뮤니케이션이 가능하다.
 * kubectl 요청이 API Server에 전달된다
 * API Server가 하는 일
   * 유저 인증
@@ -73,7 +74,7 @@
 
 
 
-# 3. Node Components
+# 3 Node Components
 
 * Node Components에는 docker, kubelet, kube-proxy가 있다.
 * Node Components는 모든 node에서 실행된다
@@ -103,3 +104,9 @@
 
 * 컨테이너 런타임은 컨테이너 실행을 담당하는 소프트웨어이다.
 * 대표적으로 Docker가 있다.
+
+
+
+참고
+
+- https://kubernetes.io/docs/concepts/overview/components/

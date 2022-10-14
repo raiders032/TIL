@@ -1,33 +1,14 @@
 # Kubernetes
 
-* Kubernetes 학습 내용을 정리하는 공간
-
-
-
-## 목록
-
-*  [쿠버네티스의 구성요소](Kubernetes-Components/Kubernetes-Components.md)
-
-
-
-## Kubernetes Objects 정리
-
-* [Pod](Pod/Pod.md)
-* [Replica Set & Deployment](Replica-Set&Deployment/Replica-Set&Deployment.md)
-* [Service](Service/Service.md)
+* [Kubernetes Components](Kubernetes-Components/Kubernetes-Components.md)
+  * Control Plane Components: kube-apiserver, etcd, kube-scheduler, kube-controller-manager
 * [Namespace](Namespace/Namespace.md)
+* [Network](Network/Network.md)
+* [Pod](Pod/Pod.md)
+* [Replica Set And Deployment](Replica-Set-And-Deployment/Replica-Set-And-Deployment.md)
+* [Service](Service/Service.md)
+* [Volume](Volume/Volume.md)
 
-
-
-## 쿠버네티스 설치하기
-
-*  [쿠버네티스 설치](Install/README.md)
-
-
-
-## 쿠버네티스 CLI cheat sheet
-
-*  [kubectl CLI](Kubectl-CLI/Kubectl-CLI.md)
 
 
 
