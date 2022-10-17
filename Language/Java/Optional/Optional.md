@@ -83,6 +83,19 @@ String version = computer.flatMap(Computer::getSoundcard)
   * null은 무형식이며 정보를 포함하고 있지 않으므로 모든 참조 형식에 null을 할당할 수 있다
   * 이런 식으로 null이 퍼졌을 때 애초에 null이 어떤 의미로 사용되었는지 알 수 없다
 
+
+
+## 1.3 Optional의 목적
+
+- Optional은 모든 null 참조를 대체하기 위해 존재하지 않는다. 
+
+- Optional을 사용하면 메서드 시그니처만 봐도 반환 값이 비어있을 수 있다는 것을 알게된다.
+- 따라서 클라이언트가 능동적으로 값이 비어있는 상황을 인지하고 처리하도록 강제하는 것이 Optional의 목적이다.
+
+
+
+
+
 # 2 Optional 만들기
 
 * Optional 객체를 만드는 방법
@@ -96,6 +109,8 @@ String version = computer.flatMap(Computer::getSoundcard)
 ```java
 Optional<Soundcard> sc = Optional.empty();
 ```
+
+
 
 **Optional.java**
 
@@ -135,6 +150,8 @@ Optional<Soundcard> sc = Optional.of(soundcard);
 ```
 Optional<Soundcard> sc = Optional.ofNullable(soundcard);
 ```
+
+
 
 **Optional.java**
 
@@ -212,8 +229,6 @@ public T orElseGet(Supplier<? extends T> supplier) {
   return value != null ? value : supplier.get();
 }
 ```
-
-
 
 
 
@@ -356,6 +371,8 @@ void testFlatMap2() {
 
 > Optional 클래스의 설계자는 Optional의 용도가 선택형 반환값을 지원하는 것이라고 명확하게 못박았다. Optional 클래스는 필드 형식으로 사용할 것을 가정하지 않았으므로 Serializable 인터페이스를 구현하지 않는다 따라서 도메인 모델에 Optional을 사용한다면 직렬화 모델을 사용하는 도구나 프레임워크에서 문제가 될 수 있다
 
+
+
 **프리미티브 타입용 Optional은 따로 있다.**
 
 * 예) OptionalInt, OptionalLong
@@ -364,9 +381,13 @@ void testFlatMap2() {
 * 하지만 Optional의 최대 요소 수는 한 개이므로 성능을 개선할 수 없다
 * 기본형 특화 Optional은 map, flatMap, filter등을 지원하지 않는다
 
+
+
 **Optional을 리턴하는 메소드에서 null을 리턴하지 말자.**
 
 * 또 다시 중첩된 null 확인 코드를 작성하게 될 것이다
+
+
 
 **Collection, Map, Stream Array, Optional은 Opiontal로 감싸지 말 것.**
 

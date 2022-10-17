@@ -164,12 +164,14 @@ void removeDuplicateElement4() {
 
 # 2 HashSet Class
 
+* [레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html)
 * 원소를 해시 테이블에 저장한다.
 * TreeSet, LinkedHashSet과 비교하면 가장 성능이 좋다
   * 대신 원소의 순서를 보장하지 않는다.
   * HashSet의 대부분의 메소드가 O(1)
   * 반면 TreeSet은 대부분의 메소드가 O(logN)
-
+* `null` 원소를 허용한다.
+* `Thread-Safe` 하지 않다.
 
 
 
@@ -201,16 +203,32 @@ public class HashSet<E> ...{
 
 
 
+## 2.1 성능
+
+- `add`, `remove`, `contains` and `size` 메서드는 상수 시간의 성능을 가지고 있다.
+- HastSet의 Iteration은 `instance's size`(원소의 개수) 더하기 `capacity`(버켓의 개수)에 비례한다.
+- Iteration 성능이 중요한 경우 `initial capacity` 를 너무 높게 잡거나 `load factor` 를 너무 낮게 잡으면 안된다.
+
+
+
 # 3 TreeSet Class
 
 > TreeSet은 이진 트리를 기반으로 한 Set 컬렉션이다. 하나의 노드는 노드값인 value와 왼쪽과 오른쪽 자식 노드를 참조하기 위한 두개의 변수로 구성된다.TreeSet에 객체를 저장하면 자동으로 정렬되는데 부모값과 비교해서 작으면 왼쪽 자식 노드에, 높으면 오른쪽 자식 노드에 저장한다.
 
+* [레퍼런스](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html)
 * TreeSet은 원소를 red-black tree에 저장한다.
 * 원소의 값을 기준으로 원소가 순서를 가진다.
   * 따라서 HashSet과 비교하여 상당히 느리다
 * TreeSet의 원소는 저장과 동시에 자동 오름차순 정렬된다. 
 * TreeSet의 원소는 정렬을 위해 java.lang.Comparable을 구현해야 한다.
 * 사용자 정의 클래스를 사용할 경우 java.lang.Comparable의 compareTo()메소드를 오버라이딩 하면 된다.
+* `Thread-Safe` 하지 않다.
+
+
+
+## 3.1 성능
+
+- `add`, `remove`,  `contains` 메서드는 log(n) 시간의 성능을 가지고 있다. 
 
 
 
@@ -245,7 +263,21 @@ public class TreeSet<E> ...{
 
 
 
-## 3.1 [메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html)
+## 3.2 생성자
+
+- 원소의 순서가 필요하므로 원소는 `java.lang.Comparable`을 구현해야한다.
+- Comparable를 구현하지 않은 원소를 정렬하거나 임의의 순서가 필요한 경우  TreeSet 생성시 `java.util.Comparator` 구현체를 넘겨주자.
+
+| Constructor                                 | Description                                                  |
+| :------------------------------------------ | :----------------------------------------------------------- |
+| `TreeSet()`                                 | Constructs a new, empty tree set, sorted according to the natural ordering of its elements. |
+| `TreeSet(Collection<? extends E> c)`        | Constructs a new tree set containing the elements in the specified collection, sorted according to the *natural ordering* of its elements. |
+| `TreeSet(Comparator<? super E> comparator)` | Constructs a new, empty tree set, sorted according to the specified comparator. |
+| `TreeSet(SortedSet<E> s)`                   | Constructs a new tree set containing the same elements and using the same ordering as the specified sorted set. |
+
+
+
+## 3.3 [메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html)
 
 * Set으로부터 상속 받은 메소드 이외에 추가적인 메소드를 알아보자
 * Set과 다르게 TreeSet은 원소의 순서가 있기 때문에 순서와 관련된 메소드를 쓰려면 참조 변수의 타입을 TreeSet으로 하자
@@ -263,10 +295,13 @@ public class TreeSet<E> ...{
 
 # 4 LinkedHashSet Class
 
-* 원소를 해시 테이블에 저장
+* [레퍼런스](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/LinkedHashSet.html)
+* 해시 테이블과 더블 링크드 리스트로 구현됨
 * 원소의 삽입 순서를 유지
 * LinkedHashSet은 HashSet과 TreeSet의 중간 단계라고 생각할 수 있다
 * 성능상 HashSet 보다 아주 조금 느리고 TreeSet 보다 빠르다
+* `Thread-Safe` 하지 않다.
+* `null` 원소를 허용한다.
 
 
 
@@ -288,6 +323,10 @@ for(String str:set){
 ```
 
 
+
+## 4.1 성능
+
+- HashSet과 달리 이터레이션 성능이 `capacity`에 영향을 받지 않는다.
 
 
 
