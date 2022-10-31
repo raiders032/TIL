@@ -66,17 +66,41 @@
 - 컨슈머가 메시지를 어디까지 가져왔는지 표시하기 위해 읽은 메시지의 바로 다음 위치를 나타내는 오프셋을 사용한다.
 - 오프셋은 숫자 형태로 나타낸다
 - 컨슈머 그룹은 자신의 오프셋 정보를 카프카에서 가장 안전한 저장소인 토픽에 저장한다.
+  - `__consumer_offsets` 토픽에 각 컨슈머 그룹별로 오프셋 위치 정보가 기록된다.
 
 
 
-# 2 컨슈머 API
+
+## 2.1 오프셋 관리 동작 과정
+
+- 컨슈머들은 지정된 토픽에서 메시지를 읽을 뒤 읽어온 위치의 오프셋 정보를 `__consumer_offsets` 에 기록합니다.
+- 이 때 컨슈머 그룹, 토픽, 파티션 등의 내용을 통합해 기록한다.
+- 이 기록으로 자신이 속한 컨슈머 그룹의 컨슈머 변경이 일어나면 해당 컨슈머가 어느 위치 까지 읽었는지를 추적할 수 있다.
+
+
+
+## 2.2 `__consumer_offsets` 토픽
+
+- 모든 컨슈머 그룹의 정보가 저장되는 `__consumer_offsets`  토픽은 브로커 설정 파일인 server.properties에서 변경 가능하다.
+
+`offsets.topic.num.partitions`
+
+- 기본값 50
+
+`offsets.topic.replication.factor`
+
+- 기본값 3
+
+
+
+# 3 컨슈머 API
 
 * `producer`가 전송한 데이터는 `broker`에 적재된다.
 * `consumer`는 적재된 데이터를 사용하기 위해 `broker`로부터 데이터를 가져와 처리한다.
 
 
 
-## 2.1 자바 컨슈머 애플리케이션
+## 3.1 자바 컨슈머 애플리케이션
 
 * 자바 애플리케이션으로 간단한 카프카 컨슈머를 구현해보자.
 
@@ -163,7 +187,7 @@ public class SimpleConsumer {
 
 
 
-## 2.2 동기 오프셋 commit
+## 3.2 동기 오프셋 commit
 
 * `poll()` 메서드 이후에 `commitSync()` 메서드를 호출하여 오프셋을 명시적으로 `commit`할 수 있다.
 * 동기 방식은 속도는 느리지만 메시지 손실을 거의 발생하지 않는다.
@@ -213,7 +237,7 @@ public class ConsumerWithSyncCommit {
 
 
 
-## 2.3 비동기 오프셋 commit
+## 3.3 비동기 오프셋 commit
 
 * 동기 오프셋 커밋을 사용할 경우 커밋 응답을 기다리는 동안 데이터 처리가 일시적으로 중단되는 단점이있다.
 * 이 때 비동기 오프셋 커밋을 사용할 수 있다.
@@ -277,7 +301,7 @@ public class ConsumerWithASyncCommit {
 
 
 
-## 2.4 리밸런스 리스너를 가진 consumer
+## 3.4 리밸런스 리스너를 가진 consumer
 
 * `consumer` 그룹에서 `consumer`가 추가 또는 제거되면 `partition` 을 `consumer`에게 재할당하는 과정인 `rebalacing` 과정이 발생한다.
 * `poll()` 메서드를 통해 반환받은 데이터를 모두 처리하기 전에 `rebalacing` 이 일어나면 데이터를 중복 처리할 수 있다.
@@ -374,7 +398,7 @@ public class ConsumerWithRebalanceListener {
 
 
 
-## 2.5 Consumer의 안전한 종료
+## 3.5 Consumer의 안전한 종료
 
 * 정상적으로 종료되지 않은 `consumer` 는 세션 타임아웃이 발생할때가지 `consumer` 그룹에 남게된다.
   * 더는 동작하지 않는 `consumer` 때문에 파티션의 데이터는 소모되지 못하고 `consumer` 랙이 늘어나게 된다.
@@ -435,9 +459,9 @@ public class ConsumerWithSyncOffsetCommit {
 
 
 
-# 3 Consumer 옵션
+# 4 Consumer 옵션
 
-## 3.1 필수 옵션
+## 4.1 필수 옵션
 
 `bootstrap.servers` 
 
@@ -455,7 +479,7 @@ public class ConsumerWithSyncOffsetCommit {
 
 
 
-## 3.2 선택 옵션
+## 4.2 선택 옵션
 
 `group.id`
 
@@ -505,7 +529,7 @@ public class ConsumerWithSyncOffsetCommit {
 
 
 
-# 4 컨슈머 그룹
+# 5 컨슈머 그룹
 
 - 하나의 컨슈머 그룹 안에 여러개의 컨슈머가 구성될 수 있다.
 - 컨슈머들은 하나의 컨슈머 그룹에 속해 그룹 내의 컨슈머들은 서로의 정보를 공유한다.
