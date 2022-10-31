@@ -7,6 +7,9 @@
 * [Pod](Pod/Pod.md)
 * [Replica Set And Deployment](Replica-Set-And-Deployment/Replica-Set-And-Deployment.md)
 * [Service](Service/Service.md)
+  * ClusterIP, NodePort, LoadBalancer, ExternalName
+  * kube-proxy
+  
 * [Volume](Volume/Volume.md)
 
 

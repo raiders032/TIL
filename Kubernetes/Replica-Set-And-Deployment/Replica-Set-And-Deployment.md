@@ -1,5 +1,9 @@
 # 1 Replica Set
 
+- 쿠버네티스 1.8 버전부터 베타로 업데이트되고 1.9 버전에서 정식 버전으로 업데이트 됨
+- 레플리카 셋은 레플리케이션 컨트롤러를 완전히 대체한다.
+- 일반적으로 레플리카셋을 직접 생성하지 않고 상위 수준의 디플로이먼트 리소스를 통해 간접적으로 생성한다.
+
 
 
 ## 1.1 Replica Set을 사용하는 이유
@@ -125,6 +129,13 @@ spec:
   selector:
     matchLabels:
       app: my-nginx
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  strategy:
+  	type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       name: my-nginx-pod
@@ -137,6 +148,30 @@ spec:
         ports:
         - containerPort: 80
 ```
+
+`spec.progressDeadlineSeconds`
+
+- 엡데이트가 되지 않으면 지정된 시간 후에 undo한다.
+
+`spec.revisionHistoryLimit`
+
+- 리비전 최대 저장 개수를 지정한다.
+
+`spec.strategy.type`
+
+- 업데이트 방식을 지정한다.
+
+`spec.strategy.rollingUpdate.maxSurge`
+
+- 지정된 replicas 대비 최대로 허용할 수 있는 파드의 개수를 비율로 지정
+- 기본값 `25%`
+- replicas가 100이라면 최대 125개 까지 파드 수를 늘릴 수 있다.
+
+`spec.strategy.rollingUpdate.maxUnavailable`
+
+- 업데이트시 지정된 replicas 대비 최대로 허용할 수 있는 다운 파드의 개수를 비율로 지정
+- 기본값 `25%`
+- replicas가 100이라면 최대 25개 까지 파드를 다운시킬 수 있다.
 
 
 
@@ -173,7 +208,7 @@ my-nginx-deployment-7484748b57   3         3         3       45s
 **Deployment로 포드 이미지 업데이트 해보기**
 
 * `Deployment`는 포드의 정보를 업데이트함으로써 새로운 레플리카셋을 만들고  레플리카셋이 새로운 포드를 생성한다
-* `-- record=true` 옵션으로 `Deployment`를 변경하면 변경 사항을 기록함으로써 해당 버전의 레플리카셋을 보존한다
+* `--record=true` 옵션으로 `Deployment`를 변경하면 변경 사항을 기록함으로써 해당 버전의 레플리카셋을 보존한다
 
 ```bash
 # Deployment 생성하기
@@ -222,6 +257,109 @@ $ kubectl rollout undo deployment my-nginx-deployment --to-revision=1
 
 
 
+## 2.3 Deployment 업데이트하기
+
+**Creating a Deployment**
+
+- 아래의 `nginx-deployment.yaml`로 실습 진행
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+
+```bash
+$ kubectl apply -f nginx-deployment.yaml --record=true
+```
+
+결과 확인
+
+```bash
+$ kubectl rollout status deployment/nginx-deployment
+deployment "nginx-deployment" successfully rolled out
+```
+
+
+
+**Updating a Deployment**
+
+- 아래와 같은 명령어로 nginx 이미지를 업데이트 할 수 있다.
+
+```bash
+$ kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record=true
+deployment.apps/nginx-deployment image updated
+```
+
+
+
+레플리카셋 확인
+
+- Deployment는 새로운 레플리카셋을 만들어고 pod를 업데이트했다.
+- `68fc675d59` 가 새로운 레플리카셋이고 `7fb96c846b` 는 예전 레플리카셋이다.
+
+```bash
+$ kubectl get rs
+NAME                          DESIRED   CURRENT   READY   AGE
+nginx-deployment-68fc675d59   3         3         3       7s
+nginx-deployment-7fb96c846b   0         0         0       77s
+```
+
+
+
+## 2.4 리비전 롤백
+
+**리비전 목록 보기**
+
+```bash
+$ kubectl rollout history deployment nginx-deployment
+deployment.apps/nginx-deployment
+REVISION  CHANGE-CAUSE
+1         kubectl apply --filename=nginx-deployment.yaml --record=true
+2         kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1 --record=true
+```
+
+
+
+**바로 이전 리비전으로 롤백하기**
+
+```bash
+$ kubectl rollout undo deployment/nginx-deployment
+```
+
+
+
+**특정 리비전으로 롤백하기**
+
+```bash
+$ kubectl rollout undo deployment/nginx-deployment --to-revision=2
+```
+
+
+
+
+
+
+
 참고
 
 * http://www.yes24.com/Product/Goods/84927385
+* https://kubernetes.io/docs/concepts/workloads/controllers/deployment/

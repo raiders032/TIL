@@ -1,4 +1,4 @@
-# 1 pod
+# 1 Pod
 
 * 하나 이상의 어플리케이션 컨테이너와 그들의 리소스(volumes, IP, run config)를 가지고있다.
 
@@ -21,20 +21,46 @@
 
 
 
-**꼭 Pod는 하나의 컨테이너만 가져야할까?**
+**파드에는 항상 하나의 컨테이너만 존재해야 할까?**
 
 * Nginx 컨테이너가 실행되기 위해 부가적인 기능이 필요할 수 있다.
   * 하나의 완전한 어플리케이션을 주된 컨테이너와 보조적인 컨테이너가 구성하는 것
   * 예를 들면 로그 수집를 수집해주는 컨테이너를 Nginx 컨테이너와 함께 포드에 포함시킬 수 있다
-* 이런 부가적인 컨테이너를 사이드카 컨테이너라고 부른다
+* 이런 부가적인 컨테이너를 `사이드카 컨테이너`라고 부른다
 * 사이드카 컨테이너는 포드 내의 다른 컨테이너와 네트워크 환경을 공유하기 때문에 포드에 포함된 컨테이너들은 모두 같은 워커 노드에서 실행된다
 
 
 
-# 2 pod 생성하기
+# 2 Resource sharing and communication
 
-* pod를 아래처럼 직접 정의해서 사용하는 일은 없다.
-* deployment를 이용해 pod를 관리한다
+- [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/#resource-sharing-and-communication)
+- 파드에 속한 컨테이너들은 데이터를 공유, 네트워크 통신을 손쉽게 할 수 있다.
+
+
+
+## 2.1 Storage
+
+- 파드에 공유되는 스토리지 볼륨을 정의할 수 있다.
+- 파드에 속한 모든 컨테이너들은 공유 스토리지에 접근이 가능하다.
+
+
+
+## 2.2 Pod networking
+
+- 파드에 속한 각각의 컨테이너들은 네트워크 네임스페이스를 공유한다.
+  - 동일한 IP 주소를 할당받는다.
+
+- 같은 파드에 속한 컨테이너와 `localhost`로 통신이 가능하다
+
+
+
+# 3 Pod 생성하기
+
+- Pod를 아래처럼 직접 정의해서 사용하는 일은 없다.
+
+* 일반적으로 `Deployment를` 이용해 `Pod`를 관리한다
+
+
 
 **nginx-pod.yml 작성**
 
@@ -74,3 +100,261 @@ $ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
 my-nginx-pod               1/1     Running   0          20s
 ```
+
+
+
+# 4 Container probes
+
+- [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes)
+- kubelet이 컨테이너의 상태를 진단하는데 이를 `probe `라고 한다.
+
+
+
+## 4.1 Check mechanisms
+
+- kubelet은 아래 4 가지 방법을 이용해서 컨테이너의 상태를 진단한다.
+
+**exec**
+
+- 지정된 command를 컨테이너 안에서 실행하고 status code 0 로 끝나면 성공으로 간주한다.
+
+**grpc**
+
+**httpget** 
+
+- 파드의 IP 주소와 지정된 포트와 path로 HTTP GET 요청을 보낸다
+- 응답으로 200에서 400 미만의 status code를 받으면 성공으로 간주한다.
+
+**tcpSocket**
+
+
+
+## 4.2 Types of probe
+
+**livenessProbe**
+
+- 컨테이너가 `실행 중`임을 나타낸다.
+- livenessProbe가 실패하면 kubelet은 해당 컨테이너를 죽이고 restart policy에 따라 후 처리한다.
+
+
+
+**readinessProbe**
+
+- 컨테이너가 `요청을 응답할 준비`가 되었음을 나타낸다.
+- readiness probe가 실패하면 엔드포인트 컨트롤러가 해당 파드의 IP를 모든 서비스의 엔드포인트에서 제거한다.
+
+
+
+**startupProbe**
+
+- 컨테이너의 애플리케이션이 `시작되었음`을 나타낸다.
+- startup probe가 완료되기 전 까지 다른 모든 probe는 비활성화 된다.
+- startup probe가 실패하면 kubelet은 해당 컨테이너를 죽이고 restart policy에 따라 후 처리한다.
+
+
+
+## 4.3 예시
+
+- [Define a liveness command](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command)
+- [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request)
+- [Define a TCP liveness probe](Define a TCP liveness probe)
+
+
+
+# 5 Pod Networking
+
+- 쿠버네티스는 파드 네트워크 솔루션을 직접 제공하지 않는다.
+- 쿠버네티스는 네트워크 모델을 정의했고 이 정의를 구현한 구현체를 사용해 파드 네트워크를 형성한다.
+- 구현체로 weave, flannel, calico 등이 있다.
+
+
+
+## 5.1 Networking Model(CNI)
+
+- 쿠버네티스가 정의한 스펙은 아래와 같다.
+
+1. Every POD should have an IP Address
+2. Every POD should be able to communicate with every other POD in the same node.
+3. Every POD should be able to communicate with every other POD on other nodes without NAT.
+
+
+
+## 5.2 구현체 살펴보기
+
+구현체들이 어떻게 구현했는지 리눅스의 기술을 사용해서 모방해보자. 먼저 아래와 같이 노드 3개가 있고 각각 포드들이 있다. 각각의 컨테이너 마다 네트워크 네임스페이스를 가지고 있다. 이를 연결하기 위해 각각의 노드마다 브리지를 만들고 up 시킨다.
+
+```bash
+$ ip link add v-net-0 type bridge
+$ ip link set dev v-net-0 up
+```
+
+
+
+각각 노드의 브리지는 자신만의 서브넷을 가지고있으며 아래와 같이 각각 브리지 인터페이스에 IP 주소를 할당한다.
+
+![image-20221028200630135](images/image-20221028200630135.png)
+
+
+
+기본 세팅은 끝났고 이제 컨테이너가 생성될 때 마다 적용할 수 있는 스크립트가 필요하다. 스크립트가 하는 일은 아래와 같다. 브리지 네트워크와 연결할 수 있는 veth 쌍을 만들고 하나는 네임스페이스에 다른 하나는 브리지에 연결한다.이후 아이피 주소를 할당하고 인테페이스를 업 상태로 변경한다.
+
+**net-script.sh**
+
+```sh
+# Create veth pair
+ip link add ......
+
+# Attach veth pair
+ip link set ...... ip link set ......
+
+# Assign IP Address
+ip -n <namespace> addr add ...... 
+ip -n <namespace> route add ......
+
+# Bring Up Interface
+ip -n <namespace> link set ...... 
+```
+
+
+
+모든 컨테이너가 생성될 때 해당 스크립트를 실행하면 아래와 같이 컨테이너가 각 브리지의 서브넷 안에서 IP를 할당받은 상태가 된다. 이 상태로 1, 2번 조건을 만족한다. 모든 파드가 IP 주소를 가지고 있고 같은 노드의 파드와 통신할 수 있다.
+
+![image-20221028201522580](images/image-20221028201522580.png)
+
+
+
+아래와 같은 라우팅 테이블을 가지면 각각의 브리지 네트워크를 묶는 10.244.0.0/16 이라는 네트워크 하나로 묶을 수 있다. 다른 포드와 통신이 가능해 진다.
+
+![image-20221028201815872](images/image-20221028201815872.png)
+
+
+
+## 5.3 kubelet and CNI
+
+- 이전 예시로 리눅스 기술을 사용해 파드 네트워크를 구성해 봤다.
+- 파드가 생성될 때 이러한 스크립트를 자동으로 실행시킬 수 없을까?
+- kubelet은 각각의 노드에서 컨테이너를 생성하는 역할을 담당한다.
+- kubelet은 컨테이너를 생성할 때 CNI 기준에 맞는 스크립트를 자동으로 실행해 컨테이너 네트워크 설정을 한다.
+  - `--cni-bin-dir=/etc/cni/bin` :/etc/cni/bin에서 스크립트를 찾아 실행한다
+  - `./net-script.sh add <container> <namespace>` 이러한 스크립트를 실행시킴
+
+
+
+```bash
+ps -aux | grep kubelet
+root        3295  1.7  1.2 1935536 96624 ?       Ssl  13:01   7:59 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --container-runtime=remote --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock --pod-infra-container-image=registry.k8s.io/pause:3.8
+kim        50806  0.0  0.0  19176  2628 pts/0    S+   20:32   0:00 grep --color=auto kubelet
+```
+
+
+
+**net-script.sh**
+
+```sh
+ADD)
+# Create veth pair
+ip link add ......
+
+# Attach veth pair
+ip link set ...... ip link set ......
+
+# Assign IP Address
+ip -n <namespace> addr add ...... 
+ip -n <namespace> route add ......
+
+# Bring Up Interface
+ip -n <namespace> link set ...... 
+
+# DEL
+ip link del
+```
+
+
+
+
+
+
+
+# 6 Static Pod
+
+- Static Pod이란 API server의 관여없이 kubelet 데몬이 직접 관리하는 파드를 말한다.
+- 대부분의 파드는 컨트롤 플레인에 의해서 관리되지만 스태틱 파드는 kubelet이 직접 관리하며 파드가 실패하면 자동으로 재시작한다.
+- kubelet은 자동으로 미러 파드를 만들어 API Server로 부터 보여지지만 관리는 받지 않는다.
+  - 미러 파드는 읽기 전용으로 API Server가 디테일을 볼 수 있지만 수정하거나 삭제할 수 없다.
+
+
+
+**Static Pod 정의하기**
+
+- 파드 디테일을 API server로 부터 받지 않기 때문에 특정 경로에 파드 데피니션 파일을 정의한다.
+- 특정 디렉토리에 pod.yaml을 작성하면 kublet 주기적으로 체크해서 파일에 정의된 파드를 생성하고 파일을 제거하면 파드를 제거한다.
+
+
+
+**경로 설정하기**
+
+- `/etc/kubernetes/manifests` 디렉토리에 아래와 같이 `kubelet.service` 파일을 작성한다.
+
+
+
+**용도**
+
+- 스태픽 파드는 컨트롤 플레인의 관여가 없는 파드이기 때문에 컨트롤 플레인 컴포넌트를 생성할 때 사용된다.
+- 스태틱 파드의 이름 끝에 노드의 이름을 붙인다.
+- 아래의 파드 목록에서 `etcd`, `kube-apiserve`, `kube-controller-manager`, `kube-scheduler`가 스태틱 파드다.
+
+```
+kubectl get pods -n kube-system
+NAME                                  READY   STATUS             RESTARTS          AGE
+coredns-565d847f94-56rrx              1/1     Running            0                 6d14h
+coredns-565d847f94-rjjzq              1/1     Running            0                 6d14h
+etcd-master-node                      1/1     Running            127 (6d14h ago)   6d14h
+kube-apiserver-master-node            1/1     Running            153 (6d14h ago)   6d14h
+kube-controller-manager-master-node   1/1     Running            169 (6d14h ago)   6d14h
+kube-proxy-7rv28                      1/1     Running            0                 6d13h
+kube-proxy-999bd                      0/1     CrashLoopBackOff   1208 (43s ago)    6d13h
+kube-proxy-ntf6g                      1/1     Running            0                 6d13h
+kube-proxy-sd6ww                      1/1     Running            0                 6d13h
+kube-proxy-sxsj9                      1/1     Running            1 (6d14h ago)     6d14h
+kube-scheduler-master-node            1/1     Running            170 (6d14h ago)   6d14h
+```
+
+
+
+# 7 Pod Phase
+
+- [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase)
+
+
+
+## 7.1 Pending
+
+- 포드가 쿠버네티스 클러스터에서 승인되었지만 하나 이상의 컨테이너가 설정되지 않았으며 실행할 준비가 되지 않은 상태
+- 파드가 스케쥴링 되기를 기다리거나 컨테이너 이미지를 다운 받는 상태가 `Pending` 상태이다
+
+
+
+## 7.2 Running
+
+- 포드가 노드에 바인딩되었으며 모든 컨테이너가 생성된 상태를 말한다.
+- 하나 이상의 컨테이너가 아직 실행 중이거나 시작 중 또는 다시 시작 중일 수 있다.
+
+
+
+## 7.3 Succeeded
+
+- 포드의 모든 컨테이너가 성공적으로 종료되었으며 다시 시작되지 않는 상태를 말한다.
+
+
+
+## 7.4 Failed
+
+- Pod의 모든 컨테이너가 종료되었으며 하나 이상의 컨테이너가 오류로 종료된 상태다. 
+- 즉, 컨테이너가 0이 아닌 상태로 종료되었거나 시스템에 의해 종료되었음을 나타낸다.
+
+
+
+참고
+
+- [시작하세요! 도커/쿠버네티스](http://www.yes24.com/Product/Goods/84927385)
+- https://kubernetes.io/docs/concepts/workloads/pods/

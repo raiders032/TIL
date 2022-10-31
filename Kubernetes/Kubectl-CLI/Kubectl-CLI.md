@@ -1,13 +1,13 @@
 # Kubectl 자동 완성
 
-#### BASH
+## BASH
 
 ```bash
 source <(kubectl completion bash) # bash-completion 패키지를 먼저 설치한 후, bash의 자동 완성을 현재 셸에 설정한다
 echo "source <(kubectl completion bash)" >> ~/.bashrc # 자동 완성을 bash 셸에 영구적으로 추가한다
 ```
 
-#### ZSH
+## ZSH
 
 ```bash
 source <(kubectl completion zsh)  # 현재 셸에 zsh의 자동 완성 설정
@@ -16,32 +16,42 @@ echo "[[ $commands[kubectl] ]] && source <(kubectl completion zsh)" >> ~/.zshrc 
 
 
 
-# kubectl apply
+# Basic
 
-> `apply`는 쿠버네티스 리소스를 정의하는 파일을 통해 애플리케이션을 관리한다. `kubectl apply`를 실행하여 클러스터에 리소스를 생성하고 업데이트한다. 이것은 프로덕션 환경에서 쿠버네티스 애플리케이션을 관리할 때 권장된다.
-
-* 쿠버네티스 매니페스트는 JSON이나 YAML로 정의된다.
-* 파일 확장자는 `.yaml` , `.yml`, `.json` 이 사용된다.
-
-```shell
-# 리소스 생성
-kubectl apply -f ./my-manifest.yaml            
-```
+## kubectl create
 
 
 
-# kubectl describe
-
-> 생성된 리소스의 자세한 정보를 확인할 수 있다
+**deployment**
 
 ```bash
-# my-nginx-pod의 자세한 정보 조회하기
-kubectl describe pods my-nginx-pod
+# Usage
+kubectl create deployment NAME --image=image -- [COMMAND] [args...]
+
+# Create a deployment named my-dep that runs the nginx image with 3 replicas
+kubectl create deployment my-dep --image=nginx --replicas=3
+
+# Create a deployment named my-dep that runs the busybox image and expose port 5701
+kubectl create deployment my-dep --image=busybox --port=5701
 ```
 
 
 
-# kubectl get
+**namespace**
+
+```bash
+# Usage
+kubectl create namespace NAME [--dry-run=server|client|none]
+
+# Create a new namespace named my-namespace
+kubectl create namespace my-namespace
+```
+
+
+
+
+
+## kubectl get
 
 > 간단한 정보를 확인할 수 있다
 
@@ -49,6 +59,9 @@ kubectl describe pods my-nginx-pod
 # 네임스페이스 내 모든 파드의 목록 조회
 kubectl get pods
 kubectl get po
+
+# 라벨과 함께 파드 목록 조회
+kubectl get pods --show-labels
 
 # 모든 네임스페이스 내 모든 파드의 목록 조회
 kubectl get pods --all-namespaces
@@ -68,88 +81,59 @@ kubectl get pod --all-namespaces
 
 
 
-# kubectl edit
+## kubectl run
+
+- 특정 이미지를 파드로 실행함
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run)
+
+**Usage**
 
 ```bash
-kubectl edit pod redis
+$ kubectl run NAME --image=image [--env="key=value"] [--port=port] [--dry-run=server|client] [--overrides=inline-json] [--command] -- [COMMAND] [args...]
 ```
-
-
-
-# kubectl scale
 
 ```bash
-# 'foo'라는 레플리카셋을 3으로 스케일
-kubectl scale --replicas=3 rs/foo
+# Start a hazelcast pod and let the container expose port 5701
+kubectl run hazelcast --image=hazelcast/hazelcast --port=5701
 
-# 'foo'라는 deployment를 1으로 스케일
-kubectl scale --replicas=1 deployment foo
+# Dry run; print the corresponding API objects without creating them
+kubectl run nginx --image=nginx --dry-run=client
 
-# "foo.yaml"에 지정된 리소스의 크기를 3으로 스케일
-kubectl scale --replicas=3 -f foo.yaml                          
+# Start the nginx pod using the default command, but use custom arguments (arg1 .. argN) for that command
+kubectl run nginx --image=nginx -- <arg1> <arg2> ... <argN>
+
+# Start the nginx pod using a different command and custom arguments
+kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN
 ```
 
 
 
-# kubectl set
+## kubectl expose
 
-```shell
-# "frontend" 디플로이먼트의 "www" 컨테이너 이미지를 업데이트하는 롤링 업데이트
-kubectl set image deployment/frontend www=image:v2
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#expose)
 
-# "my-nginx-depolyment" deployment의 "nginx"라는 이름을 가지는 컨테이너의 이미지를 "nginx:1.11"로 변경
-kubectl set image deployment my-nginx-deployment nginx=nginx:1.11 --record
-```
-
-
-
-# kubectl rollout
-
-```shell
-# 완료될 때까지 "frontend" 디플로이먼트의 롤링 업데이트 상태를 감시
-kubectl rollout status -w deployment/frontend   
-
-# 이전 디플로이먼트로 롤백
-kubectl rollout undo deployment/frontend
-
-# 현 리비전을 포함한 디플로이먼트의 이력을 체크
-kubectl rollout history deployment/frontendkubectl rollout history deployment/first-app --revision=1
-
-# 특정 리비전으로 롤백
-kubectl rollout undo deployment/frontend --to-revision=2         
-```
-
-
-
-# kubectl run
+**Usage**
 
 ```bash
-# Start a nginx pod.
-kubectl run nginx --image=nginx
-
-kubectl run redis --image=redis --namespace=finance
+$ kubectl expose (-f FILENAME | TYPE NAME) [--port=port] [--protocol=TCP|UDP|SCTP] [--target-port=number-or-name] [--name=name] [--external-ip=external-ip-of-service] [--type=type]
 ```
-
-
-
-# kubectl expose
 
 ```bash
 kubectl expose deployment http-go --port=8080 --target-port=8080 --type=LoadBalancer
+
+#Create a service for a pod valid-pod, which serves on port 444 with the name "frontend"
+kubectl expose pod valid-pod --port=444 --name=frontend
+
+#Create a service for a replicated nginx using replica set, which serves on port 80 and connects to the containers on port 8000
+kubectl expose rs nginx --port=80 --target-port=8000
+
+#Create a service for an nginx deployment, which serves on port 80 and connects to the containers on port 8000
+kubectl expose deployment nginx --port=80 --target-port=8000
 ```
 
 
 
-# kubectl exec
-
-```shell
-# 기존 파드에서 명령 실행(한 개 컨테이너 경우)
-kubectl exec my-pod -- ls /   
-```
-
-
-
-# kubectl delete
+## kubectl delete
 
 ```shell
 # webapp pod 삭제
@@ -167,7 +151,135 @@ kubectl delete namespace production
 
 
 
-# kubectl logs
+
+
+
+
+# APP Management
+
+
+
+## kubectl apply
+
+> `apply`는 쿠버네티스 리소스를 정의하는 파일을 통해 애플리케이션을 관리한다. `kubectl apply`를 실행하여 클러스터에 리소스를 생성하고 업데이트한다. 이것은 프로덕션 환경에서 쿠버네티스 애플리케이션을 관리할 때 권장된다.
+
+* 쿠버네티스 매니페스트는 JSON이나 YAML로 정의된다.
+* 파일 확장자는 `.yaml` , `.yml`, `.json` 이 사용된다.
+
+```shell
+# 리소스 생성
+kubectl apply -f ./my-manifest.yaml            
+```
+
+
+
+## kubectl edit
+
+```bash
+kubectl edit pod redis
+```
+
+
+
+## kubectl label
+
+```bash
+# new-label=awesome 라벨 추가
+kubectl label pods my-pod new-label=awesome
+
+# new-label=awesome 라벨 삭제
+kubectl label pods my-pod new-label-
+```
+
+
+
+## kubectl rollout
+
+```shell
+# 완료될 때까지 "frontend" 디플로이먼트의 롤링 업데이트 상태를 감시
+kubectl rollout status -w deployment/frontend   
+
+# 이전 디플로이먼트로 롤백
+kubectl rollout undo deployment/frontend
+
+# 현 리비전을 포함한 디플로이먼트의 이력을 체크
+kubectl rollout history deployment/frontendkubectl rollout history deployment/first-app --revision=1
+
+# 특정 리비전으로 롤백
+kubectl rollout undo deployment/frontend --to-revision=2         
+```
+
+
+
+## kubectl scale
+
+```bash
+# 'foo'라는 레플리카셋을 3으로 스케일
+kubectl scale --replicas=3 rs/foo
+
+# 'foo'라는 deployment를 1으로 스케일
+kubectl scale --replicas=1 deployment foo
+
+# "foo.yaml"에 지정된 리소스의 크기를 3으로 스케일
+kubectl scale --replicas=3 -f foo.yaml                          
+```
+
+
+
+## kubectl set
+
+```shell
+# "frontend" 디플로이먼트의 "www" 컨테이너 이미지를 업데이트하는 롤링 업데이트
+kubectl set image deployment/frontend www=image:v2
+
+# "my-nginx-depolyment" deployment의 "nginx"라는 이름을 가지는 컨테이너의 이미지를 "nginx:1.11"로 변경
+kubectl set image deployment my-nginx-deployment nginx=nginx:1.11 --record
+```
+
+
+
+# Working with apps
+
+
+
+## kubectl describe
+
+> 생성된 리소스의 자세한 정보를 확인할 수 있다
+
+```bash
+# my-nginx-pod의 자세한 정보 조회하기
+kubectl describe pods my-nginx-pod
+```
+
+
+
+## kubectl exec
+
+- Execute a command in a container.
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec)
+
+
+
+**Usage**
+
+```
+$ kubectl exec (POD | TYPE/NAME) [-c CONTAINER] [flags] -- COMMAND [args...]
+```
+
+```shell
+# Get output from running the 'date' command from pod mypod, using the first container by default
+kubectl exec mypod -- date
+
+# Get output from running the 'date' command in ruby-container from pod mypod
+kubectl exec mypod -c ruby-container -- date
+
+# Switch to raw terminal mode; sends stdin to 'bash' in ruby-container from pod mypod # and sends stdout/stderr from 'bash' back to the client
+kubectl exec mypod -c ruby-container -i -t -- bash -il
+```
+
+
+
+## kubectl logs
 
 > pod의 로그를 확인할 수 있다
 
@@ -178,6 +290,93 @@ kubectl logs my-pod
 
 
 
+# Cluster Management
+
+
+
+## kubectl taint
+
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#taint)
+
+**Usage**
+
+```bash
+$ kubectl taint NODE NAME KEY_1=VAL_1:TAINT_EFFECT_1 ... KEY_N=VAL_N:TAINT_EFFECT_N
+```
+
+
+
+```bash
+#Update node 'foo' with a taint with key 'dedicated' and value 'special-user' and effect 'NoSchedule' # If a taint with that key and effect already exists, its value is replaced as specified
+kubectl taint nodes foo dedicated=special-user:NoSchedule
+
+# remove from node 'foo' the taint with key 'dedicated' and effect 'NoSchedule' if one exists
+kubectl taint nodes foo dedicated:NoSchedule-
+```
+
+
+
+# KUBECTL SETTINGS AND USAGE
+
+
+
+## kubectl explain
+
+- 리소스의 필드 목록을 보여준다.
+
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#explain)
+
+
+
+**USAGE**
+
+```bash
+kubectl explain RESOURCE
+```
+
+```bash
+#Get the documentation of the resource and its fields
+$kubectl explain pods
+KIND:     Pod
+VERSION:  v1
+
+DESCRIPTION:
+     Pod is a collection of containers that can run on a host. This resource is
+     created by clients and scheduled onto hosts.
+
+FIELDS:
+   apiVersion	<string>
+     APIVersion defines the versioned schema of this representation of an
+     object. Servers should convert recognized schemas to the latest internal
+     value, and may reject unrecognized values. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+   kind	<string>
+     Kind is a string value representing the REST resource this object
+     represents. Servers may infer this from the endpoint the client submits
+     requests to. Cannot be updated. In CamelCase. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+
+   metadata	<Object>
+     Standard object's metadata. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+   spec	<Object>
+     Specification of the desired behavior of the pod. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+
+   status	<Object>
+     Most recently observed status of the pod. This data may not be up to date.
+     Populated by the system. Read-only. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+     
+# Get the documentation of a specific field of a resource
+kubectl explain pods.spec.containers
+```
+
+
+
 참고
 
 * https://kubernetes.io/ko/docs/reference/kubectl/cheatsheet/
+* https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-strong-getting-started-strong-

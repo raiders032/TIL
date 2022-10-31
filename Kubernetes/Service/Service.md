@@ -1,26 +1,78 @@
-# 1. Service
+# 1 Service
 
 * pod의 내부 IP 주소를 확인하고 포드로 접근할 수 있지만 이는 로컬 개발 환경 또는 쿠베네티스 클러스터 내부에서만 사용할 수 있다
   * 게다가 포드의 IP 주소는 영속적이지 않아 변할 수 있다
 * Deployment가 pod를 생성할 때 pod를 외부로 노출하지 않는다
   * `containerPort`를 지정해도 pod가 바로 외부로 노출되는 것이 아니다
 * pod를 외부로 노출해 사용자가 접근할 수 있도록 하려면 **Service**라는 오브젝트를 사용해야 한다
-* Service는 여러 종류가 있으나 `ClusterIP`, `NodePort`, `LoadBalancer` 3가지 종류를 주로 사용합니다
+* Service는 여러 종류가 있으나 `ClusterIP`, `NodePort`, `LoadBalancer` 3가지 종류를 주로 사용한다.
 
  
 
-**Service의 핵심 기능**
+## 1.1 Service의 핵심 기능
 
 * 여러 개의 포드에 쉽게 접근할 수 있도록 고유한 도메인 이름을 부여한다
-* 여로 개의 포드에 접근할 때, 요청을 분산하는 로드 밸랜서 기능을 제공한다
+* 여러 개의 포드에 접근할 때, 요청을 분산하는 로드 밸랜서 기능을 제공한다
 * 클라우드 플랫폼의 로드 밸랜서, 클러스터 노드의 포트 등을 통해 포트를 외부로 노출한다
 
 
 
-# 2. ClusterIP
+**가상 아이피**
+
+- 여러개의 파드를 묶어 단일 진입점을 제공하는 것이 서비스다.
+- 서비스는 가상 아이피를 가지고 있고 이 가상 아이피 주소에 요청하면 요청을 로드밸런싱해서 파드로 요청을 전달한다.
+- 모든 노드에는 kube-proxy가 작동 중인데 kube-proxy가 서비스에 가상 아이피를 할당하는 역할을 한다.
+
+
+
+## 1.2 Defining a Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+```
+
+`spec.selector`
+
+* 어떠한 라벨을 가진 포드에 접근할 수 있게 만들지 결정한다
+
+`spec.ports.port`
+
+* 생성된 서비스는 서비스는 클러스터 내부에서 사용할 수 있는 IP를 할당 받는다
+* `spec.ports.port`는 할당 받은 IP에 접근할 때 사용할 포트를 설정한다
+
+`spec.ports.targetPort`
+
+* `selector` 접근하려는 pod들이 내부적으로 사용하고 있는 포트를 입력한다
+* pod 템플릿에 정의된 `containerPort`와 같은 값으로 설정한다
+
+`spec.type`
+
+* 서비스의 타입을 지정한다
+* ClusterIP, NodePort, LoadBalancer 등을 설정할 수 있다
+
+
+
+## 1.3 service의 타입
+
+- ClusterIP, NodePort, LoadBalancer, ExternalName 타입을 제공한다.
+
+
+
+# 2 ClusterIP
 
 * 쿠버네티스 내부에서만 pod를 접근할 때 사용한다
 * 외부로 pod를 노출하지 않기 때문에 클러스터 내부에서만 사용되는 pod에 사용한다
+* 서비스의 타입을 명시하지 않으면 기본으로 ClusterIP 타입이 적용된다.
 
 
 
@@ -72,25 +124,6 @@ spec:
   type: ClusterIP
 ```
 
-`spec.selector`
-
-* 어떠한 라벨을 가진 포드에 접근할 수 있게 만들지 결정한다
-
-`spec.ports.port`
-
-* 생성된 서비스는 서비스는 클러스터 내부에서 사용할 수 있는 IP를 할당 받는다
-* `spec.ports.port`는 할당 받은 IP에 접근할 때 사용할 포트를 설정한다
-
-`spec.ports.targetPort`
-
-* `selector` 접근하려는 pod들이 내부적으로 사용하고 있는 포트를 입력한다
-* pod 템플릿에 정의된 `containerPort`와 같은 값으로 설정한다
-
-`spec.type`
-
-* 서비스의 타입을 지정한다
-* ClusterIP, NodePort, LoadBalancer 등을 설정할 수 있다
-
 
 
 ## 2.2 생성 및 확인
@@ -136,18 +169,28 @@ $ curl hostname-svc-clusterip:8080 --silent | grep Hello
         <p>Hello,  hostname-deployment-7dfd748479-lxf5f</p>     </blockquote>
 ```
 
-# 3. NodePort
 
-* NodePort 타입을 사용하면 외부에서 pod에 접근할 수 있다
-* pod에 접근할 수 있는 포트를 클러스터의 모든 노드에 동일하게 개방한다
-  * 클러스터의 모든 노드의 내부 IP 또는 외부 IP를 통해 개방된 포트로 접근하면 pod에 접근할 수 있다
+
+# 3 NodePort
+
+* NodePort는 ClusterIP의 기능을 모두 포함한다.
+  * 즉 클러스터 내에서만 사용가능한  ClusterIP 주소를 갖는다.
+
+* 추가적으로 NodePort 타입을 사용하면 외부에서 pod에 접근할 수 있다
+  * pod에 접근할 수 있는 포트를 클러스터의 모든 노드에 동일하게 개방한다
+  * 클러스터의 모든 노드의 내부 IP(클러스터 아이피) 또는 외부 IP를 통해 개방된 포트로 접근하면 pod에 접근할 수 있다
+
 * 접근할 수 있는 포트는 랜덤으로 정해진다
   * 특정 포트로 접근할 수 있게 설정할 수도 있다
 * 실제 운영 환경에서 NodePort로 서비스를 외부에 제공하는 경우는 많지 않다
   * SSL 인증서 적용, 라우팅 등과 같은 복잡한 설정을 서비스에 적용하기 어렵기 때문
   * NodePort 서비스 그 자체를 사용하기 보다 인그레스 오브젝트를 통해 간접적으로 사용하는 경우가 많다
 
+
+
 ![image-20211005222123301](./images/nodeport.png)
+
+
 
 ## 3.1 yaml 작성
 
@@ -168,6 +211,18 @@ spec:
       targetPort: 80
       #nodePort: 30008
 ```
+
+`spec.ports[].port`
+
+- ClusterIP에서 수신할 포트
+
+`spec.ports[].targetPort`
+
+- 목적지 컨테이너 포트 번호
+
+`spec.ports[].nodePort`
+
+- 모든 쿠버네티스 노드 IP 주소에서 수신할 포트
 
 
 
@@ -238,7 +293,7 @@ $ curl hostname-svc-nodeport:8080 --silent | grep Hello
 
 
 
-# 4. LoadBalancer
+# 4 LoadBalancer
 
 * 클라우드 플랫폼에서 제공하는 로드 밸런서를 동적으로 프로비저닝해 포드에 연결한다
 * 외부에서 pod를 접근할 수 있다
@@ -267,6 +322,103 @@ spec:
 ```
 
 
+
+# 5 ExternalName
+
+- 클러스터 안에서 외부에 접속 시 사용할 도메인을 서비스의 이름으로 접근할 수 있다.
+- 클러스터 DNS에 CNAME 레코드를 만든다고 생각하면 된다.
+  - CNAME 레코드는 별칭과 도메인을 매핑해주는 레코드다
+  - 여기서 별칭은 서비스의 이름이다.
+
+
+
+## 5.1 yaml 작성
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: prod
+spec:
+  type: ExternalName
+  externalName: my.database.example.com
+```
+
+`spec.externalName`
+
+- 외부 도메인을 설정한다.
+- `my-service.prod.svc.cluster.local` 호스트를 조회하면 `my.database.example.com` 을 반환하도록 클러스터 DNS 서비스가 세팅된다.
+
+
+
+# 6 kube-proxy
+
+- Service는 가상의 객체로 실제 프로세스도 아니며 네임스페이스나 인터페이스를 가지고 있지 않다.
+- 그런데 어떻게 서비스가 IP 주소를 가지고 파드에 요청을 전달할 수 있을까?
+- 여기서 kube-proxy가 작동한다.
+- kube-proxy는 특정 서비스의 아이피 주소 요청이 오면 이를 파드의 아이피 주소로 바꾸어 전달하는 포워딩 룰을 가지고 있다.
+- kube-proxy의 이러한 포워딩 룰을 어떻게 만들까?
+  - 3 가지 모드를 지원한다.
+  - User space
+  - iptables: 기본값
+  - ipvs
+- User space 모드는 현재 잘 사용하지 않는다.
+
+
+
+## 6.1 iptables 모드
+
+아래와 같이 3개의 파드가 있다.
+
+```bash
+$ kubectl get pods -o wide
+NAME                                READY   STATUS    RESTARTS          AGE     IP                NODE      NOMINATED NODE   READINESS GATES
+nginx-deployment-68fc675d59-kg8j9   1/1     Running   0                 2d21h   192.168.189.82    worker2   <none>           <none>
+nginx-deployment-68fc675d59-mpdnw   1/1     Running   0                 2d21h   192.168.235.147   worker1   <none>           <none>
+nginx-deployment-68fc675d59-nvmwh   1/1     Running   587 (2m24s ago)   2d21h   192.168.199.167   worker4   <none>           <none>
+```
+
+
+
+ClusterIP 타입의 서비스를 만들었다.
+
+```bash
+$ kubectl get service
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   6d17h
+my-nginx     ClusterIP   10.96.82.159   <none>        80/TCP    35s
+```
+
+
+
+iptables을 확인해보면 서비스의 아이피 주소와 포트 넘버 10.96.82.159:80 의 요청을 3 개의 파드로 192.168.189.82:80, 192.168.199.167:80, 192.168.235.147:80로 포워딩하는 것을 볼 수 있다.
+
+```bash
+$ sudo iptables -L -t nat | grep my-nginx
+KUBE-SVC-SV7AMNAGZFKZEMQ4  tcp  --  anywhere             10.96.82.159         /* default/my-nginx:http cluster IP */ tcp dpt:http
+KUBE-MARK-MASQ  tcp  -- !192.168.0.0/16       10.96.82.159         /* default/my-nginx:http cluster IP */ tcp dpt:http
+KUBE-SEP-UVOFIZSEWI2RUYNM  all  --  anywhere             anywhere             /* default/my-nginx:http -> 192.168.189.82:80 */ statistic mode random probability 0.33333333349
+KUBE-SEP-LCU7RGNP43CTIDND  all  --  anywhere             anywhere             /* default/my-nginx:http -> 192.168.199.167:80 */ statistic mode random probability 0.50000000000
+KUBE-SEP-IDBVHPLVKZAHS24Y  all  --  anywhere             anywhere             /* default/my-nginx:http -> 192.168.235.147:80 */
+```
+
+
+
+따라서 kube-proxy는 각각의 노드에서 service가 생성될 때 iptables rule을 생성한다. NodePort의 경우 해당하는 포트로 listen하고 클라이언트 연결을 받아서 iptables rule을 통해 파드와 연결한다.
+
+
+
+# 7 기타
+
+## 7.1 서비스 IP Range 확인
+
+```bash
+$ cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep cluster-ip-range
+- --service-cluster-ip-range=10.96.0.0/12
+```
+
+넵ㄴㅂ 
 
  참고
 
