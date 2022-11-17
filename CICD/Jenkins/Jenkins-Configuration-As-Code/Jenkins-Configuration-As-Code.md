@@ -47,7 +47,7 @@ build.gradle    gradle          gradlew         gradlew.bat     settings.gradle
 
 - build.gradle를 아래와 같이 수정하자.
 - `com.palantir.docker`와 `com.palantir.docker-run` 를 추가하면 그래들을 통해 도커 이미지를 만들고 컨테이너를 실행할 수 있다.
-  - docker-compose와 유사하게 docker 명령어를 통해 이미지를 만들거나 컨테이너를 만들지 않고 코드로관리 가능
+  - docker-compose와 유사하게 docker 명령어를 통해 이미지를 만들거나 컨테이너를 만들지 않고 코드로 관리 가능
   - 각각 docker, dockerRun 태스크가 추가된다.
 
 ```groovy
@@ -163,10 +163,6 @@ workflow-cps:latest
 - JCasC 젠킨스를 코드로 설정하는 것과 더불어 잡도 코드로 미리 만들어 둘 수 있다
 - `/usr/share/jenkins/ref/jobs/{잡이름}` 디렉토리에 `confing.xml` 파일을 넣으면 된다.
 - `confing.xml` 을 직접 작성하는 것을 어려우니 젠킨스에서 GUI로 잡을 하나만들고 이를 통해 만들어진 `confing.xml` 파일을 로컬 호스트로 옮겨보자
-
-
-
-**defaultJob 만들기**
 
 
 

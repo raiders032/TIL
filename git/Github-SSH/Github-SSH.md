@@ -35,6 +35,8 @@ Enter same passphrase again:
 ssh-keygen -t ed25519 -C "nameks@naver.com"
 ```
 
+
+
 # 4 ssh-agent에 SSH Key 등록
 
 ```bash

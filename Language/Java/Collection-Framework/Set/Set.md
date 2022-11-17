@@ -355,6 +355,41 @@ for(String str:set){
 
 
 
+**비교 테스트**
+
+```java
+@Test
+void testSet() {
+    //given
+    List<String> strings = Arrays.asList("if", "it", "is", "to", "be", "it", "is", "up", "to", "me", "to", "delegate");
+    HashSet<String> hashSet = new HashSet<>();
+    TreeSet<Object> treeSet = new TreeSet<>();
+    LinkedHashSet<Object> linkedHashSet = new LinkedHashSet<>();
+
+    // when
+    for (String string : strings) {
+        hashSet.add(string);
+        treeSet.add(string);
+        linkedHashSet.add(string);
+    }
+
+    // then
+    System.out.println("hashSet = " + hashSet);
+    assertThat(hashSet.size()).isEqualTo(8);
+    assertThat(hashSet).containsOnly("if", "it", "is", "to", "be", "up", "me", "delegate");
+
+    System.out.println("treeSet = " + treeSet);
+    assertThat(treeSet.size()).isEqualTo(8);
+    assertThat(treeSet).containsExactly("be", "delegate", "if", "is", "it", "me", "to", "up");
+
+    System.out.println("linkedHashSet = " + linkedHashSet);
+    assertThat(linkedHashSet.size()).isEqualTo(8);
+    assertThat(linkedHashSet).containsExactly("if", "it", "is", "to", "be", "up", "me", "delegate");
+}
+```
+
+
+
 참고
 
 * https://docs.oracle.com/javase/tutorial/collections/interfaces/set.html

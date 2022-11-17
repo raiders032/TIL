@@ -89,11 +89,60 @@ WebClient client1 = WebClient.builder()
 
 
 
-# 3 retrieve
+# 3 [retrieve()](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-client-retrieve)
+
+* retrieve() 메서드를 통해 response를 어떻게 뽑아낼 지 지정함
+* exchange() 메서드의 간단 버전
 
 
 
-# 4 Exchange
+## 3.1 ResponseEntity 반환받기
+
+* response로 status code, headers, body를 가진 ResponseEntity를 반환 받는다
+
+```java
+WebClient client = WebClient.create("https://example.org");
+
+Mono<ResponseEntity<Person>> result = client.get()
+  .uri("/persons/{id}", id).accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .toEntity(Person.class);
+```
+
+
+
+## 3.2 Body만 반환받기
+
+* response의 body만 뽑아내고 싶다면 bodyToMono 메서드를 이용하자
+
+```java
+WebClient client = WebClient.create("https://example.org");
+
+Mono<Person> result = client.get()
+  .uri("/persons/{id}", id).accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(Person.class);
+```
+
+
+
+## 3.3 에러 핸들링
+
+* 기본적으로 response의 status가 4XX, 5XX 이라면 `WebClientResponseException`이 발생한다
+* status 마다 커스텀한 에러 핸들링을 하고 싶다면 아래와 샅이 onStatus 메서드를 사용하자
+
+```java
+Mono<Person> result = client.get()
+  .uri("/persons/{id}", id).accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .onStatus(HttpStatus::is4xxClientError, response -> ...)
+  .onStatus(HttpStatus::is5xxServerError, response -> ...)
+  .bodyToMono(Person.class);
+```
+
+
+
+# 4 exchange()
 
 
 

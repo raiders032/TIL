@@ -336,9 +336,16 @@ configurations {
 **JPAQueryFactory 스프링 빈 등록**
 
 ```java
-@Bean
-JPAQueryFactory jpaQueryFactory(EntityManager em) {
-  return new JPAQueryFactory(em);
+@Configuration
+public class JpaConfig {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Bean
+    JPAQueryFactory jpaQueryFactory() {
+        return new JPAQueryFactory(entityManager);
+    }
 }
 ```
 

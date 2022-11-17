@@ -358,6 +358,16 @@ cat /var/log/nginx/secure.access.log
 
 
 
+```
+upstream backend {
+    server 192.168.155.68;
+    server 192.168.155.69;
+    server 192.168.155.60;
+    server 192.168.154.63;
+    server 192.168.154.64;
+}
+```
+
 
 
 

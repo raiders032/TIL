@@ -4,6 +4,8 @@
   * BooleanBuilder 
   * Where 다중 파라미터 사용
 
+
+
 # 2 BooleanBuilder
 
 ```java
@@ -134,4 +136,3 @@ private BooleanExpression ageLoe(Integer ageLoe) {
     return ageLoe == null ? null : member.age.loe(ageLoe);
 }
 ```
-

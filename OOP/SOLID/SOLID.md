@@ -77,6 +77,8 @@ public class MemberService {
 
 * 객체를 생성하고, 연관관계를 맺어주는 별도의 조립, 설정자가 필요하다.
 
+
+
 # 4 Liskov Substitution Principle
 
 > 서브타입은 그것의 기반 타입으로 치환 가능해야 한다.

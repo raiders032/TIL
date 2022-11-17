@@ -14,6 +14,8 @@
 
 ![image-20220727203426723](images/image-20220727203426723.png)
 
+
+
 # 2 연산
 
 * stack 자료구조가 push와 pop 연산으로 이루어진 것처럼 Disjoint Set은 union과 find라는 2개의 연산으로 조작한다
@@ -49,6 +51,8 @@ def find(disjoint_set, x):
     return find(disjoint_set, disjoint_set[x])
   return x
 ```
+
+
 
 **경로 압축 기법**
 

@@ -1,4 +1,4 @@
-# 1. [DispatcherServlet](https://docs.spring.io/spring-framework/docs/5.2.5.RELEASE/spring-framework-reference/web.html#mvc-servlet)
+# 1 [DispatcherServlet](https://docs.spring.io/spring-framework/docs/5.2.5.RELEASE/spring-framework-reference/web.html#mvc-servlet)
 
 * Spring MVC는 다른 웹 프레임워크와 마찬가지로 front controller pattern으로 디자인 되었다. 
 * 여기서  front controller란 `DispatcherServlet` 를 의미한다.
@@ -22,7 +22,9 @@
 
 # 2 DispatcherServlet 선언
 
-* Java Configuration 또는 xml로 DispatcherServlet을 선언하고 등록할 수 있다
+* Java Configuration 또는 xml로 DispatcherServlet을 선언하고 등록할 수 있다.
+* 아래와 같이 DispatcherServlet을 등록하면 서블릿 컨테이너가 자동 감지한다.
+* 스프링 부트는 DispatcherServlet을 자동으로 등록하면서 모든 경로에 대해서 매핑한다.
 
 
 

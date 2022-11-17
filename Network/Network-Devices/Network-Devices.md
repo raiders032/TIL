@@ -2,7 +2,7 @@
 
 
 
-# 2 Physical layer 장비
+# 2 L1: Physical layer 장비
 
 * Physical layer 장비는 들어온 전기 신호를 그대로 잘 전달하는 것이 목적이다
 * 따라서 전기 신호가 들어오면 이 전기 신호를 재생성해서 내보낸다
@@ -24,7 +24,7 @@
 
 
 
-# 3 Data link layer 장비
+# 3 L2: Data link layer 장비
 
 * Data link layer에서 동작하는 장비는 모두 MAC 주소를 이해할 수 있다
 
@@ -104,7 +104,9 @@
 
 ## 3.3 브릿지
 
-# 4 Network layer 장비
+
+
+# 4 L3: Network layer 장비
 
 * Network layer에서 동작하는 장비는 모두 IP 주소를 이해할 수 있다
 
@@ -156,7 +158,7 @@
 
 
 
-# 5 Transport layer 장비
+# 5 L4: Transport layer 장비
 
 
 
@@ -191,7 +193,7 @@
 
 
 
-# 6 Application layer 장비
+# 6 L7: Application layer 장비
 
 
 

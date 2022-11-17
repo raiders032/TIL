@@ -211,6 +211,25 @@ Person person2 = Person.builder()
 ```
 
 
+
+## @Builder.Default
+
+- 빌드 세션에 세팅되지 않은 필드는 `0`, `null`, `false`의 값을 가진다.
+- 필드의 기본값을 지정하고 싶은 경우 `@Builder.Default` 애노테이션을 필드에 적용한다.
+
+
+
+```java
+@Builder.Default
+private TakeoutOrderStatus takeoutOrderStatus = TakeoutOrderStatus.NEW;
+```
+
+> 참고
+>
+> - https://www.baeldung.com/lombok-builder-default-value
+
+
+
 참고
 
 * https://projectlombok.org/features/all

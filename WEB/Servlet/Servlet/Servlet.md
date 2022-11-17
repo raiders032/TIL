@@ -1,10 +1,10 @@
-# 서블릿(Servlet)
+# 1 서블릿(Servlet)
 
 >  자바를 사용하여 웹페이지를 동적으로 생성하는 서버측 프로그램 혹은 그 사양을 말하며, 흔히 "서블릿"이라 불린다. 자바 서블릿은 웹 서버의 성능을 향상하기 위해 사용되는 자바 클래스의 일종이다. 서블릿은 JSP와 비슷한 점이 있지만, JSP가 HTML 문서 안에 Java 코드를 포함하고 있는 반면, 서블릿은 자바 코드 안에 HTML을 포함하고 있다는 차이점이 있다.
 
 
 
-# 1. Servlet의 특징
+# 2 Servlet의 특징
 
 ```java
 @WebServlet(name = "helloServlet", urlPatterns = "/hello")
@@ -22,7 +22,9 @@ public class HelloServlet extends HttpServlet {
 * HTTP 응답 정보를 편리하게 제공할 수 있는 HttpServletResponse
 * 개발자는 HTTP 스펙을 매우 편리하게 사용
 
-# 2 서블릿의 역할
+
+
+# 3 서블릿의 역할
 
 **HttpServletRequest**
 
@@ -37,7 +39,9 @@ public class HelloServlet extends HttpServlet {
 * 헤더 생성
 * 바디 생성
 
-# 3 서블릿의 흐름
+
+
+# 4 서블릿의 흐름
 
 1. WAS는 Request, Response 객체를 새로 만들어서 서블릿 객체 호출
 2. 개발자는 Request 객체에서 HTTP 요청 정보를 편리하게 꺼내서 사용
@@ -46,7 +50,7 @@ public class HelloServlet extends HttpServlet {
 
 
 
-# 4 Servlet 컨테이너
+# 5 Servlet 컨테이너
 
 * 톰캣처럼 서블릿을 지원하는 WAS를 서블릿 컨테이너라고 함
 * 서블릿 컨테이너는 서블릿 객체를 생성, 초기화, 호출, 종료하는 생명주기 관리
@@ -61,15 +65,15 @@ public class HelloServlet extends HttpServlet {
 
 
 
-## 4.1 쓰레드 풀
+## 5.1 쓰레드 풀
 
 * 쓰레드가 Servlet을 실행하는 주체이다
 * 필요한 쓰레드를 쓰레드 풀에 보관하고 관리한다.
   * 쓰레드 풀에 생성 가능한 쓰레드의 최대치를 관리한다. 
   * 톰캣은 최대 200개 기본 설정 (변경 가능) 
-* 사용 • 쓰레드가 필요하면, 이미 생성되어 있는 쓰레드를 쓰레드 풀에서 꺼내서 사용한다.
+* 쓰레드가 필요하면, 이미 생성되어 있는 쓰레드를 쓰레드 풀에서 꺼내서 사용한다.
 * 사용을 종료하면 쓰레드 풀에 해당 쓰레드를 반납한다. 
-* 최대 쓰레드가 모두 사용중이어서 쓰레드 풀에 쓰레드가 없으면? • 
+* 최대 쓰레드가 모두 사용중이어서 쓰레드 풀에 쓰레드가 없으면?
   * 기다리는 요청은 거절하거나 특정 숫자만큼만 대기하도록 설정할 수 있다.
 
 **쓰레드 풀의 장점**  
@@ -79,7 +83,7 @@ public class HelloServlet extends HttpServlet {
 
 
 
-## 4.2 실무 팁
+## 5.2 실무 팁
 
 * WAS의 주요 튜닝 포인트는 최대 쓰레드(max thread) 수이다.
 * 이 값을 너무 낮게 설정하면?

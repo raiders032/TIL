@@ -3,10 +3,10 @@
 * off-by-one error를 방지하기 위한 전략
 
 1. [low, high]가 check(low) != check(high)가 되도록 구간을 설정
-2. while (**low + 1 < high**)
-   * `mid = (low+ high) // 2`
+2. `while (low + 1 < high)`
+   * `mid = (low + high) // 2`
    * `if check(mid) == check(low) then low = mid`
-   * `if check(mid) == check(low) then high = mid`
+   * `else then high = mid`
 3. 답은 low 또는 high 문제에 따라 생각해보기
 
 > 위에서 check 메서드는 결정 문제를 나타낸다. 결정 문제란 답이 Yes or No인 문제를 의미한다

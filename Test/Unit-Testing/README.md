@@ -26,7 +26,7 @@
   * 통합 테스트, 관리 의존성, 비관리 의존성, 인터페이스
 
 * [목 처리에 대한 모범 사례](Mocking-Best-Practices/Mocking-Best-Practices.md)
-* 10 ¦ Testing the database
+* [데이터베이스 테스트](Testing-The-Database/Testing-The-Database.md) 
 * [단위 테스트 안티 패턴](Unit-Testing-Anti-Patterns/Unit-Testing-Anti-Patterns.md) 
 
 

@@ -69,6 +69,13 @@ dependencies {
 * mapper를 만들고 싶다면 인터페이스만 정의하고 인터페이스에  `@Mapper` 애노테이션을 적용한다.
 * MapStruct가 빌드 시점의 인터페이스의 구현체를 만들어 준다.
 
+
+
+## 3.1 Basic mappings
+
+- 소스 엔티티와 타겟 엔티티의 프로퍼티 이름이 같으면 자동적으로 매핑
+- 소스 엔티티와 타겟 엔티티의 프로퍼티 이름이 다르면 `@Mapping` 애노테이션을 통해 명시
+
 ```java
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -83,13 +90,6 @@ public interface CarMapper {
   PersonDto personToPersonDto(Person person);
 }
 ```
-
-
-
-# 4 mapping
-
-* 소스 엔티티와 타겟 엔티티의 프로퍼티 이름이 같으면 자동적으로 매핑
-* 소스 엔티티와 타겟 엔티티의 프로퍼티 이름이 다르면 `@Mapping` 애노테이션을 통해 명시
 
 
 
@@ -146,6 +146,49 @@ public class CarMapperImpl implements CarMapper {
 
 
 
+## 3.2 Adding custom methods to mappers
+
+- 종종 MapStruct가 매핑 코드를 생성하지 못하는 복잡한 매핑 로직이 있을 수 있다.
+- 이러한 경우 수작업으로 매핑 작업을 할 수 있다.
+- Mapper 인터페이스에 default 메서드로 수동 매핑 로직을 작성한다.
+- 이 메서드는 아규먼트의 타입과 반환타입이 일치하면 호출될 것이다.
+
+
+
+**예시**
+
+```java
+@Mapper
+public interface PostInfoMapper {
+  PostInfoMapper INSTANCE = Mappers.getMapper(PostInfoMapper.class);
+
+  @Mapping(target = "userId", source = "user.id")
+  @Mapping(target = "postId", source = "id")
+  @Mapping(target = "boardName", source = "board.name")
+  @Mapping(target = "likeCount", expression = "java(post.getLikeCount())")
+  @Mapping(target = "commentCount", expression = "java(post.getComments().size())")
+  @Mapping(target = "tags", expression = "java(post.getTagNames())")
+  PostInfo of(Post post);
+
+  default Map<CommentInfo, List<CommentInfo>> of(List<Comment> comments) {
+    Map<CommentInfo, List<CommentInfo>> commentMap = new LinkedHashMap<>();
+
+    for (Comment comment : comments) {
+      if (comment.getParentComment() == null) {
+        commentMap.put(of(comment), new ArrayList<>());
+        continue;
+      }
+      Comment parentComment = comment.getParentComment();
+      commentMap.get(parentComment).add(of(comment));
+    }
+
+    return commentMap;
+  }
+}
+```
+
+
+
 
 
 # 5 Retrieving a mapper
@@ -178,6 +221,31 @@ CarDto dto = CarMapper.INSTANCE.carToCarDto( car );
 
 
 ## 5.2 [Using dependency injection](https://mapstruct.org/documentation/stable/reference/html/#using-dependency-injection)
+
+
+
+# 6 Advanced mapping options
+
+## 6.1 Expressions
+
+- [레퍼런스](https://mapstruct.org/documentation/stable/reference/html/#expressions)
+- 아래와 같이 자바 표현식을 사용할 수 있다.
+
+```java
+@Mapper
+public interface TakeoutOrderInfoMapper {
+    TakeoutOrderInfoMapper INSTANCE = Mappers.getMapper(TakeoutOrderInfoMapper.class);
+    
+  @Mapping(target = "takeoutOrderId", source = "id")
+    @Mapping(target = "shopId", source = "takeoutOrder.shop.id")
+    @Mapping(target = "totalPrice", expression = "java(takeoutOrder.getTotalPrice())")
+    TakeoutOrderInfo of(TakeoutOrder takeoutOrder);
+}
+```
+
+
+
+
 
 
 

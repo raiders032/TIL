@@ -9,7 +9,6 @@
 
 
 
-
 **TCP/IP Model**
 
 * 5개의 계층으로 나누어진 TCP/IP Model
@@ -49,6 +48,8 @@
   * IP 주소를 통해 DeviceB로 패킷을 전달하는 것이 목표
   * 따라서 IP가 속한 Network Layer까지만 개입해도 DeviceB를 찾을 수 있다 
 
+
+
 # 2 Application Layer
 
 
@@ -56,6 +57,8 @@
 ## 2.1 프로토콜
 
 * HTTP, HTTPS, DNS, FTP, SMTP, SSH, TLS, SSL 
+
+
 
 # 3 Transport Layer
 
@@ -93,6 +96,8 @@
 
 * IP Address
 * [IP.md](../Protocol/IP/IP.md) 참고
+
+
 
 # 5 Data Link Layer
 

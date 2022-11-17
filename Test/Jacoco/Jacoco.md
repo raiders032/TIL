@@ -178,6 +178,8 @@ jacocoTestCoverageVerification {
 * 이 값을 통해 `jacocoTestCoverageVerification` 의 성공 여부가 결정됩니다.
 * 기본 값 없음
 
+
+
 # 5 커버리지에서 제외할 클래스 설정
 
 

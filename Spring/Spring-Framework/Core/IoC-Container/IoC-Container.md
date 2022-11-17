@@ -415,7 +415,172 @@ public @interface SpringBootApplication {
 
 
 
-# 6 빈 스코프
+
+
+# 6 빈 생명주기 콜백
+
+- 스프링은 의존관계 주입이 완료되면 스프링 빈에게 콜백 메서드를 통해서 초기화 시점을 알려주는 다양한 기능을 제공한다
+- 스프링은 스프링 컨테이너가 종료되기 직전에 소멸 콜백을 준다
+- 스프링은 크게 3가지 방법으로 빈 생명주기 콜백을 지원한다.
+
+
+
+**스프링 빈의 이벤트 라이프사이클**
+
+1. 스프링컨테이너 생성
+2. 스프링빈 생성
+3. 의존관계 주입
+4. 초기화콜백 
+5. 사용 
+6. 소멸전콜백 
+7. 스프링 종료
+
+
+
+> 싱글톤 빈들은 스프링 컨테이너가 종료될 때 싱글톤 빈들도 함께 종료되기 때문에 스프링 컨테이너가 종료되기 직전에 소멸전 콜백이 일어난다.
+
+
+
+## 6.1 인터페이스
+
+- InitializingBean 은 afterPropertiesSet() 메서드로 초기화를 지원한다.
+- DisposableBean 은 destroy() 메서드로 소멸을 지원한다.
+
+```java
+public class NetworkClient implements InitializingBean, DisposableBean {
+  private String url;
+  
+  public NetworkClient() {
+    System.out.println("생성자 호출, url = " + url); 
+  }
+  
+  public void setUrl(String url) {
+    this.url = url;
+  }
+  
+  //서비스 시작시 호출
+  public void connect() {
+    System.out.println("connect: " + url);
+  }
+  
+  public void call(String message) {
+    System.out.println("call: " + url + " message = " + message);
+  }
+  
+  //서비스 종료시 호출
+  public void disConnect() {
+    System.out.println("close + " + url);
+  }
+  
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    connect();
+    call("초기화 연결 메시지"); 
+  }
+  
+  @Override
+  public void destroy() throws Exception {
+    disConnect();
+  }
+}
+```
+
+
+
+**초기화, 소멸 인터페이스 단점**
+
+- 이 인터페이스는 스프링 전용 인터페이스다. 해당 코드가 스프링 전용 인터페이스에 의존한다. 
+- 초기화, 소멸 메서드의 이름을 변경할 수 없다.
+- 내가 코드를 고칠 수 없는 외부 라이브러리에 적용할 수 없다.
+- 현재는 사용하지 않는 방식이다.
+
+
+
+## 6.2 설정 정보에 초기화 메서드, 종료 메서드 지정
+
+- 아래와 같이 설정 정보에 초기화 소멸 메서드 지정할 수 있다.
+
+```java
+@Configuration
+static class LifeCycleConfig {
+  @Bean(initMethod = "init", destroyMethod = "close")
+  public NetworkClient networkClient() {
+    NetworkClient networkClient = new NetworkClient();
+    networkClient.setUrl("http://hello-spring.dev");
+    return networkClient;
+  } 
+}
+```
+
+
+
+**설정 정보 사용 특징**
+
+- 메서드 이름을 자유롭게 줄 수 있다.
+- 스프링 빈이 스프링 코드에 의존하지 않는다.
+- 코드가 아니라 설정 정보를 사용하기 때문에 코드를 고칠 수 없는 외부 라이브러리에도 초기화, 종료 메서드 를 적용할 수 있다.
+
+
+
+## 6.3 @PostConstruct, @PreDestory 애노테이션
+
+- @PostConstruct , @PreDestroy 이 두 애노테이션을 사용하면 가장 편리하게 초기화와 종료를 실행할 수 있다.
+- 초기화 콜백에 @PostConstruct을 적용하고 종료 콜백에 @PreDestroy 을 적용하면 된다.
+
+```java
+public class NetworkClient {
+  private String url;
+  
+  public NetworkClient() {
+    System.out.println("생성자 호출, url = " + url); 
+  }
+  
+  public void setUrl(String url) {
+    this.url = url;
+  }
+  
+  //서비스 시작시 호출
+  public void connect() {
+    System.out.println("connect: " + url);
+  }
+  
+  public void call(String message) {
+    System.out.println("call: " + url + " message = " + message);
+  }
+  
+  //서비스 종료시 호출
+  public void disConnect() {
+    System.out.println("close + " + url);
+  }
+  
+  @PostConstruct
+  public void init() throws Exception {
+    connect();
+    call("초기화 연결 메시지"); 
+  }
+  
+  @PreDestroy
+  public void close() throws Exception {
+    disConnect();
+  }
+}
+```
+
+
+
+**@PostConstruct, @PreDestory 애노테이션 특징**
+
+- 최신 스프링에서 가장 권장하는 방법이다.
+- 애노테이션 하나만 붙이면 되므로 매우 편리하다.
+- 패키지를 잘 보면 javax.annotation.PostConstruct 이다. 
+- 스프링에 종속적인 기술이 아니라 JSR-250 라는 자바 표준이다. 따라서 스프링이 아닌 다른 컨테이너에서도 동작한다.
+- 컴포넌트 스캔과 잘 어울린다.
+- 유일한 단점은 외부 라이브러리에는 적용하지 못한다는 것이다. 
+- 외부 라이브러리를 초기화, 종료 해야 하면 @Bean의 기능을 사용하자.
+
+
+
+# 7 빈 스코프
 
 - 스프링 컨테이너의 빈 스코프는 아래와 같이 지원된다
   - 싱글톤
@@ -427,7 +592,7 @@ public @interface SpringBootApplication {
 
 
 
-## 6.1 빈 스코프 지정
+## 7.1 빈 스코프 지정
 
 - 빈 스코프는 다음과 같이 지정할 수 있다
 
@@ -447,20 +612,23 @@ PrototypeBean HelloBean() {
 
 
 
-## 6.2 프로토파입 스코프
+## 7.2 프로토파입 스코프
 
 - 싱글톤 스코프의 빈을 조회하면 항상 같은 인스턴스를 반환한다.
 - 프로토파입 스코프의 빈은 조회하면 스프링 컨테이너는 항상 새로운 인스턴스를 생성해서 반환한다.
 - 스프링 컨테이너는 프로토타입 빈을 생성하고, 의존관계 주입, 초기화까지만 처리한다.
+  -  @PostConstruct가 적용된 초기화 콜백은 실행된다.
+
 - 클라이언트에 빈을 반환하고, 이후 스프링 컨테이너는 생성된 프로토타입 빈을 관리하지 않는다. 
 - 프로토타입 빈을 관리할 책임은 프로토타입 빈을 받은 클라이언트에 있다. 
   - 따라서 @PreDestory 같은 종료 메서드가 호출되지 않는다.
 
 
 
-**빈 생성 과정**
+``**빈 생성 과정**
 
 1. 프로토타입 스코프의 빈을 스프링 컨테이너에 요청한다.
 2. 스프링 컨테이너는 이 시점에 프로토타입 빈을 생성하고, 필요한 의존관계를 주입한다.
-3.  스프링 컨테이너는 생성한 프로토타입 빈을 클라이언트에 반환한다.
+3. 스프링 컨테이너는 생성한 프로토타입 빈을 클라이언트에 반환한다.
 4. 이후에 스프링 컨테이너에 같은 요청이 오면 항상 새로운 프로토타입 빈을 생성해서 반환한다.
+
