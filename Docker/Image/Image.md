@@ -82,6 +82,43 @@ docker load -i ubuntu_14_04.tar
 
 
 
+# 8 이미지 생성 과정
+
+- 빌드 프로세스는 도커 클라이언트가 수행하지 않고 도커 데몬이 수행한다.
+- 디렉토리 전체 콘텐츠가 도커 데몬에 업로드되고 그곳에서 이미지가 빌드된다.
+- Dockerfile에 기록된 명령어를 하나 하나를 스텝이라고 한다.
+- 하나의 스텝마다 이전 스텝에서 만들어진 이미지로 임시 컨테이너를 생성하고 명령어를 적용하고 이를 이미지로 커밋하고 컨테이너는 삭제한다.
+- 따라서 dockerfile의 명령어 수만큼 레이어가 존재하게 되며 중간에 컨테이너도 같은 수만큼 생성되고 삭제된다.
+
+
+
+**예시**
+
+- Running in `fbc63d321d73` 새로운 컨테이너를 생성함
+- CMD /bin/ls 명령어를 적용하고 이미지를 커밋함
+- ---> `3286931702ad` 커밋된 이미지 레이어의 ID
+- Removing intermediate container `fbc63d321d73` 컨테이너 삭제
+
+```bash
+$ docker build -f ctx/Dockerfile http://server/ctx.tar.gz
+
+Downloading context: http://server/ctx.tar.gz [===================>]    240 B/240 B
+Step 1/3 : FROM busybox
+ ---> 8c2e06607696
+Step 2/3 : ADD ctx/container.cfg /
+ ---> e7829950cee3
+Removing intermediate container b35224abf821
+Step 3/3 : CMD /bin/ls
+ ---> Running in fbc63d321d73
+ ---> 3286931702ad
+Removing intermediate container fbc63d321d73
+Successfully built 377c409b35e4
+```
+
+
+
+
+
 참고
 
 * [Kubernetes and Docker - An Enterprise Guide](https://www.amazon.com/Kubernetes-Docker-Effectively-containerize-applications/dp/183921340X)

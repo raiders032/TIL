@@ -41,15 +41,12 @@
 ## [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
 
 * 컨테이너가 시작되었을 때 실행할 실행 파일 또는 쉘 스크립트
-
 * Dockerfile 파일 내에서 1번만 정의가 가능합니다.
 
   * 여러개 정의 할 경우 마지막만 인식
-
 * Overwrite 가능
 
   * 예) `docker run node npm init` npm init으로 CMD를 Overwrite할 수 있다.
-
 * 3가지 형태 가능
 
 ```
@@ -57,6 +54,12 @@ CMD ["executable","param1","param2"] (exec form, this is the preferred form)
 CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
 CMD command param1 param2 (shell form)
 ```
+
+
+
+**CMD의 올바른 사용법**
+
+- `CMD`의 올바른 사용 방법은 명령어를 `ENTRYPOINT`로 지정하고 기본 인자를 정의하는 경우에만 CMD를 사용해야 한다.
 
 
 
@@ -250,6 +253,59 @@ docker build --build-arg user1=what_user .
 * ENTRYPOINT와 CMD는 컨테이너가 시작될 때 수행할 명령을 지점한다는 공통점이 있다.
 * Overwrite 불가능
   * 예 ) `docker run node init` init이 **ENTRYPOINT** 뒤에 붙어서 실행된다.
+* ENTRYPOINT Overwrite가 필요하면 `docker run --entrypoint` 옵션을 사용한다.
+
+
+
+**ENTRYPOINT의 올바른 사용법**
+
+- `CMD` 명령어를 사용해 이미지가 실행될 때 실행할 명령어를 지정할 수 있지만 올바른 방법은 `ENTRYPOINT`로 명령어를 지정하고 기본 의자를 정의하려는 경우만 `CMD`를 지정하는 것이다.
+
+
+
+**예시**
+
+- 실행할 명령어인 sleep을 `ENTRYPOINT`로 지정하고 인자를 `CMD`로 지정한다.
+
+- `docker run node 10` -> sleep 10
+- `docker run node` -> sleep 5
+
+```dockerfile
+FROM Ubuntu
+
+ENTRYPOINT ["sleep"]
+
+CMD ["5"]
+```
+
+
+
+**shell과 exec 형식 간의 차이점**
+
+- ENTRYPOINT는 shell 형식과 exec 형식 두 가지를 지원한다.
+- 두 형식의 차이점은 명령어를 shell로 호출하는지 여부다.
+  - shell 형식은 명령어를 shell로 호출하고 exec 형식은 명령어를 직접 실행한다.
+- shell 형식 : `ENTRYPOINT node app.js`
+- exec 형식 : `ENTRYPOINT ["node",  "app.js"]`
+
+- 컨테이너 내부에서 실행중인 프로세스 목록을 보면 아래와 같다.
+
+```bash
+# exec 형식 컨테이너 내부 프로세스 조회
+$ docker exec 4567d ps x
+PID TTY STAY TIME COMMAND
+  1               node app.js
+ 12               ps x
+
+# shell 형식 컨테이너 내부 프로세스 조회
+$ docker exec 4567d ps x
+PID TTY STAY TIME COMMAND
+  1               /bin/sh -c node app.js
+  7               node app.js
+ 13               ps x
+```
+
+
 
 
 

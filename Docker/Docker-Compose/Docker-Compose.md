@@ -1,4 +1,4 @@
-# 1 Docker Compose
+# Docker Compose
 
 > 다중 컨테이너 도커 애플리케이션을 정의하고 실행하기 위한 도구입니다.
 >
