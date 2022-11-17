@@ -20,6 +20,8 @@ echo "[[ $commands[kubectl] ]] && source <(kubectl completion zsh)" >> ~/.zshrc 
 
 ## kubectl create
 
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create)
+
 
 
 **deployment**
@@ -121,13 +123,13 @@ $ kubectl expose (-f FILENAME | TYPE NAME) [--port=port] [--protocol=TCP|UDP|SCT
 ```bash
 kubectl expose deployment http-go --port=8080 --target-port=8080 --type=LoadBalancer
 
-#Create a service for a pod valid-pod, which serves on port 444 with the name "frontend"
+# Create a service for a pod valid-pod, which serves on port 444 with the name "frontend"
 kubectl expose pod valid-pod --port=444 --name=frontend
 
-#Create a service for a replicated nginx using replica set, which serves on port 80 and connects to the containers on port 8000
+# Create a service for a replicated nginx using replica set, which serves on port 80 and connects to the containers on port 8000
 kubectl expose rs nginx --port=80 --target-port=8000
 
-#Create a service for an nginx deployment, which serves on port 80 and connects to the containers on port 8000
+# Create a service for an nginx deployment, which serves on port 80 and connects to the containers on port 8000
 kubectl expose deployment nginx --port=80 --target-port=8000
 ```
 
@@ -148,10 +150,6 @@ kubectl delete -f deployment.yaml -f service.yaml
 # "production" 네임스페이스 삭제 (네임스페이스 삭제 시 네임스페이스에 존재하는 모든 리소스 또한 삭제된다)
 kubectl delete namespace production
 ```
-
-
-
-
 
 
 
@@ -228,12 +226,17 @@ kubectl scale --replicas=3 -f foo.yaml
 
 ## kubectl set
 
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#set)
+
 ```shell
 # "frontend" 디플로이먼트의 "www" 컨테이너 이미지를 업데이트하는 롤링 업데이트
 kubectl set image deployment/frontend www=image:v2
 
 # "my-nginx-depolyment" deployment의 "nginx"라는 이름을 가지는 컨테이너의 이미지를 "nginx:1.11"로 변경
 kubectl set image deployment my-nginx-deployment nginx=nginx:1.11 --record
+
+# Update deployment 'registry' with a new environment variable
+kubectl set env deployment/registry STORAGE_DIR=/local
 ```
 
 
@@ -281,11 +284,28 @@ kubectl exec mypod -c ruby-container -i -t -- bash -il
 
 ## kubectl logs
 
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs)
+
 > pod의 로그를 확인할 수 있다
 
 ```bash
 # 파드 로그 덤프 (stdout)
-kubectl logs my-pod                   
+kubectl logs my-pod
+
+# 이전 켄테이너 로그 확인
+kubectl logs my-pod --previous
+
+# Return snapshot logs from pod nginx with multi containers
+kubectl logs nginx --all-containers=true
+
+# Begin streaming the logs of the ruby container in pod web-1
+kubectl logs -f -c ruby web-1
+
+# Display only the most recent 20 lines of output in pod nginx
+kubectl logs --tail=20 nginx
+
+# Show all logs from pod nginx written in the last hour
+kubectl logs --since=1h nginx
 ```
 
 

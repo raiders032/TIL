@@ -13,7 +13,7 @@
   * 클러스터 밖에서 접근 할 수 없다.
   * pod가 교체되면 IP 주소 또한 바뀐다.
 
-* 한 pod에 포함된 container끼리 localhost를 통해 통신할 수 있다.
+* 한 pod에 포함된 container끼리  localhost를 통해 통신할 수 있다.
 
 * pod는 수명이 짧다. 
 
@@ -106,26 +106,43 @@ my-nginx-pod               1/1     Running   0          20s
 # 4 Container probes
 
 - [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes)
-- kubelet이 컨테이너의 상태를 진단하는데 이를 `probe `라고 한다.
+- `kubelet`이 컨테이너의 상태를 진단하는데 이를 `probe `라고 한다.
+- `kubelet`은 주기적으로 probe를 실행한다.
+- probe의 결과로  `Success`, `Failure`, `Unknown`가 있으며 `Failure` 인 경우 정책에 따라 컨테이너를 재시작 할 수 있다.
 
 
 
 ## 4.1 Check mechanisms
 
-- kubelet은 아래 4 가지 방법을 이용해서 컨테이너의 상태를 진단한다.
+- `kubelet`은 아래 4 가지 방법을 이용해서 컨테이너의 상태를 진단한다.
+
+
 
 **exec**
 
 - 지정된 command를 컨테이너 안에서 실행하고 status code 0 로 끝나면 성공으로 간주한다.
 
+
+
 **grpc**
+
+- gRPC를 사용하여 원격 프로시저 호출을 수행한다. 
+- 대상은 gRPC 상태 검사를 구현해야 한다. 응답 상태가 SERVING인 경우 진단이 성공한 것으로 간주된다.
+
+
 
 **httpget** 
 
 - 파드의 IP 주소와 지정된 포트와 path로 HTTP GET 요청을 보낸다
 - 응답으로 200에서 400 미만의 status code를 받으면 성공으로 간주한다.
+- 전혀 응답하지 않으면 probe가 실패한 것으로 간주한다.
+
+
 
 **tcpSocket**
+
+- 컨테이너의 지정된 포트에 TCP 연결을 시도한다.
+- 연결에 성공하면 probe가 성공한 것이고 그렇지 않으면 실패로 간주한다.
 
 
 
@@ -153,11 +170,101 @@ my-nginx-pod               1/1     Running   0          20s
 
 
 
-## 4.3 예시
+## 4.3 livenessProbe
+
+- 운영 환경에서는 실행 중인 파드는 반드시 라이브니스 프로브를 정의해야 한다.
+- 라이브니스 프로브는 너무 많은 연산 리소스를 사용해서는 안된다.
+- 프로브의 CPU 사용 시간은 컨테이너 CPU 시간 할당량으로 계산되어 라이브니스 프로브가 무거운 경우 컨테이너가 사용할 수 있는 CPU 시간이 줄어들게 된다.
+
+
+
+**HTTP request**
+
+- [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request)
+- kublet이 HTTP GET를 요청하고 컨테이너의 응답으로 200에서 400 미만의 status code를 받으면 성공으로 간주한다.
+
+
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-http
+spec:
+  containers:
+  - name: liveness
+    image: registry.k8s.io/liveness
+    args:
+    - /server
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+        httpHeaders:
+        - name: Custom-Header
+          value: Awesome
+      initialDelaySeconds: 3
+      periodSeconds: 3
+      timeoutSeconds: 1
+```
+
+`periodSeconds`
+
+- kubelet이 liveness probe를 지정된 시간 마다 진행한다.
+
+`timeoutSeconds`
+
+- HTTP 요청의 응답을 기다리는 시간 해당 시간이 지나면 실패로 간주한다.
+
+`initialDelaySeconds`
+
+- kubelet이 지정된 시간 만큼 대기한 후 liveness probe를 시작한다.
+- 애플리케이션의 시작 시간을 고려해 초기 지연을 설정해야 한다.
+
+`livenessProbe.httpGet`
+
+- HTTP GET 요청으로 liveness probe를 진행한다.
+
+`path, port`
+
+- HTTP GET 요청의 path와 port를 지정한다.
+- HTTP path 엔드포인드테 인증이 필요하지 않은지 확인하자.
+  - 인증이 필요한 경우 프로브가 항상 실패해 컨테이너가 무한정 재시작된다.
+
+
+
+
+**예시**
 
 - [Define a liveness command](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command)
-- [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request)
+
 - [Define a TCP liveness probe](Define a TCP liveness probe)
+
+
+
+## 4.4 readinessProbe
+
+- 파드의 레이블이 서비스의 레이블 셀렉터와 일치할 경우 파드가 서비스의 엔드포인트로 포함된다.
+- 새로운 파드가 만들어지자마자 서비스의 일부가 돼 요청이 해당 파드로 전달되면 어떻게 될까?
+  - 해당 파드가 즉시 요청을 처리할 준비가 돼 있지 않을 수 있다.
+- 이러한 경우 `readinessProbe`를 통해 특정 `파드가 클라이언트 요청을 수신할 수 있는지 진단`한다.
+- 라이브니스 프로브와 마찬가지로 exec, tcp, httpget 메커니즘을 사용할 수 있다.
+- 프로브 결과에 따라 파드가 준비되지 않았다고 하면 서비스에서 제거되고 준비되면 서비스에 다시 추가된다.
+  - 레디니스 프로브에 실패한 파드로 요청이 전달되지 않는다.
+- 라이브니스 프로브와 달리 결과가 실패하더라도 컨테이너를 재시작하지 않는다.
+
+
+
+**주의사항**
+
+- 레디니스 프로브를 항상 정의하라
+- 레디니스 프로브를 정의하지 않으면 파드가 시작하는 즉시 서비스 엔드포인트가 된다.
+
+
+
+## 4.5 startupProbe
 
 
 
@@ -271,10 +378,6 @@ ip link del
 
 
 
-
-
-
-
 # 6 Static Pod
 
 - Static Pod이란 API server의 관여없이 kubelet 데몬이 직접 관리하는 파드를 말한다.
@@ -291,9 +394,18 @@ ip link del
 
 
 
-**경로 설정하기**
+**경로 확인하기**
 
-- `/etc/kubernetes/manifests` 디렉토리에 아래와 같이 `kubelet.service` 파일을 작성한다.
+- kublet의 설정 파일 `/var/lib/kubelet/config.yaml` 에서 `staticPodPath`를 확인한다.
+- `/etc/kubernetes/manifests` 경로에 파드 데피니션을 정의하면 Static Pod를 만들 수 있다.
+- `staticPodPath`을 수정하면 kubelet을 꼭 재시작해야한다.
+
+``` bash
+$ sudo cat /var/lib/kubelet/config.yaml
+...
+staticPodPath: /etc/kubernetes/manifests
+...
+```
 
 
 
@@ -317,6 +429,12 @@ kube-proxy-ntf6g                      1/1     Running            0              
 kube-proxy-sd6ww                      1/1     Running            0                 6d13h
 kube-proxy-sxsj9                      1/1     Running            1 (6d14h ago)     6d14h
 kube-scheduler-master-node            1/1     Running            170 (6d14h ago)   6d14h
+```
+
+```bash
+# 컨트롤 플레인의 스태틱 파드 확인
+$ ls /etc/kubernetes/manifests/
+etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
 ```
 
 
@@ -351,6 +469,150 @@ kube-scheduler-master-node            1/1     Running            170 (6d14h ago)
 
 - Pod의 모든 컨테이너가 종료되었으며 하나 이상의 컨테이너가 오류로 종료된 상태다. 
 - 즉, 컨테이너가 0이 아닌 상태로 종료되었거나 시스템에 의해 종료되었음을 나타낸다.
+
+
+
+# 8 init Container
+
+- [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+- 앱 컨테이너를 실행하기 전에 미리 실행되는 컨테이너를 의미한다.
+- 앱 컨테이너가 실행되기 전에 사전 작업이 필요한 경우에 사용한다.
+- 여러개의 init container를 사용하는 경우 kubelet은 순차적으로 실행한다.
+  - 각각의 init container가 성공해야 다음 init container가 실행된다.
+  - 모든 init container가 완료되면 kubelet은 앱 컨테이너를 실행한다.
+
+
+
+## 8.1 사용하기
+
+- 아래의 예시는 두 개의 init container를 사용하고 있다.
+- 먼저 myservice를 실행되기를 기다리고 두 번째로 mydb가 실행되기를 기다린다.
+- 두 개의 init container가 완료되면 앱 컨테이너가 실행된다.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app.kubernetes.io/name: MyApp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup mydb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done"]
+```
+
+
+
+# 9 pause Container
+
+- 파드를 만들면 pause라는 infra container가 포함된다.
+- 파드 정의에 컨테이너를 하나만 명시해도 실제로 파드를 생성할 때 pause container도 같이 생성되고 삭제할 때 같이 삭제된다.
+
+
+
+## 9.1 목적
+
+- pause Container는 IP, 호스트 네임등 인프라를 관리하기 위해 사용된다.
+
+
+
+# 10 명령어와 인자
+
+- 컨테이너 이미지에 정의된 기본 명령을 실행하는 대신 다른 명령과 인자를 사용해 실행하는 것이 가능하다.
+
+
+
+## 10.1 도커에서 명령어와 인자 정의
+
+- 먼저 컨테이너에서 실행하는 전체 명령이 명령어와 인자의 두 부분으로 구성되어 있다.
+- Dockerfile의 `ENTRYPOINT `와 `CMD` 으로 구성됨
+
+
+
+`ENTRYPOINT`
+
+- 컨테이너가 시작될 때 호출될 **명령어**를 정의한다.
+
+
+
+`CMD`
+
+- ENTRYPOINT에 전달되는 **인자**를 정의한다.
+- `CMD` 명령어를 사용해 이미지가 실행될 때 실행할 명령어를 지정할 수 있지만 올바른 방법은 `ENTRYPOINT`로 명령어를 지정하고 기본 의자를 정의하려는 경우만 `CMD`를 지정하는 것이다.
+- 그러면 아무런 인자도 지정하지 않고 이미지를 실행할 수 있다.
+
+
+
+## 10.2 쿠버네티스에서 명령과 인자 재정의
+
+- 쿠버네티스에서 컨테이너를 정의할 때 `ENTRYPOINT`와 `CMD` 둘 다 재정의할 수 있다
+
+- `ENTRYPOINT`는 `spec.containers[].command`로 재정의할 수 있다
+- `CMD`는 `spec.containers[].args`로 재정의할 수 있다
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nys
+spec:
+  containers:
+  - image: some/image
+    command: ["bin/command"]
+    args: ["arg1", "arg2", "arg3"]
+```
+
+`spec.containers[].command`
+
+- 컨테이너 안에서 실행되는 실행파일
+- 파드 생성 이후 업데이트할 수 없다.
+
+
+
+`spec.containers[].args`
+
+- 실행파일에 전달되는 인자
+- 파드 생성 이후 업데이트할 수 없다.
+- 문자열 값을 따옴표로 묶을 필요는 없지만 숫자는 묶어야 한다.
+
+
+
+# 11 환경변수
+
+- 컨테이너화된 애플리케이션은 종종 환경변수를 설정 옵션의 소스로 사용한다.
+- 파드의 각 컨테이너를 위한 환경변수 목록을 설정할 수 있다.
+- 환경변수 목록은 파드 생성 후에는 업데이트할 수 없다.
+
+
+
+**예시**
+
+- 파드 레벨이 아닌 컨테이너 레벨에 환경변수를 설정한다.
+- INTERVAL이란 환경변수의 값을 30으로 설정한다.
+- 아래의 예시처럼 직접 value를 지정할 수 있고 `valueFrom` 필드를 사용해 컨피그맵 또는 시크릿에서 값을 가져올 수 있다.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fortune-env
+spec:
+  containers:
+  - name: html-generator 
+  	image: luksa/fortune:env
+    env:
+    - name: INTERVAL
+      value: "30"
+```
 
 
 
