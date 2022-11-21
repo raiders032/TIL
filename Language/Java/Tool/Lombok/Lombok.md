@@ -230,6 +230,14 @@ private TakeoutOrderStatus takeoutOrderStatus = TakeoutOrderStatus.NEW;
 
 
 
+
+
+## @ToString
+
+
+
+
+
 참고
 
 * https://projectlombok.org/features/all
