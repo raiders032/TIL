@@ -312,6 +312,59 @@ kubectl logs --since=1h nginx
 
 # Cluster Management
 
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-strong-cluster-management-strong-)
+
+
+
+## kubectl cordon
+
+- Mark node as unschedulable.
+
+**Usage**
+
+```bash
+$ kubectl cordon NODE
+```
+
+
+
+## kubectl drain
+
+- [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#drain)
+
+**Usage**
+
+```bash
+$ kubectl drain NODE
+```
+
+```bash
+#Drain node "foo", even if there are pods not managed by a replication controller, replica set, job, daemon set or stateful set on it
+kubectl drain foo --force
+
+#As above, but abort if there are pods not managed by a replication controller, replica set, job, daemon set or stateful set, and use a grace period of 15 minutes
+kubectl drain foo --grace-period=900
+```
+
+
+
+**Flags**
+
+| Name                         | Shorthand | Default | Usage                                                        |
+| :--------------------------- | :-------- | :------ | :----------------------------------------------------------- |
+| chunk-size                   |           | 500     | Return large lists in chunks rather than all at once. Pass 0 to disable. This flag is beta and may change in the future. |
+| delete-emptydir-data         |           | false   | Continue even if there are pods using emptyDir (local data that will be deleted when the node is drained). |
+| delete-local-data            |           | false   | Continue even if there are pods using emptyDir (local data that will be deleted when the node is drained). |
+| disable-eviction             |           | false   | Force drain to use delete, even if eviction is supported. This will bypass checking PodDisruptionBudgets, use with caution. |
+| dry-run                      |           | none    | Must be "none", "server", or "client". If client strategy, only print the object that would be sent, without sending it. If server strategy, submit server-side request without persisting the resource. |
+| force                        |           | false   | Continue even if there are pods that do not declare a controller. |
+| grace-period                 |           | -1      | Period of time in seconds given to each pod to terminate gracefully. If negative, the default value specified in the pod will be used. |
+| ignore-daemonsets            |           | false   | Ignore DaemonSet-managed pods.                               |
+| pod-selector                 |           |         | Label selector to filter pods on the node                    |
+| selector                     | l         |         | Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints. |
+| skip-wait-for-delete-timeout |           | 0       | If pod DeletionTimestamp older than N seconds, skip waiting for the pod. Seconds must be greater than 0 to skip. |
+| timeout                      |           | 0s      | The length of time to wait before giving up, zero means infinite |
+
 
 
 ## kubectl taint
@@ -332,6 +385,18 @@ kubectl taint nodes foo dedicated=special-user:NoSchedule
 
 # remove from node 'foo' the taint with key 'dedicated' and effect 'NoSchedule' if one exists
 kubectl taint nodes foo dedicated:NoSchedule-
+```
+
+
+
+## kubectl uncordon
+
+- Mark node as schedulable.
+
+**Usage**
+
+```yaml
+$ kubectl uncordon NODE
 ```
 
 

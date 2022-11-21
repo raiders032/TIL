@@ -435,7 +435,125 @@ KUBE-SEP-IDBVHPLVKZAHS24Y  all  --  anywhere             anywhere             /*
 
 # 7 Headless Service
 
-
+- 헤드리스 서비스는 대상이 되는 개별 파드의 IP 주소가 직접 반환되는 서비스다.
+- 앞서 소개한 다른 서비스에서 부하 분산을 위해 제공되는 엔드포인트는 가상 IP로 로드 밸런싱 동작을 하기 위해 여러 파드로 전송되는 IP 엔드포인트였다.
+- 헤드리스 서비스는 로드 밸런싱을 위한 IP 주소는 제공되지 않고 DNS 라운드 로빈을 사용한 엔드포인트롤 제공한다.
+  - 헤드리스 서비스의 DNS 라운드 로빈에서 목적지 파드 IP 주소가 클러스터 내부 DNS에서 반환되는 형태로 부하 분산이 일어난다.
+- 스테이트풀셋이 헤드리스 서비스를 사용하는 경우에만 파드명으 IP주소를 디스커버리할 수 있다.
+
+
+
+**각 서비스와 엔드포인트 내용**
+
+| 서비스 종류  | IP 엔드포인트 내용                                   |
+| ------------ | ---------------------------------------------------- |
+| ClusterIP    | 클러스터 내부에서만 통신이 가능한 가상 IP 주소       |
+| NodePort     | 모든 클러스터 노드의 모든 IP 주소                    |
+| LoadBalancer | 클러스터 외부에서 제공되는 로드밸런스의 가상 IP 주소 |
+
+
+
+## 7.1 Headless Service 생성
+
+- Headless Service를 생성하려면 아래 두가지 조건을 만족해야 한다.
+  - `spec.type: ClusterIp`
+  - `spec.clusterIp: None`
+- 스테이트풀셋으로 생성된 파드명으로 디스커버리하는 경우
+  - 서비스의 `metadata.name과` 스테이트풀셋의 `spec.serviceName` 이 같아야한다.
+
+
+
+**sample-headless.yaml**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-headless
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: "http-port"
+      protocol: "TCP"
+      port: 80
+      targetPort: 80
+  selector:
+    app: sample-app
+```
+
+
+
+**sample-statefulset-headless.yaml**
+
+- `metadata.name과` 스테이트풀셋의 `spec.serviceName`이 같다.
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sample-statefulset-headless
+spec:
+  serviceName: sample-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:1.12
+```
+
+
+
+```bash
+# 파일 확인
+$ ls
+headless-service.yaml  sample-statefulset-headless.yaml
+
+# 오브젝트 생성
+$ kubectl create -f . -n study
+
+# 파드 IP 주소 확인
+$ kubectl get pods -n study -o wide
+NAME                            READY   STATUS    RESTARTS   AGE   IP             NODE      NOMINATED NODE   READINESS GATES
+sample-statefulset-headless-0   1/1     Running   0          12m   10.244.4.109   worker1   <none>           <none>
+sample-statefulset-headless-1   1/1     Running   0          12m   10.244.3.80    worker2   <none>           <none>
+sample-statefulset-headless-2   1/1     Running   0          12m   10.244.2.38    worker3   <none>           <none>
+
+# centos 파드를 하나 띄우고 dig을 사용하기 위한 패키지 설치
+$ kubectl run --image=centos:7 -it testpod
+[root@testpod /]# yum -y install bind-utils
+
+
+# '서비스명.네임스페이스명.svc.cluster.local'로 질의하면 ClusterIP DNS 라운드 로빈에서 여러 파드의 IP 주소가 반환된다.
+[root@testpod /]# dig sample-headless.study.svc.cluster.local
+
+...
+;; QUESTION SECTION:
+;sample-headless.study.svc.cluster.local. IN A
+
+;; ANSWER SECTION:
+sample-headless.study.svc.cluster.local. 30 IN A 10.244.3.80
+sample-headless.study.svc.cluster.local. 30 IN A 10.244.2.38
+sample-headless.study.svc.cluster.local. 30 IN A 10.244.4.109
+...
+
+# '파드명.서비스명.네임스페이스명.svc.cluster.local'로 질의하면 파드의 IP 주소가 반환된다.
+[root@testpod /]dig sample-statefulset-headless-0.sample-headless.study.svc.cluster.local
+...
+; QUESTION SECTION:
+;sample-statefulset-headless-0.sample-headless.study.svc.cluster.local. IN A
+
+;; ANSWER SECTION:
+sample-statefulset-headless-0.sample-headless.study.svc.cluster.local. 30 IN A 10.244.4.109
+...
+```
 
 
 
@@ -448,7 +566,7 @@ $ cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep cluster-ip-range
 - --service-cluster-ip-range=10.96.0.0/12
 ```
 
-넵ㄴㅂ 
+
 
  참고
 
