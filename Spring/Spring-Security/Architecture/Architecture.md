@@ -1,16 +1,29 @@
 # Servlet Applications Architecture
 
 * Servlet 기반의 애플리케이션에서 스프링 시큐리티의 아키텍쳐를 알아보자
+* [레퍼런스](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
+
+
 
 # 1 Filters
 
 * 클라이언트가 애플리케이션에 요청을 보내면 컨테이너는 필터 체인을 만든다.
+  * [Servlet-Filter.md](../../../WEB/Servlet/Servlet-Filter/Servlet-Filter.md) 참고
+
 * 필터 체인은 필터와 서블릿으로 구성된다.
-  * Spring MVC application에서  `Servlet` 은 `DispatcherServlet`이다.
+  * Spring MVC application에서  `Servlet`은 `DispatcherServlet`이다.
   * 서블릿은 최대 하나이고 필터 하나 이상 가능하다.
 * 필터와 서블릿은 HttpServletRequest 처리한다.
 
+
+
+**Picture**
+
 ![filterchain](images/filterchain.png)
+
+- 필터 체인은 필터와 서블릿으로 구성된다.
+
+
 
 ## 1.1 Filter의 기능
 
@@ -37,14 +50,26 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 
 * 일반적인 서블릿 필터
 * 서블릿 필터 처리를 스프링 빈으로 위임하는 역할을 하는 필터
-  * 아래서 설명하는 [FilterChainProxy](#3 filterchainproxy)라는 빈으로 필터 처리를 위임한다.
+* 아래서 설명하는 [FilterChainProxy](#3 filterchainproxy)라는 빈으로 필터 처리를 위임한다.
+
+
+
+**Picture**
 
 
 ![delegatingfilterproxy](./images/DelegatingFilterProxy.png)
 
+- 필터 체인은 필터와 서블릿으로 구성된다.
+- DelegatingFilterProxy는 필터다.
+- DelegatingFilterProxy는 내부에 가지고 있는 스프링 빈(Bean Filter0)에게 처리를 위임한다.
+
+
+
 
 
 **DelegatingFilterProxy Pseudo Code**
+
+- DelegatingFilterProxy는 애플리케이션 컨텍스트에서 someBeanName 빈을 찾아 처리를 위임한다.
 
 ```java
 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
@@ -59,24 +84,26 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 
 
 
-
-
 # 3 FilterChainProxy
 
 * 스프링 시큐리티가 제공하는 필터를 호출하는 역할
   * 여러개의 [SecurityFilterChain](#4-securityfilterchain)들을 가지고 있어 요청에 따라 어떤 [SecurityFilterChain](#4-securityfilterchain)을 적용할지 결정한다.
   * 따라서 스프링 시큐리티와 관련해서 디버깅이 필요한 경우 **FilterChainProxy**가 좋은 시작 위치이다.
-
-* **FilterChainProxy**는 빈이고 [DelegatingFilterProxy](#2-delegatingfilterproxy)가 감싸는 형태이다
+* **FilterChainProxy**는 빈이고 [DelegatingFilterProxy](#2-delegatingfilterproxy)라는 필터가 감싸는 형태이다
 * `WebSecurity`가 **FilterChainProxy**를 만든다
 * `WebSecurity`를 커스터마이징 하기 위해 `WebSecurityConfigurerAdapter`를 사용한다.
 * 즉 `WebSecurityConfigurerAdapter`를 통해 `FilterChainProxy`를 관리할 수 있다.
 
 
 
+**Picture**
+
 ![filterchainproxy](./images/FilterChainProxy.png)
 
-
+- 필터 체인은 필터와 서블릿으로 구성된다.
+- DelegatingFilterProxy는 필터다.
+- DelegatingFilterProxy는 내부에 가지고 있는 스프링 빈(FilterChainProxy)에게 처리를 위임한다.
+- FilterChainProxy는 여러개의 SecurityFilterChain들을 가지고 있어 요청에 따라 어떤 SecurityFilterChain을 적용할지 결정한다.
 
 
 
@@ -85,16 +112,30 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 * [FilterChainProxy](#3 filterchainproxy)는 여러개의 [SecurityFilterChain](#4-securityfilterchain)들을 가지고 있어 요청에 따라 어떤 [SecurityFilterChain](#4-securityfilterchain)을 적용할지 결정한다.
 * 시큐리티 설정 정보를 통해 어떤 필터 체인을 호출해야 할지 결정
 
+
+
+**Picture**
+
 ![multi securityfilterchain](./images/multi-securityfilterchain.png)
 
-
+- 필터 체인은 필터와 서블릿으로 구성된다.
+- DelegatingFilterProxy는 필터다.
+- DelegatingFilterProxy는 내부에 가지고 있는 스프링 빈(FilterChainProxy)에게 처리를 위임한다.
+- FilterChainProxy는 여러개의 SecurityFilterChain들을 가지고 있어 요청에 따라 어떤 SecurityFilterChain을 적용할지 결정한다.
+- 여러개의 SecurityFilterChain을 가지고 있을 경우 처음으로 매칭되는 SecurityFilterChain가 호출된다.
+  - `/api/messages/` 패스로 요청하면 SecurityFilterChain(0)이 호출된다
+    - SecurityFilterChain(n)도 조건을 충족하지만 가장 먼저 매칭되는 SecurityFilterChain(0)만 호출된다
+  - `/messages/`로 호출하면 SecurityFilterChain(n)이 호출된다.
 
 
 
 # 5 SecurityFilter
 
+* SecurityFilter는 SecurityFilterChain에 삽입해 SecurityFilterChain을 만들 수 있다.
 * 스프링 시큐리티가 제공하는 SecurityFilter 목록
 * **SecurityFilter** 각각은 빈이다.
+
+
 
 **주요 SecurityFilter**
 

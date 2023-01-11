@@ -93,34 +93,38 @@ public class WebClientProperties {
 * `@ConstructorBinding`를 사용해 생성자 바인딩을 사용할 수 있다
 * `@DefaultValue` 애노테이션을 사용해 기본 값을 설정할 수 있다
 
+
+
+**Properties 파일**
+
+```yaml
+spring:
+  redis:
+    host: localhost
+```
+
+
+
+**Constructor binding 예시**
+
 ```java
+@Getter
 @ConstructorBinding
-@ConfigurationProperties("my.service")
-public class MyProperties {
+@RequiredArgsConstructor
+@ConfigurationProperties(prefix = "spring")
+public class RedisProperties {
+    private final Redis redis;
 
-  // fields...
+    @Getter
+    public static class Redis {
+        private final String host;
+        private final Integer port;
 
-  public MyProperties(boolean enabled, InetAddress remoteAddress, Security security) {
-    this.enabled = enabled;
-    this.remoteAddress = remoteAddress;
-    this.security = security;
-  }
-
-  // getters...
-
-  public static class Security {
-
-    // fields...
-
-    public Security(String username, String password, @DefaultValue("USER") List<String> roles) {
-      this.username = username;
-      this.password = password;
-      this.roles = roles;
+        public Redis(String host, @DefaultValue("6379") Integer port) {
+            this.host = host;
+            this.port = port;
+        }
     }
-
-    // getters...
-
-  }
 
 }
 ```

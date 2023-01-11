@@ -219,12 +219,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
   List<Member> findUser(@Param("username") String username, @Param("age") int age);
 ```
 
+
+
 **값 조회**
 
 ```java
   @Query("select m.username from Member m")
   List<String> findUsernameList();
 ```
+
+
 
 **DTO 직접 조회**
 
@@ -234,6 +238,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 List<MemberDto> findMemberDto();
 ```
 
+
+
 **파라미터 바인딩**
 
 ```java
@@ -241,12 +247,16 @@ List<MemberDto> findMemberDto();
 Member findMembers(@Param("name") String username);
 ```
 
+
+
 **컬렌션 파라미터 바인딩**
 
 ```java
 @Query("select m from Member m where m.username in :names")
 List<Member> findByNames(@Param("names") List<String> names);
 ```
+
+
 
 **반환 타입**
 

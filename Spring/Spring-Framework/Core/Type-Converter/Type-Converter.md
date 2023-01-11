@@ -1,5 +1,3 @@
-
-
 # 1 Spring Type Conversion
 
 * 타입 변환하기
@@ -187,6 +185,7 @@ Integer value = conversionService.convert("10", Integer.class);
 
 ## 4.1 Formatter 인터페이스
 
+* `org.springframework.format.Formatter` 패키지
 * String print(T object, Locale locale) : 객체를 문자로 변경한다. 
 * T parse(String text, Locale locale) : 문자를 객체로 변경한다.
 
