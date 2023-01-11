@@ -53,7 +53,7 @@
 
 
 
-# 2. Gitlab Runner 설치 및 등록
+# 2 Gitlab Runner 설치 및 등록
 
 **[설치](https://docs.gitlab.com/runner/install/)**
 
@@ -188,52 +188,88 @@ deploy-prod:
 
 
 
-## 3.1 [Keyword reference for the .gitlab-ci.yml file](https://docs.gitlab.com/ee/ci/yaml/README.html)
+## 3.1 [Keyword reference](https://docs.gitlab.com/ee/ci/yaml/README.html)
 
 
 
-[image](https://docs.gitlab.com/runner/executors/docker.html#the-image-keyword)
+**`rules:if`**
 
->  `image` 키워드는 빌드가 실행될 컨테이너를 만드는 데 사용되는 Docker 이미지를 나타낸다.
+```yml
+job:
+  script: echo "Hello, Rules!"
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature/ && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME != $CI_DEFAULT_BRANCH
+      when: never
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature/
+      when: manual
+      allow_failure: true
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+```
 
-[services](https://docs.gitlab.com/runner/executors/docker.html#the-services-keyword)
 
-> `services` 키워드는 빌드 중에 실행되고 `image`키워드가 정의하는 Docker 이미지에 연결된 다른 Docker 이미지를 의미한다. 이를 통해 빌드 시간 동안 서비스 이미지에 액세스 할 수 있습니다.
 
-[tags](https://docs.gitlab.com/ee/ci/yaml/index.html#tags)
+## 3.2 [Predefined variables reference](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
 
-> 태그를 사용하여 프로젝트에 사용할 수 있는 모든 러너 목록에서 특정 러너를 선택할 수 있다.
->
-> Runner를 등록할 때 docker, aws등의 Runner 태그를 지정할 수 있다.
->
-> ```bash
-> sudo gitlab-runner register \
-> 	...
->   	--tag-list "docker,aws" \
-> 	...
-> ```
->
-> 태그를 사용하여 서로 다른 플랫폼에서 서로 다른 작업을 실행할 수 있습니다. 예를 들어 tag osx가 있는 OS X 러너와 태그 창이 있는 윈도우즈 러너가 있는 경우 각 플랫폼에서 작업을 실행할 수 있습니다.
->
-> ```yml
-> windows job:
->   stage:
->     - build
->   tags:
->     - windows
->   script:
->     - echo Hello, %USERNAME%!
-> 
-> osx job:
->   stage:
->     - build
->   tags:
->     - osx
->   script:
->     - echo "Hello, $USER!"
-> ```
+`CI_COMMIT_BRANCH`
 
-# 4. Use Docker to build Docker images
+- 커밋된 브랜치의 이름
+
+```yaml
+docker build:
+  script: docker build -t my-image:$CI_COMMIT_REF_SLUG .
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: delayed
+      start_in: '3 hours'
+      allow_failure: true
+```
+
+
+
+`CI_PIPELINE_SOURCE`
+
+- 파이프라인이 트리거된 이유로 아래와 같은 값을 가진다
+- [레퍼런스](https://docs.gitlab.com/ee/ci/jobs/job_control.html#common-if-clauses-for-rules)
+
+| Value                         | Description                                                  |
+| :---------------------------- | :----------------------------------------------------------- |
+| `api`                         | For pipelines triggered by the [pipelines API](https://docs.gitlab.com/ee/api/pipelines.html#create-a-new-pipeline). |
+| `chat`                        | For pipelines created by using a [GitLab ChatOps](https://docs.gitlab.com/ee/ci/chatops/index.html) command. |
+| `external`                    | When you use CI services other than GitLab.                  |
+| `external_pull_request_event` | When an external pull request on GitHub is created or updated. See [Pipelines for external pull requests](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/index.html#pipelines-for-external-pull-requests). |
+| `merge_request_event`         | For pipelines created when a merge request is created or updated. Required to enable [merge request pipelines](https://docs.gitlab.com/ee/ci/pipelines/merge_request_pipelines.html), [merged results pipelines](https://docs.gitlab.com/ee/ci/pipelines/merged_results_pipelines.html), and [merge trains](https://docs.gitlab.com/ee/ci/pipelines/merge_trains.html). |
+| `parent_pipeline`             | For pipelines triggered by a [parent/child pipeline](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#parent-child-pipelines) with `rules`. Use this pipeline source in the child pipeline configuration so that it can be triggered by the parent pipeline. |
+| `pipeline`                    | For [multi-project pipelines](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#multi-project-pipelines) created by [using the API with `CI_JOB_TOKEN`](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#trigger-a-multi-project-pipeline-by-using-the-api), or the [`trigger`](https://docs.gitlab.com/ee/ci/yaml/index.html#trigger) keyword. |
+| `push`                        | For pipelines triggered by a `git push` event, including for branches and tags. |
+| `schedule`                    | For [scheduled pipelines](https://docs.gitlab.com/ee/ci/pipelines/schedules.html). |
+| `trigger`                     | For pipelines created by using a [trigger token](https://docs.gitlab.com/ee/ci/triggers/index.html#configure-cicd-jobs-to-run-in-triggered-pipelines). |
+| `web`                         | For pipelines created by using **Run pipeline** button in the GitLab UI, from the project’s **CI/CD > Pipelines** section. |
+| `webide`                      | For pipelines created by using the [WebIDE](https://docs.gitlab.com/ee/user/project/web_ide/index.html). |
+
+
+
+
+
+`CI_MERGE_REQUEST_APPROVED`
+
+- 머지 리퀘스트의 승인 여부
+- 머지 리퀘스트가 승인 된 경우 `true`
+
+
+
+`CI_MERGE_REQUEST_SOURCE_BRANCH_NAME`
+
+- 머지 리퀘스트의 소스 브랜치 이름
+
+
+
+`CI_MERGE_REQUEST_TARGET_BRANCH_NAME`
+
+- 머지 리퀘스트의 타켓 브랜치 이름
+
+
+
+# 4 Use Docker to build Docker images
 
 > Docker와 함께 GitLab CI/CD를 사용하여 Docker 이미지를 생성할 수 있습니다.  애플리케이션의 Docker 이미지를 만들고 테스트한 후 컨테이너 레지스트리에 업로드할 수 있습니다.
 
