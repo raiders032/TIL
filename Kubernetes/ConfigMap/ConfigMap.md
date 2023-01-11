@@ -102,7 +102,7 @@ data:
 # 3 Pods definition
 
 - ConfigMap을 참조하기 위해서는 spec 부분에 명시하면 된다.
-- Pod와 ConfigMap이 같은 네임스페이스에 속해야한다
+- Pod와 ConfigMap이 **같은 네임스페이스에 속해야한다**.
 - 컨피그 맵의 값을 파드의 컨테이너로 전달하는 방법은 세 가지가 있다.
 
 

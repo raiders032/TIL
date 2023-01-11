@@ -14,7 +14,7 @@
 
 
 
-# 2 노드 어피니티 사용하기
+## 1.1 노드 어피니티 사용하기
 
 
 
@@ -65,7 +65,8 @@ spec:
 
 **preferredDuringScheduling 예시**
 
-- weight로 선호도를 명시할 수 있다. 
+- weight로 선호도를 명시할 수 있다.
+- weight는 점수라고 생각하면 쉽고 가장 높은 점수를 획득한 노드에 파드가 스케줄링 된다.
 
 ```yaml
 apiVersion: extensions/v1beta1
@@ -106,7 +107,7 @@ spec:
 
 
 
-# 3 노드 어피니트 타입
+## 1.2 Node Affinity 타입
 
 - 노드 어피니티는 두 가지의 타입을 제공한다.
   - `requiredDuringSchedulingIgnoredDuringExecution`
@@ -124,6 +125,8 @@ spec:
 
 - 먼저 룰을 만족시키는 노드를 찾는다.
 - 만약 룰을 만족시키는 노드가 없으면 룰을 무시하고 파드를 스케줄링 한다.
+- weight를 지정할 수 있다.
+- 각각의 노드들이 획득한 weight를 모두 더해 점수를 내고 점수가 가장 높은 노드가 파드 스케줄링 우선순위를 가진다. 
 
 `...IgnoredDuringExecution`
 
@@ -133,6 +136,53 @@ spec:
 `...RequiredDuringExecution`
 
 - 이전에 룰을 만족시켜 파드가 배치된 노드에 레이블을 변경해 더 이상 룰을 만족시키지 못하는 파드를 제거한다.
+
+
+
+# 2 Pod Affinity
+
+- 노드 어피니티와 유사하게 특정 파드가 호스팅된 노드에 파드를 스케줄링하도록 지시할 수 있다.
+
+
+
+## 2.1 사용하기
+
+- 파드 스펙의 `affinity.podAffinity` 필드를 이용해 어피티니를 설정한다.
+- 파드 스펙의 `affinity.podAntiAffinity` 필드를 이용해 안티 어피니티를 설정한다.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-pod-affinity
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: security
+            operator: In
+            values:
+            - S1
+        topologyKey: topology.kubernetes.io/zone
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: security
+              operator: In
+              values:
+              - S2
+          topologyKey: topology.kubernetes.io/zone
+  containers:
+  - name: with-pod-affinity
+    image: registry.k8s.io/pause:2.0
+```
+
+
 
 
 

@@ -14,7 +14,7 @@ source <(kubectl completion zsh)  # 현재 셸에 zsh의 자동 완성 설정
 echo "[[ $commands[kubectl] ]] && source <(kubectl completion zsh)" >> ~/.zshrc # 자동 완성을 zsh 셸에 영구적으로 추가한다.
 ```
 
-
+ 
 
 # Basic
 
@@ -331,6 +331,7 @@ $ kubectl cordon NODE
 ## kubectl drain
 
 - [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#drain)
+- 노드를 비우고 노드를 unschedulable로 표시한다.
 
 **Usage**
 

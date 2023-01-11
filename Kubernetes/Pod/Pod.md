@@ -396,7 +396,7 @@ ip link del
 
 **경로 확인하기**
 
-- kublet의 설정 파일 `/var/lib/kubelet/config.yaml` 에서 `staticPodPath`를 확인한다.
+- kublet의 설정 파일 `/var/lib/kubelet/config.yaml`에서 `staticPodPath`를 확인한다.
 - `/etc/kubernetes/manifests` 경로에 파드 데피니션을 정의하면 Static Pod를 만들 수 있다.
 - `staticPodPath`을 수정하면 kubelet을 꼭 재시작해야한다.
 

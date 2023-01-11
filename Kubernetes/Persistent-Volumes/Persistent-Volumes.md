@@ -278,12 +278,35 @@ spec:
 
 
 
+## 2.2 PersistentVolumeClaim 사용
+
+- 파드는 PersistentVolumeClaim을 사용해 스토리지에 접근이 가능하다
+- PersistentVolumeClaim은 Pod와 같은 네임스페이스에 있어야 한다.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim
+```
+
+
+
 # 3 StorageClass
 
 - 동적 프로비저닝을 사용하려면 어떤 PersistentVolume을 생성할지 정의한 StorageClass를 생성해야 한다.
 - [1.3 Dynamic-Provisioning](#1.3-Dynamic-Provisioning)
-
-
 
 
 
@@ -313,6 +336,12 @@ volumeBindingMode: Immediate
   - 실제 파드가 PersistentVolumeClaim를 사용할 때 PersistentVolume이 생성된다.
 - 기본값 Immediate
 - Persistent Volume 플러그인 마다 지원 여부가 다르다.
+
+
+
+# 4 Provisioner
+
+- [nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
 
 
 

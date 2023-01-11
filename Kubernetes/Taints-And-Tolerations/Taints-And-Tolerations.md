@@ -64,11 +64,13 @@ kubectl taint nodes node1 key1=value1:NoSchedule-
 `NoSchedule`
 
 - 파드가 테인트를 허용하지 않는 경우 파드가 노드에 스케줄링되지 않는다.
+- 기존의 존재하는 파드는 유지된다.
 
 `PreferNoSchedule`
 
 - NoSchedule의 소프트한 버전이다
 - 스케줄러가 파드를 노드에 스케줄링하지 않으려 하지만 다른 곳에 스케줄링할 수 없으면 해당 노드에 스케줄링 된다.
+- 기존의 존재하는 파드는 유지된다.
 
 `NoExecute`
 
@@ -120,4 +122,3 @@ spec:
     value: "production"
     effect: "NoSchedule"
 ```
-

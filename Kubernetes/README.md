@@ -8,7 +8,10 @@
 
 ---
 
-* [Annotations](Annotations/Annotations.md) 
+* [Affinity](Affinity/Affinity.md)
+  * Node Affinity, Pod Affinity
+
+* [Annotations](Annotations/Annotations.md)
 * [CNI](CNI/CNI.md)
 * [ConfigMap](ConfigMap/ConfigMap.md)
 * [CronJob](CronJob/CronJob.md) 
@@ -18,24 +21,27 @@
 * [Kubernetes Components](Kubernetes-Components/Kubernetes-Components.md)
   * Control Plane Components: kube-apiserver, etcd, kube-scheduler, kube-controller-manager
   * Node Components: kubelet, kube-proxy, Container runtime
-* [Labels And Selectors](Labels-And-Selectors/Labels-And-Selectors.md) 
+* [Labels And Selectors](Labels-And-Selectors/Labels-And-Selectors.md)
+  * nodeSelector
+
 * [Namespace](Namespace/Namespace.md)
 * [Network](Network/Network.md)
 * [Persistent Volumes](Persistent-Volumes/Persistent-Volumes.md) 
   * PersistentVolume, PersistentVolumeClaim
   * Dynamic Provisioning
-  
+
 * [Pod](Pod/Pod.md)
   * livenessProbe
   * Static Pod
 
 * [Replica Set And Deployment](Replica-Set-And-Deployment/Replica-Set-And-Deployment.md)
 * [Resource Management](Resource-Management/Resource-Management.md)
-* [Secret](Secret/Secret.md) 
+* [Secret](Secret/Secret.md)
 * [Service](Service/Service.md)
   * ClusterIP, NodePort, LoadBalancer, ExternalName
   * kube-proxy
 
+* [ServiceAccount](ServiceAccount/ServiceAccount.md)
 * [StatefulSet](StatefulSet/StatefulSet.md)
 * [Taints And Tolerations](Taints-And-Tolerations/Taints-And-Tolerations.md)
 * [Volume](Volume/Volume.md)

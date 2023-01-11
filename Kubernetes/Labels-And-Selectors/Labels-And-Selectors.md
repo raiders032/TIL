@@ -141,8 +141,6 @@ test-rs-wv7nq   1/1     Running   0              9d     app=nginx
 - 레이블 셀렉터는 kubectl에서만 사용하는 것이 아니라 내부적으로도 사용된다.
 - 워커 노드 분류에 레이블을 사용하고 파드를 특정 노드에 스케줄링 되도록 만들어보자.
 
-
-
 ```bash
 # 노드가 GPU를 가지고 있음을 보여주는 레이블을 노드에 추가한다.
 $ kubectl label node worker1 gpu=true
