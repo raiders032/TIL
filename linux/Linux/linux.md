@@ -386,8 +386,6 @@ ___
 
 
 
-
-
 # 사용자 관리 관련 파일들
 
 
@@ -402,7 +400,7 @@ ___
   cat /etc/passwd
   ...
   ubuntu:x:1000:1000:Ubuntu:/home/ubuntu:/bin/bash
-  ...
+  ...2
   ```
 
 * ubuntu
@@ -468,7 +466,7 @@ ___
 
 ```bash
 # user01 사용자를 생성한다.
-useradd user01
+useradd user01 -m
 tail -1 /etc/passwd
 user01:x:1002:1002::/home/user01:/bin/bash
 
@@ -625,6 +623,13 @@ hostnamectl set-hostname new_host_name
 
 - 호스트의 네트워크 인터페이스를 볼 수 있다.
 
+```bash
+$ ip link
+
+# 축약어 사용
+$ ip l
+```
+
 
 
 ## ip addr
@@ -632,9 +637,16 @@ hostnamectl set-hostname new_host_name
 - 네트워크 인터페이스에 할당 된 IP 주소를 볼 수 있다.
 
 ````bash
-ip addr
+$ ip addr
+
+# 축약어 사용
+$ ip a
+
 # 네티워크 인터페이스에 IP 주소를 할당한다. 재시작 하면 풀림
-ip addr add 192.168.1.10/24 dev eth0
+$ ip addr add 192.168.1.10/24 dev eth0
+
+# 브리지 타입의 인터페이스 조회
+$ ip addr show type bridge
 ````
 
 
@@ -643,6 +655,36 @@ ip addr add 192.168.1.10/24 dev eth0
 
 - 네트워크 네임스페이스 조회
 
+```bash
+# 네트워크 인터페이스 생성
+$ ip netns add red
+$ ip netns add blue
+
+# 네트워크 네임스페이스 조회
+$ ip netns
+blue
+red
+
+# red 네트워크 네임스페이스의 네트워크 인터페이스 조회
+$ ip -n red link
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    
+# red 네트워크 네임스페이스의 arp 테이블 조회 비어있음
+$ ip netns exec red arp
+
+# 호스트의 arp 테이블
+$ arp
+Address                  HWtype  HWaddress           Flags Mask            Iface
+k8-single-node-ttyd-sta  ether   02:42:c0:12:65:09   C                     eth0
+172.25.0.1               ether   02:42:f1:e7:87:ee   C                     eth1
+10.244.0.3               ether   1a:af:3b:cd:9f:4b   C                     cni0
+oc-192-18-101-7.compute  ether   02:42:c0:12:65:07   C                     eth0
+k8-single-node-ttyd-sta  ether   02:42:c0:12:65:06   C                     eth0
+oc-192-18-101-10.comput  ether   02:42:c0:12:65:0a   C                     eth0
+10.244.0.2               ether   7e:7e:b5:88:d4:0a   C                     cni0
+```
+
 
 
 ## ip route
@@ -650,9 +692,13 @@ ip addr add 192.168.1.10/24 dev eth0
 - 라우팅 테이블 보기
 
 ```bash
-ip route
+$ ip route
+
+# 축약어 사용
+$ ip r
+
 # 라우팅 테이블에 엔트리 추가하기
-ip route add 192.168.1.0/24 via 192.168.2.1
+$ ip route add 192.168.1.0/24 via 192.168.2.1
 ```
 
 
@@ -662,11 +708,52 @@ ip route add 192.168.1.0/24 via 192.168.2.1
 - Print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
 
 ```bash
+$ netstat -help
+usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
+       netstat [-vWnNcaeol] [<Socket> ...]
+       netstat { [-vWeenNac] -i | [-cnNe] -M | -s [-6tuw] }
+
+        -r, --route              display routing table
+        -i, --interfaces         display interface table
+        -g, --groups             display multicast group memberships
+        -s, --statistics         display networking statistics (like SNMP)
+        -M, --masquerade         display masqueraded connections
+
+        -v, --verbose            be verbose
+        -W, --wide               don't truncate IP addresses
+        -n, --numeric            don't resolve names
+        --numeric-hosts          don't resolve host names
+        --numeric-ports          don't resolve port names
+        --numeric-users          don't resolve user names
+        -N, --symbolic           resolve hardware names
+        -e, --extend             display other/more information
+        -p, --programs           display PID/Program name for sockets
+        -o, --timers             display timers
+        -c, --continuous         continuous listing
+
+        -l, --listening          display listening server sockets
+        -a, --all                display all sockets (default: connected)
+        -F, --fib                display Forwarding Information Base (default)
+        -C, --cache              display routing cache instead of FIB
+        -Z, --context            display SELinux security context for sockets
+
+  <Socket>={-t|--tcp} {-u|--udp} {-U|--udplite} {-S|--sctp} {-w|--raw}
+           {-x|--unix} --ax25 --ipx --netrom
+  <AF>=Use '-6|-4' or '-A <af>' or '--<af>'; default: inet
+  List of possible address families (which support routing):
+    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25)
+    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)
+    x25 (CCITT X.25)
+```
+
+
+
+```bash
 # tcp
 netstat -t
 
 # PID/Program name
-netstat -p
+netstat -psudo
 
 # listening
 netstat -l
@@ -677,7 +764,134 @@ netstat -n
 
 
 
-##  iptables -L -t nat
+## netcat
+
+```bash
+$ netcat -help
+OpenBSD netcat (Debian patchlevel 1.187-1ubuntu0.1)
+usage: nc [-46CDdFhklNnrStUuvZz] [-I length] [-i interval] [-M ttl]
+	  [-m minttl] [-O length] [-P proxy_username] [-p source_port]
+	  [-q seconds] [-s source] [-T keyword] [-V rtable] [-W recvlimit] [-w timeout]
+	  [-X proxy_protocol] [-x proxy_address[:port]] 	  [destination] [port]
+	Command Summary:
+		-4		Use IPv4
+		-6		Use IPv6
+		-b		Allow broadcast
+		-C		Send CRLF as line-ending
+		-D		Enable the debug socket option
+		-d		Detach from stdin
+		-F		Pass socket fd
+		-h		This help text
+		-I length	TCP receive buffer length
+		-i interval	Delay interval for lines sent, ports scanned
+		-k		Keep inbound sockets open for multiple connects
+		-l		Listen mode, for inbound connects
+		-M ttl		Outgoing TTL / Hop Limit
+		-m minttl	Minimum incoming TTL / Hop Limit
+		-N		Shutdown the network socket after EOF on stdin
+		-n		Suppress name/port resolutions
+		-O length	TCP send buffer length
+		-P proxyuser	Username for proxy authentication
+		-p port		Specify local port for remote connects
+		-q secs		quit after EOF on stdin and delay of secs
+		-r		Randomize remote ports
+		-S		Enable the TCP MD5 signature option
+		-s source	Local source address
+		-T keyword	TOS value
+		-t		Answer TELNET negotiation
+		-U		Use UNIX domain socket
+		-u		UDP mode
+		-V rtable	Specify alternate routing table
+		-v		Verbose
+		-W recvlimit	Terminate after receiving a number of packets
+		-w timeout	Timeout for connects and final net reads
+		-X proto	Proxy protocol: "4", "5" (SOCKS) or "connect"
+		-x addr[:port]	Specify proxy address and port
+		-Z		DCCP mode
+		-z		Zero-I/O mode [used for scanning]
+	Port numbers can be individual or ranges: lo-hi [inclusive]
+```
+
+
+
+
+
+##  iptables
+
+````bash
+$ iptables -help
+iptables v1.6.1
+
+Usage: iptables -[ACD] chain rule-specification [options]
+       iptables -I chain [rulenum] rule-specification [options]
+       iptables -R chain rulenum rule-specification [options]
+       iptables -D chain rulenum [options]
+       iptables -[LS] [chain [rulenum]] [options]
+       iptables -[FZ] [chain] [options]
+       iptables -[NX] chain
+       iptables -E old-chain-name new-chain-name
+       iptables -P chain target [options]
+       iptables -h (print this help information)
+
+Commands:
+Either long or short options are allowed.
+  --append  -A chain		Append to chain
+  --check   -C chain		Check for the existence of a rule
+  --delete  -D chain		Delete matching rule from chain
+  --delete  -D chain rulenum
+				Delete rule rulenum (1 = first) from chain
+  --insert  -I chain [rulenum]
+				Insert in chain as rulenum (default 1=first)
+  --replace -R chain rulenum
+				Replace rule rulenum (1 = first) in chain
+  --list    -L [chain [rulenum]]
+				List the rules in a chain or all chains
+  --list-rules -S [chain [rulenum]]
+				Print the rules in a chain or all chains
+  --flush   -F [chain]		Delete all rules in  chain or all chains
+  --zero    -Z [chain [rulenum]]
+				Zero counters in chain or all chains
+  --new     -N chain		Create a new user-defined chain
+  --delete-chain
+            -X [chain]		Delete a user-defined chain
+  --policy  -P chain target
+				Change policy on chain to target
+  --rename-chain
+            -E old-chain new-chain
+				Change chain name, (moving any references)
+Options:
+    --ipv4	-4		Nothing (line is ignored by ip6tables-restore)
+    --ipv6	-6		Error (line is ignored by iptables-restore)
+[!] --protocol	-p proto	protocol: by number or name, eg. `tcp'
+[!] --source	-s address[/mask][...]
+				source specification
+[!] --destination -d address[/mask][...]
+				destination specification
+[!] --in-interface -i input name[+]
+				network interface name ([+] for wildcard)
+ --jump	-j target
+				target for rule (may load target extension)
+  --goto      -g chain
+                              jump to chain with no return
+  --match	-m match
+				extended match (may load extension)
+  --numeric	-n		numeric output of addresses and ports
+[!] --out-interface -o output name[+]
+				network interface name ([+] for wildcard)
+  --table	-t table	table to manipulate (default: `filter')
+  --verbose	-v		verbose mode
+  --wait	-w [seconds]	maximum wait to acquire xtables lock before give up
+  --wait-interval -W [usecs]	wait time to try to acquire xtables lock
+				default is 1 second
+  --line-numbers		print line numbers when listing
+  --exact	-x		expand numbers (display exact values)
+[!] --fragment	-f		match second or further fragments only
+  --modprobe=<command>		try to insert modules using this command
+  --set-counters PKTS BYTES	set the counter during insert/append
+[!] --version	-V		print package version.
+````
+
+
 
 
 

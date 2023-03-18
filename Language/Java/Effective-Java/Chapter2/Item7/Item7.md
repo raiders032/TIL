@@ -62,7 +62,7 @@ public class Stack {
   * 다 쓴 참조: 앞으로 다시 쓰지 않을 참조
 * GC는 Unreachable한 객체를 찾을 수 있지만 Unused 한 객체를 찾을 수 없다
   * 위에 다 쓴 참조가 Unused 한 객체이다
-* Unused 한 객체는 프로그램의 논리에 따라 달라지므로 프로그래머는 비지느스 코드에 주의해야 한다
+* Unused 한 객체는 프로그램의 논리에 따라 달라지므로 프로그래머는 비즈니스 코드에 주의해야 한다
 
 
 
@@ -155,6 +155,8 @@ public synchronized void removeElementAt(int index) {
 ## 2.2 캐시
 
 - 객체 참조를 캐시에 넣고 객체를 다 쓴 이후에도 그냥 두는 경우가 있다.
+
+
 
 **해결방법**
 

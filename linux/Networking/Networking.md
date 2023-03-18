@@ -133,8 +133,6 @@ default via 192.168.155.1 dev en7
 
 
 
-
-
 # 5 Network Namespace
 
 - 네트워크 네임스페이스는 프로세스 간에 네트워크 환경을 격리할 수 있는 매우 강력한 기능들을 제공한다.
@@ -166,7 +164,7 @@ red
 - 네트워크 네임스페이스의 네트워크 인터페이스를 조회하면 LOOPBACK 인터페이스를 제외하고 다른 인터페이스가 없다.
 
 ```bash
-ip link
+$ ip link
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 2: eno1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
@@ -207,8 +205,8 @@ Address                  HWtype  HWaddress           Flags Mask            Iface
 10.244.1.2                       (incomplete)                              cni0
 
 # 두 네임스페이스의 ARP 테이블은 비어있다.
-ip netns exec red arp
-ip netns exec blue arp
+$ ip netns exec red arp
+$ ip netns exec blue arp
 ```
 
 
@@ -242,7 +240,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 먼저 두개의 네트워크 인터페이스를 연결하는 파이프 만든다.
 
 ```bash
-ip link add veth-red type veth peer name veth-blue
+$ ip link add veth-red type veth peer name veth-blue
 ```
 
 
@@ -322,6 +320,10 @@ $ ip -n red link del veth-red
 
 ![image-20221028155044956](images/image-20221028155044956.png)
 
+
+
+**bridge 타입의 네트워크 인터페이스 생성**
+
 ```bash
 $ ip link add v-net-0 type bridge
 ```
@@ -341,6 +343,10 @@ $ ip link
 
 
 **파이프 만들기**
+
+![image-20230308205256610](images/image-20230308205256610.png)
+
+![image-20230308205304290](images/image-20230308205304290.png)
 
 - 네임스페이스와 브릿지를 연결할 파이프를 만든다.
 
@@ -366,6 +372,8 @@ $ ip link
 
 **네트워크 인터페이스**
 
+![image-20230308205406820](images/image-20230308205406820.png)
+
 - 한쪽은 네임스페이스에 한쪽은 브리지에 연결한다.
 
 ```bash
@@ -386,3 +394,14 @@ $ ip -n red addr add 192.168.15.1/24 dev veth-red
 $ ip -n blue addr add 192.168.15.2/24 dev veth-blue
 ```
 
+
+
+![image-20230308205630669](images/image-20230308205630669.png)
+
+
+
+![image-20230308205638444](images/image-20230308205638444.png)
+
+
+
+![image-20230308205646038](images/image-20230308205646038.png)

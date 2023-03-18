@@ -1,8 +1,9 @@
 # Redis
 
-* [Redis](Redis/Redis.md) 
-* [Data Type](Data-Type/Data-Type.md) 
-* [Replication](Replication/Replication.md) 
+* [Data Type](Data-Type/Data-Type.md)
+* [Redis](Redis/Redis.md)
+* [Redis Cluster](Redis-Cluster/Redis-Cluster.md)
+* [Replication](Replication/Replication.md)
 
 
 

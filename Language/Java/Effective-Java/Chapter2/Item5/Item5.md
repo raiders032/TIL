@@ -50,6 +50,8 @@ public class SpellChecker {
 
 > **클래스가 내부적으로 하나 이상의 자원에 의존하고, 그 자원이 클래스 동작에 영향을 준다면 싱글턴(Singleton) 과, 정적 유틸리티(static util class)는 사용하지 않는 것이 좋다.**
 
+
+
 # 2 의존 객체 주입
 
 * SpellChecker가 여러 사전을 사용할 수 있도록 만들어보자.
@@ -78,6 +80,8 @@ public class SpellChecker {
 
 * 간단히 dictionary 필드에서 final 한정자를 제거하고 다른 사전으로 교체하는 메서드를 추가한다(setter)
 * 아쉽게도 setter 주입 방식은 어색하고 오류를 내기 쉬우며 멀티쓰레드 환경에서는 쓸 수 없다.
+
+
 
 **예시**
 

@@ -87,6 +87,13 @@ bridge add <container_id> <namespace>
 
 
 
+**NAT가 없으면**
+
+- 파드 A가 네트워크 패킷을 보내기위해 파드 B에 연결할 때 파드 B가 보는 출발지 IP는 파드 A의 IP주소와 동일하다.
+- NAT가 없기 때문에 패킷의 목적지와 출발지   주소는 변하지 않는다.
+
+
+
 # 3 CNI 플러그인
 
 - 지원되는 플러그인
@@ -132,4 +139,3 @@ $ cat /etc/cni/net.d/10-flannel.conflist
   ]
 }
 ```
-

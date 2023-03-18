@@ -98,8 +98,6 @@ public class EmployeeBean implements Serializable {
 
 
 
-
-
 ## 1.1 JavaBean의 단점
 
 **Mutability**

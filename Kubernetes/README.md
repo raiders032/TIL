@@ -10,10 +10,10 @@
 
 * [Affinity](Affinity/Affinity.md)
   * Node Affinity, Pod Affinity
-
 * [Annotations](Annotations/Annotations.md)
 * [CNI](CNI/CNI.md)
 * [ConfigMap](ConfigMap/ConfigMap.md)
+* [CRI](CRI/CRI.md)
 * [CronJob](CronJob/CronJob.md) 
 * [DaemonSet](DaemonSet/DaemonSet.md)
 * [Ingress](Ingress/Ingress.md)
@@ -23,27 +23,28 @@
   * Node Components: kubelet, kube-proxy, Container runtime
 * [Labels And Selectors](Labels-And-Selectors/Labels-And-Selectors.md)
   * nodeSelector
-
 * [Namespace](Namespace/Namespace.md)
 * [Network](Network/Network.md)
 * [Persistent Volumes](Persistent-Volumes/Persistent-Volumes.md) 
   * PersistentVolume, PersistentVolumeClaim
-  * Dynamic Provisioning
-
+  * StorageClass, Dynamic Provisioning
 * [Pod](Pod/Pod.md)
-  * livenessProbe
+  * livenessProbe, readinessProbe
   * Static Pod
-
+  * init Container, pause Container
 * [Replica Set And Deployment](Replica-Set-And-Deployment/Replica-Set-And-Deployment.md)
 * [Resource Management](Resource-Management/Resource-Management.md)
 * [Secret](Secret/Secret.md)
+* [Security](Security/Security.md)
+  * UserAccount, ServiceAccount
+  * RBAC, RoleRoleBinding, ClusterRole, ClusterRoleBinding
+
 * [Service](Service/Service.md)
   * ClusterIP, NodePort, LoadBalancer, ExternalName
   * kube-proxy
-
-* [ServiceAccount](ServiceAccount/ServiceAccount.md)
 * [StatefulSet](StatefulSet/StatefulSet.md)
 * [Taints And Tolerations](Taints-And-Tolerations/Taints-And-Tolerations.md)
+* [Troubleshooting](Troubleshooting/README.md) 
 * [Volume](Volume/Volume.md)
   * emptyDir, hostPath
 

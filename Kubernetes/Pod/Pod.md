@@ -401,10 +401,8 @@ ip link del
 - `staticPodPath`을 수정하면 kubelet을 꼭 재시작해야한다.
 
 ``` bash
-$ sudo cat /var/lib/kubelet/config.yaml
-...
+$ sudo cat /var/lib/kubelet/config.yaml | grep staticPodPath
 staticPodPath: /etc/kubernetes/manifests
-...
 ```
 
 
@@ -483,9 +481,27 @@ etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yam
 
 
 
+**장점**
+
+- 메인 컨테이너에 보관하지 않는 상태를 유지할 수 있다
+- 보안을 유지하고 이미지 용량을 줄일 수 있다.
+
+
+
+**사용 사례**
+
+- 저장소에서 파일 가져오기
+- 컨테이너 기동을 지연시키기
+- 설정 파일을 동적으로 생성하기
+
+
+
 ## 8.1 사용하기
 
-- 아래의 예시는 두 개의 init container를 사용하고 있다.
+- `spec.initContainers`에 init container를 복수로 지정할 수 있다.
+  - 아래의 예시는 두 개의 init container를 사용하고 있다.
+
+- 위에서 부터 하나씩 컨테이너가 기동되고 `spec.initContainers[].command`가 실행된다.
 - 먼저 myservice를 실행되기를 기다리고 두 번째로 mydb가 실행되기를 기다린다.
 - 두 개의 init container가 완료되면 앱 컨테이너가 실행된다.
 

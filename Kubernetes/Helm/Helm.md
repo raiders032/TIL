@@ -7,6 +7,12 @@
 
 
 
+**패키지란?**
+
+- 패키지란 실행 파일뿐만 아니라 실행 환경에 필요한 의존성 파일과 환경 정보들의 묶음이다.
+
+
+
 **Helm이 필요한 이유**
 
 - 가장 쉬운 쿠버네티스 배포 방법은 YAML 형식으로 쓰여진 매니페스트를 작성하고 kubectl을 사용해 적용하는 것이다.
@@ -18,7 +24,6 @@
 ## 1.1 Helm의 작동 원리
 
 - Helm은 쿠버네티스에 패키지를 손쉽게 배포할 수 있도록 패키지를 관리하는 쿠버네티스 전용 패키지 매니저다.
-- 패키지란 실행 파일뿐만 아니라 실행 환경에 필요한 의존성 파일과 환경 정보들의 묶음이다.
 - 패키지 매니저란 외부에 있는 저장소에서 패키지 정보를 받아와 패키지를 안정적으로 관리하는 도구다.
 
 
@@ -35,16 +40,158 @@
 **저장소**
 
 - Helm의 기본 저장소는 `artifacthub.io`로 다른 패키지 매니저처럼 외부에 있다.
+- https://artifacthub.io/
 
 
 
-# 2 Installing Helm
+# 2 Chart
+
+- 차트는 디렉터리 내부의 파일들의 모음으로 구성된다.
+- 디렉터리 이름이 차트의 이름이된다. 
+
+
+
+**디렉토리의 구조**
+
+- 차트의 디렉토리 구조는 아래와 같다.
+- 필수적으로 필요한 파일은 Chart.yaml, values.yaml, templates/이 있다.
+- 따라서 차트를 생성한다면 위 파일은 필수적으로 생성해야 한다.
+
+```
+wordpress/
+  Chart.yaml          # A YAML file containing information about the chart
+  LICENSE             # OPTIONAL: A plain text file containing the license for the chart
+  README.md           # OPTIONAL: A human-readable README file
+  values.yaml         # The default configuration values for this chart
+  values.schema.json  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file
+  charts/             # A directory containing any charts upon which this chart depends.
+  crds/               # Custom Resource Definitions
+  templates/          # A directory of templates that, when combined with values,
+                      # will generate valid Kubernetes manifest files.
+  templates/NOTES.txt # OPTIONAL: A plain text file containing short usage notes
+```
+
+
+
+## 2.1 Chart.yaml
+
+- 해당 차트에 대한 메타 정보를 가지고 있다.
+- 헬름의 버전, 차트의 이름, 차트의 버전 등을 가지고 있다.
+- Chart.yaml 작성 방법은 https://helm.sh/docs/topics/charts/#the-chartyaml-file 이곳을 참조하자
+
+
+
+**Chart.yaml 예시**
+
+```yaml
+apiVersion: The chart API version (required)
+name: The name of the chart (required)
+version: A SemVer 2 version (required)
+kubeVersion: A SemVer range of compatible Kubernetes versions (optional)
+description: A single-sentence description of this project (optional)
+type: The type of the chart (optional)
+keywords:
+  - A list of keywords about this project (optional)
+home: The URL of this projects home page (optional)
+sources:
+  - A list of URLs to source code for this project (optional)
+dependencies: # A list of the chart requirements (optional)
+  - name: The name of the chart (nginx)
+    version: The version of the chart ("1.2.3")
+    repository: (optional) The repository URL ("https://example.com/charts") or alias ("@repo-name")
+    condition: (optional) A yaml path that resolves to a boolean, used for enabling/disabling charts (e.g. subchart1.enabled )
+    tags: # (optional)
+      - Tags can be used to group charts for enabling/disabling together
+    import-values: # (optional)
+      - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
+    alias: (optional) Alias to be used for the chart. Useful when you have to add the same chart multiple times
+maintainers: # (optional)
+  - name: The maintainers name (required for each maintainer)
+    email: The maintainers email (optional for each maintainer)
+    url: A URL for the maintainer (optional for each maintainer)
+icon: A URL to an SVG or PNG image to be used as an icon (optional).
+appVersion: The version of the app that this contains (optional). Needn't be SemVer. Quotes recommended.
+deprecated: Whether this chart is deprecated (optional, boolean)
+annotations:
+  example: A list of annotations keyed by name (optional).
+```
+
+
+
+## 2.2 templates/
+
+- 쿠버네티스 리소스를 위한 매니페스트를 이곳에 위치시킨다.
+- [Built-in Objects 레퍼런스](https://helm.sh/docs/chart_template_guide/builtin_objects/)
+
+
+
+**Built-in Objects Release**
+
+- `Release.Name`: The release name
+- `Release.Namespace`: The namespace to be released into (if the manifest doesn’t override)
+- `Release.IsUpgrade`: This is set to `true` if the current operation is an upgrade or rollback.
+- `Release.IsInstall`: This is set to `true` if the current operation is an install.
+- `Release.Revision`: The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.
+- `Release.Service`: The service that is rendering the present template. On Helm, this is always `Helm`
+
+
+
+**Built-in Objects Values**
+
+- `Values`: Values passed into the template from the `values.yaml` file and from user-supplied files. By default, `Values` is empty.
+
+
+
+**Built-in Objects Chart**
+
+- `Chart`: The contents of the `Chart.yaml` file. 
+- Any data in `Chart.yaml` will be accessible here. 
+- For example `{{ .Chart.Name }}-{{ .Chart.Version }}` will print out the `mychart-0.1.0`.
+
+
+
+## 2.3 values.yaml
+
+- 차트에 대한 기본 값을 설정한다.
+- 외부에서 값을 주입하지 않았을 때 사용되는 기본 값을 의미한다.
+- `helm install` 또는 `helm upgrade`를 통해 값을 주입해서 사용할 수 있다.
+- 따라서 같은 차트에 값을 변경해 재사용할 수 있다.
+- [레퍼런스](https://helm.sh/docs/chart_template_guide/values_files/)
+
+
+
+**values.yaml**
+
+- 아래와 같은 내용의 values.yaml가 있다
+
+```yaml
+favoriteDrink: coffee
+```
+
+- templates/ 디렉토리에 위치한 매니페스트에서 values.yam에 설정한 값을 참조해서 사용할 수 있다.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  myvalue: "Hello World"
+  drink: {{ .Values.favoriteDrink }}
+```
+
+- values.yaml의 정의된 기본 값은 helm install 명령어에서 --set 옵션으로 오버라이딩할 수 있다.
+  - helm install solid-vulture ./mychart --dry-run --debug --set favoriteDrink=slurm
+
+
+
+# 3 Installing Helm
 
 - [레퍼런스](https://helm.sh/docs/intro/install/)
 
 
 
-## 2.1 From the Binary Releases
+## 3.1 From the Binary Releases
 
 1. Download your [desired version](https://github.com/helm/helm/releases)
    - 예시) `curl -sL https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz`
@@ -53,7 +200,7 @@
 
 
 
-## 2.2  From Script
+## 3.2  From Script
 
 - 최신 버전의 Helm을 로컬에 설치한다.
 
@@ -65,7 +212,23 @@ $ ./get_helm.sh
 
 
 
-# 3 헬름 저장소
+## 3.3 From Apt (Debian/Ubuntu)
+
+```bash
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+
+sudo apt-get install apt-transport-https --yes
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+
+sudo apt-get update
+
+sudo apt-get install helm
+```
+
+
+
+# 4 헬름 저장소
 
 - 기본적으로 참조하는 저장소가 등록되어 있지 않다.
 - 저장소를 추가하려면 `helm repo add` 명령어를 사용한다.
@@ -102,9 +265,9 @@ helm repo update
 
 
 
-# 4 차트 설치
+# 5 차트 설치
 
-## 4.1 Install Chart
+## 5.1 Install Chart
 
 ```bash
 $ helm install [RELEASE_NAME] jenkins/jenkins [flags]
@@ -143,7 +306,7 @@ $ helm install sample-wordpress bitnami/wordpress --version 10.9.1 \
 
 
 
-## 4.2 Uninstall Chart
+## 5.2 Uninstall Chart
 
 ```bash
 $ helm uninstall [RELEASE_NAME]
@@ -151,7 +314,7 @@ $ helm uninstall [RELEASE_NAME]
 
 
 
-## 4.3 Upgrade Chart
+## 5.3 Upgrade Chart
 
 ```bash
 $ helm upgrade [RELEASE_NAME] jenkins/jenkins [flags]

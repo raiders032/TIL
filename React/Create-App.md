@@ -6,7 +6,8 @@
 
 ## 1.1 Prerequisite
 
-* ㅠㅕnodejs
+- nodejs
+
 * npx
 
 **설치 확인**
@@ -28,7 +29,7 @@ Type 'exit' or ^D when finished
 # 2 react 앱 만들기
 
 ```bash
-$ npx create-react-app my-app
+$ npx create-react-app my-app --template typescript
 cd my-app
 npm start
 ```

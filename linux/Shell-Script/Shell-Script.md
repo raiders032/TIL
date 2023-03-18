@@ -1,3 +1,142 @@
+# 1 shell script 생성
+
+- shell script 파일은 `sh` 확장자를 사용한다.
+- shell script를 만들 때는 시작에 `#!/bin/bash`를 붙여 shell script라는 것을 알린다.
+
+
+
+**hello.sh**
+
+```shell
+#!/bin/bash
+echo "hello world"
+```
+
+
+
+## 1.1 shell script 실행하기
+
+
+
+**sh 명령어 이용**
+
+```bash
+$ sh hello.sh
+hello world
+```
+
+
+
+**chmod 명령어 이용**
+
+- shell script에 실행권한을 주고 직접 shell script를 실행하는 방법
+
+```bash
+$ chmod +x hello.sh
+$ ./hello.sh
+hello world
+```
+
+
+
+# 2 변수
+
+``
+
+**변수 선언 및 초기화**
+
+```shell
+#!/bin/bash
+
+language="Korean"
+echo "i can speak $language"
+```
+
+```bash
+$ sh hello.sh
+i can speak Korean
+```
+
+
+
+## 2.1 전역 변수
+
+- 함수 내에서 전역 변수 language에 접근이 가능하다.
+
+````shell
+#!/bin/bash
+language="Korean"
+
+function print(){
+  echo "i can speak $language"
+}
+
+print
+````
+
+```bash
+$ sh hello.sh
+i can speak Korean
+```
+
+
+
+## 2.2 지역 변수
+
+- learn 함수 내에서 만 쓰이는 지역 변수 learn_language를 만든다.
+- 지역 변수를 만들 때 `local` 이라는 키워드를 사용한다.
+
+```shell
+cat hello.sh
+#!/bin/bash
+language="Korean"
+
+function learn(){
+  local learn_language="English"
+  echo "i can speak $learn_language"
+}
+
+function print(){
+  echo "i can speak $1"
+}
+
+learn
+print $language
+print $learn_language
+```
+
+```bash
+$ sh hello.sh
+i can speak English
+i can speak Korean
+i can speak
+```
+
+
+
+## 2.3 매개 변수
+
+- 
+
+
+
+## 2.4 환경 변수
+
+- 시스템을 위해 사전에 미리 시스템에서 사용하고 있는 변수들이 있다.
+
+
+
+| 변수명 | 설명                             |
+| ------ | -------------------------------- |
+| HOME   | 사용자의 홈 디렉터리             |
+| PATH   | 실행 파일을 찾을 디렉터리 경로   |
+| PWD    | 사용자의 현재 작업 중인 디렉터리 |
+| SHELL  | 로그인해서 사용하는 셸           |
+| USER   | 사용자의 이름                    |
+| ...    |                                  |
+
+
+
 # if
 
 ```

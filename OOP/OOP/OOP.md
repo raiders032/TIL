@@ -334,8 +334,6 @@ public class Main {
 
 
 
-
-
 # 9 Composition
 
 * Composition은 더 제한적인 Aggregation 관계를 의미합니다.

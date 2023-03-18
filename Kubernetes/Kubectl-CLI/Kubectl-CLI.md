@@ -51,8 +51,6 @@ kubectl create namespace my-namespace
 
 
 
-
-
 ## kubectl get
 
 > 간단한 정보를 확인할 수 있다
@@ -278,6 +276,9 @@ kubectl exec mypod -c ruby-container -- date
 
 # Switch to raw terminal mode; sends stdin to 'bash' in ruby-container from pod mypod # and sends stdout/stderr from 'bash' back to the client
 kubectl exec mypod -c ruby-container -i -t -- bash -il
+
+# 동작 중인 컨테이너의 셸 접근
+kubectl exec --stdin --tty shell-demo -- /bin/bash
 ```
 
 
@@ -285,8 +286,15 @@ kubectl exec mypod -c ruby-container -i -t -- bash -il
 ## kubectl logs
 
 - [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs)
+- pod의 로그를 확인할 수 있다
 
-> pod의 로그를 확인할 수 있다
+
+
+**Usage**
+
+```
+$ kubectl logs [-f] [-p] (POD | TYPE/NAME) [-c CONTAINER]
+```
 
 ```bash
 # 파드 로그 덤프 (stdout)
@@ -307,6 +315,46 @@ kubectl logs --tail=20 nginx
 # Show all logs from pod nginx written in the last hour
 kubectl logs --since=1h nginx
 ```
+
+
+
+**Flags**
+
+| Name                             | Shorthand | Default | Usage                                                        |
+| :------------------------------- | :-------- | :------ | :----------------------------------------------------------- |
+| all-containers                   |           | false   | Get all containers' logs in the pod(s).                      |
+| container                        | c         |         | Print the logs of this container                             |
+| follow                           | f         | false   | Specify if the logs should be streamed.                      |
+| ignore-errors                    |           | false   | If watching / following pod logs, allow for any errors that occur to be non-fatal |
+| insecure-skip-tls-verify-backend |           | false   | Skip verifying the identity of the kubelet that logs are requested from. In theory, an attacker could provide invalid log content back. You might want to use this if your kubelet serving certificates have expired. |
+| limit-bytes                      |           | 0       | Maximum bytes of logs to return. Defaults to no limit.       |
+| max-log-requests                 |           | 5       | Specify maximum number of concurrent logs to follow when using by a selector. Defaults to 5. |
+| pod-running-timeout              |           | 20s     | The length of time (like 5s, 2m, or 3h, higher than zero) to wait until at least one pod is running |
+| prefix                           |           | false   | Prefix each log line with the log source (pod name and container name) |
+| previous                         | p         | false   | If true, print the logs for the previous instance of the container in a pod if it exists. |
+| selector                         | l         |         | Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints. |
+| since                            |           | 0s      | Only return logs newer than a relative duration like 5s, 2m, or 3h. Defaults to all logs. Only one of since-time / since may be used. |
+| since-time                       |           |         | Only return logs after a specific date (RFC3339). Defaults to all logs. Only one of since-time / since may be used. |
+| tail                             |           | -1      | Lines of recent log file to display. Defaults to -1 with no selector, showing all log lines otherwise 10, if a selector is provided. |
+| timestamps                       |           | false   | Include timestamps on each line in the log output            |
+
+
+
+## kubectl top
+
+- Display resource (CPU/memory) usage of nodes.
+- The top-node command allows you to see the resource consumption of nodes.
+
+```bash
+kubectl top node
+```
+
+```bash
+# Show metrics for all pods in the default namespace 
+kubectl top pod
+```
+
+
 
 
 

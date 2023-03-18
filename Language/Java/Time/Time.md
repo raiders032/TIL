@@ -89,6 +89,60 @@ LocalDateTime.of(2017, Month.SEPTEMBER, 21, 13, 45, 20);
 
 
 
+# 6 날짜와 시간 객체 출력과 파싱
+
+- 날짜와 시간 관련 작업에서 포매팅과 파싱은 서로 떨어질 수 없는 관계다.
+- `java.time.format` 이라는 포매팅과 파싱 전용 패키지를 제공한다.
+
+
+
+## 6.1 DateTimeFormatter
+
+- `java.time.format`에서 가장 중요한 클래스다.
+
+
+
+**예시**
+
+- 다음과 같이 상수가 미리 정의되어 있어 손쉽게 포매터를 만들 수 있다.
+
+```java
+@Test
+void testDateTimeFormatter() {
+    // given
+    LocalDate date = LocalDate.of(2014, 3, 18);
+
+    // when
+    String format1 = date.format(DateTimeFormatter.BASIC_ISO_DATE);
+    String format2 = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+    // then
+    assertThat(format1).isEqualTo("20140318");
+    assertThat(format2).isEqualTo("2014-03-18");
+}
+```
+
+- 직접 패턴을 지정할 수 있다.
+
+```java
+    @Test
+    void testDateTimeFormatter2() {
+        // given
+        LocalDate date = LocalDate.of(2014, 3, 18);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // when
+        String format = date.format(dateTimeFormatter);
+
+        // then
+        assertThat(format).isEqualTo("18/03/2014");
+    }
+```
+
+
+
+`
+
 관련자료
 
 - [SpringBoot에서 날짜 타입 JSON 변환에 대한 오해 풀기](https://jojoldu.tistory.com/361)

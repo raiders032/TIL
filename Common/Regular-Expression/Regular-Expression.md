@@ -110,8 +110,6 @@ Causes the resulting RE to match from m to n repetitions of the preceding RE, at
 
 
 
-
-
 참고
 
 - https://docs.python.org/3/library/re.html

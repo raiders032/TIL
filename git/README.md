@@ -1,12 +1,12 @@
 # Git
 
-* [Cheat Sheet](Cheat-Sheet/cheat-sheet.md)
-* [dreamcoding](dream-coding/dreamcoding.md)
+* [Git Branch Strategy](Git-Branch-Strategy/Git-Branch-Strategy.md) 
 * [Github SSH](Github-SSH/Github-SSH.md)
 * [Gitlab SSH](Gitlab-SSH/Gitlab-SSH.md)
+* [Multiple GitHub Accounts](Multiple-GitHub-Accounts/Multiple-GitHub-Accounts.md)
 
 
 
-## [Git Book](https://git-scm.com/book/en/v2)
+**git Book**
 
-* [reset](reset/reset.md) 
+- [git Book](git-book/README.md)

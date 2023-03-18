@@ -339,6 +339,37 @@ volumeBindingMode: Immediate
 
 
 
+`reclaimPolicy`
+
+- StorageClass가 동적으로 생성한 PersistentVolume은 `reclaimPolicy` 필드에 명시된 reclaim policy를 갖는다.
+- 값으로 Delete 또는 Retain이 가능하다
+- reclaimPolicy을 생략하면 기본적으로 Delete가 적용된다.
+
+
+
+`provisioner`
+
+- PV를 프로비저닝하기 위해 사용되는 볼륨 플러그인을 설정한다.
+
+| Volume Plugin        | Internal Provisioner |                        Config Example                        |
+| :------------------- | :------------------: | :----------------------------------------------------------: |
+| AWSElasticBlockStore |          ✓           | [AWS EBS](https://kubernetes.io/docs/concepts/storage/storage-classes/#aws-ebs) |
+| AzureFile            |          ✓           | [Azure File](https://kubernetes.io/docs/concepts/storage/storage-classes/#azure-file) |
+| AzureDisk            |          ✓           | [Azure Disk](https://kubernetes.io/docs/concepts/storage/storage-classes/#azure-disk) |
+| CephFS               |          -           |                              -                               |
+| Cinder               |          ✓           | [OpenStack Cinder](https://kubernetes.io/docs/concepts/storage/storage-classes/#openstack-cinder) |
+| FC                   |          -           |                              -                               |
+| FlexVolume           |          -           |                              -                               |
+| GCEPersistentDisk    |          ✓           | [GCE PD](https://kubernetes.io/docs/concepts/storage/storage-classes/#gce-pd) |
+| iSCSI                |          -           |                              -                               |
+| NFS                  |          -           | [NFS](https://kubernetes.io/docs/concepts/storage/storage-classes/#nfs) |
+| RBD                  |          ✓           | [Ceph RBD](https://kubernetes.io/docs/concepts/storage/storage-classes/#ceph-rbd) |
+| VsphereVolume        |          ✓           | [vSphere](https://kubernetes.io/docs/concepts/storage/storage-classes/#vsphere) |
+| PortworxVolume       |          ✓           | [Portworx Volume](https://kubernetes.io/docs/concepts/storage/storage-classes/#portworx-volume) |
+| Local                |          -           | [Local](https://kubernetes.io/docs/concepts/storage/storage-classes/#local) |
+
+
+
 # 4 Provisioner
 
 - [nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)

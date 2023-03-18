@@ -186,6 +186,8 @@ Mono<Void> result = client.post()
         .bodyToMono(Void.class);
 ```
 
+
+
 # 6 Testing
 
 * 외부 서비스를 호출하다 보니 목으로 대체하는 경우가 많다

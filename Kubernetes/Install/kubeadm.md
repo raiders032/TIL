@@ -15,15 +15,25 @@
 
 ## 2.1 Installing a container runtime
 
+- [레퍼런스](https://kubernetes.io/ko/docs/setup/production-environment/container-runtimes/)
 - container runtime interface의 여러 구현체 중 하나를 선택해 사용할 수 있다.
 - container runtime을 지정하지 않으면 kubeadm이 자동으로 설치된 container runtime 감지한다.
 - 여러 container runtime 또는 container runtime이 감지되지 않으면 kubeadm은 예러를 던진다.
-- Docker Engine을 Docker Runtime으로 설치한다.
+- 쿠버네티스 1.26에서는 컨테이너 런타임 인터페이스(CRI) 요구사항을 만족하는 런타임을 사용해야 한다.
+
+
+
+### 2.1.1 Docker
+
 - https://docs.docker.com/engine/install/ubuntu/
 
 
 
-### 2.1.1 Install On Ubuntu
+> 참고
+>
+> 도커 엔진은 쿠버네티스와 함께 작동하기 위한 요구 사항인 CRI를 구현하지 않았다. 이러한 이유로 추가 서비스 cri-dockerd도 설치해야 한다.
+
+
 
 **Set up the repository**
 
@@ -67,6 +77,104 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 ```bash
 sudo service docker start
+```
+
+
+
+### 2.1.2 CRI-O
+
+- [CRI-O 설치 레퍼런스](https://github.com/cri-o/cri-o/blob/v1.26.1/install.md#apt-based-operating-systems)
+
+
+
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+# 필요한 sysctl 파라미터를 설정하면, 재부팅 후에도 값이 유지된다.
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+# 재부팅하지 않고 sysctl 파라미터 적용하기
+sudo sysctl --system
+```
+
+```bash
+OS=xUbuntu_22.04
+VERSION=1.24
+
+echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+
+mkdir -p /usr/share/keyrings
+curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+
+apt-get update
+apt-get install cri-o cri-o-runc
+
+sudo systemctl daemon-reload
+sudo systemctl enable crio --now
+
+service crio status
+```
+
+
+
+### 2.1.3 cgroup 드라이버
+
+- kubelet과 컨테이너 런타임이 같은 cgroup group 드라이버를 사용해야 한다.
+- 두 가지의 cgroup 드라이버가 이용 가능하다.
+  - cgroupfs
+  - systemd
+- systemd가 init 시스템으로 선택되었을 때에는 systemd를 kubelet과 컨테이너 런타임의 cgroup 드라이버로 사용해야 한다.
+
+
+
+**kubelet 설정**
+
+- v1.22부터 kubeadm을 이용하면 kubelet의 cgroup 드라이버는 기본적으로 `systemd`이다.
+- [레퍼런스](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/configure-cgroup-driver/#configuring-the-kubelet-cgroup-driver)
+
+```yaml
+# kubeadm-config.yaml
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+kubernetesVersion: v1.21.0
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: systemd
+```
+
+```bash
+kubeadm init --config kubeadm-config.yaml
+```
+
+
+
+
+
+
+
+**CRI-O 설정**
+
+- [레퍼런스](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#cri-o)
+- CRI-O systemd를 기본 값으로 사용한다.
+- cgroupfs를 사용하기 위해선 아래와 같이 `/etc/crio/crio.conf` 파일을 수정한다.
+
+```
+[crio.runtime]
+conmon_cgroup = "pod"
+cgroup_manager = "cgroupfs"
 ```
 
 
@@ -147,21 +255,12 @@ sudo apt-mark hold kubelet kubeadm kubectl
 ## 3.1 master node 초기화
 
 ```bash
-$ kubeadm init --apiserver-advertise-address=192.168.155.69 --apiserver-cert-extra-sans=192.168.155.69 --pod-network-cidr=192.168.0.0/16
-```
-
-
-
-```bash
-$ kubeadm init --apiserver-advertise-address=192.168.155.69 \
---pod-network-cidr=192.168.0.0/16
+$ kubeadm init --apiserver-advertise-address=192.168.154.133 --apiserver-cert-extra-sans=192.168.154.133 --pod-network-cidr=192.168.0.0/16
 ```
 
 `--apiserver-advertise-address` 옵션
 
 - 다른 노드가 마스터에 접근할 수 있는 IP 주소를 입력한다.
-
-
 
 `--pod-network-cidr` 옵션
 
@@ -169,10 +268,39 @@ $ kubeadm init --apiserver-advertise-address=192.168.155.69 \
 
 
 
+**kubeadm으로 생성한 클러스터의 드라이버를 `systemd`로 변경하기**
+
+- [레퍼런스](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/configure-cgroup-driver/)
+- 아래와 같이 kubeadm-config.yaml 파일을 작성하고 `kubeadm init --config kubeadm-config.yaml`
+  - --config 옵션으로 설정 파일 전달 가능
+
+```yml
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 192.168.154.133
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/crio/crio.sock
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.26.1
+controlPlaneEndpoint: 192.168.154.133:6443
+networking:
+  serviceSubnet: 10.96.0.0/16
+  podSubnet: 10.10.0.0/16
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+```
+
+
+
 초기화가 완료되면 아래와 같은 출력 결과가 나온다. 하니씩 살펴보자.
 
 ```bash
-
 Your Kubernetes control-plane has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:
@@ -238,10 +366,6 @@ kubectl create -f custom-resources.yaml
 
 
 
-
-
-
-
 # 4 worker node
 
 
@@ -255,8 +379,8 @@ kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discove
 ```
 
 ```bash
-kubeadm join --token 6g3mk8.txv3jmoz58ctwwzo 192.168.155.69:6443 \
-        --discovery-token-ca-cert-hash sha256:124884ada96bcd6dc74dac7bc1588aeeb878c14fd4f688cba1d97aff24a8281d
+kubeadm join --token frumf0.zzpuudwj4h65426d 192.168.154.133:6443 \
+        --discovery-token-ca-cert-hash sha256:403b27ec0901a9a274e51270a46c1a357b38ca0bdda9d23c3b14ce41984110c4
 ```
 
 ​	

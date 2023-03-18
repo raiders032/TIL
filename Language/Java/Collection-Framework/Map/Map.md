@@ -177,8 +177,6 @@ public class Hashtable<K,V>
 
 
 
-
-
 **Thread Safe Map**
 
 * Thread Safe한 Map이 필요하다면 HashTable 대신 ConcurrentHashMap을 사용하는 것이 권장된다.

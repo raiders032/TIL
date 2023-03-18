@@ -145,6 +145,8 @@ void test3() {
 * get 메소드는 엉뚱한 해시 버킷에 가서 객체를 찾으려 한다
 * 설사 두 인스턴스를 같은 버킷에 담았더라고 get 메소드는 null을 반환하는데 HashMap은 해시코드가 다른 엔트리끼리는 동치성 비교를 시도조차 안하도록 최적화 되어있기 때문
 
+
+
 **Object의 hashCode**
 
 >  실용적인 이유로, Object 클래스의 hashCode 메소드는 다른 객체에 대해 각기 다른 integer 값을 리턴하도록 정의되었습니다. (일반적으로 객체의 내부 주소를 integer 값으로 변환하는 방식으로 구현되지만, 그러한 구현 기법은 Java(TM) 프로그래밍 언어에서는 필수적인 것은 아닙니다)
@@ -359,4 +361,3 @@ private int hashCode; // Automatically initialized to 0
   return result;
 }
 ```
-

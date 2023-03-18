@@ -14,16 +14,20 @@
 
 **수도코드**
 
+- 인접 리스트 사용시 시간 복잡도 구하기
+
 ```
    procedure BFS(G, root) is
        let Q be a queue
        label root as explored
        Q.enqueue(root)
-       while Q is not empty do
+       // 알고리즘 전체로 보면 모든 정점을 한번 방문하기 때문에 O(|V|)
+       while Q is not empty do 
            v := Q.dequeue()
            if v is the goal then
                return v
-           for all edges from v to w in G.adjacentEdges(v) do
+           // 알고리즘 전체로 보면 간선의 개수 만큼 O(|E|)
+           for all edges from v to w in G.adjacentEdges(v) do 
               if w is not labeled as explored then
                   label w as explored
                   Q.enqueue(w)
@@ -33,7 +37,7 @@
 
 # 3 시간 복잡도
 
-* O(|V| + |E|)
+* 인접리스트 사용 시 O(|V| + |E|)
   * V: 정점의 개수
   * E: 간선의 개수
 

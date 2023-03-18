@@ -2,6 +2,9 @@
 
 * 특정 노드에서 출발하여 다른 모든 노드로 가는 최단 경로를 계산한다
 * 음의 간선이 없을 때 정상 작동한다
+  * 음수 간선의 순환이 발생한 경우 해당 알고리즘으로 최단 경로를 구할 수 없다.
+  * 이런 경우  [Bellman-Ford-Algorithm](../Bellman-Ford-Algorithm/Bellman-Ford-Algorithm.md)을 사용한다.
+
 * 그리디 알고리즘으로 분류된다
 
 

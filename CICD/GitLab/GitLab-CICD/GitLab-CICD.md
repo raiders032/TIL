@@ -365,7 +365,6 @@ sudo gitlab-runner register -n \
   --description "gitlab-runner on 238" \
   --docker-image "docker:19.03.12" \
   --docker-volumes /var/run/docker.sock:/var/run/docker.sock
-  
 ```
 
 4. `.gitlab-ci.yml` 작성

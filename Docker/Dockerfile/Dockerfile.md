@@ -60,6 +60,7 @@ CMD command param1 param2 (shell form)
 **CMD의 올바른 사용법**
 
 - `CMD`의 올바른 사용 방법은 명령어를 `ENTRYPOINT`로 지정하고 기본 인자를 정의하는 경우에만 CMD를 사용해야 한다.
+- 그러면 아무런 인자를 지정하지 않고 이미지를 실행할 수 있다.
 
 
 
@@ -260,6 +261,7 @@ docker build --build-arg user1=what_user .
 **ENTRYPOINT의 올바른 사용법**
 
 - `CMD` 명령어를 사용해 이미지가 실행될 때 실행할 명령어를 지정할 수 있지만 올바른 방법은 `ENTRYPOINT`로 명령어를 지정하고 기본 의자를 정의하려는 경우만 `CMD`를 지정하는 것이다.
+- 그러면 아무런 인자를 지정하지 않고 이미지를 실행할 수 있다.
 
 
 
@@ -298,14 +300,13 @@ PID TTY STAY TIME COMMAND
  12               ps x
 
 # shell 형식 컨테이너 내부 프로세스 조회
+# 메인 프로세스가 node 프로세스가 아닌 Shell 프로세스다 노드 프로세스는 shell 프로세스에서 시작된다
 $ docker exec 4567d ps x
 PID TTY STAY TIME COMMAND
   1               /bin/sh -c node app.js
   7               node app.js
  13               ps x
 ```
-
-
 
 
 

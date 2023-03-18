@@ -19,7 +19,7 @@
 
 * 자바에서는 에러 이외에 **예외**라고 부르는 오류가 있다
 * 예외는 프로그램 실행 중에 발생하는 이벤트로, 프로그램 명령의 정상적인 흐름을 방해한다.
-* 메소드 내에서 오류가 발생하면 메소드는 객체를 만들어 런타임 시스템으로 전달합니다. 
+* 메소드 내에서 오류가 발생하면 메소드는 객체를 만들어 런타임 시스템으로 전달한다.
   * 예외 개체라고 하는 개체에는 오류 발생 시 프로그램 상태 및 유형 등 오류에 대한 정보가 포함되어 있다. 
   * 예외 개체를 만들어 런타임 시스템에 전달하는 것을 **예외 던지기**라고 한다.
 
@@ -27,18 +27,25 @@
 
 ## 1.3 예외 던지기 흐름
 
+**call stack**
+
 ![The call stack showing three method calls, where the first method called has the exception handler.](https://docs.oracle.com/javase/tutorial/figures/essential/exceptions-callstack.gif)
 
 * 메서드가 예외를 발생시킨 후 런타임 시스템은 메서드를 처리할 수 있는 핸들러를 콜 스택에서 찾으려고 시도한다
+
+
+
+**exception handler를 콜 스택에서 찾는 과정**
+
+![The call stack showing three method calls, where the first method called has the exception handler.](https://docs.oracle.com/javase/tutorial/figures/essential/exceptions-errorOccurs.gif)
+
 * 런타임 시스템은 콜 스택에서 예외를 처리할 수 있는 코드 블록을 포함하는 메서드를 찾는다. 
   * 이 코드 블록을 exception handler(예외 처리기)라고 한다.
-* 검색은 오류가 발생한 메서드로 시작하여 메서드가 호출된 역순으로 콜 스택을 통해 진행됩니다. 
-* 적절한 처리기가 발견되면 런타임 시스템은 예외를 처리기에 전달합니다. 
+* 예외 처리기 검색은 오류가 발생한 메서드로 시작하여 메서드가 호출된 역순으로 콜 스택을 통해 진행된다.
+* 적절한 처리기가 발견되면 런타임 시스템은 예외를 처리기에 전달한다.
   * 던져진 예외 개체의 유형이 처리기에서 처리할 수 있는 유형과 일치하는 경우 예외 처리기가 적절한 것으로 간주된다.
   * 이것을 예외 핸들러가 예외를 잡는다고(catch) 한다.
 * 적절한 예외 처리기를 찾지 못하면 프로그램이 종료된다.
-
-![The call stack showing three method calls, where the first method called has the exception handler.](https://docs.oracle.com/javase/tutorial/figures/essential/exceptions-errorOccurs.gif)
 
 
 
@@ -84,12 +91,11 @@
 
 # 4 비교
 
-|                        | Checked Exception         | Unchecked Exception                            |
-| ---------------------- | :------------------------ | ---------------------------------------------- |
-| 처리 여부              | 반드시 예외 처리 해야함   | 예외 처리 하지 않아도됨                        |
-| 확인 시점              | 컴파일                    | 런타임                                         |
-| 트랜잭션 Rollback 여부 | Rollback 안됨             | Rollback 진행                                  |
-| 대표 Exception         | IOException, SQLException | NullPointerException, IllegalArgumentException |
+|                | Checked Exception         | Unchecked Exception                            |
+| -------------- | :------------------------ | ---------------------------------------------- |
+| 처리 여부      | 반드시 예외 처리 해야함   | 예외 처리 하지 않아도됨                        |
+| 확인 시점      | 컴파일                    | 런타임                                         |
+| 대표 Exception | IOException, SQLException | NullPointerException, IllegalArgumentException |
 
 
 
