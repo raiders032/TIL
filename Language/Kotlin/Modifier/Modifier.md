@@ -1,5 +1,3 @@
-
-
 # 1 Access Modifier
 
 - 코틀린에는 `public`, `private`, `protected`, `internal` 4가지의 접근 지시자가 있다.

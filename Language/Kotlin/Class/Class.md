@@ -87,8 +87,10 @@ class Rectangle(val height:Int, val width:Int) {
 abstract class Animated {
 	// 추상 메서드
   abstract fun animate()
+  
   // 비추상 메서드도 기본적으로 final이기 때문에 원한다면 open을 명시해야 함
   open fun stopAnimating() {}
+  
   // 비추상 메서드 기본적으로 final
   fun animateTwice() {}
 }
@@ -127,7 +129,7 @@ abstract class Animated {
 **초기화 블록**
 
 - init 키워드는 초기화 블록을 시작한다.
-- 초기화 블록에는  클래스의 객체가 만들어질 때 실행될 초기화 코드가 들어간다.
+- 초기화 블록에는 클래스의 객체가 만들어질 때 실행될 초기화 코드가 들어간다.
 - 초기화 블록은 주로 주 생성자와 함께 사용된다.
 - 주 생성자는 제한적이기 때문에 별도의 코드를 포함할 수 없어 초기화 블록이 필요하다.
 
@@ -175,7 +177,7 @@ class User(val nickname: String)
 
 
 
-# 6 data 클래스
+# 6 data class
 
 - 어떤 클래스가 데이터를 저장하는 역할만 수행한다면 toString, equals, hashcode를 반드시 오버라이드해야 한다.
 - 코틀린에서는 data 라는 변경자를 클래스 앞에 붙이면 필요한 메서드를 컴파일러가 자동으로 만들어준다.
@@ -203,3 +205,157 @@ data class Client(val name: String, val postalCode: Int)
 - data 클래스를 불변 객체로 더 쉽게 사용할 수 있게 코틀린 컴파일러는 copy라는 메서드를 제공한다.
   - 복사본은 원본과 다른 생명주기를 가지며 복사하면서 일부 프로퍼티 값을 바꿀 수 있다.
   - 복사복을 제거해도 원본에 전혀 영향을 미치지 않는다.
+
+
+
+# 7 by
+
+- 상속에 의해서 두 객체가 강력하게 결합하는 것을 막는 방법으로 데코레이터 패턴을 사용할 수 있다.
+  - [상속보다는 컴포지션을 사용하라](../../Java/Effective-Java/Chapter4/Item18/Item18.md) 참고
+- 데코레이터 패턴의 단점은 준비 코드가 상당히 많이 필요하다는 점이다.
+- 코틀린은 이러한 준비 코드를 컴파일러가 만들어 준다.
+  - 데코레이터가 기존 클래스 객체의 포워딩하는 메서드를 자동으로 만들어준다.
+
+
+
+**예시**
+
+- 새로운 기능 없이 기존 클래스의 기능을 그대로 쓰는 경우
+
+```kotlin
+class DelegatingCollection<T> (
+	innnerList: Collection<T> = ArrayList<T>()
+) Collection<T> by innnerList {}
+```
+
+- add와 addAll 메서드에 대해서 새로운 기능을 정의한 경우
+
+```kotlin
+class CountingSet<T>(
+        val innerSet: MutableCollection<T> = HashSet<T>()
+) : MutableCollection<T> by innerSet {
+
+    var objectsAdded = 0
+
+    override fun add(element: T): Boolean {
+        objectsAdded++
+        return innerSet.add(element)
+    }
+
+    override fun addAll(c: Collection<T>): Boolean {
+        objectsAdded += c.size
+        return innerSet.addAll(c)
+    }
+}
+```
+
+
+
+> 데코레이터 패턴
+>
+> - 클래스에 새로운 동작을 추가해야할 때 데코레이터 패턴을 사용한다.
+> - 데코레이터 패턴을 사용해 기존 클래스와 같은 인터페이스를 가지는 데코레이터를 만든다.
+> - 데코레이터 내부에 기존 클래스에 대한 참조를 가지고 있다.
+>   - 컴포지션
+> - 새로운 기능은 데코레이터의 메서드에 새로 정의한다.
+>   - 기존 클래스의 메서드나 필드를 활용할 수 있다.
+> - 기존 기능이 필요한 경우 데코레이터 메서드에서 기존 클래스의 메서드에게 요청을 전달한다.(포워딩)
+
+
+
+# 8 object
+
+
+
+## 8.1 싱글턴 만들기
+
+- 코틀린은 `객체 선언` 기능을 통해 싱글턴을 언어에서 기본 지원한다.
+
+
+
+> 객체 선언
+>
+> - 객체 선언은 `object` 키워드로 시작한다.
+> - 객체 선언은 클래스를 정의하고 그 클래스의 인스턴스를 만들어서 변수에 저장하는 모든 작업을 단 한 문장으로 처리한다.
+> - 주 생성자는 객체 선언에 쓸 수 없다.
+>   - 일반 클래스 인스턴스와 달리 싱글턴 객체는 객체  선언문이 있는 위치에서 생성자 호출 없이 즉시 만들어진다. 
+
+
+
+**예시**
+
+- 객체 선언도 클래스와 인터페이스를 상속할 수 있다.
+- 특정 인터페이스를 구현해야 하는데 상태가 필요하지 않은 경우 object 키워드가 유용하다.
+
+```kotlin
+import java.util.Comparator
+import java.io.File
+
+object CaseInsensitiveFileComparator : Comparator<File> {
+  override fun compare(file1: File, file2: File): Int {
+      return file1.path.compareTo(file2.path, ignoreCase = true)
+  }
+}
+
+fun main(args: Array<String>) {
+  println(CaseInsensitiveFileComparator.compare(File("/User"), File("/user")))
+  val files = listOf(File("/Z"), File("/a"))
+  println(files.sortedWith(CaseInsensitiveFileComparator))
+}
+```
+
+
+
+## 8.2 companion object
+
+- 클래스 안에 정의된 `object` 중 하나에 `companion`이라는 키워드를 붙이면 그 클래스의 동반 객체로 만들 수 있다.
+  - 동반 객체는 클래스 안에 정의된 일반 객체다.
+- 동반 객체의 프로퍼티나 메서드에 접근하려면 동반 객체가 정의된 클래스 이름을 사용한다.
+- 동반 객체는 자신을 둘러싼 클래스의 모든 private 멤버에 접근할 수 있다.
+  - 따라서 동반 객체는 팩토리 메서드를 구현하기 가장 적합한 위치다.
+
+
+
+**예시**
+
+```kotlin
+class A {
+    companion object {
+        fun bar() {
+            println("Companion object called")
+        }
+    }
+}
+
+fun main(args: Array<String>) {
+    A.bar()
+}
+```
+
+
+
+**예시**
+
+- 생성자의 접근 지시자가 private이므로 팩터리 메서드를 통해서만 인스턴스를 만들 수 있다.
+- 클래스 이름을 사용해 동반 객체의 메서드를 호출할 수 있다.
+
+```kotlin
+fun getFacebookName(accountId: Int) = "fb:$accountId"
+
+class User private constructor(val nickname: String) {
+    companion object {
+        fun newSubscribingUser(email: String) =
+            User(email.substringBefore('@'))
+
+        fun newFacebookUser(accountId: Int) =
+            User(getFacebookName(accountId))
+    }
+}
+
+fun main(args: Array<String>) {
+    val subscribingUser = User.newSubscribingUser("bob@gmail.com")
+    val facebookUser = User.newFacebookUser(4)
+    println(subscribingUser.nickname)
+}
+```
+
