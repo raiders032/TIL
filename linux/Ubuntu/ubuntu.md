@@ -47,3 +47,4 @@ sudo ufw deny 22
 ```bash
 sudo ufw delete deny 22
 ```
+

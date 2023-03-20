@@ -814,8 +814,6 @@ usage: nc [-46CDdFhklNnrStUuvZz] [-I length] [-i interval] [-M ttl]
 
 
 
-
-
 ##  iptables
 
 ````bash
@@ -893,10 +891,70 @@ Options:
 
 
 
+## Host
 
+- *host* 명령어 뒤에 조회하려는 도메인을 지정한다.
+- host 는 DNS lookup 유틸리티로  nslookup 명령어와 동일한 역할을 수행합니다.
+
+```bash
+$ host
+Usage: host [-aCdilrTvVw] [-c class] [-N ndots] [-t type] [-W time]
+            [-R number] [-m flag] hostname [server]
+       -a is equivalent to -v -t ANY
+       -c specifies query class for non-IN data
+       -C compares SOA records on authoritative nameservers
+       -d is equivalent to -v
+       -i IP6.INT reverse lookups
+       -l lists all hosts in a domain, using AXFR
+       -m set memory debugging flag (trace|record|usage)
+       -N changes the number of dots allowed before root lookup is done
+       -r disables recursive processing
+       -R specifies number of retries for UDP packets
+       -s a SERVFAIL response should stop query
+       -t specifies the query type
+       -T enables TCP/IP mode
+       -v enables verbose output
+       -V print version number and exit
+       -w specifies to wait forever for a reply
+       -W specifies how long to wait for a reply
+       -4 use IPv4 query transport only
+       -6 use IPv6 query transport only
+```
+
+```bash
+$ host google.com
+google.com has address 172.217.25.174
+google.com has IPv6 address 2404:6800:400a:80a::200e
+google.com mail is handled by 10 smtp.google.com.
+tmax@af-k8s-master:~$ kubectl describe pod superapp-master-9cbd7b894-z797m
+```
 
 
 
 # 네트워크 파일
 
 ## /etc/network/interfaces
+
+
+
+# 기타
+
+
+
+## journalctl
+
+```bash
+$ journalctl --help
+journalctl [OPTIONS...] [MATCHES...]
+
+Query the journal.
+
+Options:
+     --system                Show the system journal
+     --user                  Show the user journal for the current user
+  -M --machine=CONTAINER     Operate on local container
+  -S --since=DATE            Show entries not older than the specified date
+  -U --until=DATE            Show entries not newer than the specified date
+  -c --cursor=CURSOR         Show entries starting at the specified cursor
+```
+
