@@ -256,6 +256,22 @@ insert into user_book (created_at, updated_at, balance, version) values ('2022-0
 
 # 6 Querydsl 설정
 
+**Kotilin Project**
+
+```groovy
+plugins {
+    id 'org.jetbrains.kotlin.kapt' version '1.7.22'
+}
+
+dependencies {
+  implementation("com.querydsl:querydsl-jpa:5.0.0")
+  kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+  kapt("org.springframework.boot:spring-boot-configuration-processor")
+}
+```
+
+
+
 **build.gradle**
 
 * dependencies

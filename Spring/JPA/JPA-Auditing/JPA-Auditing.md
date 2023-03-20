@@ -139,6 +139,3 @@ public class BaseEntity extends BaseTimeEntity {
   private String lastModifiedBy;
 }
 ```
-
-
-
