@@ -19,6 +19,7 @@
 
 # 2 @ExceptionHandler
 
+* [레퍼런스](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-exceptionhandler)
 * `@ExceptionHandler` 메소드를 정의한 클래스 내에서 특정 예외가 발생한 요청을 처리하는 핸들러를 정의할 때 사용한다.
 * ExceptionHandlerExceptionResolver가 @ExceptionHandler를 읽어 동작한다.
   * 스프링은 ExceptionHandlerExceptionResolver를 기본으로 제공한다.
@@ -71,9 +72,10 @@ public ResponseEntity<ErrorResult> userExHandle(UserException e) {
 
 # 3 @ControllerAdvice
 
+* [레퍼런스](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-controller-advice)
 * 일반적으로 `@ExceptionHandler`, `@InitBinder`, `@ModelAttribute` 메서드 들은 선언된 클래스에서만 적용된다. 
 * 만약 이러한 **메서드를 글로벌하게사용하고 싶을 때 `@ControllerAdvice`, `@RestControllerAdvice` 를 사용한다.**
-* `@ControllerAdvice` 는 `@Component` 를 포함하기에 컴포넌트 스캐닝에 의해 스프링 빈으로 등록된다.
+* `@ControllerAdvice` 는 `@Component`를 포함하기에 컴포넌트 스캐닝에 의해 스프링 빈으로 등록된다.
 * `@RestControllerAdvice` 는 `@ControllerAdvice` 와 `@ResponseBody`를 합친것과 같다.
 
 

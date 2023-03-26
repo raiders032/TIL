@@ -225,7 +225,7 @@ data class Client(val name: String, val postalCode: Int)
 ```kotlin
 class DelegatingCollection<T> (
 	innnerList: Collection<T> = ArrayList<T>()
-) Collection<T> by innnerList {}
+) : Collection<T> by innnerList {}
 ```
 
 - add와 addAll 메서드에 대해서 새로운 기능을 정의한 경우
@@ -234,7 +234,7 @@ class DelegatingCollection<T> (
 class CountingSet<T>(
         val innerSet: MutableCollection<T> = HashSet<T>()
 ) : MutableCollection<T> by innerSet {
-
+  
     var objectsAdded = 0
 
     override fun add(element: T): Boolean {

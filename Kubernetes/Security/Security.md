@@ -189,6 +189,25 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhNmpaaVI5VVdRR3dzWGJDX09PS1ZSSHRHMXpR
 
 
 
+## 3.4 image pull secret
+
+```yaml
+apiVersion: v1
+imagePullSecrets:
+- name: secretName
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2023-03-22T03:11:37Z"
+  name: default
+  namespace: oom
+  resourceVersion: "6419330"
+  uid: 8adcfda0-baa4-40fe-8479-8228daa0e8d1
+```
+
+
+
+
+
 # 4 RBAC
 
 - 쿠버네티스 1.6.0 버전부터 클러스터 보안이 크게 강화되었다.

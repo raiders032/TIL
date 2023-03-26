@@ -408,3 +408,4 @@ Content-Type: text/plain
 참고
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
+* https://httpwg.org/specs/rfc7231.html#status.2xx

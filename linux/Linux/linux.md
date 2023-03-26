@@ -159,6 +159,7 @@ tail -f
 ```bash
 # 대소문자 구분 X
 grep -i
+
 # 라인넘버 표시
 grep -n
 grep -v
