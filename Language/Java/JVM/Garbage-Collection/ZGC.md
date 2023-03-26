@@ -35,19 +35,22 @@
 
 **low latency**
 
-- **Sub-millisecond** max pause times
-- 1ms 이하
+- 최대 1ms의 pause times
   - JEP 333에서는 10ms이하지만 JEP 333의 작성자 Per Liden의 영상에서는 1ms이하로 설정
-  - https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s 여기 참고
+    - [ZGC - The Future of Low-Latency Garbage Collection Is Here](https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s) 여기 참고
+  - JDK 16이후부터 1ms 이하로 목표 설정
+    - [Erik Österlund — Concurrent thread-stack processing in the Z Garbage Collector](https://www.youtube.com/watch?v=zsrSUs65xZA&t=821s) 참고
 
 
 
 **scalable**
 
-- Pause times **do not** increase with the heap, live-set or root-set size
+- Pause times **do not** increase with root-set size
 - ZGC pause O(1)
 
-- Handle heaps ranging from a **8MB** to **16TB** in size
+- 회소 힙 사이즈 **8MB** 
+
+- 최대 힙 사이즈 **16TB**
 
 
 
@@ -59,21 +62,43 @@
 
 ## 1.3 ZGC의 특징 요약
 
-- Concurrent
-  - While Java threads are running, GC threads are executed silently in the background
-  - the fact that almost all GC work, marking, and heap defragmentation, are performed while mutators are running except for brief STW pauses for synchronization
-- Region-based
-  - heaps being divided into regions of different sizes governed by certain size classes.
-- Compacting
-  - The active objects are periodically organized in the heap to solve the problem of memory fragmentation.
-- Single Generation(Non-generational)
-  -  each GC cycle involves marking all live objects in the whole heap
-  -  Generational ZGC는 현재 진행중에 있다.
-  -  [JEP](https://openjdk.org/jeps/8272979)
-- NUMA-aware
-- Using colored pointers
-- Using load barriers
+**Concurrent**
 
+- 자바 쓰레드가 실행되는 동시에 GC 쓰레드가 백그라운드에서 실행된다.
+- 동기화를 위한 짧은 STW를 제외하고 거의 모든 GC 작업(marking, heap defragmentation)이 자바 쓰레드와 동시에 진행된다.
+
+
+
+**Region-based**
+
+- 힙은 3가지 종류의 특정 사이즈의 regions들로 구성된다.
+
+
+
+**Compacting**
+
+- 메모리 단편화를 막기위해 주기적으로 살아있는 객체들이 힙에서
+- The active objects are periodically organized in the heap to solve the problem of memory fragmentation.
+
+
+
+**Single Generation(Non-generational)**
+
+-  each GC cycle involves marking all live objects in the whole heap
+-  Generational ZGC는 현재 진행중에 있다.
+-  [JEP](https://openjdk.org/jeps/8272979)
+
+
+
+**Using colored pointers**
+
+
+
+**Using load barriers**
+
+
+
+NUMA-aware
 
 
 
@@ -283,31 +308,66 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 
 
-# 5 Colored Pointers and Load Barriers
+# 5 Problem
 
-**문제**
+**모든 concurrent collector가 풀어야할 문제**
 
-- A major challenge concurrent collectors have to address is how to ensure that mutators and GC
-  threads share a coherent view of the heap.
-- Without special treatment, mutators may mutate the object graph in a way that invalidates a decision the GC just made
-
+- mutators(애플리케이션 쓰레드)와 GC 쓰레드가 힙에 대한 동일한 뷰를 갖는 것이 concurrent 콜렉터가 반드시 해결해야할 문제다.
+- 적절한 조치가 취해지지 않으면 mutators가 오브젝트 그래프를 변경하여 GC의 판단을 의미없게 만들 수 있기 때문이다.
 
 
-**해결**
 
-- A typical solution to this problem is to have mutators run some extra code when objects are read (read barrier) or written (write barrier) so that the GC is informed and can act accordingly
-- The ZGC algorithm uses a special kind of read barrier, called a load barrier
+**예시**
+
+- mutators와 GC 쓰레드가 힙에 대한 동일한 뷰를 가지고 있지 않을 때 발생할 수 있는 문제에 대해 그림과 함께 알아보자.
+
+![image-20230325091125180](images/image-20230325091125180.png)
+
+- 초기 상태
+
+
+
+![image-20230325091151339](images/image-20230325091151339.png)
+
+- GC가 컴팩팅 과정에서 오브젝트를 From Space에서 To Space로 옮긴다.
+
+
+
+![image-20230325091208094](images/image-20230325091208094.png)
+
+- 애플리케이션 쓰레드는 이전 위치에 객체에 쓰기 작업을 진행한다.
+
+
+
+![image-20230325091242932](images/image-20230325091242932.png)
+
+- 참조가 갱신되어 이동된 객체로 바뀐다.
+- 애플리케이션 쓰레드의 쓰기 작업이 정상적으로 반영되지 않는다. 
+
+
+
+**일반적인 해결법**
+
+- 이 문제에 대한 일반적인 해결책은 mutators가 작은 코드 조각을 추가적으로 실행함으로써 해결할 수 있다.
+  - 이 코드 조각으로 mutators와 GC가 동일한 힙 뷰를 갖도록 한다.
+- mutators가 객체를 읽을 때 read barrier라 불리는 작은 코드 조각을 실행한다.
+  - 객체를 읽을 때 read barrier가 실행되어 GC로 부터 뷰에 대한 정보를 받는다.
+- mutators가 객체를 쓸 때 write barrier라 불리는 작은 코드 조각을 실행한다.
+  - 객체를 쓸 때 write barrier가 실행되어 GC에게 뷰에 대한 정보를 전달한다.
+- ZGC 알고리즘은 특별한 종류의 load barrier라고 불리는 특별한 read barrier를 사용한다.
+- `load barrier`는 mutators와 GC가 힙에대한 동일한 뷰를 가지게 한다.
 
 
 
 **Load Barriers and Colored Pointers**
 
+- To ensure that mutators see only valid pointers, even with GC running concurrently, ZGC utilizes colored pointers and load barriers
 - during relocation, an object may be moved at any time without updating its incoming pointers (which may exist anywhere in the heap), which effectively produces dangling pointers
 - load barriers trap loads of such dangling pointers and trigger code that updates the pointers with the new locations of relocated objects, thereby “fixing” the dangling pointers.
 - The trapping of dangling pointers is achieved by embedding metadata in pointers, using higherorder bits in addresses
 - ZGC denotes such metadata as “colors”, and all pointers mediate between two colors: good (pointer is valid) and bad (pointer is potentially invalid)
 
-›
+
 
 ## 5.1 **Colored Pointers**
 
@@ -316,13 +376,26 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 - Pointers are always 64-bit structures, consisting of meta bits (color of the pointer) and address bits. 
 - The four meta bits are 
   - Finalizable (F) 
-  - Remapped (R 
-  - Marked1 (M1)
-  - Marked0 (M0)
+  - Remapped (R): relocation set을 가리키는 지 여부 
+  - Marked1 (M1): 마킹된 여부
+  - Marked0 (M0): 마킹된 여부
 - A pointer’s color is determined by the status of its meta bits: F, R, M1, and M0
-- A color can be either “good” or “bad”. 
+- A color can be either “good” or “bad”.
+  - Object creation always yields a pointer with the current good color.
+
 - A good color is one of the R, M1, M0 meta bits set and the other three unset
   - three good colors: 0100, 0010, and 0001
+  - Once the good color is decided, all other colors are considered bad
+- there is a globally agreed-upon single good color, and its selection is decided twice during a ZGC cycle
+  - in STW1, where it alternates between M1 (0010) or M0 (0001) set
+  - in STW3, where it equals R being set, 0100. 
+
+
+
+
+![image-20230309132926825](images/image-20230309132926825.png)
+
+- The same physical heap memory is mapped into the virtual address space three times, resulting in three “views” of the same physical memory
 
 
 
@@ -334,7 +407,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 - 힙에 있는 오브젝트 참조할 때 해당 코드가 작동된다.
 - 오브젝트 레퍼런스의 색을 검사한다.
   - 만약 잘못되어 있다면 이를 교정한다.
-
+- If the color of the pointer being loaded is good, the fast path of the load barrier is taken, otherwise, the slow path. The fast path is effectively empty, while the slow path contains logic for calculating the corresponding pointer with good color: checking if the object has been (or is about to be) relocated and if so, looking up (or deciding) the new address of the object
 
 
 
@@ -344,19 +417,11 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 ![image-20230311133404558](images/image-20230311133404558.png)
 
-
-
-![image-20230309132926825](images/image-20230309132926825.png)
-
-- The same physical heap memory is mapped into the virtual address space three times, resulting in three “views” of the same physical memory
+![image-20230325125857552](images/image-20230325125857552.png)
 
 
 
 ![image-20230309134120763](images/image-20230309134120763.png)
-
-
-
-
 
 
 
@@ -368,34 +433,97 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 
 
+## STW1: The Start of the ZGC Cycle
+
+- The start of the ZGC cycle is a STW pause
+- all threads agree on the current good color, meaning either the M0 or M1 bit is set by alternating selection
+- pages allocated before this cycle are identified, and the current GC cycle collects only dead objects on those pages
+  - fresh pages are created to replace the currently used allocating pages for mutators to use so that future allocations (after STW1) will be placed on those fresh pages.
+
+- all roots have a good color and are pushed to the mark stack for concurrent marking
+  - the mark barrier is applied for roots, such as system classes and objects, references on the stack frame, and so on
+  - The reason why roots need to have good color is that mutators will not hit the load barrier when accessing roots
+  - loading variables on the stack does not trigger the load barrier
+
+
+
+
 ## marking/remapping (M/R)
+
+- GC threads consume the mark stack, mark the popped objects, and update the liveness information of the associated page
+- The liveness information is the number of live bytes on a page and is used to select pages on which objects will be evacuated, meaning they will be relocated as part of defragmenting the heap.
+- The marking phase terminates when all objects are marked
+
+
+
+![image-20230326095349451](images/image-20230326095349451.png)
+
+- the main GC loop of the M/R phase. 
+- The function mark_obj returns true if and only if the object was not marked and the current thread successfully marked the object. 
+- It uses an atomic operation (CAS) internally to set bits in a bitmap, so it is thread-safe.14 
+- Finally, in the true case, the mark barrier is applied to this object’s fields of the reference type.
+
+
+
+![image-20230326095358019](images/image-20230326095358019.png)
+
+
+
+## STW2: The End of the Marking Phase
+
+- The marking phase terminates when all objects are marked
+- Checking when this condition becomes true is non-trivial
+- each mutator and GC thread have its own thread-local mark stack
+- thread-local handshaking with each mutator (one mutator at a time) is performed to check for the presence of any to-be-marked objects before attempting an STW pause
+  - this reduces the probability of entering STW2 prematurely.
+- after marking, the ZGC heap is guaranteed free of dangling pointers.
 
 
 
 ## reference processing (RP)
 
+- The reference processing phase handles Java’s Soft, Weak, and Phantom references
+
 
 
 ## selection of evacuation candidates (EC)
+
+- The evacuation candidate set is a collection of sparsely populated relocatable pages. 
+- After relocating all live objects on the EC pages into other pages, all EC pages can be reclaimed
+- before selecting evacuation candidates, the EC set from the previous GC cycle is cleared, and forwarding tables (mapping old addresses to new) associated with those pages are dropped.
+  - This is safe as there can be no reachable pointers in the heap still pointing into these pages
+  - these pointers have been remapped by mutators or GC threads by the end of the M/R phase
+
+- relocatable pages (i.e., allocated prior to the current GC cycle) with at least one live object (page->is_marked() == true) are tentatively added to the EC set, and pages with no live objects are reclaimed right away
+- we sort all pages in EC by live bytes
+- so that the trailing multiple pages (too many live objects) are dropped from the EC set;
+
+![image-20230326125859882](images/image-20230326125859882.png)
+
+
+
+## STW3: Transitioning to Relocation
+
+- the good color is to have the R bit set (0100)
+- A pointer of this color is guaranteed not to point to objects on EC pages
+- while mutators are stopped, all roots are visited—if a root points into an EC page, the object will be relocated to a non-EC page
 
 
 
 ## relocation (RE)
 
+- After STW3, the system is ready to perform concurrent relocation
+- This happens by GC threads migrating all live objects in the EC, page by page. 
 
+![image-20230326130602444](images/image-20230326130602444.png)
 
-
+# 
 
 # 7 
 
-## 7.1 Remembered Set
-
-- 올드 제네레이션 객체가 참조하는 영 제네레이션 객체를 저장하는 자료구조
-- 영 제네레이션의 gc minor gc에서 필요함
 
 
-
-## 7.2 regions
+## 7.1 regions
 
 - Heap space is broken into memory regions of one of three size classes, small, medium, and large.
 - These regions are called **pages** inside OpenJDK
@@ -403,7 +531,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 
 
-## 7.3 live map
+## 7.2 live map
 
 - page 마다 가지고 있다.
 - 비트맵이다
@@ -413,19 +541,24 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 ## 7.3 relocation set
 
-- 마킹 이후 비워야할 page의 집합이다.
-- 가비지가 많이 찬 page들
+- The evacuation candidate set is a collection of sparsely populated relocatable pages
+- After relocating all live objects on the EC pages into other pages, all EC pages can be reclaimed
+- relocatable pages: allocated prior to the current GC cycle
 
 
 
 ## 7.4 forwarding table
 
-- 해시맵
+- To keep track of how objects move so that dangling pointers can be fixed on load
+- forwarding tables are used to map pre-relocation (old) to post-relocation (new) addresses.
+- either in the load barrier by mutators as a side-effect of accessing those pointers or by GC threads traversing all live objects in the heap (during marking)
 
 
 
 **JEP**
 
+- [JEP 333: ZGC: A Scalable Low-Latency Garbage Collector (Experimental)](https://openjdk.org/jeps/333)
+- [JEP 376: ZGC: Concurrent Thread-Stack Processing](https://openjdk.org/jeps/376)
 - [JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production)](https://openjdk.org/jeps/377)
 
 
@@ -435,6 +568,17 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 - https://wiki.openjdk.org/display/zgc/Main
 - https://dl.acm.org/doi/pdf/10.1145/3538532
 - https://www.alibabacloud.com/blog/alibaba-dragonwell-zgc-part-2-the-principles-and-tuning-of-zgc-%7C-a-new-garbage-collector_598851
-- https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s
 - https://dinfuehr.github.io/blog/a-first-look-into-zgc/
 - https://www.opsian.com/blog/javas-new-zgc-is-very-exciting
+
+
+
+참고 영상
+
+- [ZGC - The Future of Low-Latency Garbage Collection Is Here](https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s)
+
+- [ZGC: A Scalable Low-Latency Garbage Collector](https://www.youtube.com/watch?v=kF_r3GE3zOo&t=1s)
+- [Simone Bordet — Concurrent Garbage collectors: ZGC & Shenandoah](https://www.youtube.com/watch?v=e2lXj_t7ZBc)
+- [Java’s Highly Scalable Low-Latency Garbage Collector : ZGC](https://www.youtube.com/watch?v=U2Sx5lU0KM8)
+- [ZGC - Low Latency GC for OpenJDK with Stefan Karlsson and Per Liden](https://www.youtube.com/watch?v=tShc0dyFtgw)
+- [Erik Österlund — Concurrent thread-stack processing in the Z Garbage Collector](https://www.youtube.com/watch?v=zsrSUs65xZA&t=821s)
