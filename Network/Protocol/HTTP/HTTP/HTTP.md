@@ -46,6 +46,8 @@
 * 지금은 HTTP 지속 연결(Persistent Connections)로 문제 해결
 * HTTP/2, HTTP/3에서 더 많은 최적화
 
+
+
 # 2 HTTP Request Method(HTTP 요청 메서드)
 
 * HTTP는 **요청 메서드**를 정의하여, 주어진 리소스에 수행하길 원하는 행동을 나타냅니다.
@@ -83,8 +85,11 @@
 
 ## 2.3 PUT
 
-* `PUT` 메서드는 목적 리소스 모든 현재 표시를 요청 payload로 바꿉니다.
-* 해당 리소스가 없으면 생성한다
+* [레퍼런스](https://httpwg.org/specs/rfc7231.html#rfc.section.4.3.4)
+* PUT 메서드는 타겟 리소스를 생성하거나 대체하는 메서드다.
+  * 타겟 리소스가 없으면 생성한다. -> `201` 응답
+  * 타겟 리소스가 있으면 요청에 명시된 상태로 대체한다. -> `200` 또는 `204` 응답
+
 * 이와 달리 `PATCH` 메서드는 리소스의 부분만을 수정하는 데 쓰입니다.
 * 클라이언트가 리소스를 식별
   * 클라이언트가 리소스 위치를 알고 URI 지정 
@@ -92,9 +97,42 @@
 
 
 
+| Request has body                                             | Yes  |
+| :----------------------------------------------------------- | ---- |
+| Successful response has body                                 | May  |
+| [Safe](https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP) | No   |
+| [Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent) | Yes  |
+| [Cacheable](https://developer.mozilla.org/en-US/docs/Glossary/Cacheable) | No   |
+| Allowed in [HTML forms](https://developer.mozilla.org/en-US/docs/Learn/Forms) | No   |
+
+> [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT)
+
+
+
 ## 2.4 PATCH
 
-* `PATCH` 메서드는 리소스의 부분만을 수정하는 데 쓰입니다.
+* `PATCH` 메서드는 리소스의 부분만을 수정하는 데 쓰인다.
+
+* `PATCH`는 Idempotent하지 않다.
+
+  * Idempotent하게 구현할 수도 있다.
+
+  * `PUT`은 언제나 Idempotent하다
+
+* 응답 코드로 `200` 또는 `204`를 사용한다.
+
+
+
+
+| Request has body                                             | Yes  |
+| :----------------------------------------------------------- | ---- |
+| Successful response has body                                 | May  |
+| [Safe](https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP) | No   |
+| [Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent) | No   |
+| [Cacheable](https://developer.mozilla.org/en-US/docs/Glossary/Cacheable) | No   |
+| Allowed in [HTML forms](https://developer.mozilla.org/en-US/docs/Learn/Forms) | No   |
+
+> [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH)
 
 
 
@@ -143,7 +181,9 @@
 
 ## 3.1 Safe
 
+* [레퍼런스](https://httpwg.org/specs/rfc7231.html#safe.methods)
 * 호출해도 리소스를 변경하지 않는다
+* `GET`, `HEAD`, `OPTIONS`, `TRACE` 메소드는 safe하다.
 
 
 
@@ -154,12 +194,12 @@
 * 같은 요청을 연속으로 여러번해도 서버는 같은 상태를 유지한다.
 * 멱등성은 서버의 상태를 고려하므로 같은 요청에 대해 status code는 다를 수 있다.
   * 첫 번째 DELETE 요청은 200을 응답할 것이고 두 번째 DELETE 요청은 404을 반환하지만 서버 상태는 같으므로 멱등하다
-
 * 멱등 메서드
-  * GET: 한 번 조회하든, 두 번 조회하든 같은 결과가 조회된다.
+  * safe한 요청은 모두 멱등하다.(`GET`, `HEAD`, `OPTIONS`, `TRACE`)
   * PUT: 결과를 대체한다. 따라서 같은 요청을 여러번 해도 최종 결과는 같다. 
-  * DELETE: 결과를 삭제한다. 같은 요청을 여러번 해도 삭제된 결과는 똑같다. 
-  * POST: 멱등이 아니다! 두 번 호출하면 같은 결제가 중복해서 발생할 수 있다.
+  * DELETE: 결과를 삭제한다. 같은 요청을 여러번 해도 삭제된 결과는 똑같다.
+
+* POST: 멱등이 아니다! 두 번 호출하면 같은 결제가 중복해서 발생할 수 있다.
 
 
 
@@ -214,6 +254,7 @@
 
 `204 No Content`
 
+* [레퍼런스](https://httpwg.org/specs/rfc7231.html#status.204)
 * 서버가 성공적으로 수행했지만 응답 페이로드 본문에 보낼 데이터가 없음
 * 예시
   * 웹 문서 편집기에 저장 버튼
@@ -400,8 +441,6 @@ Content-Type: text/plain
 (content of the uploaded file foo.txt)
 -----------------------------974767299852498929531610575--
 ``````
-
-
 
 
 

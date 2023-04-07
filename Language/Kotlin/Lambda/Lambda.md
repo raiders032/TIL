@@ -148,3 +148,136 @@ fun Person.isAdult() = age >= 21
 val predicate = Person::isAdult
 ```
 
+
+
+# 4 수신 객체 지정 람다: with, apply
+
+- 수신 객체 지정 람다란 수신 객체를 명시하지 않고 람다의 본문 안에서 다른 객체의 메서드를 호출할 수 있게하는 것이다.
+
+
+
+## 4.1 with
+
+- 어떤 객체의 이름을 반복하지 않고도 그 객체에 대해 다양한 연산을 수행할 수 있다면 좋을 것이다.
+- 코틀린에서는 언어 구성 요소로 제공하진 않지만 with라는 라이브러리 함수를 통해 이 기능을 제공한다.
+- 아래 예시를 통해 with를 사용해보자.
+
+
+
+**예시**
+
+- 아래 예제에서 result에 대해 다른 여러 메서드를 호출하면서 result를 반복사용하고 있다.
+
+```kotlin
+fun alphabet(): String {
+    val result = StringBuilder()
+    for (letter in 'A'..'Z') {
+         result.append(letter)
+    }
+    result.append("\nNow I know the alphabet!")
+    return result.toString()
+}
+
+fun main(args: Array<String>) {
+    println(alphabet())
+}
+```
+
+
+
+**with를 사용하여 리팩터링**
+
+```kotlin
+fun alphabet(): String {
+    val stringBuilder = StringBuilder()
+    return with(stringBuilder) { // 메서드를 호출하려는 수신 객체를 지정한다.
+        for (letter in 'A'..'Z') {
+            this.append(letter) // this를 명시해서 수신 객체의 메서드를 호출한다.
+        }
+        append("\nNow I know the alphabet!") // this를 생략해서 수신 객체의 메서드를 호출한다.
+        this.toString() // 람다의 값을 반환한다.
+    }
+}
+
+fun main(args: Array<String>) {
+    println(alphabet())
+}
+```
+
+```kotlin
+fun alphabet() = with(StringBuilder()) {
+    for (letter in 'A'..'Z') {
+        append(letter)
+    }
+    append("\nNow I know the alphabet!")
+    toString()
+}
+
+fun main(args: Array<String>) {
+    println(alphabet())
+}
+```
+
+
+
+**with**
+
+- with문은 언어제 제공하는 특별한 구문 같지만 실제로 파라미터가 2개 있는 함수다.
+- 위 예시에서 첫 번째 파라미터는 stringBuilder고 두 번째 파라미터는 람다다
+- 람다를 괄호 밖으로 빼는 관례에 따라 언어가 제공하는 특별한 구문처럼 보인다.
+- with는 첫 번째 인자로 받은 객체를 두번 째 인자로 받은 람다의 수신 객체로 만든다.
+- with가 반환하는 값은 람다 코드를 실행한 결과다.
+  - 람다 식의 결과는 마지막 식의 값이다.
+- 람다식의 결과 대신 수신 객체가 필요한 경우에는 `apply` 라이브러리 함수를 사용한다.
+
+
+
+**메서드 이름 충돌**
+
+- with에게 인자로 넘긴 객체의 메서드 이름과 with를 사용하는 코드가 들어있는 클래스의 메서드가 같은 경우에 바깥쪽 클래스의 메서드를 호출하고 싶다면 `this@OuterClass.toString()`과 같은 구문을 사용한다.
+
+
+
+## 4.2 apply
+
+- `apply`는 `with`와 거의 같은 함수다.
+- 유일한 차이점은 `apply`는 항상 자신에게 전달된 수신 객체를 반환한다는 점이다.
+- 이런 `apply` 함수는 객체의 인스턴스를 만들면서 즉시 프로퍼티 중 일부를 초기화하는데 용이하다.
+
+
+
+**예시**
+
+- 위에 `with`의 예시를 `apply`를 사용해 리팩터링 했다.
+
+```kotlin
+fun alphabet() = StringBuilder().apply {
+    for (letter in 'A'..'Z') {
+        append(letter)
+    }
+    append("\nNow I know the alphabet!")
+}.toString()
+
+fun main(args: Array<String>) {
+    println(alphabet())
+}
+```
+
+
+
+**초기화 예시**
+
+- 보통 별도의 Builder객체가 이런 역할을 담당하지만 코틀린에서는 apply를 사용해 객체의 인스턴스를 만들면서 즉시 프로퍼티 중 일부를 초기화 할 수 있다.
+- 새로운 TextView 인스턴스를 만들고 즉시 apply에게 넘긴다. apply에 전달된 TextView가 수신 객체가 된다.
+- 따라서 TextView의 메서드를 호출하거나 프로퍼티를 설정할 수 있다.
+- 람다가 실행되고 나면  apply는 람다에 의해 초기화된 TextView 인스턴스를 반환한다.
+
+```kotlin
+fun createViewCustomAttributes(context: Context) = 
+TextView(context).apply {
+  text = "Samplt Text"
+  textSize = 20.0
+  setPadding(10, 0, 0, 0)
+}
+```
+

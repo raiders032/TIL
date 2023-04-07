@@ -429,6 +429,8 @@ Page<Member> findMemberAllCountBy(Pageable pageable);
 
 * 스프링 데이터가 제공하는 페이징과 정렬 기능을 스프링 MVC에서 편리하게 사용할 수 있다.
 * 파라미터로 Pageable 을 받을 수 있다.
+  * `package org.springframework.data.domain`
+
 * Pageable 은 인터페이스, 실제는 org.springframework.data.domain.PageRequest 객체 생성된다.
 * 요청예시 : `/members?page=0&size=3&sort=id,desc&sort=username,desc`
   * page: 현재 페이지, 0부터 시작한다
@@ -565,8 +567,6 @@ void test() {
   assertThat(findMember.getAge()).isEqualTo(21);
 }
 ```
-
-
 
 
 
