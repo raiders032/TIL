@@ -325,3 +325,125 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
+
+
+# 6 CSR
+
+- Certificate Signing Requests
+- [레퍼런스](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user)
+- 일반 사용자가 API 서버를 호출하기 위해서는 몇 가지 인증 단계가 필요하다.
+  - [API 서버의 인증 절차 참고](##1.1-API-서버의-인증 절차)
+  - 먼저 이 사용자는 Kubernetes 클러스터에서 발급한 Certificate를 가지고 있어야 한다
+  - API 호출 시 Certificate를 제출한다.
+- 일반 사용자가 Certificate를 얻는 과정을 보자.
+
+
+
+**private key 생성하기**
+
+- 먼저 private key 생성한다.
+
+``````bash
+openssl genrsa -out myuser.key 2048
+``````
+
+
+
+**CSR 생성하기**
+
+- 앞서 생성한 private key로 csr을 생성한다.
+
+```bash
+openssl req -new -key myuser.key -out myuser.csr
+```
+
+
+
+**CertificateSigningRequest 생성하기**
+
+- CertificateSigningRequest 오브젝트를 생성해 관리자에게 요청한다.
+- [CertificateSigningRequest 리소스 레퍼런스](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#certificatesigningrequest-v1-certificates-k8s-io)
+
+```yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: myuser
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZVzVuWld4aE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQTByczhJTHRHdTYxakx2dHhWTTJSVlRWMDNHWlJTWWw0dWluVWo4RElaWjBOCnR2MUZtRVFSd3VoaUZsOFEzcWl0Qm0wMUFSMkNJVXBGd2ZzSjZ4MXF3ckJzVkhZbGlBNVhwRVpZM3ExcGswSDQKM3Z3aGJlK1o2MVNrVHF5SVBYUUwrTWM5T1Nsbm0xb0R2N0NtSkZNMUlMRVI3QTVGZnZKOEdFRjJ6dHBoaUlFMwpub1dtdHNZb3JuT2wzc2lHQ2ZGZzR4Zmd4eW8ybmlneFNVekl1bXNnVm9PM2ttT0x1RVF6cXpkakJ3TFJXbWlECklmMXBMWnoyalVnald4UkhCM1gyWnVVV1d1T09PZnpXM01LaE8ybHEvZi9DdS8wYk83c0x0MCt3U2ZMSU91TFcKcW90blZtRmxMMytqTy82WDNDKzBERHk5aUtwbXJjVDBnWGZLemE1dHJRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBR05WdmVIOGR4ZzNvK21VeVRkbmFjVmQ1N24zSkExdnZEU1JWREkyQTZ1eXN3ZFp1L1BVCkkwZXpZWFV0RVNnSk1IRmQycVVNMjNuNVJsSXJ3R0xuUXFISUh5VStWWHhsdnZsRnpNOVpEWllSTmU3QlJvYXgKQVlEdUI5STZXT3FYbkFvczFqRmxNUG5NbFpqdU5kSGxpT1BjTU1oNndLaTZzZFhpVStHYTJ2RUVLY01jSVUyRgpvU2djUWdMYTk0aEpacGk3ZnNMdm1OQUxoT045UHdNMGM1dVJVejV4T0dGMUtCbWRSeEgvbUNOS2JKYjFRQm1HCkkwYitEUEdaTktXTU0xMzhIQXdoV0tkNjVoVHdYOWl4V3ZHMkh4TG1WQzg0L1BHT0tWQW9FNkpsYWFHdTlQVmkKdjlOSjVaZlZrcXdCd0hKbzZXdk9xVlA3SVFjZmg3d0drWm89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+```
+
+- expirationSeconds로 만료시간 지정
+- request에는 CSR file content를 base64로 인코딩한 값을 넣는다.
+  - 아래 명령어로 myuser.csr의 base64 인코딩 값을 얻을 수 있다.
+  - `cat myuser.csr | base64 | tr -d "\n"`
+
+
+
+**Approve certificate signing request**
+
+- CertificateSigningRequest가 만들어지면 관리자는 `kubectl get csr` 명령어를 통해 CertificateSigningRequest를 조회할 수 있다.
+- 관리자는 CertificateSigningRequest를 승인하거나 거절할 수 있다.
+  - 승인: `kubectl certificate approve <certificate-signing-request-name> `  
+  - 거절: `kubectl certificate deny <certificate-signing-request-name>`
+
+
+
+**Get the certificate**
+
+- 관리자가 CertificateSigningRequest를 승인해주면 Certificate를 얻을 수 있다.
+- Certificate의 값은 `status.certificate`에 Base64로 인코딩되어 있다
+- 따라서 아래의 명령어로  Certificate의 값을 myuser.crt로 저장할 수 있다.
+- `kubectl get csr myuser -o jsonpath='{.status.certificate}'| base64 -d > myuser.crt`
+
+
+
+# 7 NetworkPolicy
+
+- [레퍼런스](https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource)
+
+
+
+## 7.1 생성
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 172.17.0.0/16
+            except:
+              - 172.17.1.0/24
+        - namespaceSelector:
+            matchLabels:
+              project: myproject
+        - podSelector:
+            matchLabels:
+              role: frontend
+      ports:
+        - protocol: TCP
+          port: 6379
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/24
+      ports:
+        - protocol: TCP
+          port: 5978
+```
+
