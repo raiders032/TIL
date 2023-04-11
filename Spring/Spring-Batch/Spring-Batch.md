@@ -146,3 +146,50 @@
 | `processSkipCount` | The number of times `process` has failed, resulting in a skipped item. |
 | `filterCount`      | The number of items that have been “filtered” by the `ItemProcessor`. |
 | `writeSkipCount`   | The number of times `write` has failed, resulting in a skipped item. |
+
+
+
+## 2.7 ExecutionContext
+
+- [레퍼런스](https://docs.spring.io/spring-batch/docs/current/reference/html/domain.html#executioncontext)
+- 프레임워크에서 관리하는 key, value 쌍의 콜렉션(Map)이다.
+- StepExecution 스코프 또는 JobExecution 스코프에서 사용 가능한 콜렉션이다.
+
+
+
+**Spring Batch Meta-Data ERD**
+
+- StepExecution 스코프에서 사용 가능한 ExecutionContext는 BATCH_STEP_EXCUTION_CONTEXT에 저장된다.
+- JobExecution 스코프에서 사용 가능한 ExecutionContext는 BATCH_JOB_EXCUTION_CONTEXT에 저장된다.
+
+![Spring Batch Meta-Data ERD](images/meta-data-erd-1096595.png)
+
+
+
+## 2.8 JobRepository
+
+- [레퍼런스](https://docs.spring.io/spring-batch/docs/current/reference/html/domain.html#jobrepository)
+
+
+
+## 2.9 JobLauncher
+
+- [레퍼런스](https://docs.spring.io/spring-batch/docs/current/reference/html/domain.html#joblauncher)
+- `JobLauncher`는 `Job`을 실행하는 인터페이스다.
+  - 실행할 `Job`과 `JobParameters`를 받아 Job을 실행하고 `JobExecution`을 반환한다.
+- 스프링 부트를 사용하면 `JobLauncher` 빈이 자동 등록된다.
+  - 스프링부트에서는 JobLauncherApplicationRunner가 자동으로 `JobLauncher`을 실행시킨다.
+
+
+
+**JobLauncher Interface**
+
+```java
+public interface JobLauncher {
+
+public JobExecution run(Job job, JobParameters jobParameters)
+            throws JobExecutionAlreadyRunningException, JobRestartException,
+                   JobInstanceAlreadyCompleteException, JobParametersInvalidException;
+}
+```
+
