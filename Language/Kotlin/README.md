@@ -12,6 +12,7 @@
 - [Exception](Exception/Exception.md) 
 - [Functions﻿](Functions/Functions﻿.md)
   - expression, statement
+  - Default arguments, Named arguments, Variable number of arguments
 - [Interface](Interface/Interface.md)
 - [Kotlin](Kotlin/Kotlin.md)
 - [Lambda](Lambda/Lambda.md)

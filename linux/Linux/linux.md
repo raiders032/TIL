@@ -1,10 +1,14 @@
-커널
+# 특수한 파일들
 
-쉘
+## /proc/meminfo
 
-프롬프트
+- 메모리 정보
 
-* 사용자 호스트 디렉토리
+
+
+## /proc/cpuinfo
+
+- CPU 정보
 
 
 
@@ -181,11 +185,26 @@ grep -l
 * 파일 또는 디렉토리를 검색할 떄 사용
 
 ```bash
-find / -name passwd
-find / -name passwd -type f
-find / -name passwd -type d
-find / -size +1G
-find . -name test -ls
+$ find --help
+Usage: find [-H] [-L] [-P] [-Olevel] [-D debugopts] [path...] [expression]
+
+# /etc라는 디렉토리에서 chrony.conf라는 파일을 찾는다.
+$ find /etc -name chrony.conf
+
+# e로 시작하는 txt 파일 검색
+$ find ./ -name 'e*.txt'
+
+# f와 e가 순서대로 포함된 파일 또는 디렉터리를 검색
+$ find ./ -regex '*f*e'
+
+# 파일의 타입을 지정할 수 있다.
+# f: 일반 파일, d: 디렉토리
+$ find / -name passwd -type f
+$ find / -name passwd -type d
+
+$ find / -size +1G
+
+$ find . -name test -ls
 ```
 
 

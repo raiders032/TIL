@@ -1,8 +1,28 @@
-# 1 PS 추천 문제
+# 1 DFS
+
+**문제**
+
+- [17265.나의 인생에는 수학과 함께](https://www.acmicpc.net/problem/17265)
 
 
 
-# 2 DP
+# 2 BFS
+
+**문제**
+
+- [1389.케빈 베이컨의 6단계 법칙](https://www.acmicpc.net/problem/1389)
+
+
+
+# 3 백트래킹
+
+**문제**
+
+- [1174.줄어드는 수](https://www.acmicpc.net/problem/1174)
+
+
+
+# 4 DP
 
 
 
@@ -16,15 +36,29 @@
 
 ## 2.2 0/1 knapsack problem
 
+**문제**
 
+- [14728.벼락치기](https://www.acmicpc.net/problem/14728), [17845.수강 과목](https://www.acmicpc.net/problem/17845)
+- [17208.카우버거 알바생](https://www.acmicpc.net/problem/17208)
+
+
+
+# 5 이분탐색
+
+
+
+## 5.1 매개 변수 탐색
 
 **문제**
 
-- [14728.벼락치기](https://www.acmicpc.net/problem/14728)
+- [1300.K번째 수](https://www.acmicpc.net/problem/1300)
+- [16434.드래곤 앤 던전](https://www.acmicpc.net/problem/16434)
+- [17951.흩날리는 시험지 속에서 내 평점이 느껴진거야](https://www.acmicpc.net/problem/17951)
 
 
 
-# 3 투포인터
+
+# 6 투포인터
 
 - 배열의 길이가 n일 때 포인터를 0, 1 인덱스에 두거나 0, n-1 인덱스에 두거나 둘 다 생각해 보자
 
@@ -33,10 +67,11 @@
 **문제**
 
 - [22945.팀 빌딩](https://www.acmicpc.net/problem/22945)
+- [22862.가장 긴 짝수 연속한 부분 수열 (large)](https://www.acmicpc.net/problem/22862)
 
 
 
-# 4 Disjoint Set
+# 7 Disjoint Set
 
 **주의**
 
@@ -51,15 +86,15 @@
 
 
 
-# 5 BFS
+# 8 Greedy Algorithm
 
 **문제**
 
-- [1389.케빈 베이컨의 6단계 법칙](https://www.acmicpc.net/problem/1389)
+- [1455.뒤집기 II](https://www.acmicpc.net/problem/1455)
 
 
 
-# 6 최단 경로
+# 9 최단 경로
 
 - 특정 노드에서 모든 노드의 최단 경로
   - 양의 간선만 존재 -> Dijkstra's Algorithm
@@ -69,9 +104,7 @@
 
 
 
-## 6.1 Dijkstra's Algorithm
-
-
+## 9.1 Dijkstra's Algorithm
 
 **문제**
 
@@ -79,19 +112,49 @@
 
 
 
-# 7 이분탐색
-
-
-
-## 7.1 매개 변수 탐색
+## 9.2 플로이드–워셜
 
 **문제**
 
-- [1300.K번째 수](https://www.acmicpc.net/problem/1300)
+- [21940.가운데에서 만나기](https://www.acmicpc.net/problem/21940)
 
 
 
-# 8 오일러 경로/회로
+# 10 자료구조
+
+## 12.1 Stack
+
+**문제**
+
+- [후위 표기식](https://www.acmicpc.net/problem/1918)
+
+
+
+## 12.2 Tree
+
+**문제**
+
+- [중첩 집합 모델](https://www.acmicpc.net/problem/19641)
+
+
+
+# 11 누적합
+
+**문제**
+
+- [20002.사과나무](https://www.acmicpc.net/problem/20002)
+
+
+
+# 12 MST
+
+**문제**
+
+- [16202.MST 게임](https://www.acmicpc.net/problem/16202)
+
+
+
+# 13 오일러 경로/회로
 
 - 그래프가 하나의 컴포넌트로 구성되어 있는지 확인한다.
 - 그래프의 각 정점에 대한 차수를 구한다.
@@ -107,22 +170,3 @@
 
 - [16168.퍼레이드](https://www.acmicpc.net/problem/16168)
 
-
-
-# 9 MST
-
-
-
-**문제**
-
-- [16202.MST 게임](https://www.acmicpc.net/problem/16202)
-
-
-
-# 10 Greedy Algorithm
-
-
-
-**문제**
-
-- [1455.뒤집기 II](https://www.acmicpc.net/problem/1455)

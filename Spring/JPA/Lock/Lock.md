@@ -200,8 +200,6 @@ WHERE
 
 ## 3.3 Lock Modes
 
-
-
 **LockModeType.java**
 
 ```java
@@ -238,14 +236,22 @@ public enum LockModeType{
 
 
 
+**동작방식**
+
+* 트랜잭션을 커밋할 때 버전 정보를 조회해서(SELECT 쿼리 사용) 현재 엔티티의 버전과 같은지 검증하고 같지 않으면 예외가 발생한다.
+
+
+
 ### 3.3.3 OPTIMISTIC_FORCE_INCREMENT
 
 * Optimistic Locking을 사용하면서 버전 정보를 강제로 증가한다
 * 논리적인 단위의 엔티티 묶음을 관리할 떄 사용한다
 
+
+
 **동작방식**
 
-* 엔티티를 수정하지 않아도 트랜잭션을 커밋할 때 UPDATE 쿼리를 사용해 버전 정버를 강제로 증가시킨다
+* 엔티티를 수정하지 않아도 트랜잭션을 커밋할 때 UPDATE 쿼리를 사용해 버전을 강제로 증가시킨다
 * 이때 데이터베이스의 버전이 엔티티 버전과 다르다면 예외가 발생한다
 * 추가로 엔티티를 수정하면 수정 시 버전 UPDATE가 발생한다 따라서 총 2번의 버전 증가가 나타날 수 있다
 
@@ -253,9 +259,11 @@ public enum LockModeType{
 
 
 
-**동작방식**
+> OPTIMISTIC_FORCE_INCREMENT 참고
+>
+> - https://vladmihalcea.com/hibernate-locking-patterns-how-does-optimistic_force_increment-lock-mode-work/
 
-* 트랜잭션을 커밋할 때 버전 정보를 조회해서(SELECT 쿼리 사용) 현재 엔티티의 버전과 같은지 검증하고 같지 않으면 예외가 발생한다
+
 
 
 
@@ -386,3 +394,8 @@ public enum LockModeType{
 * [Testing Pessimistic Locking Handling with Spring Boot and JPA - mimacom](https://blog.mimacom.com/testing-pessimistic-locking-handling-spring-boot-jpa/)
 * [자바 ORM 표준 JPA 프로그래밍](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788960777330)
 
+
+
+블로그
+
+- https://velog.io/@raiders032/Silent-Data-Loss-%ED%95%B4%EA%B2%B0%EB%B2%95Optimistic-Locking

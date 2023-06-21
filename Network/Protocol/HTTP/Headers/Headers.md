@@ -183,7 +183,7 @@ Accept: text/*, text/plain, text/plain;format=flowed, */*
 
 # 5 엔티티 헤더(entity headers)
 
-- 엔티티 헤더란 렌티티 본문에 대한 헤더를 말한다.
+- 엔티티 헤더란 엔티티 본문에 대한 헤더를 말한다.
 - 엔티티 헤더는 본문에 들어있는 데이터의 타입이 무엇인지 말해줄 수 있다.
 - `Content-Type: text/html; charset=iso-latin-1`
   - 애플리케이션에게 데이터가 iso-latin-1 문자집합으로 된 HTML 문서임을 알려준다.
@@ -205,8 +205,8 @@ Accept: text/*, text/plain, text/plain;format=flowed, */*
 
 ### 5.2.1 [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
 
-* Content-Type은 representation 헤더이다
-* Content-Type은 리소스의 미디어 타입을 나타내는데 사용된다
+* Content-Type은 representation 헤더이다.
+* 이 헤더에 엔티티 본문의 MIME 타입을 기술한다.
 * 응답과 요청에서 모두 사용된다
 
 
@@ -233,9 +233,21 @@ Content-Length: 16
 
 
 
-**요청 예시**
+#### **multipart/form-data 타입**
 
-* HTML form을 사용한 POST 요청의 Content-Type은 form 엘리먼트의 enctype 속성으로 지정할 수 있다
+- HTML 폼을 이용한 전송 방식에는 두 가지 방식이 있다
+  - `application/x-www-form-urlencoded`
+  - `multipart/form-data`
+  - HTML에 `enctype` 속성을 따로 명시하지 않으면 기본적으로 `application/x-www-form-urlencoded` 가 선택된다
+- `multipart/form-data`은 문자와 바이너리(파일)을 동시에 전송할 때 사용한다
+- `application/x-www-form-urlencoded`은 엔티티 본문에 문자열을 담고 있기 때문에 파일을 전송할 수 없다.
+
+
+
+**multipart/form-data 사용 예시**
+
+- 아래와 같이 `multipart/form-data`을 사용하려면 `enctype` 속성에 명시해야 한다.
+- HTML에 `enctype` 속성을 따로 명시하지 않으면 기본적으로 `application/x-www-form-urlencoded` 가 선택된다
 
 ```html
 <form action="/" method="post" enctype="multipart/form-data">
@@ -245,9 +257,15 @@ Content-Length: 16
 </form>
 ```
 
-* 실제 HTTP POST 요청은 아래와 같다
 
-```http
+
+**http request**
+
+- boundary 문자로 컨텐츠가 구분되어 있다
+- `Content-Disposition` : 항목별 헤더가 추가되어 있고 여기에 부가 정보를 추가한다
+- 폼의 일반 데이터는 문자가 전송되고 파일의 경우 파일 이름과 `Content-Type` 이 추가되고 바이너리 데이터가 전송된다
+
+``````http
 POST /foo HTTP/1.1
 Content-Length: 68137
 Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
@@ -257,12 +275,12 @@ Content-Disposition: form-data; name="description"
 
 some text
 -----------------------------974767299852498929531610575
-Content-Disposition: form-data; name="myFile"; filename="foo.txt"
-Content-Type: text/plain
+Content-Disposition: form-data; name="myFile"; filename="example.jpg"
+Content-Type: image/jpeg
 
-(content of the uploaded file foo.txt)
+<이미지 바이너리 데이터>
 -----------------------------974767299852498929531610575--
-```
+``````
 
 
 

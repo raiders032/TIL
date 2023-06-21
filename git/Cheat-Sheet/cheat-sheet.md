@@ -391,8 +391,20 @@ git mergetool #opens merge tool
 
 ```bash
 git rebase master #rebase current branch onto the master
-git rebase --onto master service ui #take commits of the ui branch forked from the service branch and move them to master
 ```
+
+
+
+```bash
+#take commits of the ui branch forked from the service branch and move them to master
+git rebase --onto master service ui 
+```
+
+![image-20230612132702548](images/image-20230612132702548.png)
+
+![image-20230612132714983](images/image-20230612132714983.png)
+
+
 
 ## Cherry picking
 

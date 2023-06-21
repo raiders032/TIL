@@ -15,15 +15,6 @@ public class Address {
   private String city;
   private String street;
   private String zipcode;
-
-  protected Address() {
-  }
-
-  public Address(String city, String street, String zipcode) {
-    this.city = city;
-    this.street = street;
-    this.zipcode = zipcode;
-  }
 }
 ```
 
@@ -64,11 +55,31 @@ public class Address {
 
 
 
+**예시**
+
+- name과 age가 값 타입이다.
+- name과 age는 별도의 식별자 값도 없고 생명주기도 Member 엔티티에 의존하게 된다.
+  - Memeber를 삭제하면 name과 age도 삭제된다.
+- 값 타입은 공유되면 안 된다.
+  - 공유하게 되면 나의 이름을 변경했을 때 다른 Member의 이름도 변경될 수 있기 때문이다.
+
+```java
+public class Member {
+  @Id @GeneratedValue
+  private Long id;
+  private String name;
+  private int age;
+}
+```
+
+
+
 ## 3.2 임베디드 타입
 
 * 임베디드 타입이란 사용자가 직접 정의한 새로운 값 타입이다
 * 임베디드 타입도 기본값 타입(int, String)처럼 값 타입이다.
 * **기본 생성자가 필수**
+* 임베디드 타입이 null이면 매핑한 컬럼 값은 모두 null이다.
 
 
 
@@ -94,6 +105,8 @@ public class Member {
 * 응집성을 높인 객체지향적인 데이터: 이름, 근무 기간, 집 주소를 가진다
 * 상세한 데이터를 임베디드 타입을 이용해서 응집성을 높여보자
 
+
+
 ```java
 @NoArgsConstructor
 @Embeddable
@@ -115,6 +128,9 @@ public class Period {
 
 * startDate, endDate를 합쳐서 Period(기간) 클래스를 만들었다
 * city, street, zipcode를 합쳐서 Address(주소) 클래스를 만들었다
+* 값 타입을 정의하는 곳에 `@Embeddable` 애노테이션을 사용한다.
+
+
 
 ```java
 @Entity
@@ -129,9 +145,13 @@ public class Member {
 }
 ```
 
+- 값 타입을 사용하는 곳에는 `@Embedded` 애노테이션을 사용한다.
+
 
 
 ## 3.3 컬렉션 값 타입
+
+- 값 타입을 하나 이상 저장하려면 컬렉션에 보관하고 `@ElementCollection`, `@CollectionTable`을 사용하면 된다.
 
 
 
@@ -141,11 +161,32 @@ public class Member {
 
 * 값 타입을 정의하는 곳에 표시
 
+```java
+@NoArgsConstructor
+@Embeddable
+public class Address {
+  private String city;
+  private String street;
+  private String zipcode;
+}
+```
+
 
 
 ## 4.2 @Embedded
 
 * 값 타입을 사용하는 곳에 표시
+
+```java
+@Entity
+public class Member {
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Embedded
+    private Address address;
+}
+```
 
 
 
@@ -153,6 +194,8 @@ public class Member {
 
 * 하나의 엔티티에 같은 값 타입을 중복해서 쓰면 테이블 매핑시 컬럼명이 중복된다
 * 이를 해결하려면 `@AttributeOverrides` 을 사용해서 중복이 되지 않도록 컬럼명을 재정의 하면된다
+
+
 
 **예시**
 
@@ -188,6 +231,15 @@ public class Member {
 
 * 임베디드 타입을 엔티티의 값일 뿐이다
 * 따라서 값이 속한 엔티티의 테이블에 매핑한다
+
+
+
+# 6 불변 객체
+
+- 값 타입은 부작용 걱정 없이 사용할 수 있게 불변 객체로 만들어야 한다.
+- 한 번 만들면 절대 변경할 수 없는 객체를 불변 객체라 한다.
+- 불변 객체도 객체이기 때문에 인스턴스의 참조 값을 공유하게 되지만 불변 객체의 공유 인스턴스를 공유해도 값을 수정할 수 없으므로 부작용이 발생하지 않는다.
+- 불변 객체는 이펙티브 자바 [Item17.md](../../../Language/Java/Effective-Java/Chapter4/Item17/Item17.md) 참고
 
 
 

@@ -324,6 +324,87 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 Disk identifier: 0xb4faec8d
    Device Boot      Start         End      Blocks   Id  System
 /dev/sdd1            2048      204799      101376   8e  Linux LVM
+
+$  sudo fdisk /dev/sdb
+Welcome to fdisk (util-linux 2.37.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x7208e960.
+
+Command (m for help): m
+
+Help:
+
+  DOS (MBR)
+   a   toggle a bootable flag
+   b   edit nested BSD disklabel
+   c   toggle the dos compatibility flag
+
+  Generic
+   d   delete a partition
+   F   list free unpartitioned space
+   l   list known partition types
+   n   add a new partition
+   p   print the partition table
+   t   change a partition type
+   v   verify the partition table
+   i   print information about a partition
+
+  Misc
+   m   print this menu
+   u   change display/entry units
+   x   extra functionality (experts only)
+
+  Script
+   I   load disk layout from sfdisk script file
+   O   dump disk layout to sfdisk script file
+
+  Save & Exit
+   w   write table to disk and exit
+   q   quit without saving changes
+
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty DOS partition table
+   s   create a new empty Sun partition table
+```
+
+
+
+## df
+
+```bash
+$ df --help
+Usage: df [OPTION]... [FILE]...
+Show information about the file system on which each FILE resides,
+or all file systems by default.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -a, --all             include pseudo, duplicate, inaccessible file systems
+  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,
+                           '-BM' prints sizes in units of 1,048,576 bytes;
+                           see SIZE format below
+      --direct          show statistics for a file instead of mount point
+      --total           produce a grand total
+  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)
+  -H, --si              likewise, but use powers of 1000 not 1024
+  -i, --inodes          list inode information instead of block usage
+  -k                    like --block-size=1K
+  -l, --local           limit listing to local file systems
+      --no-sync         do not invoke sync before getting usage info (default)
+      --output[=FIELD_LIST]  use the output format defined by FIELD_LIST,
+                               or print all fields if FIELD_LIST is omitted.
+  -P, --portability     use the POSIX output format
+      --sync            invoke sync before getting usage info
+  -t, --type=TYPE       limit listing to file systems of type TYPE
+  -T, --print-type      print file system type
+  -x, --exclude-type=TYPE   limit listing to file systems not of type TYPE
+  -v                    (ignored)
+      --help     display this help and exit
+      --version  output version information and exit
 ```
 
 

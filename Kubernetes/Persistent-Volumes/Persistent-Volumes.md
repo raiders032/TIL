@@ -1,6 +1,10 @@
 # 1 PersistentVolume
 
 - 인프라스트럭처의 세부 사항을 처리하지 않고 애플리케이션이 쿠버네티스 클러스터에 스토리지를 요청할 수 있도록 하기 위해 만들어진 오브젝트가 PersistentVolume와 PersistentVolumeClaim이다.
+- 클러스터 범주의 리소스
+  - 네임스페이스를 지정하지 않는다.
+- PV는 관리자가 프로비저닝하거나 스토리지 클래스를 사용하여 동적으로 프로비저닝한 클러스터의 스토리지다.
+
 
 
 
@@ -186,19 +190,26 @@ spec:
 
 `persistentVolumeReclaimPolicy`
 
+- [레퍼런스](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming)
 - PersistentVolumeClaim과 바인딩되어 사용된 후 PersistentVolumeClaim가 삭제되었을 때 PersistentVolume를 처리하는 정책을 지정한다.
 - ReclaimPolicy의 종류는 Retain, Recycle, Delete가 있다.
-- Retain
-  - PersistentVolume과 바인딩된 PersistentVolumeClaim이 삭제되어도 볼륨과 콘텐츠가 유지된다.
-  - 바인딩된 PersistentVolumeClaim이 삭제되면 PersistentVolume의 상태는 Bound에서 Released 상태가 된다.
-  - 이미 볼륨을 사용했기 때문에 데이터를 가지고 있으므로 클러스터 관리자가 볼륨을 완전히 비우지 않으면 새로운 클레임에 바인딩할 수 없다.
-- Recycle
-  - 볼륨의 콘텐츠를 삭제하고 볼륨이 다시 클레임될 수 있도록 볼륨을 사용 가능하게 만든다.
-  - 이렇게 하면 PersistentVolume을 여러 번 다른 PersistentVolumeClaim과 다른 파드에서 재사용할 수 있다.
-  - Recycle은 더이상 사용하지 않는다.
-    - 대신 동적 프로비저닝을 사용해 동적으로 신규 디스크를 할당하고 사용 후 자동으로 삭제하므로 같은 디스크를 재사용하는 Recycle을 사용할 필요가 없어졌다. 
-- Delete
-  - PersistentVolumeClaim이 삭제되면 PersistentVolume도 동시에 삭제된다.
+
+**Retain**
+
+- PersistentVolume과 바인딩된 PersistentVolumeClaim이 삭제되어도 볼륨과 콘텐츠가 유지된다.
+- 바인딩된 PersistentVolumeClaim이 삭제되면 PersistentVolume의 상태는 Bound에서 Released 상태가 된다.
+- 이미 볼륨을 사용했기 때문에 데이터를 가지고 있으므로 클러스터 관리자가 볼륨을 완전히 비우지 않으면 새로운 클레임에 바인딩할 수 없다.
+
+**Recycle**
+
+- 볼륨의 콘텐츠를 삭제하고 볼륨이 다시 클레임될 수 있도록 볼륨을 사용 가능하게 만든다.
+- 이렇게 하면 PersistentVolume을 여러 번 다른 PersistentVolumeClaim과 다른 파드에서 재사용할 수 있다.
+- Recycle은 더이상 사용하지 않는다.
+  - 대신 동적 프로비저닝을 사용해 동적으로 신규 디스크를 할당하고 사용 후 자동으로 삭제하므로 같은 디스크를 재사용하는 Recycle을 사용할 필요가 없어졌다. 
+
+**Delete**
+
+- PersistentVolumeClaim이 삭제되면 PersistentVolume도 동시에 삭제된다.
 
 
 
@@ -211,13 +222,20 @@ spec:
 
 `accessModes`
 
+- [레퍼런스](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)
 - PersistentVolume의 타입에 따라 지원하는 접근 모드가 다르다.
-- ReadWriteMany
-  - 여러개의 노드가 읽고 쓸 수 있도록 마운트 하는 옵션
-- ReadOnlyMany
-  - 여러개의 노드가 읽을 수 있도록 마운트 하는 옵션
-- ReadWriteOnce
-  - 하나의 노드가 읽고 쓸 수 있도록 마운트 하는 옵션
+
+**ReadWriteMany**
+
+- 여러개의 노드가 읽고 쓸 수 있도록 마운트 하는 옵션
+
+**ReadOnlyMany**
+
+- 여러개의 노드가 읽을 수 있도록 마운트 하는 옵션
+
+**ReadWriteOnce**
+
+- 하나의 노드가 읽고 쓸 수 있도록 마운트 하는 옵션
 
 
 
@@ -228,9 +246,33 @@ spec:
 
 
 
-## 1.3 Dynamic Provisioning
+`storageClassName`
 
-- 여전히 클러스터 관리자는 실제 스토리지를 미리 프로비저닝해야 한다.
+- PV는 클래스를 가질 수 있다.
+- storageClassName으로 StorageClass의 이름을 지정함으로써 클래스를 가지게 된다.
+- PV가 클래스를 가지면 해당 클래스를 원하는 PVC와 매칭된다.
+
+
+
+## 1.3 Provisioning
+
+- PV를 생성하는 행위를 Provisioning이라고 한다.
+- Provisioning에는 두 가지의 종류가 있다.
+  - **Static Provisioning**
+  - **Dynamic Provisioning**
+
+
+
+**Static Provisioning**
+
+- 클러스터 관리자가 PV를 직접 생성한다.
+- 인프라스트럭처에 대한 전문 지식을 가지고 직접 스토리지를 다룬다.
+
+
+
+**Dynamic Provisioning**
+
+- Static Provisioning은 여전히 클러스터 관리자는 실제 스토리지를 미리 프로비저닝해야 한다.
 - PersistentVolume의 동적 프로비저닝을 사용하면 위 작업을 자동화할 수 있다.
 - 관리자는 PersistentVolume을 생성하는 대신 PersistentVolume 프로비저를 배포하고 사용자가 선택 가능한 PersistentVolume의 타입을 하나 이상의 스토리지클래스 오브젝트로 정의한다.
 - 사용자가 PersistentVolumeClaim에서 스토리지클래스를 참조하면 프로비저너가 퍼시스턴트 스토리지를 프로비저닝할 때 처리한다.
@@ -239,10 +281,31 @@ spec:
 
 
 
-**장점**
+**Dynamic Provisioning의 장점**
 
+- 사용자의 PVC에 매칭되는 Static PV가 없으면 Dynamic PV가 자동으로 생성된다.
 - 사전에 PersistentVolume을 생성할 필요가 없고 용량 낭비가 발생하지 않는다.
   - PersistentVolumeClaim에서 요청한 용량 만큼의 PersistentVolume이 자동 생성된다.
+
+
+
+## 1.4 Status
+
+**Available**
+
+- 아직 PVC에 바운드 되지 않은 상태
+
+**Bound**
+
+- PVC에 바운드된 상태
+
+**Released**
+
+- 연관된 PVC는 삭제되었지만 볼륨은 그대로 남아 있는 상태
+
+**Failed**
+
+- 볼륨 자동 해제가 실패한 상태
 
 
 
@@ -251,6 +314,7 @@ spec:
 - 인프라스트럭처의 세부 사항을 처리하지 않고 애플리케이션이 쿠버네티스 클러스터에 스토리지를 요청할 수 있도록 하기 위해 만들어진 오브젝트가 PersistentVolume와 PersistentVolumeClaim이다.
 - PersistentVolumeClaim은 PersistentVolume을 요청하는 리소스다.
 - PersistentVolumeClaim에서 지정된 조건(용량, 레이블등)을 기반으로 PersistentVolume에 대한 요청이 들어오면 스케줄러는 현재 가지고 있는 PersistentVolume에서 적당한 볼륨을 할당한다.
+- namespaed 리소스다.
 
 
 
@@ -275,6 +339,13 @@ spec:
     matchExpressions:
       - {key: environment, operator: In, values: [dev]}
 ```
+
+`storageClassName`
+
+- storageClassName에 StorageClass의 이름을 넣으면 해당 클래스의 PV만 매칭될 수 있다.
+- storageClassName의 값을 `""`으로 세팅하면 클래스가 없는 PV와 매칭된다.
+- storageClassName을 아예 생략하면 DefaultStorageClass admission plugin의 동작 여부에 따라 다르게 동작한다.
+  - DefaultStorageClass admission plugin이 작동하고 있으면 default로 지정한 StorageClass가 사용된다.
 
 
 
@@ -305,8 +376,13 @@ spec:
 
 # 3 StorageClass
 
+- PersistentVolumeClaim이 사용자로하여금 스토리지를 추상화해서 인프라스트럭처에 대한 지식 없지 스토리지를 사용하는데 도움을 준다.
+  - 하지만 사용자가 성능상의 이유로 특정한 스토리지를 사용하고 싶은 경우가 있다.
+  - 관리자는 스토리지의 디테일 부분을 숨겨 이러한 사용자의 요구를 충족시켜야 하는데 이 때 `StorageClass` 리소스가 사용된다.
 - 동적 프로비저닝을 사용하려면 어떤 PersistentVolume을 생성할지 정의한 StorageClass를 생성해야 한다.
 - [1.3 Dynamic-Provisioning](#1.3-Dynamic-Provisioning)
+
+
 
 
 

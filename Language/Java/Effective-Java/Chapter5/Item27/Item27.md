@@ -56,8 +56,6 @@ public @interface SuppressWarnings {
 
 
 
-
-
 ## 2.1 범위
 
 * @SuppressWarninigs 애노테이션은 개별 지역변수 선언부터 클래스 전체까지 선언할 수 있다
@@ -65,6 +63,20 @@ public @interface SuppressWarnings {
 * 보통은 변수 선언, 아주 짧은 메소드, 혹은 생성자가 될 것
 * 절대로 클래스 전체에 적용하지 마라
 * 한 줄이 넘는 메소드나 생성자에 달린 @SuppressWarninigs은 지역변수 선언 쪽으로 옮기자
+
+
+
+**SuppressWarnings 애노테이션**
+
+- @Target을 보면 SuppressWarnings을 어디에 적용할 수 있는지 알 수 있다.
+
+```java
+@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, MODULE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SuppressWarnings {
+    String[] value();
+}
+```
 
 
 

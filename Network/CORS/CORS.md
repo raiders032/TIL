@@ -19,11 +19,29 @@
 
 
 
+**브라우저**
+
+- `브라우저`가 스크립트에서 시작한 교차 출처 HTTP 요청을 제한한다.
+- 따라서 브라우저를 통하지 않는 서버에서 다른 출처의 서버로 API 요청을 하면 CORS 에러로부터 자유로워 진다.
+
+
+
 # 2 CORS 요청 종류
 
 ## 2.1 Simple request
 
-* 서버 데이터에 부수 효과(side effect)를 일으키지 않는 HTTP 요청 메서드(GET HTTP 메서드)에 대해 적용됨
+- [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests)
+
+* 서버 데이터에 부수 효과(side effect)를 일으키지 않는 HTTP 요청 메서드에 대해 적용됨
+* 프리플라이트 없이 바로 본 요청을 보낸다.
+
+
+
+ **아래 3가지 경우를 모두 만족 할때 만 Simple request가 적용된다.**
+
+1. 요청의 메소드는 GET, HEAD, POST 중 하나여야 한다.
+2. Accept, Accept-Language, Content-Language, Content-Type, DPR, Downlink, Save-Data, Viewport-Width, Width 헤더일 경우 에만 적용된다.
+3. Content-Type 헤더가 application/x-www-form-urlencoded, multipart/form-data, text/plain중 하나여야한다.
 
 
 

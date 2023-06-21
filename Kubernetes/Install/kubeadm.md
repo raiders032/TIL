@@ -83,9 +83,11 @@ sudo service docker start
 
 ### 2.1.2 CRI-O
 
-- [CRI-O 설치 레퍼런스](https://github.com/cri-o/cri-o/blob/v1.26.1/install.md#apt-based-operating-systems)
 
 
+**Forwarding IPv4 and letting iptables see bridged traffic**
+
+- [레퍼런스](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic)
 
 ```bash
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -106,6 +108,12 @@ EOF
 # 재부팅하지 않고 sysctl 파라미터 적용하기
 sudo sysctl --system
 ```
+
+
+
+**CRI-O Installation Instructions**
+
+- [APT based operating systems CRI-O 설치 레퍼런스](https://github.com/cri-o/cri-o/blob/v1.26.1/install.md#apt-based-operating-systems)
 
 ```bash
 OS=xUbuntu_22.04
@@ -161,10 +169,6 @@ kubeadm init --config kubeadm-config.yaml
 
 
 
-
-
-
-
 **CRI-O 설정**
 
 - [레퍼런스](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#cri-o)
@@ -198,24 +202,41 @@ sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 ## 2.3 kubelet kubeadm kubectl 설치
 
+- [레퍼런스](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl)
 - Debian 기준
+
+
+
+Update the `apt` package index and install packages needed to use the Kubernetes `apt` repository
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
 ```
 
+
+
+Download the Google Cloud public signing key
+
 ```bash
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 ```
+
+
+
+Add the Kubernetes `apt` repository
 
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 ```
 
+
+
+Update `apt` package index, install kubelet, kubeadm and kubectl, and pin their version
+
 ```bash
 sudo apt-get update
-sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-get install -y kubelet=1.26.1-00 kubeadm=1.26.1-00 kubectl=1.26.1-00
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
@@ -379,11 +400,12 @@ kubeadm join --token <token> <control-plane-host>:<control-plane-port> --discove
 ```
 
 ```bash
-kubeadm join --token frumf0.zzpuudwj4h65426d 192.168.154.133:6443 \
-        --discovery-token-ca-cert-hash sha256:403b27ec0901a9a274e51270a46c1a357b38ca0bdda9d23c3b14ce41984110c4
+kubeadm join \
+  --token frumf0.zzpuudwj4h65426d 192.168.154.133:6443 \
+  --discovery-token-ca-cert-hash sha256:403b27ec0901a9a274e51270a46c1a357b38ca0bdda9d23c3b14ce41984110c4
 ```
 
-​	
+
 
 **Token 조회하기**
 

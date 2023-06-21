@@ -114,7 +114,7 @@ spec:
 **클라우드가 아닌 환경에서 인그레스**
 
 - 클라우드 환경이 아니라면 LoadBalancer 타입 대신 NodePort 타입의 서비스를 사용한다.
-- 이 경우 각 노드에서 `nodePort` 로 Nginx 인그레스 컨트롤러에 접근할 수 있다.
+- 이 경우 각 노드에서 `nodePort`로 Nginx 인그레스 컨트롤러에 접근할 수 있다.
 
 
 
@@ -148,6 +148,75 @@ $ kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 
 - 위와 같이 인그레스 컨트롤러는 요청을 서비스로 전달하지 않고 서비스는 파드를 선택하는 데만 사용한다.
 - 대부분의 컨트롤러가 위와 같이 동작한다.
+
+
+
+# 4 TLS 적용
+
+- [TLS.md](../../Network/TLS/TLS.md) 참조
+- 먼저 CA에게 TLS 인증서를 발급 받으면 인증서와 개인 키를 얻을 수 있다.
+
+
+
+**시크릿 만들기**
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: testsecret-tls
+  namespace: default
+data:
+  tls.crt: base64 encoded cert
+  tls.key: base64 encoded key
+type: kubernetes.io/tls
+```
+
+
+
+**base64 encoding**
+
+- 인증서와 개인키를 base64인코딩한다.
+
+```bash
+$ ls
+cert.pem key.pem
+
+$ cat cert.pem | base64 | tr -d "\n"
+base64 encoded cert
+
+$ cat key.pem | base64 | tr -d "\n"
+base64 encoded key
+```
+
+
+
+**인그레스 생성**
+
+- TLS 인증서와 개인키를 포함하는 Secret을 Ingress에 명시해서 TLS를 적용할 수 있다.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tls-example-ingress
+spec:
+  tls:
+  - hosts:
+      - https-example.foo.com
+    secretName: testsecret-tls
+  rules:
+  - host: https-example.foo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80
+```
 
 
 

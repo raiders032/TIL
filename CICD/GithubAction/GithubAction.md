@@ -4,7 +4,13 @@
 
 # 2 workflow file
 
-- workflow의 yaml 문법에대해서 알아보자.
+- workflow란 자동화 된 프로세스를 작성하는 것을 뜻한다.
+  - 이 프로세스 안에서 한개 이상의 잡이 실행된다.
+
+- 이러한 workflow는 YAML file로 작성되고 특정 이벤트 발생 시 실행시키거나 직접 실행시킬 수 도 있다.
+- Workflows file은 리포지토리의 `.github/workflows` 디렉토리에 작성한다.
+  - 이 디렉토리에 여러개의 workflow를 작성하는 것도 가능하다.
+
 - [레퍼런스](https://docs.github.com/ko/actions/learn-github-actions/understanding-github-actions#understanding-the-workflow-file)
 
 
@@ -40,6 +46,52 @@ on:
 	pull_request:
 		branches: [ master]
 ```
+
+
+
+### 2.2.1 pull request
+
+- [레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request)
+- pull request 발생 시 workflow를 트리거할 수 있다.
+- pull request의 여러 액티비티 타입을 지정해서 pull request가 open되었을 때 또는 pull request가 reopne되었을 때 등 세세한 조절이 가능하다.
+
+
+
+**예시**
+
+- 아래는 pull_request의 액티비티 타입으로 opened, reopened를 지정했다.
+- 따라서 pull_request가 open되거나 reopen될 때 workflow가 트리거된다.
+
+```yaml
+on:
+  pull_request:
+    types: [opened, reopened]
+```
+
+
+
+**Activity types**
+
+- 지원되는 Activity types은 아래와 같다.
+- Activity types을 지정하지 않으면 기본적으로 pull_request가 open, reopen 또는 헤드 브랜치가 변경될 때 workflow가 트리거 된다.
+
+- assigned
+- unassigned
+- labeled
+- unlabeled
+- opened
+- edited
+- closed
+- reopened
+- synchronize
+- converted_to_draft
+- ready_for_review
+- locked
+- unlocked
+- review_requested
+- review_request_removed
+- auto_merge_enabled
+- auto_merge_disabled
 
 
 
@@ -84,7 +136,6 @@ jobs:
 
 - `env` 키를 사용해서 workflow에 환경변수를 지정할 수 있다.
 - env의 위치에 따라 환경 변수의 스코프가 결정된다.
-- [미리 정의된 환경변수들](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables)
 
 
 
@@ -111,6 +162,45 @@ jobs:
         env:
           First_Name: Mona
 ```
+
+
+
+# 3 Context
+
+
+
+## 3.1 gitHub context
+
+`github.ref_name`
+
+- 워크플로가 시작된 브랜치의 이름 또는 태그의 심플 버전
+
+`github.run_number`
+
+- 워크플로를 실행을 나타내는 고유한 번호 
+- 워크플로의 첫 번째 실행에 대해 1에서 시작하여 새로운 실행마다 1씩 증가한다. 
+- 워크플로 실행을 다시 실행해도 번호가 변경되지 않는다.
+
+
+
+# 4 Default environment variables
+
+- [미리 정의된 환경변수들](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables)
+
+
+
+`GITHUB_REF_NAME`
+
+- 워크플로가 시작된 브랜치의 이름 또는 태그의 심플 버전
+- 풀 버전은 `GITHUB_REF`를 사용한다.
+
+
+
+`GITHUB_REF_TYPE`
+
+- 워크플로가 트리거된 종류로 값으로 `branch` 또는 `tag`를 가진다
+
+
 
 
 
@@ -185,8 +275,6 @@ jobs:
 
 
 
-
-
 ## 3.4 [Setup Java JDK](https://github.com/marketplace/actions/setup-java-jdk#supported-version-syntax)
 
 **예시**
@@ -221,4 +309,14 @@ env:
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
 ```
+
+
+
+# 4 runner
+
+- runner란 실제 workflow를 실행하는 서버를 의미한다.
+- github는 Ubuntu Linux, Microsoft Windows, and macOS runners를 제공한다.
+- 각각의 workflow는 새롭게 프로비저닝된 가상 머신에서 실행된다.
+- 다른 OS가 필요하거나 특정 하드웨어가 필요하다면 직접 runner를 구성할 수도 있다.
+  - [Hosting your own runners](https://docs.github.com/en/actions/hosting-your-own-runners)
 

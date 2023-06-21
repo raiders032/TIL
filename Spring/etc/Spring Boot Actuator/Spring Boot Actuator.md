@@ -1,14 +1,17 @@
-
-
-# Spring Boot Actuator
+# 1 Spring Boot Actuator
 
 > Spring Boot Actuator는 프로덕션에서 Spring Boot 애플리케이션을 모니터링하고 관리하는 데 도움이 되는 여러 가지 추가 기능이 포함되어 있습니다. HTTP Endpoints 또는 JMX를 사용하여 응용프로그램을 관리 및 모니터링하도록 선택할 수 있습니다. 감사, 상태 및 메트릭 수집은 응용프로그램에 자동으로 적용될 수도 있습니다.
 
-# 1. 의존성 추가하기
 
-> Spring Boot Actuator 모듈은 스프링 부트의 모든 production-ready 기능을 제공합니다. 기능을 활성화하기 위해 아래와 같이 의존성을 추가합니다.
 
-메이븐
+## 1.1 의존성 추가하기
+
+- Spring Boot Actuator 모듈은 스프링 부트의 모든 production-ready 기능을 제공합니다. 
+- 기능을 활성화하기 위해 아래와 같이 의존성을 추가합니다.
+
+
+
+**메이븐**
 
 ```xml
 <dependencies>
@@ -19,7 +22,7 @@
 </dependencies>
 ```
 
-그래들
+**그래들**
 
 ```groovy
 dependencies {
@@ -27,11 +30,22 @@ dependencies {
 }
 ```
 
-# 2. Endpoints
 
-> 액추에이터 Endpoints을 사용하여 응용 프로그램을 모니터링하고 상호 작용할 수 있습니다. Spring Boot에는 여러 기본 제공 엔드포인트가 포함되어 있으며 사용자가 자신의 엔드포인트를 추가할 수 있습니다. 예를 들어 `health` endpoint은 기본 응용 프로그램 상태 정보를 제공합니다.
->
-> HTTP 또는 JMX를 통해 각 개별 엔드포인트를 사용하거나 사용하지 않도록 설정하고 원격으로 액세스할 수 있도록 할 수 있습니다. 엔드포인트는 사용 가능 및 노출되었을 때 사용할 수 있는 것으로 간주됩니다. 기본 제공 엔드포인트는 사용 가능한 경우에만 자동으로 구성됩니다. 대부분의 응용 프로그램은 HTTP를 통해 노출을 선택합니다. 여기서 /actuator의 접두사와 함께 endpoint의 ID가 URL에 매핑됩니다. 예를 들어, 기본적으로 `health` endpoint는 `/actuator/health`에 매핑됩니다.
+
+# 2 Endpoints
+
+- Actuator의 Endpoints을 사용하여 응용 프로그램을 모니터링하고 상호 작용할 수 있다.
+- Spring Boot에는 여러 기본 제공 엔드포인트가 포함되어 있으며 사용자가 자신의 엔드포인트를 추가할 수 있다.
+- 예를 들어 `health` endpoint은 기본 응용 프로그램 상태 정보를 제공한다.
+- HTTP 또는 JMX를 통해 각 개별 엔드포인트를 활성화할 수 있다. 
+- 엔드포인트는 활성화되고 동시에 노출되었을 때 사용할 수 있는 것으로 간주된다. 
+- 대부분의 응용 프로그램은 HTTP를 통해 엔드포인트를 노출한다.
+- 이러한 엔드포인트의 Path는 접두사와 endpoint ID를 이용해 만들어진다.
+  - `health`의 endpoint id와 접두사(/actuator)를 가지고 `actuator/health` Path를 만든다.
+
+
+
+**엔드포인트 ID와 설명**
 
 | Endpoint ID    | Description                                                  |
 | :------------- | :----------------------------------------------------------- |
@@ -64,9 +78,14 @@ web application (Spring MVC, Spring WebFlux, or Jersey)인 경우 아래의 endp
 
 ## 2.1 Endpoints 활성화(비활성화)하기
 
-> 기본적으로 모든 endpoint은 활성화 되어 있다. (shutdown 빼고) properties파일을 통해 endpoint를 활성화하고 비활성화 할 수 있다.
->
-> * `management.endpoint.<Endpoint ID>.enabled = true`
+- 기본적으로 모든 endpoint은 활성화 되어 있다. (shutdown 빼고) 
+- properties파일을 통해 endpoint를 활성화하고 비활성화 할 수 있다.
+
+
+
+**예시**
+
+- shutdown 엔드포인트 활성화하기
 
 ```yml
 management:
@@ -79,8 +98,7 @@ management:
 
 ## 2.2 Endpoints 공개하기
 
-> HTTP상에서 `health` 와 `info` 만 공개되어 있다. 
->
+- HTTP상에서 `health` 와 `info` 만 공개되어 있다. 
 
 ```yml
 # 공개
@@ -96,6 +114,40 @@ management:
       exposure:
         exclude: "*"
 ```
+
+
+
+# 3 HTTP
+
+- [레퍼런스](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.monitoring)
+- HTTP를 이용해 애플리케이션을 모니터링하고 관리할 수 있다.
+
+
+
+## 3.1 Endpoint Paths 커스텀
+
+- Endpoint의 prefix는 기본적으로 `/actuator`로 설정되어 있다.
+- 이 prefix를 수정하려면 아래와 같이 설정한다.
+  - info endpoint의 경우 `actuator/info` 에서 `/manage/info`로 Path가 변경된다.
+
+```yaml
+management:
+  endpoints:
+    web:
+      base-path: "/manage"
+```
+
+
+
+# 4 Loggers
+
+
+
+# 5 Metrics
+
+
+
+# 6 Tracing
 
 
 

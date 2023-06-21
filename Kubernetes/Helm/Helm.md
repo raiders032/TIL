@@ -185,6 +185,13 @@ data:
 
 
 
+**values.yaml 파일 미리보기**
+
+- 커스텀한 값을 설정하기 위해서는 차트의 `values.yaml`를 미리 알아야 한다.
+- `helm show values [CHART]` 명령어로 차트의 `values.yaml`을 볼 수 있다.
+
+
+
 # 3 Installing Helm
 
 - [레퍼런스](https://helm.sh/docs/intro/install/)
@@ -230,8 +237,14 @@ sudo apt-get install helm
 
 # 4 헬름 저장소
 
-- 기본적으로 참조하는 저장소가 등록되어 있지 않다.
-- 저장소를 추가하려면 `helm repo add` 명령어를 사용한다.
+- 기본적으로 참조하는 Chart Repository가 등록되어 있지 않다.
+- Chart Repository를 추가하려면 `helm repo add` 명령어를 사용한다.
+
+
+
+> Chart Repository
+>
+> - 여러 차트를 저장, 공유, 검색할 수 있는 중앙 저장소다.
 
 
 
@@ -306,6 +319,18 @@ $ helm install sample-wordpress bitnami/wordpress --version 10.9.1 \
 
 
 
+**옵션**
+
+`--values`
+
+- 
+
+`--version`
+
+- 차트의 버전을 명시한다. `--version` 옵션을 사용하지 않으면 latest 버전이 사용된다.
+
+
+
 ## 5.2 Uninstall Chart
 
 ```bash
@@ -319,3 +344,50 @@ $ helm uninstall [RELEASE_NAME]
 ```bash
 $ helm upgrade [RELEASE_NAME] jenkins/jenkins [flags]
 ```
+
+
+
+# 6 차트 찾기
+
+- [레퍼런스](https://helm.sh/docs/intro/using_helm/#helm-search-finding-charts)
+
+
+
+## 6.1 helm search hub
+
+- [Artifact Hub](https://artifacthub.io/)에서 차트를 찾는다.
+
+
+
+**예시**
+
+```bash
+$ helm search hub wordpress
+URL                                               	CHART VERSION	APP VERSION        	DESCRIPTION
+https://artifacthub.io/packages/helm/kube-wordp...	0.1.0        	1.1                	this is my wordpress package
+https://artifacthub.io/packages/helm/truecharts...	1.1.16       	6.1.1              	The WordPress rich content management system ca...
+https://artifacthub.io/packages/helm/bitnami-ak...	15.2.13      	6.1.0              	WordPress is the world's most popular blogging ...
+https://artifacthub.io/packages/helm/bitnami/wo...	15.4.1       	6.2.0              	WordPress is the world's most popular blogging ...
+```
+
+
+
+## 6.2 helm search repo
+
+- 로컬에 추가한 리포지토리 내에서 차트를 찾는다.
+- 로컬에서 찾기 때문에 네트워크 연결이 필요하지 않다.
+
+
+
+**예시**
+
+```bash
+$ helm search repo rook-release/rook-ceph --versions
+NAME                          	CHART VERSION	APP VERSION	DESCRIPTION
+rook-release/rook-ceph        	v1.11.4      	v1.11.4    	File, Block, and Object Storage Services for yo...
+rook-release/rook-ceph        	v1.11.3      	v1.11.3    	File, Block, and Object Storage Services for yo...
+rook-release/rook-ceph        	v1.11.2      	v1.11.2    	File, Block, and Object Storage Services for yo...
+rook-release/rook-ceph        	v1.11.1      	v1.11.1    	File, Block, and Object Storage Services for yo...
+rook-release/rook-ceph        	v1.11.0      	v1.11.0    	File, Block, and Object Storage Services for yo...
+```
+

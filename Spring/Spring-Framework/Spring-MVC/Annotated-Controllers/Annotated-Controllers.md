@@ -160,31 +160,53 @@ public String requestParamV2(@RequestParam("username") String memberName,
 * 클라이언트가 쿼리 파라미터나 HTML Form으로 데이터를 전달할 때 @ModelAttribute를 사용해 아규먼트에 바인딩할 수 있다.
 * 개발시 요청 파라미터를 받아 객체를 생성하는 일이 자주 발생한다.
 * @ModelAttribute를 사용하면 요청 파라미터를 받고 객체를 생성하는 일을 자동화할 수 있다.
-  * 바인딩 객체를 생성한다.
-  * 요청 파라미터의 이름으로 해당 프로퍼티의 setter를 호출해서 파라미터의 값을 입력(바인딩) 한다.
-* 바인딩 객체에 setter가 필요하다
 * @ModelAttribute는 생략할 수 있다.
   * String , int , Integer 같은 단순 타입 아규먼트의 애노테이션이 생략 -> @RequestParam로 인식
   * 단순 타입을 제외한 나머지 타입 아규먼트의 애노테이션 생략 -> @ModelAttribute로 인식
 
-**요청 파라미터를 바인딩할 객체를 만든다**
+
+
+**Setter 사용**
+
+* 기본 생성자가 존재하면 먼저 기본 생성자를 통해 객체를 만들고 Setter를 사용해 객체에 값을 바인딩한다.
+* 따라서 기본 생성자가 존재하면 Setter가 필수적으로 필요하다.
+* 기본 생성자가 존재하면 다른 생성자가 존재하더라도 기본 생성자와 Setter를 사용해 객체를 바인딩 한다.
 
 ```java
-@Data
-public class HelloData {
-  private String username;
-  private int age;
+@Setter
+@NoArgsConstructor
+public static class RequestDto {
+	  private String username;
+	  private int age;
 }
 ```
 
+
+
+**생성자 사용**
+
+- 기본 생성자와 Setter 없이 필요한 모든 인자를 받는 생성자를 통해 객체를 바인딩할 수 있다.
+- 기본 생성자가 없어야 인자를 받은 생성자가 사용된다.
+
+```java
+@AllArgsConstructor
+public static class RequestDto {
+	  private String username;
+  	private int age;
+}
+```
+
+
+
 **@ModelAttribute 사용**
 
-* helloData 객체를 생성하고 setter로 요청 파라미터 이름과 매칭되는 프로퍼티에 값을 입력한다.
+* 기본 생성자로 helloData 객체를 생성하고 setter로 요청 파라미터 이름과 매칭되는 프로퍼티에 값을 입력한다.
+* 기본 생성자가 없는 경우 인자를 받는 생성자를 통해 객체 바인딩을 진행한다.
 
 ```java
 @ResponseBody
 @RequestMapping("/model-attribute-v1")
-public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+public String modelAttributeV1(@ModelAttribute RequestDto helloData) {
   log.info("username={}, age={}", helloData.getUsername(),
   helloData.getAge());
   return "ok";
@@ -193,7 +215,18 @@ public String modelAttributeV1(@ModelAttribute HelloData helloData) {
 
 
 
-## 3.4 UriComponentsBuilder
+## 3.4 @RequestBody
+
+- [레퍼런스](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-requestbody)
+- HTTP request body을 파싱해서 자바 객체로 변환해주는 기능이다.
+- HttpMessageConverter를 사용해 request body를 자바 객체로 변환해준다.
+- 타겟 타입은 기본 생성자가 필수적으로 필요하다.
+  - 직렬화 가능한 클래스들은 기본 생성자가 필수
+  - 데이터 바인딩을 위한 필드명을 알아내기 위해 getter나 setter 중 1가지는 정의되어 있어야 한다.
+
+
+
+## 3.5 UriComponentsBuilder
 
 * 현재 요청의 호스트, 포트, 프로토콜, 컨텍스트 패스를 이용해서 URL을 만들 때 사용한다.
 

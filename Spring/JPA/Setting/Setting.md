@@ -2,10 +2,15 @@
 
 ```groovy
 dependencies {
-  // h2 database
+  // h2 database runtimeOnly 런타임과 테스트 동시 사용 가능
   runtimeOnly 'com.h2database:h2'
+  
+  // 테스트에서만 사용 가능
+  testImplementation 'com.h2database:h2'
+  
   // mysql driver
   runtimeOnly 'mysql:mysql-connector-java'
+  
   // Spring Data JPA
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
@@ -25,13 +30,17 @@ dependencies {
 
 **스키마 자동 생성**
 
-`spring.jpa.hibernate.ddl-auto`
+`spring.jpa.generate-ddl`
 
 * `true` : 스키마 자동 생성 활성화
 
 `spring.jpa.hibernate.ddl-auto`
 
 * `create`: 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
+* `none`
+* `validate`
+* `update`
+* `create-drop`
 
 
 

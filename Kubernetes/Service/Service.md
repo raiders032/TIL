@@ -22,7 +22,7 @@
 - 여러개의 파드를 묶어 `단일 진입점`을 제공하는 것이 서비스다.
 - 서비스는 가상 아이피를 가지고 있고 이 가상 아이피 주소에 요청하면 요청을 로드밸런싱해서 파드로 요청을 전달한다.
 - 모든 노드에는 `kube-proxy`가 작동 중인데 kube-proxy가 서비스에 가상 아이피를 할당하는 역할을 한다.
-- 이 가상 아이피 주소와 포트는 서비스가 존재하는 동안 절대 바뀌지 않는다.
+- `가상 아이피 주소와 포트는 서비스가 존재하는 동안 절대 바뀌지 않는다`.
 
 
 
@@ -76,7 +76,32 @@ spec:
 - `service.spec.sessionAffinity`를 `ClientIP `로 설정하면 된다.
 - 서비스는 쿠키 기반 세션 어피니티를 제공하지 않는다. 
   - 서비스가 L4 수준의 로드밸랜서이기 때문이다.
-  - 서비스는 TCP와 UDP 패킬을 처리하고 그들이 가지고 있는 페이로드는 신경쓰지 않기 때문이다.
+  - 서비스는 TCP와 UDP 패킷을 처리하고 그들이 가지고 있는 페이로드는 신경쓰지 않기 때문이다.
+
+
+
+## 1.5 멀티 포트
+
+- 하나의 서비스로 여러 포트를 지원할 수 있다.
+- 여러 포트가 있는 서비스는 만들 떄는 각 포트의 이름을 지정해야 한다.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hostname-svc-clusterip
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443
+  selector:
+    app: webserver
+  type: ClusterIP
+```
 
 
 

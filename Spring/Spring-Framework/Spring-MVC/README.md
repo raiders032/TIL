@@ -1,7 +1,7 @@
 # Spring MVC
 
 * [Annotated Controllers](Annotated-Controllers/Annotated-Controllers.md)
-  * @Controller, @RestController, @RequestParam, @ModelAttribute
+  * @Controller, @RestController, @RequestParam, @ModelAttribute, @RequestBody
   * Request Mapping, 컨트롤러 메소드 아규먼트
 * [Argument Resolver](Argument-Resolver/Argument-Resolver.md)
   * Argument Resolver로 커스텀한 로그인 애노테이션 만들기

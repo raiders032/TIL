@@ -349,6 +349,14 @@ kubectl get crd -n rook-ceph --no-headers=true | awk '/[[:lower:]]*ceph*/ { prin
 
 
 
+```
+kubectl get pod -n rook-ceph --no-headers=true | awk '/[[:lower:]]*ceph*/ { print $1}' | xargs  kubectl delete pod -n rook-ceph
+```
+
+
+
+
+
 # 5 Troubleshooting
 
 
@@ -407,7 +415,7 @@ nvme0n1     259:0    0 931.5G  0 disk
 
 - sda의 RM 필드 1의 의미는 removable device라는 의미다.
 - removable device의 경우 OSD를 생성할 수 없기 때문에 sda가 스킵된 것 오류 메시지  `"Insufficient space (<5GB)"` rook의 버그다.
-- [참고 이슈](https://github.com/rook/rook/issues/11474)
+- [참고 이슈](https://github.com/rook/rook/issues/11474)ex
 - https://tracker.ceph.com/issues/38833
 - removable device에 OSD를 생성하고 싶은 경우 removable device를 직접 사용하지 않고 removable device 위에 LV를 생성해서 LV를 사용하면 된다.
 

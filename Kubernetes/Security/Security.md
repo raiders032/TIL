@@ -84,7 +84,116 @@
 - UserAccount은 전역으로 지정됩니다. 
   - 이름은 클러스터의 모든 네임스페이스에서 고유하다.
   - 어떤 네임스페이스를 보든지 사용자를 나타내는 특정 사용자 이름은 동일한 사용자를 나타낸다.
+-  쿠버네티스 관리 대상이 아니다.
+  - API 서버를 통해 사용자를 생성, 수정, 삭제할 수 없다는 뜻이다.
+- 모든 유저의 접근은 API Server에 의해 관리된다.
+  - API Server에 kubectl로 접근하거나 http 요청으로 접근한다.
+  - 일반 사용자가 API 서버를 호출하기 위해서는 몇 가지 인증 단계가 필요하다.
+    - [API 서버의 인증 절차 참고](##1.1-API-서버의-인증 절차)
 
+
+
+
+## 2.1 인증 방식
+
+- 클라이언트의 인증서
+- HTTP 헤더로 전달된 인증 토큰
+- 기본 HTTP 인증
+- 아래의 static 방식은 권장하지 않는 방식으로 사용하지 않는다.
+- static password file
+  - 유저 정보를 담은 파일을 작성한다.
+  - `<password,username,userID,groupID>` 엔트리로 구성된 파일
+  - `--basic-auth-file=<static_password_file>` 옵션을 추가해 kube-apiserver를 실행
+  - `curl ` 명령어로 api-server에 요청할 때 `-u "user1:password123"` 옵션을 추가해 인증한다.
+
+- static token file
+  - static password filer과 같은 방식
+  - `<token,username,userID,groupID>` 엔트리로 구성된 파일
+    - 비밀번호 대신 토큰 사용
+    - `curl ` 명령어로 api-server에 요청할 때 `--header "Authorization: Bearer <token>"` 옵션을 추가해 인증한다.
+
+
+
+## 2.2 certificate를 부여하는 법
+
+- [레퍼런스](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user)
+- userAccount에게 certificate를 부여해보자.
+
+
+
+**private key 생성하기**
+
+- 먼저 private key 생성한다.
+
+``````bash
+openssl genrsa -out myuser.key 2048
+``````
+
+
+
+**CSR 생성하기**
+
+- 앞서 생성한 private key로 csr을 생성한다.
+- CN과 O 속성을 면시하는 것이 중요하다.
+  - CN(Common Name): user의 이름
+  - O: user가 속할 group
+
+
+```bash
+openssl req -new \
+  -key myuser.key \
+  -subj "/CN=kube-admin/O=system:masters" \
+  -out myuser.csr
+```
+
+
+
+**CertificateSigningRequest 생성하기**
+
+- CertificateSigningRequest 오브젝트를 생성해 관리자에게 요청한다.
+- [CertificateSigningRequest 리소스 레퍼런스](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#certificatesigningrequest-v1-certificates-k8s-io)
+
+```yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: myuser
+spec:
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZVzVuWld4aE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQTByczhJTHRHdTYxakx2dHhWTTJSVlRWMDNHWlJTWWw0dWluVWo4RElaWjBOCnR2MUZtRVFSd3VoaUZsOFEzcWl0Qm0wMUFSMkNJVXBGd2ZzSjZ4MXF3ckJzVkhZbGlBNVhwRVpZM3ExcGswSDQKM3Z3aGJlK1o2MVNrVHF5SVBYUUwrTWM5T1Nsbm0xb0R2N0NtSkZNMUlMRVI3QTVGZnZKOEdFRjJ6dHBoaUlFMwpub1dtdHNZb3JuT2wzc2lHQ2ZGZzR4Zmd4eW8ybmlneFNVekl1bXNnVm9PM2ttT0x1RVF6cXpkakJ3TFJXbWlECklmMXBMWnoyalVnald4UkhCM1gyWnVVV1d1T09PZnpXM01LaE8ybHEvZi9DdS8wYk83c0x0MCt3U2ZMSU91TFcKcW90blZtRmxMMytqTy82WDNDKzBERHk5aUtwbXJjVDBnWGZLemE1dHJRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBR05WdmVIOGR4ZzNvK21VeVRkbmFjVmQ1N24zSkExdnZEU1JWREkyQTZ1eXN3ZFp1L1BVCkkwZXpZWFV0RVNnSk1IRmQycVVNMjNuNVJsSXJ3R0xuUXFISUh5VStWWHhsdnZsRnpNOVpEWllSTmU3QlJvYXgKQVlEdUI5STZXT3FYbkFvczFqRmxNUG5NbFpqdU5kSGxpT1BjTU1oNndLaTZzZFhpVStHYTJ2RUVLY01jSVUyRgpvU2djUWdMYTk0aEpacGk3ZnNMdm1OQUxoT045UHdNMGM1dVJVejV4T0dGMUtCbWRSeEgvbUNOS2JKYjFRQm1HCkkwYitEUEdaTktXTU0xMzhIQXdoV0tkNjVoVHdYOWl4V3ZHMkh4TG1WQzg0L1BHT0tWQW9FNkpsYWFHdTlQVmkKdjlOSjVaZlZrcXdCd0hKbzZXdk9xVlA3SVFjZmg3d0drWm89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+```
+
+- expirationSeconds로 만료시간 지정
+- request에는 CSR file content를 base64로 인코딩한 값을 넣는다.
+  - 아래 명령어로 myuser.csr의 base64 인코딩 값을 얻을 수 있다.
+  - `cat myuser.csr | base64 | tr -d "\n"`
+
+
+
+**Approve certificate signing request**
+
+- CertificateSigningRequest가 만들어지면 관리자는 `kubectl get csr` 명령어를 통해 CertificateSigningRequest를 조회할 수 있다.
+- 관리자는 CertificateSigningRequest를 승인하거나 거절할 수 있다.
+  - 승인: `kubectl certificate approve <certificate-signing-request-name> `  
+  - 거절: `kubectl certificate deny <certificate-signing-request-name>`
+
+
+
+**Get the certificate**
+
+- 관리자가 CertificateSigningRequest를 승인해주면 Certificate를 얻을 수 있다.
+- Certificate의 값은 `status.certificate`에 Base64로 인코딩되어 있다
+- 따라서 아래의 명령어로  Certificate의 값을 myuser.crt로 저장할 수 있다.
+- `kubectl get csr myuser -o jsonpath='{.status.certificate}'| base64 -d > myuser.crt`
+
+
+
+> certificate 정보 보기
+>
+> `openssl x509 -in <certificate-path> -text -noout`
 
 
 
@@ -216,13 +325,18 @@ metadata:
 - RBAC는 권한이 없는 사용자가 클러스터 상태를 보거나 수정하지 못한다.
 - default 서비스어카운트는 추가 권한을 부여하지 않는 한 클러스터 상태를 볼 수 없으며 수정도 불가능하다.
 
-- 쿠버네티스 API 서버는 RBAC 인가 플러그인을 사용해 액션을 요청하는 사용자의 권한을 점검하도록 설정할 수 있다.
-- 사용자는 요청에 자격증명을 포함시켜 인증한다.
-- API 서버는 REST 인터페이스를 제공한다.
+
+
+## 4.1 RBAC 인가 플러그인
+
+- kube-apiserver는 RBAC 인가 플러그인을 사용해 액션을 요청하는 사용자가 액션을 수행할 수 있는지 점검한다.
+- kube-apiserver는 REST 인터페이스를 제공하므로 사용자는 HTTP 요청을 통해 액션을 수행한다.
+  - HTTP 요청에는 자격증명 정보가 포함되어 있다.
+    - 자격증명 정보에는 인증 토큰, 클라이언트 인증서 등이 있다.
 
 
 
-## 4.1 액션
+## 4.2 액션
 
 - REST 클라이언트는 GET, POST, PUT, DELETE 유형의 메서드 요청을 특정 리소스를 나타내는 URL 경로로 보낸다.
 - 리소스에는 파드, 서비스, 시크릿 등이 있다.
@@ -232,8 +346,11 @@ metadata:
 # 5 RBAC 리소스
 
 - RBAC 인가 규칙은 네 개의 리소스로 구성된다.
-- 롤과 클러스터 롤: 리소스에 수행할 수 있는 동사를 지정한다.
-- 롤바인딩과 클러스터롤바인딩: 위의 롤을 특정 사용자, 그룹 서비스 어카운트에 바인딩한다.
+  - 롤: 리소스에 수행할 수 있는 동사를 지정한다.
+  - 클러스터 롤: 리소스에 수행할 수 있는 동사를 지정한다.
+  - 롤바인딩: 롤을 특정 사용자, 그룹 서비스 어카운트에 바인딩한다.
+  - 클러스터롤바인딩: 롤을 특정 사용자, 그룹 서비스 어카운트에 바인딩한다.
+
 - 롤과 롤바인딩은 네임스페이스가 지정된 리소스이며 클러스터롤과 클러스터롤바인딩은 네임스페이스를 지정하지 않는 클러스터 수준의 리소스다.
 
 
@@ -242,6 +359,9 @@ metadata:
 
 - 네임스페이스가 지정된 리소스이기 때문에 반드시 네임스페이스를 명시해야한다.
   - namespace를 지정하지 않으면 default namespace가 지정된다.
+- 리소스가 `core` 그룹에 속하면 apiGroups에 `""`으로 지정한다.
+  - 임의의 리소스가 core 그룹에 속하는지 알고 싶다면 [여기를 참고](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#-strong-api-overview-strong-)
+
 
 ```yml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -260,6 +380,7 @@ rules:
 ## 5.2 RoleBinding
 
 - 네임스페이스가 지정된 리소스이며 namespace를 지정하지 않으면 default namespace가 지정된다.
+- RoleBinding은 다른 네이스페이스의 서비스 어카운트도 참조할 수 있다.
 
 ```yml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -285,10 +406,25 @@ roleRef:
 
 ## 5.3 ClusterRole
 
-- ClusterRole을 사용하는 경우
-  - 네임스페이스 리소스에 대한 사용 권한을 정의하고 개별 네임스페이스 내에서 액세스 권한을 부여할 때
-  - 네임스페이스 리소스에 대한 사용 권한을 정의하고 모든 네임스페이스에 대한 액세스 권한 부여할 때
-  - 클러스터 범위 리소스에 대한 사용 권한 정의할 때
+**일반 Role이 해결할 수 없는 문제**
+
+- 일반 Role은 동일한 네임스페이스의 리소스에만 액세스 할 수 있다.
+  - 따라서 다른 네임스페이스에 리소스에 누군가 액세세할 수 있게 하려면 해당 네임스페이스마다 롤과 롤바인딩을 만들어야 한다.
+  - 이를 모든 네임스페이스로 확장하려면 각 네임스페이스에서 동일한 롤과 롤바인딩을 만들어야 함
+  - 추가적으로 네임스페이스가 추가되면 해당 네임스페이스에 롤과 롤바인딩을 만들어야 한다는 것을 기억해야 한다.
+
+- 네임스페이스를 지정하지 않는 리소스에 대한 액세스 권한을 부여할 수 없다.
+  - 네임스페이스를 지정하지 않는 리소스는 아래 명령어로 확인 가능
+  - `kubectl api-resources --namespaced=false`
+
+
+
+
+**ClusterRole을 사용하는 경우**
+
+- 일반 Role이 해결할 수 없는 문제는 ClusterRole를 사용해 해결한다.
+- `네임스페이스 리소스`에 대한 사용 권한을 정의하고 `모든 네임스페이스에 대한 액세스 권한 부여`할 때
+- `클러스터 범위 리소스`에 대한 사용 권한 정의할 때
 
 ```yml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -324,81 +460,6 @@ roleRef:
   name: secret-reader
   apiGroup: rbac.authorization.k8s.io
 ```
-
-
-
-# 6 CSR
-
-- Certificate Signing Requests
-- [레퍼런스](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#normal-user)
-- 일반 사용자가 API 서버를 호출하기 위해서는 몇 가지 인증 단계가 필요하다.
-  - [API 서버의 인증 절차 참고](##1.1-API-서버의-인증 절차)
-  - 먼저 이 사용자는 Kubernetes 클러스터에서 발급한 Certificate를 가지고 있어야 한다
-  - API 호출 시 Certificate를 제출한다.
-- 일반 사용자가 Certificate를 얻는 과정을 보자.
-
-
-
-**private key 생성하기**
-
-- 먼저 private key 생성한다.
-
-``````bash
-openssl genrsa -out myuser.key 2048
-``````
-
-
-
-**CSR 생성하기**
-
-- 앞서 생성한 private key로 csr을 생성한다.
-
-```bash
-openssl req -new -key myuser.key -out myuser.csr
-```
-
-
-
-**CertificateSigningRequest 생성하기**
-
-- CertificateSigningRequest 오브젝트를 생성해 관리자에게 요청한다.
-- [CertificateSigningRequest 리소스 레퍼런스](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#certificatesigningrequest-v1-certificates-k8s-io)
-
-```yaml
-apiVersion: certificates.k8s.io/v1
-kind: CertificateSigningRequest
-metadata:
-  name: myuser
-spec:
-  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZVzVuWld4aE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQTByczhJTHRHdTYxakx2dHhWTTJSVlRWMDNHWlJTWWw0dWluVWo4RElaWjBOCnR2MUZtRVFSd3VoaUZsOFEzcWl0Qm0wMUFSMkNJVXBGd2ZzSjZ4MXF3ckJzVkhZbGlBNVhwRVpZM3ExcGswSDQKM3Z3aGJlK1o2MVNrVHF5SVBYUUwrTWM5T1Nsbm0xb0R2N0NtSkZNMUlMRVI3QTVGZnZKOEdFRjJ6dHBoaUlFMwpub1dtdHNZb3JuT2wzc2lHQ2ZGZzR4Zmd4eW8ybmlneFNVekl1bXNnVm9PM2ttT0x1RVF6cXpkakJ3TFJXbWlECklmMXBMWnoyalVnald4UkhCM1gyWnVVV1d1T09PZnpXM01LaE8ybHEvZi9DdS8wYk83c0x0MCt3U2ZMSU91TFcKcW90blZtRmxMMytqTy82WDNDKzBERHk5aUtwbXJjVDBnWGZLemE1dHJRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBR05WdmVIOGR4ZzNvK21VeVRkbmFjVmQ1N24zSkExdnZEU1JWREkyQTZ1eXN3ZFp1L1BVCkkwZXpZWFV0RVNnSk1IRmQycVVNMjNuNVJsSXJ3R0xuUXFISUh5VStWWHhsdnZsRnpNOVpEWllSTmU3QlJvYXgKQVlEdUI5STZXT3FYbkFvczFqRmxNUG5NbFpqdU5kSGxpT1BjTU1oNndLaTZzZFhpVStHYTJ2RUVLY01jSVUyRgpvU2djUWdMYTk0aEpacGk3ZnNMdm1OQUxoT045UHdNMGM1dVJVejV4T0dGMUtCbWRSeEgvbUNOS2JKYjFRQm1HCkkwYitEUEdaTktXTU0xMzhIQXdoV0tkNjVoVHdYOWl4V3ZHMkh4TG1WQzg0L1BHT0tWQW9FNkpsYWFHdTlQVmkKdjlOSjVaZlZrcXdCd0hKbzZXdk9xVlA3SVFjZmg3d0drWm89Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
-  signerName: kubernetes.io/kube-apiserver-client
-  expirationSeconds: 86400  # one day
-  usages:
-  - client auth
-```
-
-- expirationSeconds로 만료시간 지정
-- request에는 CSR file content를 base64로 인코딩한 값을 넣는다.
-  - 아래 명령어로 myuser.csr의 base64 인코딩 값을 얻을 수 있다.
-  - `cat myuser.csr | base64 | tr -d "\n"`
-
-
-
-**Approve certificate signing request**
-
-- CertificateSigningRequest가 만들어지면 관리자는 `kubectl get csr` 명령어를 통해 CertificateSigningRequest를 조회할 수 있다.
-- 관리자는 CertificateSigningRequest를 승인하거나 거절할 수 있다.
-  - 승인: `kubectl certificate approve <certificate-signing-request-name> `  
-  - 거절: `kubectl certificate deny <certificate-signing-request-name>`
-
-
-
-**Get the certificate**
-
-- 관리자가 CertificateSigningRequest를 승인해주면 Certificate를 얻을 수 있다.
-- Certificate의 값은 `status.certificate`에 Base64로 인코딩되어 있다
-- 따라서 아래의 명령어로  Certificate의 값을 myuser.crt로 저장할 수 있다.
-- `kubectl get csr myuser -o jsonpath='{.status.certificate}'| base64 -d > myuser.crt`
 
 
 
@@ -445,5 +506,100 @@ spec:
       ports:
         - protocol: TCP
           port: 5978
+```
+
+
+
+# 8 KubeConfig
+
+- `curl `을 이용해 kube-apiserver에  https 요청할 때 인증을 아래와 같이 자격 증명을 위한 파일을 함께 보낸다.
+
+```bash
+curl https://my-kube:6443/api/v1/pods \
+  --key admin.key \
+  --cert admin.crt \
+  --cacert ca.crt
+```
+
+- kubectl를 사용할 때 마찬가지로 옵션을 사용해 자격 증명을 위한 파일을 보낸다.
+
+```bash
+kubectl get pods \
+  --server my-kube:6443 \
+  --client-key admin.key \
+  --client-certificate admin.crt \
+  --certificate-authority ca.crt
+```
+
+- 하지만 매 요청마다 이러한 옵션을 추가하는 것은 매우 번거로운 일이다. 
+- 따라서 이러한 정보를 config 파일에 담고 `--kubeconfig` 옵션으로 명시해주면 보다 편리하게 사용 가능
+
+````bash
+kubectl get pods \
+  --kubeconfig config
+````
+
+- 기본적으로 kubectl은 `~/.kube/config` 파일을 설정 파일로 사용한다.
+- 따라서 `--kubeconfig` 옵션으로 컨피그 파일을 지정하지 않으면 `~/.kube/config`를 기본으로 사용한다.
+
+
+
+## 8.1 KubeConfig의 구조
+
+- [레퍼런스](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#define-clusters-users-and-contexts)
+- KubeConfig은 yaml 형식이다.
+- `~/.kube/config` 파일의 구조는 크게 세 가지로 구분된다.
+  - clusters
+  - contexts
+  - users
+
+
+
+**예시**
+
+```yaml
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    certificate-authority: fake-ca-file
+    server: https://1.2.3.4
+  name: development
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://5.6.7.8
+  name: test
+contexts:
+- context:
+    cluster: development
+    namespace: frontend
+    user: developer
+  name: dev-frontend
+- context:
+    cluster: development
+    namespace: storage
+    user: developer
+  name: dev-storage
+- context:
+    cluster: test
+    namespace: default
+    user: experimenter
+  name: exp-test
+current-context: ""
+preferences: {}
+users:
+- name: developer
+  user:
+    client-certificate: fake-cert-file
+    client-key: fake-key-file
+- name: experimenter
+  user:
+    # Documentation note (this comment is NOT part of the command output).
+    # Storing passwords in Kubernetes client config is risky.
+    # A better alternative would be to use a credential plugin
+    # and store the credentials separately.
+    # See https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+    password: some-password
+    username: exp
 ```
 

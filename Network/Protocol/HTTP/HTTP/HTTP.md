@@ -391,59 +391,6 @@
 
 
 
-# 7 Content-Type
-
-
-
-## 7.1 multipart/form-data
-
-- HTML 폼을 이용한 전송 방식에는 두 가지 방식이 있다
-  - `application/x-www-form-urlencoded`
-  - `multipart/form-data`
-  - HTML에 `enctype` 속성을 따로 명시하지 않으면 기본적으로 `application/x-www-form-urlencoded` 가 선택된다
-- `multipart/form-data`은 문자와 바이너리(파일)을 동시에 전송할 때 사용한다
-
-
-
-**multipart/form-data 사용 예시**
-
-- 아래와 같이 `multipart/form-data`을 사용하려면 `enctype` 속성에 명시해야 한다
-
-```html
-<form action="/" method="post" enctype="multipart/form-data">
-  <input type="text" name="description" value="some text">
-  <input type="file" name="myFile">
-  <button type="submit">Submit</button>
-</form>
-```
-
-
-
-**http request**
-
-- boundary 문자로 컨텐츠가 구분되어 있다
-- `Content-Disposition` : 항목별 헤더가 추가되어 있고 여기에 부가 정보를 추가한다
-- 폼의 일반 데이터는 문자가 전송되고 파일의 경우 파일 이름과 `Content-Type` 이 추가되고 바이너리 데이터가 전송된다
-
-``````http
-POST /foo HTTP/1.1
-Content-Length: 68137
-Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
-
------------------------------974767299852498929531610575
-Content-Disposition: form-data; name="description"
-
-some text
------------------------------974767299852498929531610575
-Content-Disposition: form-data; name="myFile"; filename="foo.txt"
-Content-Type: text/plain
-
-(content of the uploaded file foo.txt)
------------------------------974767299852498929531610575--
-``````
-
-
-
 참고
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods

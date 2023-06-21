@@ -74,6 +74,8 @@ WebClient webClient = WebClient.create();
 WebClient webClient = WebClient.create("http:localhost:3000");
 ```
 
+
+
 **WebClient.builder() 사용해서  WebClient 만들기**
 
 ```java
@@ -84,7 +86,9 @@ WebClient client = WebClient.builder()
 
 ```java
 WebClient client1 = WebClient.builder()
-        .filter(filterA).filter(filterB).build();
+      .filter(filterA)
+			.filter(filterB)
+			.build();
 ```
 
 
