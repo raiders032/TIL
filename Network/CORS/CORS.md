@@ -62,10 +62,14 @@
 `Access-Control-Request-Method`
 
 * preflighted request의 헤더로 사용되며 실제 요청에서 사용될 Method를 의미한다.
+* preflighted request의 대응되는 응답 헤더 `Access-Control-Allow-Methods`와 일치해야 한다.
+
+
 
 `Access-Control-Request-Headers`
 
 * preflighted request의 헤더로 사용되며 실제 요청에서 사용될 Header를 의미한다.
+* preflighted request의 대응되는 응답 헤더 `Access-Control-Allow-Headers`와 일치해야 한다.
 
 
 
@@ -74,16 +78,47 @@
 `Access-Control-Allow-Origin`
 
 * 응답이 공유될 수 있는 origin을 나타낸다.
-* `Access-Control-Allow-Origin: *` : 모든 도메인에서 접근할 수 있음을 의미
+* `Access-Control-Allow-Origin: *` : 모든 도메인에서 접근할 수 있음을 의미한다.
 * `Access-Control-Allow-Origin: https://foo.example` : `https://foo.example` 이외의 도메인은 corss-site 방식으로 리소스에 접근할 수 없다
+
+
 
 `Access-Control-Allow-Methods`
 
+- CORS (Cross-Origin Resource Sharing) 프로토콜에서 사용되는 HTTP 헤더
+- 이 헤더는 CORS 요청에 대해 서버가 허용하는 HTTP 메서드들을 지정한다.
+
+- 사전 전송 요청에 대한 응답에 `Access-Control-Allow-Methods` 헤더를 포함시키면 브라우저는 어떤 HTTP 메서드들이 허용되는지 알 수 있게 됩니다. 
+- 만약 브라우저가 `Access-Control-Allow-Methods`에 포함되지 않은 메서드로 본 요청을 시도한다면, 브라우저는 그 요청을 차단하게 된다.
+
+
+
 `Access-Control-Allow-Headers`
+
+- 이 헤더는 웹 서버가 클라이언트로부터 어떤 HTTP 헤더를 수용할 수 있는지를 지정합니다.
+- `Access-Control-Allow-Headers`는 이런 사전 요청에 대한 응답에 포함된다.
+- 서버가 수용 가능한 HTTP 헤더를 나열합니다. 
+  - 클라이언트가 실제 요청을 보낼 때 이러한 헤더 중 하나 이상을 사용하면, 그 요청은 CORS 정책에 의해 거부될 수 있습니다.
+
+
 
 `Access-Control-Max-Age`
 
+- `Access-Control-Max-Age`는 CORS(Cross-Origin Resource Sharing) 프로토콜에서 사용되는 HTTP 헤더입니다. 
+- 이 헤더는 사전 전송 요청(Preflight request)의 결과를 캐시(cache)하는 시간을 초 단위로 명시한다.
+-  `Access-Control-Max-Age` 헤더는 브라우저가 이 사전 요청의 결과를 얼마나 오래 캐싱해두어야 하는지를 알려주는 역할을 한다.
+- 이 헤더가 설정되면, 동일한 요청에 대해 설정된 시간 동안은 브라우저가 사전 요청을 다시 보낼 필요가 없게 된다.
+- 이는 네트워크 대역폭을 절약하고 성능을 향상시키는 데 도움이 된다.
+
+
+
 `Access-Control-Expose-Headers`
+
+- 이 헤더는 웹 서버가 클라이언트에게 노출시킬 수 있는 HTTP 헤더를 지정한다.
+- 기본적으로 브라우저는 다음 헤더만 읽을 수 있습니다
+  -  `Cache-Control`, `Content-Language`, `Content-Type`, `Expires`, `Last-Modified`, `Pragma`. 
+- 서버가 이 외의 헤더를 노출시키고 싶다면, `Access-Control-Expose-Headers`를 사용해서 해당 헤더를 나열해야 한다.
+- 이 헤더는 실제 요청에 대한 응답에서 사용되며, 클라이언트가 추가적으로 접근 가능한 헤더를 알 수 있게 합니다
 
 
 

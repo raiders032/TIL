@@ -17,6 +17,7 @@
 
 - [레퍼런스](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/)
 - 관리의 용이성을 생각해서 하나의 설정 파일의 모든 설정을 하지말고 목적에 맞게 설정파일을 분리하는 것을 추천한다.
+- `/etc/nginx/conf.d` 위치에 분리된 설정 파일을 놓는다.
 
 
 
@@ -124,6 +125,8 @@ http {
 
 
 
+**directive: listen**
+
 ```nginx
 server {
     listen 127.0.0.1:8080;
@@ -138,7 +141,60 @@ server {
 
 ## Configuring Locations
 
-- 
+- [레퍼런스](https://docs.nginx.com/nginx/admin-guide/web-server/web-server/#locations)
+- `location` directive의 파라미터의 타입은 두 가지다.
+  - prefix string(pathnames)
+  - regular expressions
+
+
+
+
+**prefix string(pathnames)**
+
+- prefix strings 타입의 파라미터를 지정하면 request URI가 prefix strings으로 시작되면 매칭된다.
+
+```nginx
+location /some/path/ {
+    #...
+}
+```
+
+- 위와 같이 설정하면 `/some/path/document.html`과는 매칭되지만 `/my-site/some/path`와는 매칭되지 않는다.
+
+
+
+**regular expressions**
+
+- 파라미터로 regular expressions를 사용하면 정규 표현식을 사용해서 path를 매칭시킬 수 있다.
+
+```nginx
+location ~ \.html? {
+    #...
+}
+```
+
+- regular expressions 타입의 파라미터를 사용할 때 location과 정규표현식 사이에 `~`를 넣어준다.
+
+
+
+**NGINX Location Priority**
+
+- 요청에 매칭되는 Location이 여러개인 경우 어떻게 될까?
+- 우선 순위가 정해져 있기 때문에 우선 순위에 맞는 최적에 location을 선택한다.
+
+
+
+**우선 순위**
+
+1. Test the URI against all prefix strings.
+2. The `=` (equals sign) modifier defines an exact match of the URI and a prefix string. If the exact match is found, the search stops.
+3. If the `^~` (caret-tilde) modifier prepends the longest matching prefix string, the regular expressions are not checked.
+4. Store the longest matching prefix string.
+5. Test the URI against regular expressions.
+6. Stop processing when the first matching regular expression is found and use the corresponding location.
+7. If no regular expression matches, use the location corresponding to the stored prefix string.
+
+
 
 
 
@@ -160,6 +216,115 @@ http {
 
 
 
+# ngx_http_rewrite_module
+
+- ngx_http_rewrite_module을 사용하면 요청 URI를 변경할 수 있다.
+- ngx_http_rewrite_module에 포함된 directives는 아래와 같다.
+  - `break`, `if`, `return`, `rewrite`, `set`
+
+
+
+`break`
+
+- Context: `server`, `location`, `if`
+- 
+
+
+
+- 
+- 
+- 
+  - `break`: This stops the processing of rewrite directives in the current set.
+  - `if`: This allows conditions to be set. If a condition is met, the specified directives are activated.
+  - `return`: This stops processing and returns the specified value to the client.
+  - `rewrite`: This rewrites the request URI based on the specified regular expression and replacement string.
+  - `set`: This assigns a value to a variable.
+
+
+
+The ngx_http_rewrite_module is a module in Nginx that is used for changing the Request URI based on Perl-Compatible Regular Expressions (PCRE), for returning redirects, and for conditionally selecting different configurations.
+
+Here's a breakdown of the directives:
+
+1. `break`: This stops the processing of rewrite directives in the current set.
+2. `if`: This allows conditions to be set. If a condition is met, the specified directives are activated.
+3. `return`: This stops processing and returns the specified value to the client.
+4. `rewrite`: This rewrites the request URI based on the specified regular expression and replacement string.
+5. `set`: This assigns a value to a variable.
+
+The order of execution is as follows:
+
+1. Directives specified on the server level are executed sequentially, in the order they appear.
+2. Then, a location is chosen based on the request URI.
+3. The directives within this location are then also executed sequentially.
+4. If the request URI was rewritten, the process of finding a location and executing its directives repeats. But it will not repeat more than 10 times, to prevent potential infinite loops.
+
+
+
+# Configuring Logging
+
+- [레퍼런스](https://docs.nginx.com/nginx/admin-guide/monitoring/logging/)
+
+
+
+## Setting Up the Error Log
+
+- NGINX는 에러가 발생하면 해당 에러에 대한 정보를  Error Log 파일에 기록한다.
+
+
+
+## Setting Up the Access Log
+
+- NGINX는 클라이언트의 요청를 처리한 직후 요청에 대한 정보를 기록한다.
+- 기본적으로 Access 로그는 `logs/access.log`에 위치한다.
+- 요청에 대한 정보는 미리 정의된 포맷으로 기록된다.
+
+
+
+예시
+
+- log_format을 사용해서 포맷을 변경할 수 있다.
+- access_log를 사용해서 Access Log의 위치와 포맷을 변경할 수 있다.
+
+```nginx
+http {
+    log_format compression '$remote_addr - $remote_user [$time_local] '
+                           '"$request" $status $body_bytes_sent '
+                           '"$http_referer" "$http_user_agent" "$gzip_ratio"';
+
+    server {
+        gzip on;
+        access_log /spool/logs/nginx-access.log compression;
+        ...
+    }
+}
+
+```
+
+
+
+
+
+
+
+
+
+# Serving Static Content
+
+- [레퍼런스](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
+
+
+
+`try_files`
+
+- Nginx에서 `try_files` 지시문은 클라이언트의 요청을 처리하기 위해 시도하는 파일이나 디렉토리의 목록을 지정한다.
+- 지정된 경로 목록은 왼쪽에서 오른쪽으로 검사되며, Nginx는 최초로 존재하는 파일이나 디렉토리를 사용하여 요청을 처리한다.
+- 만약 모든 파일이나 디렉토리가 존재하지 않는 경우, 마지막 인수가 반환되는데, 이는 일반적으로 에러 코드를 반환하는 지시문이나 다른 location으로의 내부 리디렉션이다.
+
+
+
+
+
 # CORS
 
 - 
@@ -170,7 +335,27 @@ http {
 
 ```nginx
 server {
-	add_header Access-Control-Allow-Origin *;
+  set $cors '';
+if ($http_origin ~ '^https?://(localhost|www\.yourdomain\.com|www\.yourotherdomain\.com)') {
+        set $cors 'true';
+}
+
+if ($cors = 'true') {
+        add_header 'Access-Control-Allow-Origin' "$http_origin" always;
+        add_header 'Access-Control-Allow-Credentials' 'true' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+        add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With' always;
+        # required to be able to read Authorization header in frontend
+        #add_header 'Access-Control-Expose-Headers' 'Authorization' always;
+}
+
+if ($request_method = 'OPTIONS') {
+        # Tell client that this pre-flight info is valid for 20 days
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+}
 }
 ```
 
