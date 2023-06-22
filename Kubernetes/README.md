@@ -11,11 +11,13 @@
 * [Affinity](Affinity/Affinity.md)
   * Node Affinity, Pod Affinity
 * [Annotations](Annotations/Annotations.md)
+* [Ceph.md](ceph/ceph.md) 
 * [CNI](CNI/CNI.md)
 * [ConfigMap](ConfigMap/ConfigMap.md)
 * [CRI](CRI/CRI.md)
 * [CronJob](CronJob/CronJob.md) 
 * [DaemonSet](DaemonSet/DaemonSet.md)
+* [EFK](EFK/EFK.md)
 * [Ingress](Ingress/Ingress.md)
 * [Job](Job/Job.md)
 * [Kubernetes Components](Kubernetes-Components/Kubernetes-Components.md)
@@ -23,6 +25,8 @@
   * Node Components: kubelet, kube-proxy, Container runtime
 * [Labels And Selectors](Labels-And-Selectors/Labels-And-Selectors.md)
   * nodeSelector
+* [Logging Architecture](Logging-Architecture/Logging-Architecture.md) 
+* [MetalLB](MetalLB/MetalLB.md) 
 * [Namespace](Namespace/Namespace.md)
 * [Network](Network/Network.md)
 * [Persistent Volumes](Persistent-Volumes/Persistent-Volumes.md) 
@@ -41,7 +45,6 @@
   * CSR
   * NetworkPolicy
   * KubeConfig
-  
 * [Service](Service/Service.md)
   * ClusterIP, NodePort, LoadBalancer, ExternalName
   * kube-proxy

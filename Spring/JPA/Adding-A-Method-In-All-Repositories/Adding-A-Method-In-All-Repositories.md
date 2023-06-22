@@ -251,7 +251,7 @@ public interface UserRepository extends ExtendedRepository<User, UUID> {
 
 ## 3.4 합성
 
-
+- 작성 중!
 
 
 
@@ -272,8 +272,17 @@ public class UserService {
 }
 ```
 
+- 서비스 코드에서 예외 처리 로직이 사라졌다.
+- 예외 처리와 관련된 변경이 일어날 때 더이상 서비스 레이어에 전파되지 않는다.
+
 
 
 참고
 
 - https://www.baeldung.com/spring-data-jpa-method-in-all-repositories
+
+
+
+블로그
+
+- https://velog.io/@raiders032/%EB%AA%A8%EB%93%A0-Repository%EC%97%90-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0
