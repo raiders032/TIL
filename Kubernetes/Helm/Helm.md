@@ -286,6 +286,12 @@ helm repo update
 $ helm install [RELEASE_NAME] jenkins/jenkins [flags]
 ```
 
+- `RELEASE_NAME`
+  - 설치된 차트의 인스턴스 이름을 의미한다.
+  - 차트를 여러 번 설치해도 인스턴스를 식별할 수 있다.
+- `jenkins/jenkins`
+  - jenkins 리포지토리에 jenkins 차트를 의미한다.
+
 
 
 파리미터가 적은 경우 다음과 같이 --set 옵션을 사용한다.
@@ -313,7 +319,9 @@ persistence:
 ```
 
 ```bash
-$ helm install sample-wordpress bitnami/wordpress --version 10.9.1 \
+$ helm install sample-wordpress bitnami/wordpress \
+--version 10.9.1 \
+-n namespace \
 --values values.yaml
 ```
 

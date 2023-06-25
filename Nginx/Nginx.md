@@ -227,14 +227,22 @@ http {
 `break`
 
 - Context: `server`, `location`, `if`
+
+
+
+`if`
+
+```bash
+Syntax:	if (condition) { ... }
+Default:	—
+Context:	server, location
+```
+
 - 
 
 
 
-- 
-- 
-- 
-  - `break`: This stops the processing of rewrite directives in the current set.
+- - `break`: This stops the processing of rewrite directives in the current set.
   - `if`: This allows conditions to be set. If a condition is met, the specified directives are activated.
   - `return`: This stops processing and returns the specified value to the client.
   - `rewrite`: This rewrites the request URI based on the specified regular expression and replacement string.

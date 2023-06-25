@@ -245,6 +245,62 @@ public interface TakeoutOrderInfoMapper {
 
 
 
+# 7 생성자 사용
+
+- [레퍼런스](https://mapstruct.org/documentation/stable/reference/html/#mapping-with-constructors)
+- 소스에서 타겟 객체로 매핑할 때 생성자를 사용할 수 있다.
+- 매핑할 때 사용할 생성자를 선택하는 규칙이 존재한다.
+
+
+
+**생성자 우선순위**
+
+1. `@Default` 애노테이션을 붙은 생성자를 선택한다.
+2. 하나의 퍼블릭 생성자가 있는 경우 해당 생성자를 사용한다.
+3. 파라미터가 없는 기본 생성자가 선택된다. 다른 파라미터가 있는 생성자는 무시된다.
+4. 사용가능 한 생성자가 여러개인 경우 컴파일 에러가 발생한다.
+
+
+
+**예시**
+
+```java
+public class Vehicle {
+
+    protected Vehicle() { }
+
+    // MapStruct will use this constructor, because it is a single public constructor
+    public Vehicle(String color) { }
+}
+
+public class Car {
+
+    // MapStruct will use this constructor, because it is a parameterless empty constructor
+    public Car() { }
+
+    public Car(String make, String color) { }
+}
+
+public class Truck {
+
+    public Truck() { }
+
+    // MapStruct will use this constructor, because it is annotated with @Default
+    @Default
+    public Truck(String make, String color) { }
+}
+
+public class Van {
+
+    // There will be a compilation error when using this class because MapStruct cannot pick a constructor
+
+    public Van(String make) { }
+
+    public Van(String make, String color) { }
+
+}
+```
+
 
 
 
