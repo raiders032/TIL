@@ -104,6 +104,15 @@
 * 플래터를 기계적으로 회전시킬 필요가 없으므로 아주 빨리 데이터를 읽고 쓸 수 있다
 * 플래시 메모리는 전원이 공급되지 않아도 데이터가 삭제되지 않는다
 
+
+
+## 2.1 순차 I/O와 랜덤 I/O
+
+* 디스크 원판을 가지지 않는 SSD는 순차 I/O와 랜덤 I/O의 차이가 없을 것 같지만 실제로 그렇지 않다.
+* 랜덤 I/O는 여전히 순차 I/O보다 Throughput이 떨어진다.
+
+
+
 > Sometimes old technologies are used in new ways as economics change or the technologies evolve. An example is the growing importance of **solid-state disks**, or **SSD****s**. Simply described, an SSD is nonvolatile memory that is used like a hard drive. There are many variations of this technology, from DRAM with a battery to allow it to maintain its state in a power failure through flash-memory technologies like single-level cell (SLC) and multilevel cell (MLC) chips.
 >
 > SSDs have the same characteristics as traditional hard disks but can be more reliable because they have no moving parts and faster because they have no seek time or latency. In addition, they consume less power. However, they are more expensive per megabyte than traditional hard disks, have less capacity than the larger hard disks, and may have shorter life spans than hard disks, so their uses are somewhat limited. One use for SSDs is in storage arrays, where they hold file-system metadata that require high performance. SSDs are also used in some laptop computers to make them smaller, faster, and more energy-efficient.
@@ -112,6 +121,10 @@
 >
 > In the remainder of this chapter, some sections pertain to SSDs, while others do not. For example, because SSDs have no disk head, disk-scheduling algorithms largely do not apply. Throughput and formatting, however, do apply.
 
+
+
 # 3 Magnetic Tapes
+
+
 
 # 4 Disk Structure

@@ -1,9 +1,42 @@
 # 1 kubeadm
 
+* [레퍼런스](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 * 쿠버네티스는 일반적인 서버 클러스터 환경에서도 쿠버네티스를 쉽게 설치할 수 있는 kubeadm이라는 관리 도구를 제공한다
 * kubeadm은 쿠버네티스 커뮤니티에서 권장하는 설치 방법 중 하나이다
 * 온프레미스 환경, 클라우드 인프라 환경에 상관없이 일반적인 리눅스 서버라면 모두 사용할 수 있다
 * Minikube, kubespary와 같은 설치 도구도 내부적으로 kubeadm을 사용하고 있다.
+
+
+
+## 1.1 사전조건
+
+- [레퍼런스](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#before-you-begin)
+- 리눅스 호스트
+- 머신 당 2기가 이상의 메모리
+- 머신 당 2개 이상의 CPU
+- 클러스터를 구성하는 머신들의 네트워크
+- 유니크한 호스트 이름, MAC 주소, product_uuid
+- 특정 포트를 오픈해야 함 
+  - [참조](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports)
+- Swap disabled
+
+
+
+**MAC address and product_uuid 확인하기**
+
+- `ip link`: MAC 주소를 확인한다.
+- `sudo cat /sys/class/dmi/id/product_uuid`: product_uuid를 확인한다.
+
+
+
+**포트 확인하기**
+
+```bash
+nc 127.0.0.1 6443
+```
+
+- [required ports](https://kubernetes.io/docs/reference/networking/ports-and-protocols/) 쿠버네티스에서 필요한 포트를 여기서 확인한다.
+- nc 명령어로 포트가 열려있는지 확인한다.
 
 
 
@@ -83,8 +116,6 @@ sudo service docker start
 
 ### 2.1.2 CRI-O
 
-
-
 **Forwarding IPv4 and letting iptables see bridged traffic**
 
 - [레퍼런스](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic)
@@ -139,7 +170,7 @@ service crio status
 
 ### 2.1.3 cgroup 드라이버
 
-- kubelet과 컨테이너 런타임이 같은 cgroup group 드라이버를 사용해야 한다.
+- kubelet과 컨테이너 런타임이 같은 cgroup 드라이버를 사용해야 한다.
 - 두 가지의 cgroup 드라이버가 이용 가능하다.
   - cgroupfs
   - systemd
@@ -225,6 +256,8 @@ sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://pack
 
 
 Add the Kubernetes `apt` repository
+
+-  Debian 12 and Ubuntu 22.04이상의 경우 `/etc/apt/keyrings ` 해당 디렉토리를 만들고 진행한다.
 
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list

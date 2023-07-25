@@ -1,15 +1,12 @@
 # 1 Spring Boot Actuator
 
-> Spring Boot Actuator는 프로덕션에서 Spring Boot 애플리케이션을 모니터링하고 관리하는 데 도움이 되는 여러 가지 추가 기능이 포함되어 있습니다. HTTP Endpoints 또는 JMX를 사용하여 응용프로그램을 관리 및 모니터링하도록 선택할 수 있습니다. 감사, 상태 및 메트릭 수집은 응용프로그램에 자동으로 적용될 수도 있습니다.
+- Spring Boot Actuator는 프로덕션에서 Spring Boot 애플리케이션을 모니터링하고 관리하는 데 도움이 되는 여러 가지 추가 기능이 포함되어 있다. 
+- HTTP Endpoints 또는 JMX를 사용하여 응용프로그램을 관리 및 모니터링하도록 선택할 수 있다. 
+- Actuator를 적용하면 Auditing, health, metrics 정보를 자동으로 모아주며 이러한 정보를 우리가 사용할 수 있다.
 
 
 
-## 1.1 의존성 추가하기
-
-- Spring Boot Actuator 모듈은 스프링 부트의 모든 production-ready 기능을 제공합니다. 
-- 기능을 활성화하기 위해 아래와 같이 의존성을 추가합니다.
-
-
+## 1.1 Spring Boot Actuato 의존성 추가하기
 
 **메이븐**
 
@@ -22,11 +19,13 @@
 </dependencies>
 ```
 
+
+
 **그래들**
 
 ```groovy
 dependencies {
-	compile("org.springframework.boot:spring-boot-starter-actuator")
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 ```
 
@@ -36,7 +35,8 @@ dependencies {
 
 - Actuator의 Endpoints을 사용하여 응용 프로그램을 모니터링하고 상호 작용할 수 있다.
 - Spring Boot에는 여러 기본 제공 엔드포인트가 포함되어 있으며 사용자가 자신의 엔드포인트를 추가할 수 있다.
-- 예를 들어 `health` endpoint은 기본 응용 프로그램 상태 정보를 제공한다.
+  - 예를 들어 `health` endpoint은 기본 애플리케이션의 상태 정보를 제공한다.
+
 - HTTP 또는 JMX를 통해 각 개별 엔드포인트를 활성화할 수 있다. 
 - 엔드포인트는 활성화되고 동시에 노출되었을 때 사용할 수 있는 것으로 간주된다. 
 - 대부분의 응용 프로그램은 HTTP를 통해 엔드포인트를 노출한다.
@@ -98,21 +98,15 @@ management:
 
 ## 2.2 Endpoints 공개하기
 
-- HTTP상에서 `health` 와 `info` 만 공개되어 있다. 
+- 기본적으로 HTTP상에서 `health` 엔드포인트만 공개되어 있
 
 ```yml
-# 공개
 management:
   endpoints:
     web:
       exposure:
-        include: refersh, beans, httptrace
-# 비공개
-management:
-  endpoints:
-    web:
-      exposure:
-        exclude: "*"
+        include: "*" # 공개
+        exclude: "env,beans" # 비공개
 ```
 
 

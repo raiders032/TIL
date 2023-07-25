@@ -38,6 +38,9 @@ include conf.d/exchange-enhanced;
 - 설정 파일은 Directives와 Directives의 파라미터로 구성된다.
 - Directive는 Simple directive와 directive로 구분된다.
 - directive는 관련된 여러 directive를 중괄호를 묶어 block을 가질 수 있다.
+- 디렉티브 문서 참고
+  - https://nginx.org/en/docs/dirindex.html
+
 
 
 
@@ -216,6 +219,63 @@ http {
 
 
 
+# HTTP Load Balancing
+
+- [레퍼런스](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)
+- HTTP Traffic을 Load Balancing하기 위해서는 먼저 upstream 디렉티브를 사용해 그룹을 만들어야 한다.
+
+
+
+## upstream
+
+- [레퍼런스](https://nginx.org/en/docs/http/ngx_http_upstream_module.html?&_ga=2.137331317.434680056.1688082575-330740163.1686637760#upstream)
+- sever 그룹을 설정한다.
+- Syntax:  `upstream name { ... }`
+- Context: `http`
+
+
+
+**예시**
+
+```nginx
+http {
+    upstream backend {
+        server backend1.example.com weight=5;
+        server backend2.example.com;
+        server 192.0.0.1 backup;
+    }
+}
+```
+
+- 위 설정은 **backend**라는 이름의 그룹을 만들었고 이 그룹은 3개의 서버로 구성된다.
+- upstream 블록 안에 사용된 server 디렉티브는 virtual server를 정의할 때 사용하는 server 블록 디렉티브와는 다르다.
+- proxy_pass로 해당 upstream 그룹에 요청이 전달되면 load‑balancing algorithm을 통해 upstream을 구성하는  server로 트래픽이 분산된다.
+  - load‑balancing algorithm을 명시하지 않으면 기본적으로 Round Robin 알고리즘이 사용된다.
+
+
+
+## proxy_pass
+
+- [레퍼런스](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass)
+- proxy_pass는 앞서 정의한 그룹(upstream)에 요청을 전달하기 위해 사용되는 디렉티브다.
+
+
+
+**예시**
+
+```nginx
+server {
+    location / {
+        proxy_pass http://backend;
+    }
+}
+```
+
+- server 블록 디렉티브로 virtual serve를 정의한다.
+- 모든 요청을 backend upstream group으로 전달하는 설정
+
+
+
 # ngx_http_rewrite_module
 
 - ngx_http_rewrite_module을 사용하면 요청 URI를 변경할 수 있다.
@@ -278,14 +338,36 @@ The order of execution is as follows:
 ## Setting Up the Error Log
 
 - NGINX는 에러가 발생하면 해당 에러에 대한 정보를  Error Log 파일에 기록한다.
+- Ubuntu, CentOS or Debian 환경에서 기본적으로 error log는 `/var/log/nginx`에 위치한다.
 
 
 
 ## Setting Up the Access Log
 
 - NGINX는 클라이언트의 요청를 처리한 직후 요청에 대한 정보를 기록한다.
-- 기본적으로 Access 로그는 `logs/access.log`에 위치한다.
+- Ubuntu, CentOS or Debian 환경에서 기본적으로 Access Log는 `/var/log/nginx`에 위치한다.
 - 요청에 대한 정보는 미리 정의된 포맷으로 기록된다.
+
+
+
+`access_log`
+
+- [레퍼런스](https://nginx.org/en/docs/http/ngx_http_log_module.html#access_log)
+- access_log를 사용하면 Access Log가 저장되는 위치를 변경하거나 포맷을 변경할 수 있다.
+
+
+
+`log_format`
+
+- [레퍼런스](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format)
+- log_format를 사용해 로그의 포맷을 지정할 수 있다.
+  - 로그 포맷 지정은 옵션이다.
+  - 로그 포맷을 지정하지 않으면 기본 포맷이 사용된다.
+- access_log가 log_format을 참조해 사용한다.
+
+
+
+**예시**
 
 
 
@@ -308,12 +390,6 @@ http {
 }
 
 ```
-
-
-
-
-
-
 
 
 

@@ -49,7 +49,51 @@ on:
 
 
 
-### 2.2.1 pull request
+### 2.2.1 push
+
+- [레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push)
+- 커밋 또는 태그를 푸시했을 때 workflow가 트리거된다.
+- 여러 필터를 사용해서 세세한 조절이 가능하다.
+
+
+
+`branches`
+
+- [레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs)
+- branches 필터를 사용하면 특정 브랜치에 push가 발생했을 때만 workflow를 시작할 수 있다.
+
+```yaml
+on:
+  push:
+    branches:
+      - 'main'
+      - 'releases/**'
+```
+
+- 위처럼 branches 필터를 설정하면 main 브랜치 또는 releases/로 시작하는 브랜치에 푸시가 발생하면 workflow가 시작된다. 
+
+
+
+`paths`
+
+- [레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-affects-specific-files)
+- paths 필터를 사용하면 특정 파일에 대한 push 이벤트가 발생했을 때만 workflow를 시작할 수 있다.
+- branches 필터와 함께 사용하면 두 조건을 모두 만족했을 때 workflow가 시작된다.
+
+```yaml
+on:
+  push:
+    branches:
+      - 'releases/**'
+    paths:
+      - '**.js'
+```
+
+- `releases/`로 시작하는 브랜치에 JavaScript (`.js`) file이 변경될 때만 workflow가 시작되는 예시
+
+
+
+### 2.2.2 pull request
 
 - [레퍼런스](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request)
 - pull request 발생 시 workflow를 트리거할 수 있다.
@@ -191,7 +235,7 @@ jobs:
 
 `GITHUB_REF_NAME`
 
-- 워크플로가 시작된 브랜치의 이름 또는 태그의 심플 버전
+- 워크플로가 시작된 `브랜치의 이름` 또는 `태그`의 심플 버전
 - 풀 버전은 `GITHUB_REF`를 사용한다.
 
 

@@ -74,7 +74,16 @@ CREATE TABLE [IF NOT EXISTS] product (
 
 
 
-## 1.3 유저
+## 1.3 컬럼
+
+```sql
+ALTER TABLE ORDERS 
+ADD ORDER_GROUP_ID BINARY(16) NOT NULL AFTER ORDER_ID;
+```
+
+
+
+## 1.4 유저
 
 **유저 생성**
 

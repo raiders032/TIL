@@ -83,6 +83,8 @@ public class OpenBankingAccount extends BaseTimeEntity {
 * 따라서 `Persistable`를 구현해서 새로운 엔티티 확인 여부를 직접 구현하는 것이 효과적이다.
 * 등록시간( `@CreatedDate` )을 조합해서 사용하면 이 필드로 새로운 엔티티 여부를 편리하게 확인할 수 있다
 
+
+
 **기본키 직접 할당 방식 예시**
 
 * `@Id`만 사용했다
@@ -114,13 +116,6 @@ public class Item implements Persistable<String> {
   }
 }
 ```
-
-
-
-```kotlin
-```
-
-
 
 
 

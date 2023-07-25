@@ -108,7 +108,7 @@ my-nginx-pod               1/1     Running   0          20s
 - [레퍼런스](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes)
 - `kubelet`이 컨테이너의 상태를 진단하는데 이를 `probe `라고 한다.
 - `kubelet`은 주기적으로 probe를 실행한다.
-- probe의 결과로  `Success`, `Failure`, `Unknown`가 있으며 `Failure` 인 경우 정책에 따라 컨테이너를 재시작 할 수 있다.
+- probe의 결과로  `Success`, `Failure`, `Unknown`가 있으며 `Failure`인 경우 정책에 따라 컨테이너를 재시작 할 수 있다.
 
 
 
@@ -170,7 +170,41 @@ my-nginx-pod               1/1     Running   0          20s
 
 
 
-## 4.3 livenessProbe
+## 4.3 Configure Probes
+
+- [레퍼런스](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes)
+
+
+
+`initialDelaySeconds`
+
+- kubelet이 컨테이너가 시작된 후 지정된 시간 만큼 대기한 후 첫 liveness 또는 readiness probes를 시작한다.
+- 애플리케이션의 시작 시간을 고려해 초기 지연을 설정해야 한다.
+
+
+
+`periodSeconds`
+
+- kubelet이 probe를 지정된 시간 마다 진행한다.
+- 기본 10초 마다 probe를 진행한다.
+- 최소 1초로 설정 가능하다.
+
+
+
+`timeoutSeconds`
+
+- probe 시 최대 진행 시간을 나타낸다.
+- 예를들어 HTTP probe를 진행했을 때 요청의 응답을 기다리는 시간이 지나면 실패로 간주한다.
+
+
+
+`failureThreshold`
+
+- probe를 연속으로 failureThreshold 만큼 실패하면 최종적으로 실패로 간주한다.
+
+
+
+## 4.4 livenessProbe
 
 - 운영 환경에서는 실행 중인 파드는 반드시 라이브니스 프로브를 정의해야 한다.
 - 라이브니스 프로브는 너무 많은 연산 리소스를 사용해서는 안된다.
@@ -178,12 +212,14 @@ my-nginx-pod               1/1     Running   0          20s
 
 
 
-**HTTP request**
+### 4.4.1 HTTP probes
 
 - [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request)
 - kublet이 HTTP GET를 요청하고 컨테이너의 응답으로 200에서 400 미만의 status code를 받으면 성공으로 간주한다.
 
 
+
+**예시**
 
 ```yaml
 apiVersion: v1
@@ -210,28 +246,45 @@ spec:
       timeoutSeconds: 1
 ```
 
-`periodSeconds`
 
-- kubelet이 liveness probe를 지정된 시간 마다 진행한다.
 
-`timeoutSeconds`
+**HTTP probes 설정**
 
-- HTTP 요청의 응답을 기다리는 시간 해당 시간이 지나면 실패로 간주한다.
+- [레퍼런스](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#http-probes)
+- 아래의 `livenessProbe.httpGet` 밑에 아래의 설정을 할 수 있다.
 
-`initialDelaySeconds`
 
-- kubelet이 지정된 시간 만큼 대기한 후 liveness probe를 시작한다.
-- 애플리케이션의 시작 시간을 고려해 초기 지연을 설정해야 한다.
 
-`livenessProbe.httpGet`
+`host`
 
-- HTTP GET 요청으로 liveness probe를 진행한다.
+- 연결할 호스트의 이름을 지정한다.
+- 기본적으로 pod의 IP가 지정된다.
 
-`path, port`
 
-- HTTP GET 요청의 path와 port를 지정한다.
-- HTTP path 엔드포인드테 인증이 필요하지 않은지 확인하자.
-  - 인증이 필요한 경우 프로브가 항상 실패해 컨테이너가 무한정 재시작된다.
+
+`scheme`
+
+- HTTP 또는 HTTPS를 지정한다.
+- 기본 값 HTTP
+
+
+
+`path`
+
+- HTTP 요청을 보낼 path를 지정한다.
+- 기본 값 `/`
+
+
+
+`httpHeaders`
+
+- 요청에 쓰일 커스텀 헤더를 지정한다.
+
+
+
+`port`
+
+- 접근하려는 컨테이너의 포트 넘버를 지정한다.
 
 
 
@@ -244,7 +297,7 @@ spec:
 
 
 
-## 4.4 readinessProbe
+## 4.5 readinessProbe
 
 - 파드의 레이블이 서비스의 레이블 셀렉터와 일치할 경우 파드가 서비스의 엔드포인트로 포함된다.
 - 새로운 파드가 만들어지자마자 서비스의 일부가 돼 요청이 해당 파드로 전달되면 어떻게 될까?
@@ -264,7 +317,7 @@ spec:
 
 
 
-## 4.5 startupProbe
+## 4.6 startupProbe
 
 
 

@@ -1,9 +1,9 @@
 # 1 Index
 
-* 인덱스는 조회 성능을 향상 시킬 수 있는 자료구조
+* 인덱스는 조회 성능을 향상 시킬 수 있는 자료구조이다.
   * 데이터의 저장 성능을 희생하고 그 대신 데이터의 읽기 속도를 높인다
-  * 인덱스 자료구조를 관리하기 위한 추가적인 저장 공간을 소비(인덱스 파일)
-* 자료구조를 이용해 디스크 접근 횟수를 줄여 조회 성능을 최적화한다
+  * 인덱스 자료구조를 관리하기 위한 추가적인 저장 공간을 소비(인덱스 파일)한다.
+
 * 인덱스는 하나 이상의 컬럼을 이용하여 생성할 수 있다
 * 인덱스는 데이터 파일과는 별도의 파일에 저장한다.
 * 인덱스 파일은 일반적으로 데이터 파일에 비하면 훨씬 작다
@@ -11,7 +11,22 @@
 
 
 
-## 1.1 Entry
+## 1.1 Disk Structure
+
+- 인덱스는 자료구조를 이용해 디스크 접근 횟수를 줄여 조회 성능을 최적화한다.
+- 최근에는 하드 디스크보다 SSD 드라이브가 많이 활용되고 있지만, 여전히 데이터 저장 매체는 컴퓨터에서 가장 느린 부분이다.
+- 따라서 데이터베이스의 성능 튜닝은 어떻게 디스크 I/O를 줄이느냐가 관건이다.
+- [Mass-Storage-Structure.md](../../Computer-Science/OS/Mass-Storage-Structure/Mass-Storage-Structure.md) 디스크의 구조 참고
+
+
+
+**주요 장치의 초당 처리 횟수**
+
+![Is the speed of SSD and RAM the same? - Quora](images/main-qimg-0e4042f3535692278656763de51ff12b.webp)
+
+
+
+## 1.2 Entry
 
 * 인덱스 파일은 인덱스 엔트리라고 불리는 레코드를 가지고있다
 * 인덱스 엔트리는 <탐색 키, 포인터>의 구조를 가지고 있다
@@ -20,20 +35,25 @@
 
 
 
-## 1.2 인덱스의 장점과 단점
+## 1.3 인덱스의 장점과 단점
 
 **장점**
 
 * 검색 속도가 향상된다.
 
+
+
 **단점**
 
 * 인덱스를 저장하기위한 공간이 추가적으로 필요하다.
 * 삽입, 삭제, 수정 연산의 속도가 저하된다.
+  * 따라서 인덱스를 하나 더 추가할지 말지는 데이터의 저장 속도를 어디까지 희생할 수 있는지에 따라 결정된다.
+  * WHERE 절에 사용되는 컬럼이라고 전부 인덱스를 생성하면 데이터 저장 성능이 떨어지고 인덱스의 크기가 비대해져 오히려 역효과가 날 수 있다.
 
 
 
-## 1.3 인덱스 적용 지침
+
+## 1.4 인덱스 적용 지침
 
 1. 기본 키는 클러스터링 인덱스를 정의할 훌륭한 후보
 2. 외래 키도 인덱스를 정의할 중요한 후보
@@ -46,14 +66,14 @@
 
 
 
-# 2 Single-level Indexing
+# 3 Single-level Indexing
 
 * Index는 보는 관점에 따라 여러 종류의 Index가 존재한다
 * Single-level Indexing 관점에서는 Primary indexing과 Secondary Indexing로 나누어진다
 
 
 
-## 2.1 Primary indexing
+## 3.1 Primary indexing
 
 * data file의 기본키로 생성된 인덱스를 Primary indexing이라고 한다
 * data file은 이미 기본키를 기준으로 정렬되어 있다
@@ -62,7 +82,7 @@
 
 
 
-## 2.2 Secondary Indexing
+## 3.2 Secondary Indexing
 
 ![image-20210830195911042](./images/Secondary Index.png)
 
@@ -75,7 +95,7 @@
 
 
 
-# 3 Dense & Sparce Index
+# 4 Dense & Sparce Index
 
 * Index는 보는 관점에 따라 여러 종류의 Index가 존재한다
 * 인덱스의 데이터 파일 참조의 횟수 관점에서 Dense Index와 Sparse Index 두 종류가 존재한다
@@ -84,7 +104,7 @@
 
 
 
-## 3.1 Dense Index
+## 4.1 Dense Index
 
 ![Dense Index](./images/1.png)
 
@@ -93,7 +113,7 @@
 
 
 
-## 3.2 Sparse Index
+## 4.2 Sparse Index
 
 ![Sparse Index](./images/2.png)
 
@@ -107,9 +127,7 @@
 
 
 
-
-
-# 4 Clustered and non-clustered indexes
+# 5 Clustered and non-clustered indexes
 
 * Index는 보는 관점에 따라 여러 종류의 Index가 존재한다
 * Data File의 정렬 관점에서 Clustered Index와 non-clustered Index가 존재한다
@@ -122,36 +140,43 @@
 
 
 
-## 4.1 Clustered Index
+## 5.1 Clustered Index
 
 * 데이터 파일의 레코드의 순서와 인덱스의 엔트리와 일치하는 인덱스를 Clustered Index라고 한다
 * 즉 인덱스의 탐색키를 기준으로 데이터 파일이 정렬되어 있다는 것
   * 따라서 하나의 데이터 파일에는 하나의 Clustered Index만 존재할 수 있다
   * 다른 탐색키를 기준으로 하면 데이터 파일이 정렬된 상태가 아니기 때문
+* 데이터 파일의 레코드는 삽입 순서대로 저장되는 것으로 생각하지만 실제로 그렇지 않다.
+  * 레코드를 전혀 삭제하지 않거나 변경하지 않고 삽입만 했다면 그럴 수 있다.
+  * 하지만 레코드를 삭제하여 빈 공간이 생기면 그 다음의 삽입은 가능한 삭제된 공간을 사용하도록 DBMS를 설계하기 때문이다.
+
+* 대부분의 RDBMS는 데이터 파일이 정렬되어 있지 않다.
+  * InnoDB 테이블에서 레코드는 기본적으로 프라이머리 키 순서로 정렬되어 저장된다.
 
 
 
-## 4.2 non-clustered Index
+
+## 5.2 non-clustered Index
 
 * 데이터 파일의 레코드의 순서와 인덱스의 엔트리와 일치하는 않는 인덱스를 non-clustered Index라고 한다
 * Clustered Index와 달리 한 데이터 파일에 여러개의 non-clustered Index를 생성할 수 있다
 
 
 
-# 5 구현 알고리즘
+# 6 구현 알고리즘
 
 * 대표적으로 B-Tree와 Hash 자료구조를 이용해 구현한다
 
 
 
-## 5.1 B-Tree
+## 6.1 B-Tree
 
 * 가장 일반적으로 사용되는 인덱스 알고리즘
 * 칼럼의 값을 변형하지 않고 원래의 값을 이용해 인덱싱하는 알고리즘
 
 
 
-## 5.2 B+Tree
+## 6.2 B+Tree
 
 * B-Tree를 개선시킨 자료구조이다.
 * B-Tree의 모든 노드에 존재하는 Key마다 Record Pointer를 가지고 있다
@@ -161,11 +186,11 @@
 
 
 
-## 5.3 B*Tree
+## 6.3 B*Tree
 
 
 
-## 5.4 Hash Table
+## 6.4 Hash Table
 
 * Hash Table은 키와 값을 쌍으로 저장할 수 있는 자료구조
   * Key: 탐색키
@@ -184,11 +209,11 @@
 
 
 
-# 6 파일 조직
+# 7 파일 조직
 
 
 
-## 6.1 힙 파일
+## 7.1 힙 파일
 
 * 레코드들이 삽입된 순서대로 파일에 저장됨
 * 삽입: 새로 삽입되는 레코드는 파일 가장 끝에 추가됨
@@ -208,7 +233,7 @@
 
 
 
-## 6.2 순차 파일
+## 7.2 순차 파일
 
 * 레코드들이 하나 이상의 필드 값에 따라 순서대로 저장된 파일
 * 레코드들이 탐색 키 값의 순서에 따라 저장된다.

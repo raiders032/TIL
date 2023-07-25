@@ -1060,3 +1060,10 @@ Options:
   -c --cursor=CURSOR         Show entries starting at the specified cursor
 ```
 
+
+
+## sed
+
+- 스트림 편집기로 입력 스트림에서 텍스트를 변환하는데 사용된다.
+  - 입력 스트림: 텍스트를 변경하고자 하는 대상 파일
+  - 스크립트: 어떤 텍스트를 어떻게 변환할지 정의하는 일

@@ -98,6 +98,16 @@ hello.name=hello {0}
 
 
 
+**두 메시지 파일이 같은 키를 가지고 있을 때**
+
+- **messages1.properties**와 **messages2.properties**가 같은 키를 가지고 있다면 파일을 읽는 순서에 따라 결과가 결정된다.
+- `messageSource.setBasenames("classpath:messages1", "classpath:messages2");`
+  - 위와 같이 설정하면 messages1을 먼저 읽고 그 다음 messages2를 읽는다.
+  - 두 메시지 파일이 같은 키를 가진다면 최종적으로 사용되는 값은  **messages2.properties**의 값이다.
+  - 나중에 읽은 값이 기존 값을 오버라이딩 하기 때문이다.
+
+
+
 # 3 스프링 메시지 소스 사용
 
 * 스프링 부트를 사용하면 스프링 부트가 MessageSource 를 자동으로 스프링 빈으로 등록한다

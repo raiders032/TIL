@@ -37,25 +37,52 @@
 
 # 3 설정
 
-* `~/.ssh/config` 파일 작성해서 간편하게 SSH 접속을 할 수 있다
-* 아래와 같이 config 파일을 작성하면
-* `ssh ubuntu` 명령어를 통해 `192.168.155.68` 로 접속할 수 있다
+* 클라이언트 쪽에서 config 파일을 작성하고 서버 쪽 특정 디렉토리 위치에 공개키를 위치시키면 간단하게 ssh로 접속할 수 있다. 
+
+
+
+**config 파일 작성(클라이언트)**
 
 ```
-Host ubuntu
-  Hostname 192.168.155.68
-  Port 22
-  User youngsam
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/id_ed25519
+Host worker-1
+  Hostname 192.168.154.100
+  port 22
+  User ys
+  IdentityFile ~/.ssh/id_rsa
 ```
 
+- `~/.ssh/config`에 ssh 설정 파일을 작성한다.
+- Host: 별칭을 부여해서 `ssh worker-1` 명령어로 192.168.154.100에 접속할 수 있게 한다.
+- Hostname: 접속할 서버의 IP 주소를 명시한다.
+- User: Linux 유저를 명시한다.
+- IdentityFile: 개인키를 명시하는데 비밀번호라고 생각하면 된다.
 
+
+
+**공개키 (서버)**
+
+- ssh를 이용해 접속하려는 호스트에 특정 파일에 클라이언트의 공개키 정보를 추가해야 한다.
+
+- `scp ~/.ssh/id_rsa.pub ys@worker-1` 과 같은 명령을 이용해 클라이언트의 공개키를 서버로 복사한다.
+- 서버에서 `~/.ssh/authorized_keys` 파일이 존재하는지 확인한다.
+  - 존재하지 않으면 `mkdir -p ~/.ssh`, `touch ~/.ssh/authorized_keys` 명령어로 생성한다.
+- 서버로 복사된 공개키를  ~/.ssh/authorized_keys 파일에 추가한다.
+  - `cat ~/id_rsa.pub >> ~/.ssh/authorized_keys`
+
+
+
+**사용하기**
+
+- 이제 `ssh worker-1 ` 명령어로 비대칭키 방식의 인증을 통해 간편하게 원격 호스트에 접속할 수 있다.
+
+ 
 
 참고
 
 - https://library.gabia.com/contents/infrahosting/9002/
 - https://library.gabia.com/contents/9008/
 - https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC0jRk2r7nPxpiw7VQInbP/lVL+UYF1eW0hmCFNX2dEhbE+vVK/KL0cMrIWDI+5UE3143y57+UUqJLz/+PSadqKdL5PyiM01MDKgDZ9fIf0T+Zc7FpLSwsviYiidmiazHM663MV31MKBVyyOgSa8vRiDZ9S4kr6h1PLct3FW3Jn8Bh7S7vZ3TRQMizOWJsjpmpgP/tTzrO9lOZMMj6bHOa9fWqJ73TDSl4vubuNhPAdkuxkfJZ7y1dr125RLSJC1rGzCSs0T9nJliQ63SHQ+vBMido8P8RXqBA/htQIgS1lFAL6w4u3dvrBT5OH1LHUF6TRdS0RJ869lQkG1LNZaWYfQOuNGFhzLVOJuzBQbkAzZl4F4+vu5m2GmXCpnVwg1CxyvmvJDk+M0lpKX0sAfuwfZ/fppujUazbRyNWHr3Jd4BTBrm2f0CDRGcFMeW+fAL/9k734h+/pj/KVB0hBJlKBMQhfIWF1AbSHTwnS1OU6vJ0PhSvfBW25BHAb4/iZQns= YT@yeongsamnoui-MacBookPro.local
