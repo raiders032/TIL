@@ -1,6 +1,10 @@
 {
   "recentFiles": [
     {
+      "basename": "Untitled",
+      "path": "Untitled.md"
+    },
+    {
       "basename": "Anonymous-Class",
       "path": "Language/Java/Anonymous-Class/Anonymous-Class.md"
     },
@@ -179,10 +183,6 @@
     {
       "basename": "MyBatis",
       "path": "Language/Java/Database/MyBatis/MyBatis.md"
-    },
-    {
-      "basename": "Untitled",
-      "path": "Untitled.md"
     },
     {
       "basename": "Tmax Commerce Homepage",

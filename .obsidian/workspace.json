@@ -39,7 +39,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Language/Java/Anonymous-Class/Anonymous-Class.md",
+                "file": "Untitled.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -169,7 +169,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Language/Java/Anonymous-Class/Anonymous-Class.md"
+                "file": "Untitled.md"
               }
             }
           },
@@ -179,7 +179,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Language/Java/Anonymous-Class/Anonymous-Class.md",
+                "file": "Untitled.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -196,7 +196,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Language/Java/Anonymous-Class/Anonymous-Class.md",
+                "file": "Untitled.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -251,6 +251,7 @@
   },
   "active": "38135d297b517a74",
   "lastOpenFiles": [
+    "Language/Java/Anonymous-Class/Anonymous-Class.md",
     "Language/Java/Collection-Framework/Map/Map.md",
     "Language/Kotlin/Coroutines/Coroutine-Builder.md",
     "Language/Kotlin/Coroutines/Coroutines.md",
@@ -280,7 +281,6 @@
     "Design-Pattern/Template-Method/Template-Method.md",
     "Design-Pattern/Observer/Observer.md",
     "Design-Pattern/Factory-Method/Factory-Method.md",
-    "Design-Pattern/Facade/Facade.md",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20240213141324.png",
     "Design-Pattern/Command",
     "images/Pasted image 20240205101537.png",
