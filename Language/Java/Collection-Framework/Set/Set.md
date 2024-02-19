@@ -218,7 +218,7 @@ public class HashSet<E> ...{
 * [레퍼런스](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TreeSet.html)
 * TreeSet은 원소를 red-black tree에 저장한다.
 * 원소의 값을 기준으로 원소가 순서를 가진다.
-  * 따라서 HashSet과 비교하여 상당히 느리다
+	* 따라서 HashSet과 비교하여 상당히 느리다
 * TreeSet의 원소는 저장과 동시에 자동 오름차순 정렬된다. 
 * TreeSet의 원소는 정렬을 위해 java.lang.Comparable을 구현해야 한다.
 * 사용자 정의 클래스를 사용할 경우 java.lang.Comparable의 compareTo()메소드를 오버라이딩 하면 된다.
@@ -228,7 +228,7 @@ public class HashSet<E> ...{
 
 ## 3.1 성능
 
-- `add`, `remove`,  `contains` 메서드는 log(n) 시간의 성능을 가지고 있다. 
+- `add`, `remove`, `contains` 메서드는 log(n) 시간의 성능을 가지고 있다. 
 
 
 
@@ -291,7 +291,7 @@ public class TreeSet<E> ...{
 | `E`               | `first()`      | Returns the first (lowest) element currently in this set.    |
 | `E`               | `last()`       | Returns the last (highest) element currently in this set.    |
 
-
+<br>
 
 # 4 LinkedHashSet Class
 

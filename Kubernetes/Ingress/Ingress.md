@@ -4,7 +4,7 @@
 - 인그레스는 서비스들을 묶는 서비스들의 상위 객체다.
 - 인그레스 리소스를 작동시키려면 클러스터에 인그레스 컨트롤러를 실행해야 한다.
 
-
+<br>
 
 ## 1.1 서비스와 비교
 
@@ -12,7 +12,7 @@
 - `Ingress`는 L7 로드 밸런싱을 제공하는 리소스다.
 - 인그레스는 네트워크 스택의 애플리케이션 계층에서 작동하여 서비스가 할 수 없는 쿠키 기반 세션 어피니티 등과 같은 기능을 제공한다.
 
-
+<br>
 
 ## 1.2 인그레스의 기본 기능
 
@@ -32,7 +32,7 @@
 
 - 여러 개의 서비스로 요청을 라우팅할 때 보안연결을 위한 인증서를 쉽게 적용할 수 있다.
 
-
+<br>
 
 ## 1.3 인그레스 리소스 생성
 
@@ -91,7 +91,7 @@ spec:
 - Nginx 인그레스 컨트롤러에만 사용할 수 있는 기능이다.
 - 이 주석은 인그레스에 정의된 경로로 들어오는 요청을 rewite-target에 설정된 경로로 전달합니다. 
 
-
+<br>
 
 # 2 인그레스 컨트롤러
 
@@ -100,14 +100,14 @@ spec:
 - 인그레스는 인그레스 컨트롤러라고 하는 특수한 서버에 적용해야만 그 규칙을 사용할 수 있다.
 - 실제로 외부 요청을 받아들이는 것은 인그레스 컨트롤러 서버이며 이 서버가 인그레스 규칙을 로드해 사용한다.
 
-
+<br>
 
 ## 2.1 인그레스 컨트롤러의 종류
 
 - 인그레스의 구현 방법은 여러가지가 있지만 실제로 많이 사용되는 것은 GKE 인그레스 컨트롤러와 Nginx 컨트롤러다.
 - 이 두가지 컨트롤러는 인그레스 리소스를 생성했을 때 처리를 담당하는 컨트롤러다.
 
-
+<br>
 
 ## 2.2 Nginx 컨트롤러
 
@@ -116,7 +116,7 @@ spec:
 - 클라우드 환경이 아니라면 LoadBalancer 타입 대신 NodePort 타입의 서비스를 사용한다.
 - 이 경우 각 노드에서 `nodePort`로 Nginx 인그레스 컨트롤러에 접근할 수 있다.
 
-
+<br>
 
 **Nginx 컨트롤러 생성**
 
@@ -126,7 +126,7 @@ spec:
 $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/baremetal/deploy.yaml
 ```
 
-
+<br>
 
 **Nginx 컨트롤러 생성 시 오류 발생**
 
@@ -138,7 +138,7 @@ Error from server (InternalError): error when creating "ingress.yaml": Internal 
 $ kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 ```
 
-
+<br>
 
 # 3 인그레스 동작 방식
 
@@ -149,14 +149,14 @@ $ kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 - 위와 같이 인그레스 컨트롤러는 요청을 서비스로 전달하지 않고 서비스는 파드를 선택하는 데만 사용한다.
 - 대부분의 컨트롤러가 위와 같이 동작한다.
 
-
+<br>
 
 # 4 TLS 적용
 
 - [TLS.md](../../Network/TLS/TLS.md) 참조
 - 먼저 CA에게 TLS 인증서를 발급 받으면 인증서와 개인 키를 얻을 수 있다.
 
-
+<br>
 
 **시크릿 만들기**
 

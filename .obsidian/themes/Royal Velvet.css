@@ -1,6 +1,6 @@
 /*───────────────────────────────────────────────────────
 Royal Velvet
-Version 0.9.7
+Version 0.9.7 - Legacy version for Obsidian v0.15.9 or lower
 Created by @caro401
 Readme:
 https://github.com/caro401/royal-velvet
@@ -330,10 +330,6 @@ code,
   color: var(--cyan);
 }
 
-.markdown-rendered code {
-  background-color: unset;
-}
-
 /*--inline code in headings--*/
 .markdown-preview-view h1 code,
 .markdown-preview-view h2 code,
@@ -367,11 +363,16 @@ a.internal-link.is-unresolved {
 
 a.external-link,
 .cm-s-obsidian span.cm-link,
-.cm-s-obsidian span.cm-link.cm-quote {
+.cm-s-obsidian span.cm-link.cm-quote,
+.cm-s-obsidian span.cm-url {
   color: var(--green);
 }
+.cm-s-obsidian span.cm-url {
+  text-decoration: unset;
+}
 .external-link:hover,
-.cm-s-obsidian span.cm-link:hover {
+.cm-s-obsidian span.cm-link:hover,
+.cm-s-obsidian span.cm-url:hover {
   color: var(--greenSecondary);
 }
 
@@ -608,6 +609,11 @@ ol ol ol ol ol ol li::marker,
 .HyperMD-list-line-6 .list-bullet::after,
 .HyperMD-list-line.HyperMD-list-line-6 .cm-formatting-list {
   color: var(--purple);
+}
+
+.suggestion-highlight,
+.search-result-file-matched-text {
+  color: var(--pink);
 }
 
 /*

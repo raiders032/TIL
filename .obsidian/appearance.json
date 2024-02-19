@@ -1,5 +1,9 @@
 {
-  "theme": "obsidian",
-  "cssTheme": "80s Neon",
-  "baseFontSize": 17
+  "theme": "moonstone",
+  "cssTheme": "Things03",
+  "baseFontSize": 19,
+  "accentColor": "",
+  "showViewHeader": true,
+  "nativeMenus": true,
+  "translucency": false
 }

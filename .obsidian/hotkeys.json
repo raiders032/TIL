@@ -16,12 +16,12 @@
     }
   ],
   "outline:open-for-current": [],
-  "global-search:open": [
+  "outline:open": [
     {
       "modifiers": [
         "Ctrl"
       ],
-      "key": "2"
+      "key": "4"
     }
   ],
   "editor:open-search-replace": [
@@ -32,12 +32,48 @@
       "key": "R"
     }
   ],
-  "outline:open": [
+  "editor:toggle-highlight": [],
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "1"
+    }
+  ],
+  "app:toggle-right-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "2"
+    }
+  ],
+  "editor:focus-right": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "ArrowRight"
+    }
+  ],
+  "editor:focus-left": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "ArrowLeft"
+    }
+  ],
+  "editor:toggle-blockquote": [],
+  "editor:toggle-code": [
     {
       "modifiers": [
         "Ctrl"
       ],
-      "key": "4"
+      "key": "`"
     }
   ]
 }

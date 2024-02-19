@@ -1,15 +1,15 @@
 # 1 [DispatcherServlet](https://docs.spring.io/spring-framework/docs/5.2.5.RELEASE/spring-framework-reference/web.html#mvc-servlet)
 
-* Spring MVC는 다른 웹 프레임워크와 마찬가지로 front controller pattern으로 디자인 되었다. 
+* Spring MVC는 다른 웹 프레임워크와 마찬가지로 front controller pattern으로 디자인 되었다.
 * 여기서  front controller란 `DispatcherServlet` 를 의미한다.
 * `DispatcherServlet`은 모든 Controller 앞에 위치하여 요청에 대한 공통된 로직을 처리를 할 수 있다. 
 * `DispatcherServlet`은 설정 가능한 여러 요소들에게 일을 위임시키는 방식으로 동작한다. 
-  * 이러한 방식은 유연성을 제공해 다양한 작업 방식을 지원한다.
-* DispacherServlet 도 부모 클래스에서 HttpServlet 을 상속 받아서 사용하고, 서블릿으로 동작한다.
+	* 이러한 방식은 유연성을 제공해 다양한 작업 방식을 지원한다.
+* DispacherServlet도 부모 클래스에서 HttpServlet 을 상속 받아서 사용하고, 서블릿으로 동작한다.
 * `DispatcherServlet`은 다른 `Servlet` 과 마찬가지로 Servlet specification에 따라 선언되고 매핑되어야 하는데 이때 specification으로 Java configuration 또는 `web.xml` 을 사용할 수 있다.
 * 스프링 부트는 `DispacherServlet`을 서블릿으로 자동으로 등록하면서 **모든 경로**( urlPatterns="/" )에 대해서 매핑한다.
 
-
+<br>
 
 ## 1.1 FrontController 패턴 특징
 
@@ -18,7 +18,7 @@
 * 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿을 사용하지 않아도 된다
 * 스프링 웹 MVC의 **DispatcherServlet**이 FrontController 패턴으로 구현되어 있다
 
-
+<br>
 
 # 2 DispatcherServlet 선언
 
@@ -26,7 +26,7 @@
 * 아래와 같이 DispatcherServlet을 등록하면 서블릿 컨테이너가 자동 감지한다.
 * 스프링 부트는 DispatcherServlet을 자동으로 등록하면서 모든 경로에 대해서 매핑한다.
 
-
+<br>
 
 ## 2.1 Java Configuration으로 DispatcherServlet 선언
 
@@ -50,7 +50,7 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 }
 ```
 
-
+<br>
 
 ## 2.2 xml로 DispatcherServlet 선언
 
@@ -84,11 +84,11 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 </web-app>
 ```
 
-
+<br>
 
 # 3 DispacherServlet 동작 과정
 
-![image-20211016144658997](./images/spring-mvc.png)
+![image-20211016144658997](spring-mvc.png)
 
 1. 핸들러 조회
    * 디스페처 서블릿은 내부에 HandlerMapping 목록을 가지고 있다.
@@ -118,32 +118,32 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 8. 뷰렌더링:
    * 뷰를 통해서 뷰를 렌더링한다.
 
-
+<br>
 
 # 4 핸들러 매핑과 핸들러 어댑터
 
 * 스프링은 이미 필요한 핸들러 매핑과 핸들러 어댑터를 대부분 구현해두었다. 
-  * 개발자가 직접 핸들러 매핑과 핸들러 어댑터를 만드는 일은 거의 없다.
+* 개발자가 직접 핸들러 매핑과 핸들러 어댑터를 만드는 일은 거의 없다.
 
-
+<br>
 
 ## 4.1 핸들러 매핑
 
 * 핸들러 매핑에서 컨트롤러를 찾는다
 * 예)스프링 빈의 이름으로 핸들러를 찾을 수 있는 핸들러 매핑이 필요하다
 
-
+<br>
 
 **자동 등록되는 핸들러 매핑**
 
 * 실제로 더 많다
 
 1. RequestMappingHandlerMapping
-   * 애노테이션 기반의 컨트롤러인 @RequestMapping에서
+	* 애노테이션 기반의 컨트롤러인 @RequestMapping
 2. BeanNameUrlHandlerMapping
-   * 스프링 빈의 이름으로 핸들러를 찾는다.
+	* 스프링 빈의 이름으로 핸들러를 찾는다.
 
-
+<br>
 
 **애노테이션 기반 컨트롤러**
 
@@ -158,30 +158,32 @@ public class SpringMemberFormControllerV1 {
 ```
 
 * @Controller
-  * 스프링이 자동으로 스프링 빈으로 등록한다.
-  * 스프링 MVC에서 애노테이션 기반 컨트롤러로 인식한다.
+	* 스프링이 자동으로 스프링 빈으로 등록한다.
+	* 스프링 MVC에서 애노테이션 기반 컨트롤러로 인식한다.
 * @RequestMapping
-  * 요청 정보를 매핑한다.
-  * 해당 URL이 호출되면 이 메서드가 호출된다.
-  * 애노테이션을 기반으로 동작하기 때문에, 메서드의 이름은 임의로 지으면 된다.
+	* 요청 정보를 매핑한다.
+	* 해당 URL이 호출되면 이 메서드가 호출된다.
+	* 애노테이션을 기반으로 동작하기 때문에, 메서드의 이름은 임의로 지으면 된다.
 
-
+<br>
 
 ## 4.2 핸들러 어댑터
 
 * 핸들러 매핑을 통해서 찾은 핸들러를 실행할 수 있는 핸들러 어댑터가 필요하다.
 * 예) Controller 인터페이스를 실행할 수 있는 핸들러 어댑터를 찾고 실행해야 한다.
 
+<br>
+
 **자동 등록되는 핸들러 어댑터**
 
 1. RequestMappingHandlerAdapter
-   * 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
+	* 애노테이션 기반의 컨트롤러인 @RequestMapping에서 사용
 2. HttpRequestHandlerAdapter
-   * HttpRequestHandler 처리
+	* HttpRequestHandler 처리
 3. SimpleControllerHandlerAdapter
-   * Controller 인터페이스(애노테이션X, 과거에 사용)
+	* Controller 인터페이스(애노테이션X, 과거에 사용)
 
-
+<br>
 
 # 5 뷰 리졸버
 
@@ -214,50 +216,49 @@ spring.mvc.view.suffix=.jsp
 >  spring.thymeleaf.suffix=.html
 >  ```
 
+<br>
 
-
-## HTTP 메시지 컨버터
+# 6 HTTP 메시지 컨버터
 
 * 뷰 템플릿으로 HTML을 생성해서 응답하는 것이 아니라, HTTP API처럼 JSON 데이터를 HTTP 메시지 바디에서 직접 읽거나 쓰는 경우 HTTP 메시지 컨버터를 사용하면 편리하다.
-* `@ResponseBody` , `HttpEntity` 를 사용하면 `viewResolver` 대신에 `HttpMessageConverter`가 동작
-* 기본적으로 등록된 HTTP 메시지 컨버터
-  * byte 처리 등등 기타 처리: `HttpMessageConverter`
-  * 기본 문자처리: `StringHttpMessageConverter`
-  * 기본 객체처리: `MappingJackson2HttpMessageConverter`
-* 스프링 부트는 다양한 메세지 컨버터를 제공하고 대상 클래스 타입과 미디어 타입 체크해서 컨버터를 선정한다.
-  * 응답의 경우 클라이언트의 HTTP Accept 해더와 서버의 컨트롤러 반환 타입 정보 둘을 조합해서 선정한다.
-* 호출 순서
-  * `RequestMappingHandlerAdaptor` -> `ArgumentResolver` -> `HttpMessageConverter`
-  * `RequestMappingHandlerAdaptor` -> `ReturnValueHandle` -> `HttpMessageConverter`
+* spring에서 제공하는 @RequestBody와 @ResponseBody 애노테이션을 사용하면 HTTP의 바디를 객체로 변환하거나 객체를 HTTP 응답으로 변환하는 과정을 직접 처리하지 않아도 된다.
+	* 내부적으로 HttpMessageConverter가 작동해서 HTTP 요청의 바디를 객체로 역직렬화하거나 객체를 HTTP 응답의 바디로 직렬화해준다.
 
+<br>
 
+## 6.1 HttpMessageConverter 선정
 
-**HTTP** **메시지 컨버터 인터페이스**
+- HttpMessageConverter는 인터페이스로 여러가지 구현체가 있다.
+- 스프링 부트를 사용하면 아래와 같이 기본적인 구현체가 자동으로 등록된다.
+	* byte 처리 등등 기타 처리: `HttpMessageConverter`
+	* 기본 문자처리: `StringHttpMessageConverter`
+	* 기본 객체처리: `MappingJackson2HttpMessageConverter`
+	* ...
+- @RequestBody와 @ResponseBody를 사용하면 자동으로 HttpMessageConverter가 작동하게 되는데 Spring MVC는 변환에 대상이 되는 객체와 HTTP의 미디어관련 헤더 정보를 가지고 적합한 HttpMessageConverter 구현체를 선정해 변환을 진행한다.
 
-* `org.springframework.http.converter.HttpMessageConverter`
+<br>
 
-* HTTP 메시지 컨버터는 HTTP 요청과 HTTP 응답 모두에서 사용된다.
+**주요 컨버터**
 
-* `canRead()`
+* ByteArrayHttpMessageConverter 
+	* byte[] 데이터를 처리한다.
+	* 클래스 타입: byte[] , 미디어타입: `*/*` 
+	* 요청 예) @RequestBody byte[] data
+	* 응답 예) @ResponseBody return byte[] 쓰기 미디어타입 application/octet-stream
+* StringHttpMessageConverter
+	* String 문자로 데이터를 처리한다. 
+	* 클래스 타입: String , 미디어타입: `*/*`
+	* 요청 예) @RequestBody String data
+	* 응답 예) @ResponseBody return "ok" 쓰기 미디어타입 text/plain
+* MappingJackson2HttpMessageConverter
+	* application/json
+	* 클래스 타입: 객체 또는 HashMap , 미디어타입 application/json 관련
+	* 요청 예) @RequestBody HelloData data
+	* 응답 예) @ResponseBody return helloData 쓰기 미디어타입 application/json 관련
 
-  * HTTP 요청 데이터 읽기
-    * 컨트롤러에서 `@RequestBody` , `HttpEntity` 파라미터를 사용할 때를 의미한다.
-  * 메시지 컨버터가 메시지를 읽을 수 있는지 확인하기 위해 canRead() 를 호출한다.
-  * 대상 클래스 타입을 지원하는가.
-    * 예) byte[] , String , Object
-  * HTTP 요청의 Content-Type 미디어 타입을 지원하는가.
-    * 예) `text/plain` , `application/json` , `*/*`
-  * 위 조건을 만족하면 `read()`를 호출해서 개체를 생성해서 반환한다.
+<br>
 
-*  `canWrite()`
-
-  * HTTP 응답 데이터 생성
-    * 컨트롤러에서 @ResponseBody , HttpEntity 로 값이 반환할 때를 의미한다.
-  * 메시지 컨버터가 메시지를 쓸 수 있는지 확인하기 위해 `canWrite()` 를 호출한다.
-  * 대상 클래스 타입을 지원하는가.
-  * `canWrite()` 조건을 만족하면 `write()` 를 호출해서 HTTP 응답 메시지 바디에 데이터를 생성한다.
-
-  
+## 6.2 HttpMessageConverter 인터페이스
 
 ```java
 package org.springframework.http.converter;
@@ -283,29 +284,33 @@ public interface HttpMessageConverter<T> {
 }
 ```
 
+- HTTP 메시지 컨버터는 HTTP 요청, HTTP 응답 둘 다 사용된다.
+- `canRead()` , `canWrite()`
+	- 메시지 컨버터가 해당 클래스, 미디어타입을 지원하는지 확인하는 메서드
+- `read()` , `write()`
+	- 메시지 컨버터를 통해서 메시지를 읽고 쓰는 기능
 
+<br>
 
-**주요 컨버터**
+## 6.3 @RequestBody
 
-* ByteArrayHttpMessageConverter 
-  * byte[] 데이터를 처리한다.
-  * 클래스 타입: byte[] , 미디어타입: `*/*` 
-  * 요청 예) @RequestBody byte[] data
-  * 응답 예) @ResponseBody return byte[] 쓰기 미디어타입 application/octet-stream
-* StringHttpMessageConverter
-  * String 문자로 데이터를 처리한다. 
-  * 클래스 타입: String , 미디어타입: `*/*`
-  * 요청 예) @RequestBody String data
-  * 응답 예) @ResponseBody return "ok" 쓰기 미디어타입 text/plain
-* MappingJackson2HttpMessageConverter
-  * application/json
-  * 클래스 타입: 객체 또는 HashMap , 미디어타입 application/json 관련
-  * 요청 예) @RequestBody HelloData data
-  * 응답 예) @ResponseBody return helloData 쓰기 미디어타입 application/json 관련
+- [레퍼런스](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html)
+- @RequestBody를 메서드 파라미터에 적용하면 HTTP 바디의 내용을 객체로 역직렬화 해준다.
 
+**예시**
 
+```java
+@PostMapping("/accounts") fun handle(@RequestBody account: Account) { // ... }
+```
 
+<br>
 
+## 6.4 @ResponseBody
+
+- `@ResponseBody` 애노테이션을 사용하면  `viewResolver` 대신에`HttpMessageConverter`가 동작한다.
+- `@ResponseBody`를 메서드에 적용하면 HttpMessageConverter가 작동해 메서드와 반환 값을 HTTP의 응답 바디 값으로 직렬화해준다.
+
+<br>
 
 참조
 

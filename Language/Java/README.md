@@ -7,14 +7,14 @@
 * [Abstract Class](Abstract-Class/Abstract-Class.md)
 * [Access Modifier](Access-Modifier/Access-Modifier.md)
   * public, protected, default, private
-* [Annotation](Annotation/Annotation.md)
+* [Annotation](Language/Java/Annotation/Annotation.md)
 * [Anonymous Class](Anonymous-Class/Anonymous-Class.md)
 * [Behavior Parameterization](Behavior-Parameterization/Behavior-Parameterization.md) 
 * [Collection Framework](Collection-Framework/Collection-Framework.md)
   * Collection, Set, List, Queue, Deque, Map, SortedSet, SortedMap
 * [Comparable & Comparator](Comparable-Comparator/Comparable-Comparator.md)
 * [Concurrent](Concurrent/Concurrent.md) 
-* [Data Type](Data-Type/Data-Type.md)
+* [Data Type](Language/Java/Data-Type/Data-Type.md)
 * [Enumeration](Enumeration/Enumeration.md)
 * [Exception](Exception/Exception.md)
 * [final](Final/Final.md)
@@ -26,7 +26,7 @@
 * [Java Bean](Java-Bean/Java-Bean.md)
   * POJO
 
-* [JDBC](JDBC/JDBC.md)
+* [JDBC](Language/Java/Database/JDBC/JDBC.md)
   * DriverManager
 * [JSP](JSP/JSP.md) 
 * [JVM](JVM/README.md) 
@@ -39,7 +39,7 @@
 * [Nested Class](Nested-Class/Nested-Class.md)
 * [POJO](POJO/POJO.md) 
 * [Optional](Optional/Optional.md)
-* [Reflection](Reflection/Reflection.md)
+* [Reflection](Language/Java/Reflection/Reflection.md)
 * [Serialization](Serialization/Serialization.md) 
 * [Static Member](Static-Member/Static-Member.md)
   * static field, static method, static initialization block, initializer block

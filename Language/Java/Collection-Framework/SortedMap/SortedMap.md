@@ -1,10 +1,10 @@
 # 1 SortedMap Interface
 
 * SortedMap은 엔트리은 오름차순 순서로 유지하는 Set이다.
-  * 엔트리는 자연스러운 순서로 정렬되어있다. 즉 엔트리의 Key가 구현한 Comparable에 정의된 대로
-  * 또는 SortedMap을 생성하는 시점에 Comparator를 제공해 원하는 순서로 엔트리를 정렬할 수 있다.
-* [Map.md](../Map/Map.md)
-* [Comparable-Comparator.md](../../Comparable-Comparator/Comparable-Comparator.md)
+	* 엔트리는 자연스러운 순서로 정렬되어있다. 즉 엔트리의 Key가 구현한 Comparable에 정의된 대로
+	* 또는 SortedMap을 생성하는 시점에 Comparator를 제공해 원하는 순서로 엔트리를 정렬할 수 있다.
+* [[Map]] 참고
+* [[Comparable-Comparator]] 참고
 
 
 

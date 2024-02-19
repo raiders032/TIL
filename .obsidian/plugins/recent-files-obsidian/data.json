@@ -1,0 +1,207 @@
+{
+  "recentFiles": [
+    {
+      "basename": "Anonymous-Class",
+      "path": "Language/Java/Anonymous-Class/Anonymous-Class.md"
+    },
+    {
+      "basename": "Map",
+      "path": "Language/Java/Collection-Framework/Map/Map.md"
+    },
+    {
+      "basename": "Coroutine-Builder",
+      "path": "Language/Kotlin/Coroutines/Coroutine-Builder.md"
+    },
+    {
+      "basename": "Coroutines",
+      "path": "Language/Kotlin/Coroutines/Coroutines.md"
+    },
+    {
+      "basename": "Coroutine-Context",
+      "path": "Language/Kotlin/Coroutines/Coroutine-Context.md"
+    },
+    {
+      "basename": "Chatting",
+      "path": "System-Design/Chatting/Chatting.md"
+    },
+    {
+      "basename": "Cache",
+      "path": "System-Design/Cache/Cache.md"
+    },
+    {
+      "basename": "chat-server",
+      "path": "WIP/chat-server/chat-server.md"
+    },
+    {
+      "basename": "Tree",
+      "path": "Computer-Science/Data-Structure/Tree/Tree.md"
+    },
+    {
+      "basename": "Class",
+      "path": "Language/Kotlin/Class/Class.md"
+    },
+    {
+      "basename": "IMS",
+      "path": "WIP/tmax/IMS/IMS.md"
+    },
+    {
+      "basename": "Untitled 1",
+      "path": "Untitled 1.md"
+    },
+    {
+      "basename": "Nullable-Type",
+      "path": "Language/Kotlin/Nullable-Type/Nullable-Type.md"
+    },
+    {
+      "basename": "Data-Type",
+      "path": "Redis/Data-Type/Data-Type.md"
+    },
+    {
+      "basename": "Redis",
+      "path": "Redis/Redis/Redis.md"
+    },
+    {
+      "basename": "Project-Reactor",
+      "path": "Reactive-Programming/Project-Reactor/Project-Reactor.md"
+    },
+    {
+      "basename": "MongoDB",
+      "path": "DB/MongoDB/MongoDB.md"
+    },
+    {
+      "basename": "Floyd–Warshall-Algorithm",
+      "path": "Computer-Science/Algorithm/Floyd–Warshall-Algorithm/Floyd–Warshall-Algorithm.md"
+    },
+    {
+      "basename": "Dijkstra-Algorithm",
+      "path": "Computer-Science/Algorithm/Dijkstra-Algorithm/Dijkstra-Algorithm.md"
+    },
+    {
+      "basename": "Database-Normalization",
+      "path": "DB/Database-Normalization/Database-Normalization.md"
+    },
+    {
+      "basename": "Strategy",
+      "path": "Design-Pattern/Strategy/Strategy.md"
+    },
+    {
+      "basename": "Template-Callback",
+      "path": "Design-Pattern/Template-Callback/Template-Callback.md"
+    },
+    {
+      "basename": "Behavior-Parameterization",
+      "path": "Language/Java/Behavior-Parameterization/Behavior-Parameterization.md"
+    },
+    {
+      "basename": "Template-Method",
+      "path": "Design-Pattern/Template-Method/Template-Method.md"
+    },
+    {
+      "basename": "Observer",
+      "path": "Design-Pattern/Observer/Observer.md"
+    },
+    {
+      "basename": "Factory-Method",
+      "path": "Design-Pattern/Factory-Method/Factory-Method.md"
+    },
+    {
+      "basename": "Facade",
+      "path": "Design-Pattern/Facade/Facade.md"
+    },
+    {
+      "basename": "Proxy",
+      "path": "Design-Pattern/Proxy/Proxy.md"
+    },
+    {
+      "basename": "Decorator",
+      "path": "Design-Pattern/Decorator/Decorator.md"
+    },
+    {
+      "basename": "Command",
+      "path": "Design-Pattern/Command/Command.md"
+    },
+    {
+      "basename": "Builder",
+      "path": "Design-Pattern/Builder/Builder.md"
+    },
+    {
+      "basename": "Adapter",
+      "path": "Design-Pattern/Adapter/Adapter.md"
+    },
+    {
+      "basename": "Mongosh",
+      "path": "DB/MongoDB/Mongosh.md"
+    },
+    {
+      "basename": "Singleton",
+      "path": "Design-Pattern/Singleton/Singleton.md"
+    },
+    {
+      "basename": "SAG 설정",
+      "path": "WIP/tmax/SAS/SAG 설정.md"
+    },
+    {
+      "basename": "SAS",
+      "path": "WIP/tmax/SAS/SAS.md"
+    },
+    {
+      "basename": "SASCTL-0.4.0",
+      "path": "WIP/tmax/SAS/SASCTL-0.4.0.md"
+    },
+    {
+      "basename": "인프라 정보",
+      "path": "WIP/tmax/인프라 정보.md"
+    },
+    {
+      "basename": "SMS",
+      "path": "WIP/tmax/SAS/SMS.md"
+    },
+    {
+      "basename": "스케줄러 version 0.3",
+      "path": "WIP/tmax/SAS/스케줄러 version 0.3.md"
+    },
+    {
+      "basename": "Untitled 3",
+      "path": "Untitled 3.md"
+    },
+    {
+      "basename": "Index",
+      "path": "DB/MongoDB/Index.md"
+    },
+    {
+      "basename": "Query",
+      "path": "DB/MongoDB/Query.md"
+    },
+    {
+      "basename": "Interceptor",
+      "path": "Spring/Spring-Framework/Spring-MVC/Interceptor/Interceptor.md"
+    },
+    {
+      "basename": "MyBatis",
+      "path": "Language/Java/Database/MyBatis/MyBatis.md"
+    },
+    {
+      "basename": "Untitled",
+      "path": "Untitled.md"
+    },
+    {
+      "basename": "Tmax Commerce Homepage",
+      "path": "WIP/HyperCloud/Tmax Commerce Homepage.md"
+    },
+    {
+      "basename": "Untitled 2",
+      "path": "Untitled 2.md"
+    },
+    {
+      "basename": "Netty",
+      "path": "Netty/Netty.md"
+    },
+    {
+      "basename": "Ingress",
+      "path": "Kubernetes/Ingress/Ingress.md"
+    }
+  ],
+  "omittedPaths": [],
+  "maxLength": null,
+  "openType": "tab"
+}

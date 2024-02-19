@@ -1,81 +1,50 @@
+# 1 Zookeeper
 
+- 카프카를 비롯해 아파치 산하 프로젝트인 하둡, 나이파이, 에이치베이스 등 많은 분산 애플리케이션에서 코디네이터 역할을 하는 애플리케이션으로 사용한다.
+- 주키퍼는 여러대의 서버를 앙상블(클러스터)로 구성하고 살아 있는 노드 수가 과반수 이상 유지된다면 지속적인 서비스가 가능한 구조이다.
+	- 따라서 주키퍼는 반드시 홀수로 구성해야 한다.
+- 카프카가 점점 성정하면서 주키퍼의 성능의 한계가 드러나기 시작했고 카프카는 주키퍼에 대한 의존성을 제거하려는 움직임을 보이고 있다.
 
-![image-20210703094856634](./images/what1.png)
+**Zookeeper의 역할**
 
+- 주키퍼는 파티션과 브로커의 메타데이터를 저장하고 컨트롤러 서버를 선출하는 동작을 수행한다.
 
+<br>
 
+## 2 Zookeeper 서버 수량
 
+- 주키퍼 쿼럼은의 사이즈는 반드시 홀수로 구성해야 한다.
+	- 주키퍼는 의사결정 시에 과반수를 기반으로 동작하기 때문이다.
+- 최소 수량으로 구성한다면 3개의 서버를 사용한다.
+	- 최대 1대 까지 장애를 허용할 수 있다.
+	- 카프카의 사용량이 높지 않으며 카프카가 매우 중요한 클러스터가 아니라면 3대로 구성하는 것이 적합하다.
+- 주키퍼를 5대로 구성한다.
+	- 최대 2대 까지 장애를 허용할 수 있다.
+	- 핵심 중앙 데이터 파이프라인으로 카프카를 이용 중이고 사용량도 많다면 안정성을 확보할 수 있게 5대로 구성하는 것이 적합하다.
 
-![image-20210626100152254](./images/role1.png)
+<br>
 
-![image-20210626100304777](./images/role2.png)
+## 3 하드웨어
 
+- 주키퍼는 높은 하드웨어 리소스를 요구하지 않는다.
+- 메모리는 4~8 GB로 구성하고 디스크는 240G 또는 480G SSD를 사용하는 것이 좋다.
+- 주키퍼의 힙 메모리 크기는 일반적으로 1~2GB이다.
+- 주키퍼는 트랜잭션이나 스냅샷 로그를 로컬 디스크에 저장하기 때문에 SSD를 추천한다.
 
+<br>
 
+# 4 주키퍼 설정
 
+`dataDir`
+- 메모리 내 데이터베이스 스냅샷을 저장할 위치
 
-![image-20210626100640772](./images/size1.png)
-
-![image-20210626100825927](./images/size2.png)
-
-![image-20210626101022347](./images/size3.png)
-
-
-
-## Zookeeper 클러스터 구성
-
-```bash
-sudo mkdir -p /data/zookeeper
-echo "1" > /data/zookeeper/myid
-```
-
-```properties
-# the location to store the in-memory database snapshots and, unless specified otherwise, the transaction log of updates to the database.
-dataDir=/data/zookeeper
-# the port at which the clients will connect
-clientPort=2181
-# disable the per-ip limit on the number of connections since this is a non-production config
-maxClientCnxns=0
-# the basic time unit in milliseconds used by ZooKeeper. It is used to do heartbeats and the minimum session timeout will be twice the tickTime.
-tickTime=2000
-# The number of ticks that the initial synchronization phase can take
-initLimit=10
-# The number of ticks that can pass between
-# sending a request and getting an acknowledgement
-syncLimit=5
-# zoo servers
-server.1=zookeeper1:2888:3888
-server.2=zookeeper2:2888:3888
-server.3=zookeeper3:2888:3888
-
-```
-
-
-
-## Zookeeper 설정
+`clientPort`
+- 클라이언트의 커넥션을 listen하는 포트
 
 `tickTime`
-
-* 주키퍼가 사용하는 시간에 대한 단위(밀리초)
+- 단위 밀리세컨드
 
 `initLimit`
 
-* 팔로워가 리더와 초기 연결하는 시간에 대한 타임 아웃
 
-`sysLimit`
-
-* 팔로워가 리더와 동기화 하는 시간에 대한 타임 아웃
-* 주키퍼에 저장된 데이터가 크면 수를 늘려야 한다.
-
-`dataDir`
-
-* 주키퍼 트랜잭션 로그와 스냅샷이 저장되는 데이터 저장 경로
-
-`clientPort`
-
-* 주키퍼 사용 TCP 포트
-
-`server.x`
-
-* 주키퍼 앙상블을 구성을 위한 서버 설정
-* `server.myid` 형식
+`syncLimit`

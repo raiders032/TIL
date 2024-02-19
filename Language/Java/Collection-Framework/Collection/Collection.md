@@ -1,8 +1,11 @@
 # 1 Collection
 
+* [레퍼런스](https://docs.oracle.com/javase/tutorial/collections/index.html)
 * 컬렌션은 객체의 그룹을 나타낸다. 여기서 객체를 요소라고 부른다.
 * 컬렉션은 주로 일반적인 요소의 그룹을 넘겨줄 때 사용된다.
-
+* 일부 컬렉션 타입은 중복 요소를 허용하는 반면, 다른 일부는 그렇지 않다.
+* 일부 컬렉션 타입은 순서가 있고, 다른 일부는 순서가 없다.
+* Java 플랫폼은 이 인터페이스의 직접적인 구현을 제공하지 않고, Set 및 List와 같은 더 구체적인 하위 인터페이스의 구현을 제공한다.
 
 
 아래와 같이 컬렉션 구현체들은 Collection 타입의 파라미터가 있는 생성자를 가지고 있다.
@@ -19,7 +22,28 @@ Collection<String> c = ...;
 List<String> list = new ArrayList<>(c);
 ```
 
+<br>
 
+## 1.1 Collection의 계층 구조
+
+![[Pasted image 20231014123110.png]]
+
+**Collection의 하위 타입**
+
+- [[Set]]
+	- [[SortedSet]]
+- [[List]]
+- [[Queue]]
+- [[Deque]]
+
+<br>
+
+**Collction의 하위 타입 아닌 것**
+
+- [[Map]]
+	- [[SortedMap]]
+
+<br>
 
 # 2 [Collection 메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html)
 

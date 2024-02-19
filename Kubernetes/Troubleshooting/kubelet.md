@@ -9,6 +9,14 @@ journalctl -u kubelet
 ```
 
 
+<br>
+
+# 2  container runtime endpoint address was not specified or empty
+
+```
+"command failed" err="failed to validate kubelet flags: the container runtime endpoint address was not specified or empty
+, use --container-runtime-endpoint to set"
+```
 
 # 2 node STATUS NotReady
 

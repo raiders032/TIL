@@ -26,27 +26,20 @@
 ## [RUN](https://docs.docker.com/engine/reference/builder/#run)
 
 * 도커 이미지가 생성되기 전에 수행할 쉘 명령어
-
 * 추가적으로 필요한 파일 다운 받기 위한 명령어 명시
-
 * 2가지 형태 가능
+	*  `RUN ["executable","param1","param2"]` (exec form)
+	- `RUN command param1 param2` (shell form)
 
-  * ```
-    RUN <command> (shell form, the command is run in a shell, which by default is /bin/sh -c on Linux or cmd /S /C on Windows)
-    RUN ["executable", "param1", "param2"] (exec form)
-    ```
-
-
+<br>
 
 ## [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
 
 * 컨테이너가 시작되었을 때 실행할 실행 파일 또는 쉘 스크립트
 * Dockerfile 파일 내에서 1번만 정의가 가능합니다.
-
-  * 여러개 정의 할 경우 마지막만 인식
+	* 여러개 정의 할 경우 마지막만 인식
 * Overwrite 가능
-
-  * 예) `docker run node npm init` npm init으로 CMD를 Overwrite할 수 있다.
+	* 예) `docker run node npm init` npm init으로 CMD를 Overwrite할 수 있다.
 * 3가지 형태 가능
 
 ```
@@ -55,14 +48,14 @@ CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
 CMD command param1 param2 (shell form)
 ```
 
-
+<br>
 
 **CMD의 올바른 사용법**
 
 - `CMD`의 올바른 사용 방법은 명령어를 `ENTRYPOINT`로 지정하고 기본 인자를 정의하는 경우에만 CMD를 사용해야 한다.
 - 그러면 아무런 인자를 지정하지 않고 이미지를 실행할 수 있다.
 
-
+<br>
 
 ## [LABEL](https://docs.docker.com/engine/reference/builder/#label)
 
@@ -217,10 +210,9 @@ USER nys
 * `ARG <name>[=<default value>]` 형태로 지정
 * default 값을 설정하면 빌드시 argument를 전달받지 못했을 때 default 값을 사용한다.
 * `docker build --build-arg <varname>=<value>`명령으로 Dockerfile에서 사용할 argument를 설정한다.
-  * 사용자가 도커 파일에 정의되지 않은 빌드 argument를 지정하면 빌드가 경고를 출력한다
-
+	* 사용자가 도커 파일에 정의되지 않은 빌드 argument를 지정하면 빌드가 경고를 출력한다
 * argument는 Dockerfile 안에서만 사용 가능
-  * `CMD` 나 애플리케이션 코드에서 사용 불가
+	* `CMD` 나 애플리케이션 코드에서 사용 불가
 
 
 

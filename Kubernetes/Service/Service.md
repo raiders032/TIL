@@ -1,13 +1,13 @@
 # 1 Service
 
 * pod의 내부 IP 주소를 확인하고 포드로 접근할 수 있지만 이는 로컬 개발 환경 또는 쿠베네티스 클러스터 내부에서만 사용할 수 있다
-  * 게다가 포드의 IP 주소는 영속적이지 않아 변할 수 있다
+	* 게다가 포드의 IP 주소는 영속적이지 않아 변할 수 있다
 * Deployment가 pod를 생성할 때 pod를 외부로 노출하지 않는다
-  * `containerPort`를 지정해도 pod가 바로 외부로 노출되는 것이 아니다
+	* `containerPort`를 지정해도 pod가 바로 외부로 노출되는 것이 아니다
 * pod를 외부로 노출해 사용자가 접근할 수 있도록 하려면 **Service**라는 오브젝트를 사용해야 한다
 * Service는 여러 종류가 있으나 `ClusterIP`, `NodePort`, `LoadBalancer` 3가지 종류를 주로 사용한다.
 
- 
+ <br>
 
 ## 1.1 Service의 핵심 기능
 
@@ -24,7 +24,7 @@
 - 모든 노드에는 `kube-proxy`가 작동 중인데 kube-proxy가 서비스에 가상 아이피를 할당하는 역할을 한다.
 - `가상 아이피 주소와 포트는 서비스가 존재하는 동안 절대 바뀌지 않는다`.
 
-
+<br>
 
 ## 1.2 Defining a Service
 
@@ -61,13 +61,13 @@ spec:
 * 서비스의 타입을 지정한다
 * ClusterIP, NodePort, LoadBalancer 등을 설정할 수 있다
 
-
+<br>
 
 ## 1.3 service의 타입
 
 - ClusterIP, NodePort, LoadBalancer, ExternalName 타입을 제공한다.
 
-
+<br>
 
 ## 1.4 세션 어피니티
 
@@ -75,10 +75,10 @@ spec:
 - 특정 클라이언트의 모든 요청을 매번 같은 파드로 리디렉션하려면 서비스의 `sesstionAffinity `를 사용하면 된다.
 - `service.spec.sessionAffinity`를 `ClientIP `로 설정하면 된다.
 - 서비스는 쿠키 기반 세션 어피니티를 제공하지 않는다. 
-  - 서비스가 L4 수준의 로드밸랜서이기 때문이다.
-  - 서비스는 TCP와 UDP 패킷을 처리하고 그들이 가지고 있는 페이로드는 신경쓰지 않기 때문이다.
+	- 서비스가 L4 수준의 로드밸랜서이기 때문이다.
+	- 서비스는 TCP와 UDP 패킷을 처리하고 그들이 가지고 있는 페이로드는 신경쓰지 않기 때문이다.
 
-
+<br>
 
 ## 1.5 멀티 포트
 
@@ -103,17 +103,16 @@ spec:
   type: ClusterIP
 ```
 
-
+<br>
 
 # 2 ClusterIP
 
 * 서비스에 클러스터 내부에서만 사용할 수 있는 주소인 ClusterIP가 할당된다.
 * 쿠버네티스 내부에서만 pod를 접근할 때 ClusterIP 타입의 서비스를 사용한다
-  * 외부로 pod를 노출하지 않기 때문에 클러스터 내부에서만 사용되는 pod에 사용한다
-
+	* 외부로 pod를 노출하지 않기 때문에 클러스터 내부에서만 사용되는 pod에 사용한다
 * 서비스의 타입을 명시하지 않으면 기본으로 ClusterIP 타입이 적용된다.
 
-
+<br>
 
 ## 2.1 yaml 작성
 
@@ -163,7 +162,7 @@ spec:
   type: ClusterIP
 ```
 
-
+<br>
 
 ## 2.2 생성 및 확인
 
@@ -178,7 +177,7 @@ hostname-svc-clusterip   ClusterIP      10.108.80.60    <none>        8080/TCP  
 kubernetes               ClusterIP      10.96.0.1       <none>        443/TCP          47h
 ```
 
-
+<br>
 
 ## 2.3 접근
 
@@ -208,28 +207,24 @@ $ curl hostname-svc-clusterip:8080 --silent | grep Hello
         <p>Hello,  hostname-deployment-7dfd748479-lxf5f</p>     </blockquote>
 ```
 
-
+<br>
 
 # 3 NodePort
 
 * NodePort는 ClusterIP의 기능을 모두 포함한다.
-  * 즉 클러스터 내에서만 사용가능한  ClusterIP 주소를 갖는다.
-
+	* 즉 클러스터 내에서만 사용가능한  ClusterIP 주소를 갖는다.
 * 추가적으로 NodePort 타입을 사용하면 외부에서 pod에 접근할 수 있다
-  * pod에 접근할 수 있는 포트를 클러스터의 모든 노드에 동일하게 개방한다
-  * 클러스터의 모든 노드의 내부 IP(클러스터 아이피) 또는 외부 IP를 통해 개방된 포트로 접근하면 pod에 접근할 수 있다
-
+	* pod에 접근할 수 있는 포트를 클러스터의 모든 노드에 동일하게 개방한다
+	* 클러스터의 모든 노드의 내부 IP(클러스터 아이피) 또는 외부 IP를 통해 개방된 포트로 접근하면 pod에 접근할 수 있다
 * 접근할 수 있는 포트는 랜덤으로 정해진다
-  * 특정 포트로 접근할 수 있게 설정할 수도 있다
+	* 특정 포트로 접근할 수 있게 설정할 수도 있다
 * 실제 운영 환경에서 NodePort로 서비스를 외부에 제공하는 경우는 많지 않다
-  * SSL 인증서 적용, 라우팅 등과 같은 복잡한 설정을 서비스에 적용하기 어렵기 때문
-  * NodePort 서비스 그 자체를 사용하기 보다 인그레스 오브젝트를 통해 간접적으로 사용하는 경우가 많다
-
-
+	* SSL 인증서 적용, 라우팅 등과 같은 복잡한 설정을 서비스에 적용하기 어렵기 때문
+	* NodePort 서비스 그 자체를 사용하기 보다 인그레스 오브젝트를 통해 간접적으로 사용하는 경우가 많다
 
 ![image-20211005222123301](./images/nodeport.png)
 
-
+<br>
 
 ## 3.1 yaml 작성
 
@@ -269,7 +264,7 @@ spec:
 
 * 서비스의 `30914`라는 포트는 모든 노드에서 동일하게 접근할 수 있게 개방된 포트를 의미한다
 * 개방되는 포트는 기본적으로 30000 ~ 32768 중 랜덤으로 선택된다
-  * 포트를 지정하고 싶다면 yaml에 `spec.ports.nodePort`으로 원하는 포트를 선택할 수 있다
+	* 포트를 지정하고 싶다면 yaml에 `spec.ports.nodePort`으로 원하는 포트를 선택할 수 있다
 
 ```bash
 # 서비스 생성
@@ -283,15 +278,15 @@ hostname-svc-nodeport   NodePort    10.100.132.250   <none>        8080:30914/TC
 kubernetes              ClusterIP   10.96.0.1        <none>        443/TCP          4m13s
 ```
 
-
+<br>
 
 ## 3.3 접근
 
 * 클러스터의 모든 노드에 내부 IP 또는 외부 IP를 통해 `30914` 포트로 접근하면 동일한 서비스에 연결할 수 있다
 * `NodePort`  타입의 서비스가 `ClusterIP` 타입의 서비스의 기능을 포함하고 있기 때문에 CLUSTER-IP 또는 서비스 이름을 이용해 pod에 접근할 수 있다
-  * 즉 `NodePort` 타입의 서비스는 내부 네트워크와 외부 네트워크 양쪽에서 접근할 수 있다
-  * 외부에서 접근할 경우 노드의 IP와 개방된 포트로 접근한다
-  * 내부에서 접근할 경우 서비스의 이름 또는 IP로 접근한다.
+	* 즉 `NodePort` 타입의 서비스는 내부 네트워크와 외부 네트워크 양쪽에서 접근할 수 있다
+	* 외부에서 접근할 경우 노드의 IP와 개방된 포트로 접근한다
+	* 내부에서 접근할 경우 서비스의 이름 또는 IP로 접근한다.
 * `NodePort`를 사용하면 노드의 IP를 알아야만 포드에 접근할 수 있지만 `LoadBalancer`를 이용하면 클라우드 플랫폼으로부터 도메인 이름과 IP를 할당받기 때문에 더 쉽게 접근할 수 있다.
 
 ```bash
@@ -330,18 +325,18 @@ $ curl hostname-svc-nodeport:8080 --silent | grep Hello
         <p>Hello,  hostname-deployment-7dfd748479-jm7b4</p>     </blockquote>
 ```
 
-
+<br>
 
 # 4 LoadBalancer
 
 * 클라우드 플랫폼에서 제공하는 로드 밸런서를 동적으로 프로비저닝해 포드에 연결한다
 * 외부에서 pod를 접근할 수 있다
 * 일반적으로 AWS, GCP 등과 같은 클라우드 플랫폼 환경에서 사용할 수 있다
-  * 온프레미스 환경에서 LoadBalancer를 사용하려면 MetalLb나 오픈스택 같은 특수한 환경을 직접 구축해야한다
+	* 온프레미스 환경에서 LoadBalancer를 사용하려면 MetalLb나 오픈스택 같은 특수한 환경을 직접 구축해야한다
 * LoadBalancer 타입의 서비스는 클라우드 플랫폼으로부터 도메인 이름과 IP 주소를 할당받기 때문에 NodePort 보다 쉽게 pod에 접근할 수 있다
-  * NodePort 는 각 노드의 IP 주소를 알아야 pod에 접근할 수 있다 
+	* NodePort 는 각 노드의 IP 주소를 알아야 pod에 접근할 수 있다 
 
-
+<br>
 
 ## 4.1 yaml 작성
 
@@ -360,7 +355,7 @@ spec:
   type: LoadBalancer
 ```
 
-
+<br>
 
 ## 4.2 비교
 
@@ -368,18 +363,17 @@ spec:
 - LoadBalancer는 ClusterIP와 NodePort 두 기능을 모두 포함한다.
 - ClusterIP 처럼 클러스터 내부에서 사용할 수 있는 IP 주소가 할당되고 NodePort처럼 모든 노드에 특정 포트가 열러 LoadBalancer가 접근할 수 있도록 한다.
 
-
+<br>
 
 # 5 ExternalName
 
 - 클러스터 안에서 외부에 접속 시 사용할 도메인을 서비스의 이름으로 접근할 수 있다.
-  - `서비스이름.네임스페이스.svc.cluster.local` 이름으로 접근 가능
-
+	- `서비스이름.네임스페이스.svc.cluster.local` 이름으로 접근 가능
 - 클러스터 DNS에 CNAME 레코드를 만든다고 생각하면 된다.
-  - CNAME 레코드는 별칭과 도메인을 매핑해주는 레코드다
-  - 여기서 별칭은 서비스의 이름이다.
+	- CNAME 레코드는 별칭과 도메인을 매핑해주는 레코드다
+	- 여기서 별칭은 서비스의 이름이다.
 
-
+<br>
 
 ## 5.1 yaml 작성
 
@@ -399,7 +393,7 @@ spec:
 - 외부 도메인을 설정한다.
 - `my-service.prod.svc.cluster.local` 호스트를 조회하면 `my.database.example.com` 을 반환하도록 클러스터 DNS 서비스가 세팅된다.
 
-
+<br>
 
 # 6 kube-proxy
 
@@ -408,13 +402,13 @@ spec:
 - 여기서 kube-proxy가 작동한다.
 - kube-proxy는 특정 서비스의 아이피 주소 요청이 오면 이를 파드의 아이피 주소로 바꾸어 전달하는 포워딩 룰을 가지고 있다.
 - kube-proxy의 이러한 포워딩 룰을 어떻게 만들까?
-  - 3 가지 모드를 지원한다.
-  - User space
-  - iptables: 기본값
-  - ipvs
+	- 3 가지 모드를 지원한다.
+	- User space
+	- iptables: 기본값
+	- ipvs
 - User space 모드는 현재 잘 사용하지 않는다.
 
-
+<br>
 
 ## 6.1 iptables 모드
 
@@ -428,8 +422,6 @@ nginx-deployment-68fc675d59-mpdnw   1/1     Running   0                 2d21h   
 nginx-deployment-68fc675d59-nvmwh   1/1     Running   587 (2m24s ago)   2d21h   192.168.199.167   worker4   <none>           <none>
 ```
 
-
-
 ClusterIP 타입의 서비스를 만들었다.
 
 ```bash
@@ -438,7 +430,6 @@ NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   6d17h
 my-nginx     ClusterIP   10.96.82.159   <none>        80/TCP    35s
 ```
-
 
 
 iptables을 확인해보면 서비스의 아이피 주소와 포트 넘버 10.96.82.159:80 의 요청을 3 개의 파드로 192.168.189.82:80, 192.168.199.167:80, 192.168.235.147:80로 포워딩하는 것을 볼 수 있다.
@@ -453,22 +444,19 @@ KUBE-SEP-IDBVHPLVKZAHS24Y  all  --  anywhere             anywhere             /*
 ```
 
 
-
 따라서 kube-proxy는 각각의 노드에서 service가 생성될 때 iptables rule을 생성한다. NodePort의 경우 해당하는 포트로 listen하고 클라이언트 연결을 받아서 iptables rule을 통해 파드와 연결한다.
 
-
+<br>
 
 # 7 Headless Service
 
 - ClusterIP가 없는 서비스를 Headless Service라고 한다.
-  - 다른 서비스에서 부하 분산을 위해 가상 IP를 제공했다.
-
+	- 다른 서비스에서 부하 분산을 위해 가상 IP를 제공했다.
 - `서비스명.네임스페이스명.svc.cluster.local`로 coredns에 질의하면 라운드 로빈으로 Headless Service가 묶고있는 여러 파드의 IP 주소가 반환된다.
-
 - 스테이트풀셋이 헤드리스 서비스를 사용하는 경우에만 파드명으로 IP주소를 디스커버리할 수 있다.
-  - 이 경우 `파드명.서비스명.네임스페이스명.svc.cluster.local`로 질의하면 파드의 IP 주소가 반환된다.
+	- 이 경우 `파드명.서비스명.네임스페이스명.svc.cluster.local`로 질의하면 파드의 IP 주소가 반환된다.
 
-
+<br>
 
 **각 서비스와 엔드포인트 내용**
 
@@ -478,17 +466,17 @@ KUBE-SEP-IDBVHPLVKZAHS24Y  all  --  anywhere             anywhere             /*
 | NodePort     | 모든 클러스터 노드의 모든 IP 주소                    |
 | LoadBalancer | 클러스터 외부에서 제공되는 로드밸런스의 가상 IP 주소 |
 
-
+<br>
 
 ## 7.1 Headless Service 생성
 
 - Headless Service를 생성하려면 아래 두가지 조건을 만족해야 한다.
-  - `spec.type: ClusterIp`
-  - `spec.clusterIp: None`
+	- `spec.clusterIp: None`
+	- `spec.type: ClusterIp`
 - 스테이트풀셋으로 생성된 파드명으로 디스커버리하는 경우
-  - 서비스의 `metadata.name과` 스테이트풀셋의 `spec.serviceName` 이 같아야한다.
+	- 서비스의 `metadata.name과` 스테이트풀셋의 `spec.serviceName` 이 같아야한다.
 
-
+<br>
 
 **sample-headless.yaml**
 
@@ -509,11 +497,9 @@ spec:
     app: sample-app
 ```
 
-
+<br>
 
 **sample-statefulset-headless.yaml**
-
-- `metadata.name과` 스테이트풀셋의 `spec.serviceName`이 같다.
 
 ```yaml
 apiVersion: apps/v1
@@ -536,7 +522,7 @@ spec:
           image: nginx:1.12
 ```
 
-
+- `metadata.name과` 스테이트풀셋의 `spec.serviceName`이 같다.
 
 ```bash
 # 파일 확인
@@ -582,7 +568,7 @@ sample-statefulset-headless-0.sample-headless.study.svc.cluster.local. 30 IN A 1
 ...
 ```
 
-
+<br>
 
 # 8 기타
 

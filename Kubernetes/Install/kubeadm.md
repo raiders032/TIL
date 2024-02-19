@@ -17,7 +17,7 @@
 - 클러스터를 구성하는 머신들의 네트워크
 - 유니크한 호스트 이름, MAC 주소, product_uuid
 - 특정 포트를 오픈해야 함 
-  - [참조](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports)
+	- [참조](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports)
 - Swap disabled
 
 
@@ -172,8 +172,8 @@ service crio status
 
 - kubelet과 컨테이너 런타임이 같은 cgroup 드라이버를 사용해야 한다.
 - 두 가지의 cgroup 드라이버가 이용 가능하다.
-  - cgroupfs
-  - systemd
+	- cgroupfs
+	- systemd
 - systemd가 init 시스템으로 선택되었을 때에는 systemd를 kubelet과 컨테이너 런타임의 cgroup 드라이버로 사용해야 한다.
 
 
@@ -309,7 +309,9 @@ sudo apt-mark hold kubelet kubeadm kubectl
 ## 3.1 master node 초기화
 
 ```bash
-$ kubeadm init --apiserver-advertise-address=192.168.154.133 --apiserver-cert-extra-sans=192.168.154.133 --pod-network-cidr=192.168.0.0/16
+$ kubeadm init \
+  --apiserver-advertise-address=192.168.121.61  \
+  --pod-network-cidr=192.168.0.0/16
 ```
 
 `--apiserver-advertise-address` 옵션

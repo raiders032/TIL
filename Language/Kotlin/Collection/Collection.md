@@ -29,32 +29,3 @@ println(set.max())
 ```
 
 
-
-# 2 읽기 전용과 변경 가능한 컬렉션
-
-- 코틀린의 컬렉션은 데이터를 접근하는 인터페이스와 컬렉션 안의 데이터를 변경하는 인터페이스를 분리했다.
-- 코틀린은 가장 기초적인 `kotlin.colletions.Collection` 인터페이스를 제공해 이터레이션, 컬렉션의 크기, 원소 검사 및 조회 기능을 제공한다.
-  - 원소를 제거하거나 추가하는 메서드는 제공하지 않는다.
-- 컬렉션 데이터 수정이 필요한 경우 `kotlin.colletions.MutableCollection`을 사용한다.
-  - MutableCollection은 위 Collection을 확장해 데이터 추가와 삭제 등의 메서드를 추가로 제공한다.
-
-
-
-## 2.1 주의점
-
-`kotlin.colletions.Collection`
-
-- **읽기 전용 컬렉션이 항상 Thread Safe하지는 않다.**
-- 같은 컬렉션 객체를 각각 읽기 전용 타입과 변경 가능 타입으로 참조하는 경우 변경 가능 타입 쪽에서 컬렉션의 내용을 변경하는 도중 읽기 전용 타입에서 참조한다면 ConcurrentModificationException 등의 예외가 발생할 수 있다.
-
-
-
-`kotlin.colletions.MutableCollection`
-
-- 어떤 함수가 인자로 kotlin.colletions.MutableCollection를 받는다면 그 함수가 컬렉션의 데이터를 바꿀 수 있다는 것을 의미한다. 원본의 변경을 막고자한다면 컬렉션의 복사복을 넘겨주는 방어적 복사가 필요하다.
-
-
-
-> 팁
->
-> 항상 읽기 전용인 `kotlin.colletions.Collection`을 사용하고 컬렉션 데이터 수정이 필요한 경우에만 `kotlin.colletions.MutableCollection`을 사용하자.

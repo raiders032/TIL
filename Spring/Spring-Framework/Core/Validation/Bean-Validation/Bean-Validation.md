@@ -3,7 +3,7 @@
 > 먼저 Bean Validation은 특정한 구현체가 아니라 Bean Validation 2.0(JSR-380)이라는 기술 표준이다. 쉽게 이야기해서 검증 애노테이션과 여러 인터페이스의 모음이다. 마치 JPA가 표준 기술이고 그 구현체로 하이버네이트가 있는 것과 같다. Bean Validation을 구현한 기술중에 일반적으로 사용하는 구현체는 하이버네이트 Validator이다. 이름이 하이버네이트가 붙어서 그렇지 ORM과는 관련이 없다.
 
 * 검증 기능을 매번 코드로 작성하는 것은 상당히 번거롭다.
-  * 특히 특정 필드에 대한 검증 로직은 대부분 빈 값인지 아닌지, 특정 크기를 넘는지 아닌지와 같이 매우 일반적인 로직이다.
+	* 특히 특정 필드에 대한 검증 로직은 대부분 빈 값인지 아닌지, 특정 크기를 넘는지 아닌지와 같이 매우 일반적인 로직이다.
 * 아래와 같이 검증 로직을 모든 프로젝트에 적용할 수 있게 공통화하고, 표준화 한 것이 바로 Bean Validation 이다.
 * 애노테이션을 통해 간편하게 프로퍼티를 검증할 수 있다.
 
@@ -24,7 +24,7 @@ public class Item {
 }
 ```
 
-
+<br>
 
 # 2 Bean Validation 사용하기
 
@@ -42,7 +42,7 @@ implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 `hibernate-validator` : 구현체
 
-
+<br>
 
 ## 2.2 Bean Validation 애노테이션 적용
 
@@ -94,9 +94,9 @@ public class Item {
 **Bean Validation 테스트 코드 작성**
 
 * 검증기를 생성하고 검증을 실행한다. 
-  * 검증기에 검증 대상(item)을 넣고 그 결과를 얻는다
+	* 검증기에 검증 대상(item)을 넣고 그 결과를 얻는다
 * 이렇게 검증기를 직접 생성하고 검증하는 일은 없을 것이다
-  * 스프링과 통합하여 직접 생성하지 않고 사용가능
+	* 스프링과 통합하여 직접 생성하지 않고 사용가능
 
 ```java
 public class BeanValidationTest {
@@ -125,7 +125,7 @@ public class BeanValidationTest {
 * [메뉴얼]( https://docs.jboss.org/hibernate/validator/6.2/reference/en-US/html_single/)
 * [검증 애노테이션 모음](https://docs.jboss.org/hibernate/validator/6.2/reference/en-US/html_single/#validator-defineconstraints-spec)
 
-
+<br>
 
 ## 2.3 Bean Validation 애노테이션 사용
 

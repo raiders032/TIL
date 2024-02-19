@@ -8,7 +8,7 @@
 ## 1.1 용도
 
 아래와 같은 특성이 필요한 애플리케이션에 StatefulSet을 사용하기 적합하다.
-
+  
 - Stable, unique network identifiers.
 - Stable, persistent storage.
 - Ordered, graceful deployment and scaling.

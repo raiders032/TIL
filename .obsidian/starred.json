@@ -1,9 +1,14 @@
 {
   "items": [
     {
-      "type": "search",
-      "title": "영속성",
-      "query": "영속성"
+      "type": "file",
+      "title": "Higher-Order-Functions",
+      "path": "Language/Kotlin/Higher-Order-Functions/Higher-Order-Functions.md"
+    },
+    {
+      "type": "file",
+      "title": "Generics",
+      "path": "Language/Kotlin/Generics/Generics.md"
     }
   ]
 }

@@ -44,7 +44,7 @@ spring.profiles.active=production, hsqldb
 ## 2.2 인텔리제이에서 활성화 하는 법
 
 * VM options = -Dspring.profiles.active=prod
-* ![image-20210201140223461](./images/image-20210201140223461.png)
+* ![image-20210201140223461](image-20210201140223461.png)
 
 
 

@@ -4,7 +4,7 @@
 * 자바8 이상을 필요로함.
 * 대체제: TestNG, Spock, ...
 
-
+<br>
 
 ## 1.1 build
 
@@ -20,7 +20,7 @@ dependencies {
 }
 ```
 
-
+<br>
 
 # 2 구성요소
 
@@ -29,31 +29,27 @@ dependencies {
 * JUnit5는 크게 세 개의 요소로 구성되어 있다
 * `JUnit 5 = JUnit Platform + JUnit Jupiter + JUnit Vintage`
 
-
-
-
-
-
+<br>
 
 ## 2.1 JUnit Platform
 
 * 테스팅 프레임워크를 구동하기 위한 런처와 테스트 엔진을 위한 API를 제공한다
-  * 런처: junit-platform-launcher
-  * 테스트 엔진 API: junit-platform-engine
+	* 런처: junit-platform-launcher
+	* 테스트 엔진 API: junit-platform-engine
 
-
+<br>
 
 ## 2.2 Jupiter
 
 * TestEngine API 구현체로 JUnit 5를 제공
 
-
+<br>
 
 ## 2.3 Vintage
 
 * JUnit 4와 3을 지원하는 TestEngine API 구현체
 
-
+<br>
 
 ## 1.2 Junit5 시작하기
 
@@ -68,21 +64,19 @@ dependencies {
 </dependency>
 ```
 
-
+<br>
 
 # 2 [애노테이션](https://junit.org/junit5/docs/current/user-guide/#writing-tests-annotations)
-
-
 
 ## 2.1 @Test
 
 - 메서드가 테스트 메서드임을 나타냅니다. 
 - JUNIT 4의 `@Test` 주석과는 달리, JUNIT Jupiter의 테스트 확장은 자체 전용 주석을 기반으로 작동하기 때문에 이 주석에는 어떠한 attribute도 선언하지 않습니다.
 - Junit5부터는 `public`이 아니여도 된다.
-  - 리플렉션을 사용하기 때문에
+	- 리플렉션을 사용하기 때문에
 - 메서드가 private이면 안된다
 
-
+<br>
 
 ## 2.2 @BeforeAll / @AfterAll
 
@@ -90,9 +84,8 @@ dependencies {
 - 한 클래스의 모든 테스트 메서드가 실행되기 전에 특정작업을 수행해야할 때 @BeforeAll 애노테이션 사용
 - 한 클래스의 모든 테스트 메서드가 실행한 뒤에 특정작업을 수행해야할 때 @AfterAll 애노테이션 사용
 - 두 애노테이션 모두 정적 메서드에 적용가능
-  - @BeforeAll : 모든 테스트 메서드를 실행하기 전에 한 번 실행된다
-  - @AfterAll : 모든 테스트 메서드를 실행한 뒤에 한 번 실행된다
-
+	- @BeforeAll : 모든 테스트 메서드를 실행하기 전에 한 번 실행된다
+	- @AfterAll : 모든 테스트 메서드를 실행한 뒤에 한 번 실행된다
 - JUNit 4의 `@BeforeClass`와 유사합니다.
 
 ```java
@@ -102,7 +95,7 @@ static void afterAll(){
 }
 ```
 
-
+<br>
 
 ## 2.3 @BeforeEach / @AfterEach
 
@@ -116,7 +109,7 @@ void afterEach(){
 }
 ```
 
-
+<br>
 
 **라이프사이클**
 
@@ -125,7 +118,7 @@ void afterEach(){
 3. @Test 애노테이션 붙은 메서드 실행
 4. @AfterEach 애노테이션이 붙은 메서드 실행
 
-
+<br>
 
 ## 2.4 @Disabled
 
@@ -140,14 +133,14 @@ void test(){
 }	
 ```
 
-
+<br>
 
 ## 2.5 @DisplayNameGeneration
 
 * Method와 Class 레퍼런스를 사용해서 테스트 이름을 표기하는 방법 설정.
 * 기본 구현체로 ReplaceUnderscores 제공
 
-
+<br>
 
 ## 2.6 @DisplayName
 
@@ -162,7 +155,7 @@ void createMenu() throws Exception {
 }
 ```
 
-
+<br>
 
 # 3 [Assertions](https://junit.org/junit5/docs/current/user-guide/#writing-tests-assertions)
 
@@ -170,7 +163,7 @@ void createMenu() throws Exception {
 * AssertJ, Hemcrest, Truth 등의 Third-party Assertion 라이브러리를 사용할 수도 있다.
 * JUnit의 Assertions 클래스는 값을 검증하기 위한 목적의 다양한 정적 메서드를 제공한다
 
-
+<br>
 
 ## 3.1 제공되는 메소드
 
@@ -198,16 +191,16 @@ void createMenu() throws Exception {
 
 * 특정 시간 안에 실행이 완료되는지 확인
 
-
+<br>
 
 # 4 [JUnit5 테스트 순서](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order)
 
 * 테스트의 순서는 항상 일정하지 않다.
 * 순서대로 테스트를 실행하고 싶은 경우
-  * `@TestMethodOrder`를 사용해 테스트 메소드의 순서를 정할 수 있다. 
-  * `@TestInstance(Lifecycle.PER_CLASS)`와 함께 사용하여 유즈 케이스나 시나리오 테스트를 하는데 용이하다.
+	* `@TestMethodOrder`를 사용해 테스트 메소드의 순서를 정할 수 있다. 
+	* `@TestInstance(Lifecycle.PER_CLASS)`와 함께 사용하여 유즈 케이스나 시나리오 테스트를 하는데 용이하다.
 
-
+<br>
 
 # 5 [JUnit 5 테스트 인스턴스](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle)
 
@@ -216,14 +209,11 @@ void createMenu() throws Exception {
 **@TestInstance(Lifecycle.PER_CLASS)**
 
 * 테스트 클래스당 인스턴스를 하나만 만들어 사용한다.
-
 * 경우에 따라, 테스트 간에 공유하는 모든 상태를 @BeforeEach 또는 @AfterEach에서
-
   초기화 할 필요가 있다.
-
 * @BeforeAll과 @AfterAll을 인스턴스 메소드 또는 인터페이스에 정의한 default 메소드로 정의할 수도 있다.
 
-* ![image-20201009172319250](/Users/YT/GoogleDrive/dev/TIL/images/image-20201009172319250.png)
+<br>
 
 # 6 [JUnit4 -> JUnit5 마이그레이션](https://junit.org/junit5/docs/current/user-guide/#migrating-from-junit4)
 
@@ -238,7 +228,7 @@ void createMenu() throws Exception {
 | @Ignore                                    | @Disabled                                      |
 | @Before, @After, @BeforeClass, @AfterClass | @BeforeEach, @AfterEach, @BeforeAll, @AfterAll |
 
-
+<br>
 
 # 7 [Extension Model](https://junit.org/junit5/docs/current/user-guide/#extensions)
 
@@ -249,11 +239,7 @@ void createMenu() throws Exception {
   2. 프로그래밍 등록 `@RegisterExtension`
   3. 자동 등록 자바 `ServiceLoader` 이용
 
-
-
-
-
-
+<br>
 
 참고
 

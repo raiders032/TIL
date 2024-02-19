@@ -43,8 +43,8 @@
 
 ## Spring
 
-*  [Spring](Spring/README.md)
-*  [JPA](Spring/JPA/README.md)
+*  [Spring](Spring-Old/README.md)
+*  [JPA](Spring/Spring-Data/JPA/README.md)
 
 
 
@@ -69,8 +69,8 @@
 
 ## CI/CD
 
-- [GithubAction](CICD/GithubAction/GithubAction.md)
-- [argocd](CICD/argocd/README.md) 
+- [GithubAction](GithubAction.md)
+- [argocd](DevOps/CICD/argocd/README.md) 
 
 
 

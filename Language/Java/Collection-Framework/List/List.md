@@ -2,9 +2,9 @@
 
 * List 순서가 있는 원소를 가진 Collection이다.
 * List는 중복된 원소를 가질 수 있다.
-  * Set은 중복된 원소를 가지지 않는다.
+	* Set은 중복된 원소를 가지지 않는다.
 
-
+<br>
 
 ## 1.1 [메소드](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html)
 
@@ -40,25 +40,25 @@
 | `Object[]`               | `toArray()`                                    | Returns an array containing all of the elements in this list in proper sequence (from first to last element). |
 | `<T> T[]`                | `toArray(T[] a)`                               | Returns an array containing all of the elements in this list in proper sequence (from first to last element); the runtime type of the returned array is that of the specified array. |
 
-
+<br>
 
 ## 1.2 구현체
 
 * [ArrayList](#2-arraylist)
 * [LinkedList](#3-linkedlist)
 
-
+<br>
 
 ## 1.3 List 조회
 
 * Iterator는 컬렉션의 원소를 하나씩 조회하거나 삭제할 수 있게 해주는 객체이다.
 * List의 iterator()를 호출해 Iterator를 얻을 수 있다.
-  * `Iterator<Integer> iterator = list.iterator();`
+	* `Iterator<Integer> iterator = list.iterator();`
 * List는 또한 Iterator에서 기능이 추가된 ListIterator를 제공한다.
-  * ListIterator는 커서를 뒤로 움직일 뿐만 아니라 앞으로 움직이는게 가능
-  * 즉 next() 메소드 뿐만 아니라 previous() 메소드도 제공한다.
+	* ListIterator는 커서를 뒤로 움직일 뿐만 아니라 앞으로 움직이는게 가능
+	* 즉 next() 메소드 뿐만 아니라 previous() 메소드도 제공한다.
 
-
+<br>
 
 **ListIterator 인터페이스**
 
@@ -130,7 +130,7 @@ void testListIterator() {
 }
 ```
 
-
+<br>
 
 ## 1.4 List Algorithms
 
@@ -146,16 +146,16 @@ void testListIterator() {
 * indexOfSubList — returns the index of the first sublist of one List that is equal to another.
 * lastIndexOfSubList — returns the index of the last sublist of one List that is equal to another.
 
-
+<br>
 
 # 2 ArrayList Class
 
 * List Interface의 구현체
 * ArrayList에는 초기 용량이라는 튜닝 매개 변수가 하나 있다.
-  * 초기 용량은 ArrayList가 초기에 보유할 수 있는 요소의 수를 나타낸다.
+	* 초기 용량은 ArrayList가 초기에 보유할 수 있는 요소의 수를 나타낸다.
 * 용량을 초과하는 원소가 들어오면 자동적으로 용량이 늘어난다.
 
-
+<br>
 
 **ArrayList Class**
 
@@ -182,50 +182,45 @@ public class ArrayList<E> ...{
 ArrayList<Integer> integers = new ArrayList<>(30);
 ```
 
-
+<br>
 
 # 3 LinkedList Class
 
 * List Interface의 구현체
-  * 또한 Queue interface의 구현체이기도 하다.
+	* 또한 Queue interface의 구현체이기도 하다.
 * LinkedList에는 튜닝 매개 변수가 없다.
 
-
+<br>
 
 # 4 어떤 구현체를 사용해야 될까?
 
 * 보통 ArrayList가 더 빠르기 때문에 대부분의 경우 ArrayList를 사용하게 될 것이다. 
 * LinkedList를 사용하기 전에 performance를 측정하는 편이 좋다.
 
-
+<br>
 
 **조회 성능**
 
 - ArrayList: O(1)
-
 * LinkedList: O(N)
 
-
+<br>
 
 **맨 앞의 원소 삽입**
 
 - ArrayList: O(N)
-
 * LinkedList: O(1)
 
-
+<br>
 
 **순회 도중 원소 삭제 및 삽입**
 
 - ArrayList: O(N)
-
 * LinkedList: O(1)
 
-
+<br>
 
 **성능 비교 예시**
-
-* List의 앞쪽에 삽입하는 연산은 LinkedList가 더 빠르다
 
 ```java
 @Test
@@ -253,7 +248,9 @@ ArrayList 걸린 시간: 5335161 ns
 LinkedList 걸린 시간: 1938724 ns
 ```
 
+* List의 앞쪽에 삽입하는 연산은 LinkedList가 더 빠르다
 
+<br>
 
 참고
 

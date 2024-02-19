@@ -19,7 +19,7 @@
 
 **Picture**
 
-![filterchain](images/filterchain.png)
+![filterchain](filterchain.png)
 
 - 필터 체인은 필터와 서블릿으로 구성된다.
 
@@ -57,7 +57,7 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 **Picture**
 
 
-![delegatingfilterproxy](./images/DelegatingFilterProxy.png)
+![delegatingfilterproxy](DelegatingFilterProxy.png)
 
 - 필터 체인은 필터와 서블릿으로 구성된다.
 - DelegatingFilterProxy는 필터다.
@@ -98,7 +98,7 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 
 **Picture**
 
-![filterchainproxy](./images/FilterChainProxy.png)
+![filterchainproxy](FilterChainProxy.png)
 
 - 필터 체인은 필터와 서블릿으로 구성된다.
 - DelegatingFilterProxy는 필터다.
@@ -116,7 +116,7 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 
 **Picture**
 
-![multi securityfilterchain](./images/multi-securityfilterchain.png)
+![multi securityfilterchain](multi-securityfilterchain.png)
 
 - 필터 체인은 필터와 서블릿으로 구성된다.
 - DelegatingFilterProxy는 필터다.

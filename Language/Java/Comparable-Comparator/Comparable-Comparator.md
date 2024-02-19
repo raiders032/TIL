@@ -1,14 +1,14 @@
 # 1 Comparable Interface
 
 * 어떠한 클래스를 정렬하려면 `Comparable` 인터페이스를 구현해야한다
-  * `Integer`, `String`, `Doulble` 모두 `Comparable` 인터페이스를 구현했다
-  * 사용자 정의 클래스도 정렬이 필요하다면 `Comparable` 인터페이스를 구현하면 된다
+	* `Integer`, `String`, `Doulble` 모두 `Comparable` 인터페이스를 구현했다
+	* 사용자 정의 클래스도 정렬이 필요하다면 `Comparable` 인터페이스를 구현하면 된다
 * Comparable을 구현하지 않은 원소의 리스트를 정렬하는 경우 ClassCastException이 발생한다.
-  * Collections.sort(list)
+	* Collections.sort(list)
 * Comparable은 구현한 클래스의 자연스러운 순서를 의미한다.
-  * 예) String 클래스는 Comparable를 사전순으로 구현했다.
+	* 예) String 클래스는 Comparable를 사전순으로 구현했다.
 
-
+<br>
 
 **Comparable Interface**
 
@@ -25,7 +25,7 @@ public interface Comparable<T> {
 * 주어진 객체보다 크면 양수 반환
 * 주어진 객체와 비교할 수 없으면 ClassCastException 발생
 
-
+<br>
 
 **구현 예시**
 
@@ -48,18 +48,18 @@ public class Person implements Comparable<Person> {
 }
 ```
 
-
+<br>
 
 # 2 Comparator Interface
 
 * `Comparator`는 `Comparable` 를 구현하지 않은 객체를 정렬할 때 사용된다
-  * **정렬자**를 제공하면 된다
-  * `Collections.sort(list, comparator)`
-  * comparator로 list의 원소를 비교할 수 없으면 ClassCastException 발생
+	* **정렬자**를 제공하면 된다
+	* `Collections.sort(list, comparator)`
+	* comparator로 list의 원소를 비교할 수 없으면 ClassCastException 발생
 * 또한 Comparable를 구현한 객체의 정렬 방식과 다르게 정렬하고 싶을 때 사용한다.
-  * String은 Comparable를 사전순으로 구현했지만 사전순이 아닌 다른 방식으로 String을 정렬하고자 할 때 Comparator를 사용한다.
+	* String은 Comparable를 사전순으로 구현했지만 사전순이 아닌 다른 방식으로 String을 정렬하고자 할 때 Comparator를 사용한다.
 
-
+<br>
 
 **Comparator 인터페이스**
 
@@ -70,20 +70,20 @@ public interface Comparator<T> {
 }
 ```
 
-  `int compare(T o1, T o2)` 메서드
 
-* `o1`과 `o2`가 동등하면 `0` 반환
-* `o1`이 `o2`보다 앞에 오게 하려면 `음수` 반환
-* `o1`이 `o2` 보다 뒤에 오게 하려면 `양수` 반환
-* 두 객체를 비교할 수 없다면 ClassCastException 발생
+- `int compare(T o1, T o2)` 메서드
+	* `o1`과 `o2`가 동등하면 `0` 반환
+	* `o1`이 `o2`보다 앞에 오게 하려면 `음수` 반환
+	* `o1`이 `o2` 보다 뒤에 오게 하려면 `양수` 반환
+	* 두 객체를 비교할 수 없다면 ClassCastException 발생
 
-
+<br>
 
 ## 2.1 정렬자
 
 * 정렬자는 `Comparator` 인터페이스를 구현한 객체를 말한다
 
-
+<br>
 
 **comparable 비구현 객체 Fruit 정렬하기**
 
@@ -99,7 +99,7 @@ public class Fruit {
 }
 ```
 
-
+<br>
 
 **정렬자**
 
@@ -118,7 +118,7 @@ public class DescendingComparator implements Comparator<Fruit> {
 }
 ```
 
-
+<br>
 
 **정렬자 사용하기**
 
@@ -143,7 +143,7 @@ public  class ComparatorExmaple {
 }
 ```
 
-
+<br>
 
 참고
 

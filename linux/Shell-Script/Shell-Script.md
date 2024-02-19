@@ -145,7 +145,7 @@ i can speak
 
 
 
-# if
+# 3 if
 
 ```
 비교식

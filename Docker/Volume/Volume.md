@@ -55,14 +55,12 @@
   * 파일이 실제로 어디에 저장되는지 사용자는 알 필요가 없다
   * `docker inspect --type volume {volumeName}` 명령어를 사용하면 볼륨이 실제 어디에 저장되는지 알 수 있다.
 * 데이터 영속화에 사용 할 수 있음
-
   * 수정이 필요없는 데이터를 영속화 할 때 사용
 
 **Named Volume 사용하기**
 
 * docker run -v data:/app/data
   * `[볼륨의 이름]:[컨테이너 공유 디렉토리]`
-
 * `Dokcerfile`에서 사용 불가
 
 

@@ -4,11 +4,55 @@
     "type": "split",
     "children": [
       {
-        "id": "8db43f466efd982a",
+        "id": "956cc56f908e90d8",
         "type": "leaf",
         "state": {
-          "type": "empty",
-          "state": {}
+          "type": "markdown",
+          "state": {
+            "file": "Language/Kotlin/Type-System/Type-System.md",
+            "mode": "source",
+            "backlinks": true,
+            "source": false
+          }
+        }
+      },
+      {
+        "id": "a6e912717db0d963",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Language/Kotlin/Functions/Functions﻿.md",
+            "mode": "source",
+            "backlinks": true,
+            "source": false
+          }
+        }
+      },
+      {
+        "id": "941091eb8f57a824",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Language/Java/Generic/Generic.md",
+            "mode": "source",
+            "backlinks": true,
+            "source": false
+          }
+        }
+      },
+      {
+        "id": "18545c295117527c",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Language/Kotlin/Generics/Generics.md",
+            "mode": "source",
+            "backlinks": true,
+            "source": false
+          }
         }
       }
     ],
@@ -36,7 +80,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "status",
+                "query": "Unit",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -54,11 +98,11 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 240.5032558441162
+    "width": 231.5
   },
   "right": {
     "id": "b0ca09c3c27e1ac4",
@@ -74,7 +118,8 @@
             "state": {
               "type": "backlink",
               "state": {
-                "collapseAll": false,
+                "file": "Language/Kotlin/Generics/Generics.md",
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -90,6 +135,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Language/Kotlin/Generics/Generics.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -111,7 +157,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Language/Kotlin/Generics/Generics.md"
+              }
             }
           },
           {
@@ -127,19 +175,19 @@
       }
     ],
     "direction": "horizontal",
-    "width": 360.5
+    "width": 382.5
   },
-  "active": "8db43f466efd982a",
+  "active": "18545c295117527c",
   "lastOpenFiles": [
-    "git/dream-coding/dreamcoding.md",
-    "Test/Code-Coverage/Code-Coverage.md",
-    "System-Design/Cache/Cache.md",
-    "System-Design/Cache/images/Pasted image 20220815201419.png",
-    "().md",
-    "Pasted image 20220815201142.png.md",
-    "Pasted image 20220815201142.png",
-    "2022-08-13.md",
-    "Pasted image 20220815200016.png.md",
-    "System-Design/README.md"
+    "Language/Kotlin/Lambda/Lambda.md",
+    "Language/Kotlin/Functions/Functions﻿.md",
+    "Language/Java/Generic/Generic.md",
+    "Language/Swift/Swift.md",
+    "Language/Kotlin/Type-System/Type-System.md",
+    "Language/Kotlin/Generics/Generics.md",
+    "2023-07-29.md",
+    "자바의 Generic.md",
+    "Language/Kotlin/Higher-Order-Functions/Higher-Order-Functions.md",
+    "Reactive-Programming/Reactive-Stream/Reactive-Stream.md"
   ]
 }

@@ -33,7 +33,7 @@ public class MyBean {
 
 * Environment
 * `@ConfigurationProperties` 애노테이션 사용해서 객체에 바인딩 후 사용하기
-  *  [Type-Safe-Configuration-Properties.md](../Type-Safe-Configuration-Properties/Type-Safe-Configuration-Properties.md) 참고
+  *  [Type-Safe-Configuration-Properties.md](Type-Safe-Configuration-Properties.md) 참고
 
 
 

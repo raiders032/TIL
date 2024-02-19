@@ -8,7 +8,6 @@
 - 이렇게 아카이빙된 단일 파일을 압축하여 파일 사이즈를 줄일 수 있다.
 
 
-
 ## 2.1 Archiving Util
 
 - Archiving 기능이 있는 대표적인 유틸리티로 tar가 있다.
@@ -293,7 +292,8 @@ $ sudo lvextend -l +100%FREE /dev/myvg/mylv
 
 ## lsblk
 
-- block devices에 대한 정보 보기
+- List Block Devices
+- 시스템에 연결된 모든 블록 디바이스의 목록을 표시한다.
 
 ```bash
 $ lsblk
@@ -312,7 +312,7 @@ sr0 11:0 1 1024M 0 rom
 
 ## fdisk
 
-- 
+- 하드 드라이브의 파티션 테이블을 조작하기 위한 명령어 도구다.
 
 ```bash
 $ sudo fdisk -l /dev/sdd
@@ -376,37 +376,35 @@ Help:
 
 ## df
 
-```bash
-$ df --help
-Usage: df [OPTION]... [FILE]...
-Show information about the file system on which each FILE resides,
-or all file systems by default.
+- disk free
+- 파일 시스템의 디스크 사용량을 표시한다.
+- 마운트된 각 파일 시스템의 총 공간, 사용 중인 공간, 사용 가능한 공간, 사용률 및 마운트 포인트 정보를 제공한다.
 
-Mandatory arguments to long options are mandatory for short options too.
-  -a, --all             include pseudo, duplicate, inaccessible file systems
-  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,
-                           '-BM' prints sizes in units of 1,048,576 bytes;
-                           see SIZE format below
-      --direct          show statistics for a file instead of mount point
-      --total           produce a grand total
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)
-  -H, --si              likewise, but use powers of 1000 not 1024
-  -i, --inodes          list inode information instead of block usage
-  -k                    like --block-size=1K
-  -l, --local           limit listing to local file systems
-      --no-sync         do not invoke sync before getting usage info (default)
-      --output[=FIELD_LIST]  use the output format defined by FIELD_LIST,
-                               or print all fields if FIELD_LIST is omitted.
-  -P, --portability     use the POSIX output format
-      --sync            invoke sync before getting usage info
-  -t, --type=TYPE       limit listing to file systems of type TYPE
-  -T, --print-type      print file system type
-  -x, --exclude-type=TYPE   limit listing to file systems not of type TYPE
-  -v                    (ignored)
-      --help     display this help and exit
-      --version  output version information and exit
+<br>
+
+**예시**
+
+```bash
+$ df -h
+Filesystem                         Size  Used Avail Use% Mounted on
+tmpfs                              3.2G  2.7M  3.2G   1% /run
+/dev/mapper/ubuntu--vg-ubuntu--lv   98G   56G   38G  60% /
+tmpfs                               16G     0   16G   0% /dev/shm
+tmpfs                              5.0M     0  5.0M   0% /run/lock
+/dev/sda2                          2.0G  253M  1.6G  14% /boot
+/dev/sda1                          1.1G  6.1M  1.1G   1% /boot/efi
+tmpfs                              3.2G  4.0K  3.2G   1% /run/user/1000
 ```
 
+- `-h`: 용량을 human-readable format으로 표시해준다.
+
+<br>
+
+## du
+
+- disk usage
+- 파일과 디렉터리의 디스크 사용량을 계산하고 표시하는 명령어다.
+- 특정 파일 또는 디렉터리가 얼마나 많은 디스크 공간을 차지하고 있는지 확인할 때 유용하다.
 
 
 **참고**

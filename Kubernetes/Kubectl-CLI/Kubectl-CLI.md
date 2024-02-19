@@ -17,7 +17,6 @@ echo "[[ $commands[kubectl] ]] && source <(kubectl completion zsh)" >> ~/.zshrc 
  
 
 # Basic
-
 ## kubectl create
 
 - [레퍼런스](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create)

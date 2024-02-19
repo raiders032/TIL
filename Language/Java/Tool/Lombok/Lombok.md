@@ -1,7 +1,5 @@
 # 1 Lombok
 
-
-
 ## 1.1 dependency
 
 **gradle**
@@ -20,12 +18,16 @@ dependencies {
 }
 ```
 
+<br>
 
 # 2 Annotation
 
 ## @NonNull
+
 * 필드와 메소드와 생성자의 파라미터에 적용할 수 있다
 * 롬복이 null을 체크하는 코드를 생성해준다
+
+<br>
 
 **with Lombok**
 
@@ -41,6 +43,8 @@ public class NonNullExample extends Something {
   }
 }
 ```
+
+<br>
 
 **Vanilla Java**
 * 롬복이 파라미터의 null 체크하는 코드를 생성해준다
@@ -61,6 +65,7 @@ public class NonNullExample extends Something {
 }
 ```
 
+<br>
 
 ## @EqualsAndHashCode
 
@@ -69,7 +74,7 @@ public class NonNullExample extends Something {
 * 기본적으로 모든 non-static 필드를 이용한다
 * 특정 필드를 지정하고 싶다면 @EqualsAndHashCode.Include 또는@EqualsAndHashCode.Exclude를 필드에 사용한다
 
-
+<br>
 
 ### of
 
@@ -116,7 +121,7 @@ public class OpenBankingAccount extends BaseTimeEntity {
 }
 ```
 
-
+<br>
 
 ## @Builder
 * [레퍼런스](https://projectlombok.org/features/Builder)

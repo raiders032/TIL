@@ -3,9 +3,7 @@
 - Git Flow Branch Strategy
 - GitHub Flow Branch Strategy
 
-
-
-
+<br>
 
 # 2 Git Flow Branch Strategy
 
@@ -13,38 +11,29 @@
 
 - Git Flow Branch 전략의 핵심은 한 브랜치의 작업을 다른 브랜치와 독립시키는 것입니다.
 - Git Flow Branch 전략은 다섯 가지의 브랜치를 가지고 있습니다.
-  - Main(Master):  제품으로 출시될 수 있는 브랜치
-  - Develop: 다음 출시 버전을 개발하는 브랜치
-  - Feature: 기능을 개발하는 브랜치
-  - Release: 이번 출시 버전을 준비하는 브랜치
-  - Hotfix:  출시 버전에서 발생한 버그를 수정 하는 브랜치
+	- Main(Master):  제품으로 출시될 수 있는 브랜치
+	- Develop: 다음 출시 버전을 개발하는 브랜치
+	- Feature: 기능을 개발하는 브랜치
+	- Release: 이번 출시 버전을 준비하는 브랜치
+	- Hotfix:  출시 버전에서 발생한 버그를 수정 하는 브랜치
 - Main과 Develop이 가장 주요한 브랜치이며 나머지 3개의 브랜치는 보조 역할을 합니다.
-  - Main과 Develop은 항상 유지되는 브랜치이며 보조 브랜치는 일정 기간 동안만 유지됩니다.
+	- Main과 Develop은 항상 유지되는 브랜치이며 보조 브랜치는 일정 기간 동안만 유지됩니다.
 
-
-
+<br>
 
 ## 2.1 흐름
 
 - 처음에는 `master`와 `develop` 브랜치가 존재합니다. 
-
 - `develop` 브랜치는 `master`에서부터 시작된 브랜치입니다. 
-
 - `develop` 브랜치에서는 상시로 버그를 수정한 커밋들이 추가됩니다. 
-
 - 새로운 기능 추가 작업이 있는 경우 `develop` 브랜치에서 `feature` 브랜치를 생성합니다. 
-
 - `feature` 브랜치는 언제나 `develop` 브랜치에서부터 시작하게 됩니다. 
-
 - 기능 추가 작업이 완료되었다면 `feature` 브랜치는 `develop` 브랜치로 merge 됩니다. 
-
 - `develop`에 이번 버전에 포함되는 모든 기능이 merge 되었다면 QA를 하기 위해 `develop` 브랜치에서부터 `release` 브랜치를 생성합니다.
-
 - QA를 진행하면서 발생한 버그들은 `release` 브랜치에 수정됩니다. QA를 무사히 통과했다면 `release` 브랜치를 `master`와 `develop` 브랜치로 merge 합니다. 
-
 - 마지막으로 출시된 `master` 브랜치에서 버전 태그를 추가합니다.
 
-
+<br>
 
 ## 2.2 장단점
 
@@ -61,7 +50,7 @@
 1. Depending on the complexity of the product, the Git flow model could overcomplicate and slow the development process and release cycle.
 2. Because of the long development cycle, Git flow is historically not able to support Continuous Delivery or Continuous Integration.
 
-
+<br>
 
 # 3 GitHub Flow Branch Strategy
 
@@ -70,7 +59,7 @@
 - GitHub Flow는 main 브랜치에 production-ready code가 담겨있다.
 - 다른 브랜치(feature, bug fixes)에서는 새로운 작업을 진행하고 충분한 검토 후에 다시 main 브랜치로 머지된다.
 
-
+<br>
 
 ## 3.1 고려사항
 
@@ -84,7 +73,7 @@
 5. 피드백과 승인을 받은 후 main 브랜치에 머지한다
 6. main 브랜치에 머지되면 즉각 배포되어야 한다.
 
-
+<br>
 
 ## 3.2 장단점
 

@@ -2,7 +2,7 @@
 
 * [Cookie Session](Cookie-Session/Cookie-Session.md)
 * [CORS](CORS/CORS.md)
-* [DNS](DNS/DNS.md)
+* [DNS](Network/DNS/DNS.md)
 * [JWT](JWT/JWT.md)
 * [Network Devices](Network-Devices/Network-Devices.md)
   * 허브, 리피터

@@ -1,39 +1,61 @@
-# 1 디펜던시 설정
+# 1 Swagger
+
+* 스프링 부트에서 Swagger 사용하기
+
+<br>
+
+## 1.1 디펜던시
+
+- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
 
 ```groovy
-implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 ```
 
-**스프링 부트 이용시**
+- 해당 의존성 추가하면 swagger-ui가 자동으로 스프링 부트 애플리케이션에 배포된다.
 
-```groovy
-implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-```
+
+
+**Swagger UI 문서 주소**
+
+- `http://server:port/context-path/swagger-ui.html`
+
+
+
+**Json 포맷으로 보기**
+
+- `http://server:port/context-path/v3/api-docs`
+
+
+
+**yaml 포맷으로 보기**
+
+- `http://server:port/context-path/v3/api-docs.yaml`
 
 
 
 # 2 설정
 
-* Docket 빈에 여러 가지 설정이 가능함
-* RequestHandlerSelectors와 PathSelectors를 사용해서 원하는 핸들러를 선택할 수 있다
-  * RequestHandlerSelectors: 패키지, 애노테이션을 기준으로 핸들러를 선택할 수 있다
-  * PathSelectors: 핸들러의 URL를 antPattern 또는 정규표현식으로 핸들러를 선택할 수 있다
 
 
 
-**설정 예시**
 
-```java
-@Configuration
-public class SpringFoxConfig {                                    
-  @Bean
-  public Docket api() { 
-    return new Docket(DocumentationType.SWAGGER_2)  
-      .select()                                  
-      .apis(RequestHandlerSelectors.any())              
-      .paths(PathSelectors.any())                          
-      .build();                                           
-  }
-}
-```
+- `@Api` → `@Tag`
+- `@ApiIgnore` → `@Parameter(hidden = true)` or `@Operation(hidden = true)` or `@Hidden`
+- `@ApiImplicitParam` → `@Parameter`
+- `@ApiImplicitParams` → `@Parameters`
+- `@ApiModel` → `@Schema`
+- `@ApiModelProperty(hidden = true)` → `@Schema(accessMode = READ_ONLY)`
+- `@ApiModelProperty` → `@Schema`
+- `@ApiOperation(value = "foo", notes = "bar")` → `@Operation(summary = "foo", description = "bar")`
+- `@ApiParam` → `@Parameter`
+- `@ApiResponse(code = 404, message = "foo")` → `@ApiResponse(responseCode = "404", description = "foo")`
 
+
+
+
+
+참고
+
+* https://springdoc.org/#Introduction
+* https://www.baeldung.com/spring-rest-openapi-documentation

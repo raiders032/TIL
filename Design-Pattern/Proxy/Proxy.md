@@ -4,7 +4,7 @@
 * 이 개념을 **네트워크**에 도입하면 **클라이언트는 웹 브라우저**가 되고, 요청을 처리하는 **서버는 웹 서버**가 된다.
 * 이 개념을 **객체**에 도입하면, **요청하는 객체는 클라이언트**가 되고, **요청을 처리하는 객체는 서버**가 된다.
 
-
+<br>
 
 **직접 호출**![image-20220605131942071](./images/1.png)
 
@@ -18,7 +18,7 @@
 * 클라이언트가 요청한 결과를 서버에 직접 요청하는 것이 아니라 어떤 대리자를 통해서 대신 간접적으로 서버에 요청할 수 있다
 * 여기서 대리자를 **프록시**라 한다
 
-
+<br>
 
 # 2 Proxy의 역할
 
@@ -27,7 +27,7 @@
 * 같은 인터페이스를 사용하기 때문에 클라이언트가 사용하는 서버 객체를 프록시 객체로 변경해도 클라이언트 코드를 변경하지 않고 동작할 수 있다
 * 프록시는 클라이언트와 서버 중간에 위치하며 아래와 같은 기능을 한다.
 
-
+<br>
 
 **클래스 의존 관계**
 
@@ -35,7 +35,7 @@
 
 * 클라이언트는 ServerInterface에 의존하고 있으며 Server와 Proxy는 같은 인터페이스를 구현하고 있다
 
-
+<br>
 
 **런타임 객체 의존 관계**
 
@@ -46,13 +46,13 @@
 * 런타임 객체 의존 관계가 클라이언트 -> Server인 상태에서 DI를 사용해서 Server 대신 Proxy를 주입해도 클라이언트의 코드를 변경하지 않아도 된다
 * 같은 인터페이스를 사용하기 때문에 Server를 Proxy로 교체해도 예전처럼 그대로 사용가능 
 
-
+<br>
 
 ## 2.1 Proxy의 주요 기능
 
 * 프록시에의 주요 기능에는 크게 2가지로 구분된다
 
-
+<br>
 
 **접근 제어**
 
@@ -60,7 +60,7 @@
 * 캐싱
 * 지연 로딩
 
-
+<br>
 
 **부가 기능 추가**
 
@@ -69,25 +69,25 @@
 * 요청이나 응답 값 중간 수정
 * 부가 기능 추가의 목적을 가진 프록시 패턴을 데코레이터 패턴이라 부른다
 
-
+<Br>
 
 ## 2.2 GOF의 Proxy 정의
 
 * 프록시 패턴과 데코레이터 패턴은 둘다 프록시를 사용하지만 의도에 따라서 구분한다.
-  * 프록시 패턴: **접근 제어가 목적**
-  * 데코레이터 패턴: **새로운 기능 추가가 목적**
-  * [Decorator.md](../Decorator/Decorator.md) 참고
+	* 프록시 패턴: **접근 제어가 목적**
+	* 데코레이터 패턴: **새로운 기능 추가가 목적**
+	* [Decorator.md](../Decorator/Decorator.md) 참고
 
 
 > 프록시라는 개념은 클라이언트 서버라는 큰 개념안에서 자연스럽게 발생할 수 있다. 프록시는 객체안에서의 개념도 있고, 웹 서버에서의 프록시도 있다. 객체안에서 객체로 구현되어있는가, 웹 서버로 구현되어 있는가 처럼 규모의 차이가 있을 뿐 근본적인 역할은 같다.
 
-
+<br>
 
 # 3 Proxy Pattern 예제 코드
 
 * 서버의 응답을 캐시에 클라이언트의 접근을 제어하는 프록시를 만들어보자
 
-
+<br>
 
 ## 3.1 Client 클래스
 
@@ -109,7 +109,7 @@ public class Client {
 }
 ```
 
-
+<br>
 
 ## 3.2 Subject 인터페이스
 
@@ -122,7 +122,7 @@ public interface Subject {
 }
 ```
 
-
+<br>
 
 ## 3.3 RealSubject 클래스
 
@@ -149,13 +149,14 @@ public class RealSubject implements Subject {
 }
 ```
 
-
+<br>
 
 ## 3.4 클래스 의존 관계
 
-<img src="./images/6.png" alt="image-20220605134045178" style="zoom: 25%;" />
 
+![[6.png]]
 
+<br>
 
 **런타임 객체 의존 관계**
 
@@ -163,7 +164,7 @@ public class RealSubject implements Subject {
 
 ![image-20220605134122765](./images/7.png)
 
-
+<br>
 
 ## 3.5 테스트 코드
 
@@ -212,8 +213,8 @@ RealSubject - RealSubject 호출
 * 따라서 런타임 시 객체 의존 관계는 `client -> proxy -> realSubject`
 * client는 realSubject의 operation 메서드를 직접 호출하지 않고 proxy의 operation 메서드를 호출하게 된다
 * proxy의 operation 메서드는 아래와 같이 작동한다
-  * 프록시는 캐싱된 값이 없으면 realSubject의 operation 메서드를 호출하고 결과 값을 `cacheValue` 변수에 저장한다
-  * 캐싱된 값이 있으면 realSubject의 operation 메서드를 호출하지 않고 캐싱된 `cacheValue` 의 값을 반환한다
+	* 프록시는 캐싱된 값이 없으면 realSubject의 operation 메서드를 호출하고 결과 값을 `cacheValue` 변수에 저장한다
+	* 캐싱된 값이 있으면 realSubject의 operation 메서드를 호출하지 않고 캐싱된 `cacheValue` 의 값을 반환한다
 
 
 
@@ -221,8 +222,8 @@ RealSubject - RealSubject 호출
 
 * 프록시도 실제 객체와 그 모양이 같아야 하기 때문에 Subject 인터페이스를 구현
 * `private Subject target` 
-  * 클라이언트가 프록시를 호출하면 프록시가 최종적으로 실제 객체를 호출
-  * 따라서 내부에 실제 객체의 참조를 가지고 있어야 한다
+	* 클라이언트가 프록시를 호출하면 프록시가 최종적으로 실제 객체를 호출
+	* 따라서 내부에 실제 객체의 참조를 가지고 있어야 한다
 
 ```java
 @Slf4j
@@ -253,7 +254,7 @@ public class Proxy implements Subject {
 * 클라이언트가 프록시를 의존하고 있다.
 * 런타임 객체 의존 관계: client -> proxy -> realSubject
 * 클라이언트와 서버 사이에 프록시가 존재에 접근 제어
-  * `RealSubject - 실제 객체 호출` 이 한번만 일어났다
+	* `RealSubject - 실제 객체 호출` 이 한번만 일어났다
 
 ```java
 @Test
@@ -282,25 +283,24 @@ Proxy - 프록시 호출
 
 * 프록시 패턴의 핵심은 접근 제어 또는 새로운 기능의 추가를 Client의 코드 변경없이 추가할 수 있다는 점
 
-
+<br>
 
 # 4 JDK 동적 프록시
 
 - 프록시를 적용하기 위해 적용 대상의 숫자 만큼 많은 프록시 클래스를 만들어야 한다.
 - 적용 대상이 100 개면 프록시 클래스도 100개 만들어야 한다.
 - 프록시의 로직은 같은데, 적용 대상만 차이가 있는 경우 동적 프록시 기술을 사용하면 개발자가 직접 프록시 클래스를 만들지 않아도 된다.
+- 자바가 기본으로 제공하는 JDK 동적 프록시 기술이나 CGLIB 같은 프록시 생성 오픈소스 기술을 활용하면 프록시 객체를 동적으로 만들어낼 수 있다.
 
 
 
 > 주의
 >
-> JDK 동적 프록시는 인터페이스를 기반으로 프록시를 동적으로 만들어준다. 따라서 인터페이스가 필수이다.
+> JDK 동적 프록시는 인터페이스를 기반으로 프록시를 동적으로 만들어준다. 따라서 인터페이스가 필수이다. 인터페이스 없이 클래스만 있는 경우에는 CGLIB 라는 바이트코드를 조작하는 특별한 라이브러리를 사용해야 한다.
 
+<br>
 
-
-## 4.1 예시
-
-- AInterface와 BInterface가 존재하고 각각 구현체인 AImpl과 BImpl가 있다.
+**예시**
 
 ```java
 public interface AInterface {
@@ -338,14 +338,11 @@ public class BImpl implements BInterface {
 }
 ```
 
+- AInterface와 BInterface가 존재하고 각각 구현체인 AImpl과 BImpl가 있다.
 
+<br>
 
-**InvocationHandler**
-
-- JDK 동적 프록시에 적용할 로직은 InvocationHandler 인터페이스의 invoke 메서드를 구현하면 된다.
-- Object proxy : 프록시 자신
-- Method method : 호출한 메서드
-- Object[] args : 메서드를 호출할 때 전달한 인수
+## 4.1 InvocationHandler
 
 ```java
 package java.lang.reflect;
@@ -355,14 +352,14 @@ public interface InvocationHandler {
 }
 ```
 
+- JDK 동적 프록시에 적용할 로직은 InvocationHandler 인터페이스의 invoke 메서드를 구현하면 된다.
+- `Object proxy` : 프록시 자신
+- `Method method` : 호출한 메서드
+- `Object[] args` : 메서드를 호출할 때 전달한 인수
 
+<br>
 
-**TimeInvocationHandler**
-
-- TimeInvocationHandler는 InvocationHandler를 구현한다.
-- TimeInvocationHandler에 공통 로직을 구현한다.
-- Object target은 동적 프록시가 호출할 대상이다.
-- `method.invoke(target, args)` 리플렉션을 사용해서 target 인스턴스의 메서드를 실행하면서 인자를 넘겨준다
+## 4.2 프록시 기능 구현
 
 ```java
 import lombok.extern.slf4j.Slf4j;
@@ -392,15 +389,14 @@ public class TimeInvocationHandler implements InvocationHandler {
 }
 ```
 
+- TimeInvocationHandler는 InvocationHandler를 구현한다.
+- TimeInvocationHandler에 공통 로직을 구현한다.
+- Object target은 동적 프록시가 호출할 대상이다.
+- `method.invoke(target, args)` 리플렉션을 사용해서 target 인스턴스의 메서드를 실행하면서 인자를 넘겨준다
 
+<br>
 
-**JDK 동적 프록시를 사용**
-
-- `new TimeInvocationHandler(target)`는 동적 프록시에 적용할 핸들러 로직이다.
-- 동적 프록시는 `java.lang.reflect.Proxy` 를 통해서 생성할 수 있다.
-  -  `Proxy.newProxyInstance()`
-  - 클래스 로더 정보, 인터페이스, 그리고 핸들러 로직을 넣어주면 된다. 
-  - 그러면 해당 인터페이스를 기반으로 동적 프록시를 생성하고 그 결과를 반환한다.
+## 4.3 프록시 생성
 
 ```java
 @Slf4j
@@ -433,7 +429,13 @@ public class JdkDynamicProxyTest {
 
 ```
 
+- `new TimeInvocationHandler(target)`는 동적 프록시에 적용할 핸들러 로직이다.
+- 동적 프록시는 `java.lang.reflect.Proxy` 를 통해서 생성할 수 있다.
+	-  `Proxy.newProxyInstance()`
+	- 클래스 로더 정보, 인터페이스, 그리고 핸들러 로직을 넣어주면 된다. 
+	- 그러면 해당 인터페이스를 기반으로 동적 프록시를 생성하고 그 결과를 반환한다.
 
+<br>
 
 출력 내용
 
@@ -444,7 +446,124 @@ TimeInvocationHandler - TimeProxy 종료 resultTime=0
 JdkDynamicProxyTest - targetClass=class hello.proxy.jdkdynamic.code.AImpl JdkDynamicProxyTest - proxyClass=class com.sun.proxy.$Proxy1
 ```
 
+<br>
 
+## 4.4 제약
+
+- JDK 동적 프록시는 인터페이스를 기반으로 프록시를 동적으로 만들어준다. 
+- 따라서 인터페이스가 필수이다. 
+- 인터페이스 없이 클래스만 있는 경우에는 CGLIB라는 바이트코드를 조작하는 특별한 라이브러리를 사용해야 한다.
+
+<br>
+
+# 5 CGLIB
+
+- Code Generator Library
+- CGLIB는 바이트코드를 조작해서 동적으로 클래스를 생성하는 기술을 제공하는 라이브러리이다.
+- CGLIB를 사용하면 인터페이스가 없어도 구체 클래스만 가지고 동적 프록시를 만들어낼 수 있다.
+
+<br>
+
+## 5.1 MethodInterceptor
+
+- JDK 동적 프록시에서 실행 로직을 위해 InvocationHandler 를 제공했듯이, CGLIB는 MethodInterceptor 를 제공한다.
+
+<br>
+
+**MethodInterceptor 인터페이스**
+
+```java
+package org.springframework.cglib.proxy;
+
+public interface MethodInterceptor extends Callback {
+  Object intercept(
+	  Object obj, 
+	  Method method, 
+	  Object[] args, 
+	  MethodProxy proxy) throws Throwable;
+}
+```
+
+- obj : CGLIB가 적용된 객체
+- method : 호출된 메서드
+- args : 메서드를 호출하면서 전달된 인수
+- proxy : 메서드 호출에 사용
+
+<br>
+
+## 5.2 프록시 기능 구현
+
+```java
+import lombok.extern.slf4j.Slf4j;  
+import org.springframework.cglib.proxy.MethodInterceptor;  
+import org.springframework.cglib.proxy.MethodProxy;  
+  
+import java.lang.reflect.Method;  
+  
+@Slf4j  
+public class TimeMethodInterceptor implements MethodInterceptor {  
+    private final Object target;  
+  
+    public TimeMethodInterceptor(Object target) {  
+        this.target = target;  
+    }  
+  
+    @Override  
+    public Object intercept(Object obj,  
+                            Method method,  
+                            Object[] args,  
+                            MethodProxy proxy) throws Throwable {  
+        log.info("TimeProxy 실행");  
+        long startTime = System.currentTimeMillis();  
+        Object result = proxy.invoke(target, args);  
+        long endTime = System.currentTimeMillis();  
+        long resultTime = endTime - startTime;  
+        log.info("TimeProxy 종료 resultTime={}", resultTime);  
+        return result;  
+    }  
+}
+```
+
+- 메서드 실행 시간을 측정하는 부가 기능을 가진 프록시 기능을 구현했다.
+- RealSubject 클래스의 메서드를 호출할 때 method와 proxy 둘다 사용이 가능하다.
+	- CGLIB는 성능상 MethodProxy proxy 를 사용하는 것을 권장한다.
+
+<br>
+
+## 5.3 프록시 생성
+
+```java
+import org.springframework.cglib.proxy.Enhancer;
+
+ConcreteService target = new ConcreteService();  
+
+// CGLIB는 Enhancer를 사용해서 프록시를 생성한다.
+Enhancer enhancer = new Enhancer();
+
+// CGLIB는 구체 클래스를 상속 받아서 프록시를 생성할 수 있다.
+// 어떤 구체 클래스를 상속 받을지 지정한다.
+enhancer.setSuperclass(ConcreteService.class);
+
+// 프록시에 적용할 실행 로직을 할당한다
+enhancer.setCallback(new TimeMethodInterceptor(target));  
+
+// 프록시를 생성한다
+ConcreteService proxy = (ConcreteService)enhancer.create();  
+log.info("targetClass={}", target.getClass());  
+log.info("proxyClass={}", proxy.getClass());  
+
+proxy.call();
+```
+
+<br>
+
+## 5.4 제약
+
+- CGLIB는 자식 클래스를 동적으로 생성하기 때문에 기본 생성자가 필요하다.
+- 클래스에 final 키워드가 붙으면 CGLIB을 사용할 수 없다.
+- 메서드에 final 키워드가 붙으면 해당 메서드를 오버라이딩 할 수 없다.
+
+<br>
 
 참고
 

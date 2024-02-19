@@ -4,7 +4,7 @@
 * [Integration Testing](Integration-Testing/Integration-Testing.md)
 * [Jacoco](Jacoco/Jacoco.md)
 * [JUnit](JUnit/JUnit.md)
-* [Mockito](Mockito/Mockito.md)
+* [Mockito](Test/Mockito/Mockito.md)
 * [Test Code Snipet](Snipet/Snipet.md)
 * [Spring Test](Spring-Test/Spring-Test.md)
   * @SpringBootTest

@@ -1,13 +1,47 @@
-# Tag
+# 1 HTML (HyperText Markup Language)
 
+- HTML (HyperText Markup Language)은 웹 문서를 만드는 언어라고 할 수 있다.
+- 웹 브라우저들은 HTML 문서를 읽어 사용자에게 그래픽 인터페이스 형태로 보여준다.
+- HTML은 웹 페이지의 내용과 구조를 정의하는 역할을 하며, 스타일링 (디자인, 레이아웃)은 주로 CSS (Cascading Style Sheets)를 사용하여 수행하고, 웹 페이지의 동작은 JavaScript를 사용하여 프로그래밍한다.
 
+<br>
 
-## [slot](https://developer.mozilla.org/ko/docs/Web/HTML/Element/slot)
+## 1.1 HTML 문서의 기본 구조
 
-> **HTML `<slot>` 요소**는 웹 컴포넌트 사용자가 자신만의 마크업으로 채워 별도의 DOM 트리를 생성하고, 컴포넌트와 함께 표현할 수 있는 웹 컴포넌트 내부의 플레이스홀더입니다.
+- 웹 문서는 보통 `!<DOCTYPE html>`로 시작한다.
+	- 현재 문서가 HTML5 언어로 작성된 웹 문서라는 뜻이다.
+- `<html>`, `<head>`, `<body>` 영역으로 구성된다. 
 
+<br>
 
+# 2 Tag
 
-참고
+## 2.1 `<html>`
 
-* https://developer.mozilla.org/ko/docs/Web/HTML
+- 웹 문서의 시작과 끝을 나타낸다.
+- 웹 브라우저는 해당 태그를 만나고 닫는 태그를 만날때 까지 소스를 읽어 화면에 표시한다.
+
+<br>
+
+## 2.2 `<head>`
+
+- 웹 브라우저가 웹 문서를 해석하는데 필요한 정보를 입력하는 부분이다.
+- head 영역의 내용은 대부분 웹 브라우저 화면에는 보이지 않는다.
+- head 태그에서는 문서의 정보를 알려주는 `<meta>` 태그와 웹 문서의 제목을 나타내는`<title>` 태그가 사용된다.
+
+<br>
+
+## 2.3 `<body>`
+
+- 실제로 웹 브라우저가 화면에 나타나는 내용이다.
+
+<br>
+
+## 3.4 `<div>`
+
+- [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div)
+- division의 줄임말이다. 
+- 이름에서 알 수 있듯이, 내용이나 요소를 그룹화하거나 나누는 데 사용된다.
+- `<div>` 태그 자체는 의미론적인 값을 가지지 않는다. 
+- 대신 CSS 스타일링이나 JavaScript 작업을 위해 사용된다.
+- 웹 페이지의 레이아웃 구조를 만들거나 특정 섹션을 그룹화하는 데 주로 사용된다.

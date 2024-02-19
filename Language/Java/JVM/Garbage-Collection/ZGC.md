@@ -3,29 +3,28 @@
 - **The Z Garbage Collector**
 - JDK 11에서 처음 선보였고 JDK 15부터 Production Ready 상태
 
-
+<br>
 
 ## 1.1 ZGC의 목표
 
 **[JEP333](https://openjdk.org/jeps/333)에서 설정한 목표**
 
-1. GC pause time이 10ms를 초과하지 않기
-2. 작은 사이즈의 힙(a few hundreds of megabytes)부터 큰 사이즈의 힙(many terabytes)까지 지원하기
-3. G1 gc와 비교하여 throughput 저하를 최대 15%까지만 허용하기
-   - low-latency을 중시하기 때문에 그만큼 throughput이 희생된다.
+- GC pause time이 10ms를 초과하지 않기
+- 작은 사이즈의 힙(a few hundreds of megabytes)부터 큰 사이즈의 힙(many terabytes)까지 지원하기
+- G1 gc와 비교하여 throughput 저하를 최대 15%까지만 허용하기
+	- low-latency을 중시하기 때문에 그만큼 throughput이 희생된다.
 
-
+<br>
 
 **추가적인 목표**
 
-4. 쉬운 튜닝
-   - The Java ZGC is **easy to use** and require minimal configuration.
-
+- 쉬운 튜닝
+	- The Java ZGC is **easy to use** and require minimal configuration.
 
 
 > JEP: JDK Enhancement Proposals
 
-
+<br>
 
 ## 1.2 ZGC란?
 
@@ -36,22 +35,20 @@
 **low latency**
 
 - 최대 1ms의 pause times
-  - JEP 333에서는 10ms이하지만 JEP 333의 작성자 Per Liden의 영상에서는 1ms이하로 설정
-    - [ZGC - The Future of Low-Latency Garbage Collection Is Here](https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s) 여기 참고
-  - JDK 16이후부터 1ms 이하로 목표 설정
-    - [Erik Österlund — Concurrent thread-stack processing in the Z Garbage Collector](https://www.youtube.com/watch?v=zsrSUs65xZA&t=821s) 참고
+	- JEP 333에서는 10ms이하지만 JEP 333의 작성자 Per Liden의 영상에서는 1ms이하로 설정
+	- [ZGC - The Future of Low-Latency Garbage Collection Is Here](https://www.youtube.com/watch?v=OcfvBoyTvA8&t=1s) 여기 참고
+	- JDK 16이후부터 1ms 이하로 목표 설정
+	- [Erik Österlund — Concurrent thread-stack processing in the Z Garbage Collector](https://www.youtube.com/watch?v=zsrSUs65xZA&t=821s) 참고
 
-
+<br>
 
 **scalable**
 
 - Pause times **do not** increase with root-set size
-- ZGC pause O(1)
-
+	- ZGC pause O(1)
 - 최소 힙 사이즈 **8MB** 
-
 - 최대 힙 사이즈 **16TB**
-  - [JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production)](https://openjdk.org/jeps/377)를 통해서 4TB에서 16TB로 상승했다.
+	- [JEP 377: ZGC: A Scalable Low-Latency Garbage Collector (Production)](https://openjdk.org/jeps/377)를 통해서 4TB에서 16TB로 상승했다.
 
 
 
@@ -70,7 +67,7 @@
 
 - The Java ZGC is **easy to use** and require minimal configuration.
 
-
+<br>
 
 ## 1.3 ZGC의 특징 요약
 
@@ -79,29 +76,28 @@
 - 자바 쓰레드가 실행되는 동시에 GC 쓰레드가 백그라운드에서 실행된다.
 - 동기화를 위한 짧은 STW를 제외하고 거의 모든 GC 작업(marking, heap defragmentation)이 자바 쓰레드와 동시에 진행된다.
 
-
+<br>
 
 **Region-based**
 
 - 힙은 3가지 종류의 특정 사이즈의 regions들로 구성된다.
 
-
+<br>
 
 **Compacting**
 
 - 메모리 단편화를 막기위해 주기적으로 살아있는 객체들을 한 region에서 다른 region으로 옮긴다.
 
-
+<br>
 
 **Single Generation(Non-generational)**
 
 -  전체 힙을 대상으로 GC cycle이 진행된다.
-   -  기존의 GC 처럼 young generation과 old generation의 구분이 없다.
-
+	-  기존의 GC 처럼 young generation과 old generation의 구분이 없다.
 -  Generational ZGC는 현재 진행중에 있다.
 -  [JEP 439: Generational ZGC](https://openjdk.org/jeps/8272979)
 
-
+<br>
 
 **Using colored pointers**
 
@@ -113,11 +109,9 @@
 
 **NUMA-aware**
 
-
+<br>
 
 ## 1.4 GC 선정 기준
-
-
 
 ### 1.4.1 Maximum Pause-Time
 
@@ -125,12 +119,12 @@
 - Pause-Time이란 garbage collector가 애플리케이션을 멈추고 가비지를 수집하는 시간이다.
 - Maximum Pause-Time은 Pause-Time의 최대치를 제한하는 목적이다.
 - Maximum Pause-Time은 `-XX:MaxGCPauseMillis=<nnn>` 옵션으로 설정할 수 있다.
-  - 이 옵션을 설정한다고 해서 pause-time 목표가 무조건 달성되는 것은 아니다.
+	- 이 옵션을 설정한다고 해서 pause-time 목표가 무조건 달성되는 것은 아니다.
 - GC는 해당 목표를 달성하기 위해 힙의 사이즈와 관련된 파라미터를 조절한다.
 - 기본 Maximum Pause-Time은 gc의 종류마다 다르다.
 - 이러한 조절이 gc가 더 많이 발생하게 할 수도 있고 throughput을 저하시킬수도 있다.
 
-
+<br>
 
 ### 1.4.2 Throughput Goal
 
@@ -139,17 +133,16 @@
 - 가비지 수집 시간과 애플리케이션이 동작하는 비율이 1 / (1 + nnn)이라는 의미다.
 - 예를 들어 `-XX:GCTimeRatio=19` 로 옵션을 지정하면 비율은 1/20으로 애플리케이션 동작 시간의 5%만 가비지 수집 시간으로 사용한다.
 
-
+<br>
 
 ### 1.4.3 Footprint
 
 - throughput과 maximum pause-time 목표가 모두 달성되면 gc는 둘 중 하나의 목표가 충족되지 않을 때까지 힙의 사이즈를 줄인다.
-  - 주로 throughput이 총족되지 못한다.
-
+	- 주로 throughput이 총족되지 못한다.
 - 최소 힙 사이즈를 설정하는 옵션: `-Xms=<nnn>`
 - 최대 힙 사이즈를 설정하는 옵션: `-Xmx=<mmm>`
 
-
+<br>
 
 ### 1.4.4 비교
 
@@ -164,11 +157,9 @@
 
 출처: [Java’s Highly Scalable Low-Latency Garbage Collector : ZGC](https://www.youtube.com/watch?v=U2Sx5lU0KM8)
 
-
+<br>
 
 # 2 성능
-
-
 
 ## 2.1 G1과 비교
 
@@ -203,7 +194,7 @@
 
 ![image-20230307163313190](images/image-20230307163313190.png)
 
-
+<br>
 
 ## 2.3 Non-generation과 Generational ZGC 성능 비교
 
@@ -229,7 +220,7 @@
 
 ![image-20230310083920678](images/image-20230310083920678.png)
 
-
+<br>
 
 # 3 사용하기
 
@@ -247,18 +238,18 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
 ```
 
-
+<br>
 
 # 4 Tuning
 
 - ZGC의 목표는 쉬운 튜닝이다 따라서 Heap Size 튜닝만을 권장하고 있다.
 - 아직 싱글 제네레이션이지만 제네레이션을 도입했을 때 제네레이션의 사이즈도 동적으로 자동 조절되도록 할 예정
-  - `-Xmn` 옵션을 사용하지 않음
+	- `-Xmn` 옵션을 사용하지 않음
 - Young 객체를 Old 객체로 승격시키는 threshold 설정도 자동으로 설정 됨
-  - `-XX:TenuringThreashold` 옵션을 사용하지 않는다.
+	- `-XX:TenuringThreashold` 옵션을 사용하지 않는다.
 - [다양한 튜닝 옵션은 Configuration & Tuning 참조](https://wiki.openjdk.org/display/zgc/Main#Main-Overview)
 
-
+<br>
 
 ## 4.1 Setting the Heap Size
 
@@ -280,7 +271,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 >
 > https://www.alibabacloud.com/blog/alibaba-dragonwell-zgc-part-2-the-principles-and-tuning-of-zgc-%7C-a-new-garbage-collector_598851
 
-
+<br>
 
 ## 4.2 Setting Number of Concurrent GC Threads
 
@@ -288,7 +279,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 - JDK 17부터 ZGC는 Concurrent GC 스레드의 수를 동적으로 늘리고 줄인다.
 - 따라서 Concurrent GC 스레드의 수를 조정할 필요가 없다.
 
-
+<br>
 
 ## 4.3 Logging
 
@@ -312,7 +303,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 -Xlog:gc*:gc.log
 ```
 
-
+<br>
 
 # 5 Problem
 
@@ -355,49 +346,47 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 **일반적인 해결법**
 
 - 이 문제에 대한 일반적인 해결책은 mutators가 작은 코드 조각을 추가적으로 실행함으로써 해결할 수 있다.
-  - 이 코드 조각으로 mutators와 GC가 동일한 힙 뷰를 갖도록 한다.
+	- 이 코드 조각으로 mutators와 GC가 동일한 힙 뷰를 갖도록 한다.
 - mutators가 객체를 읽을 때 read barrier라 불리는 작은 코드 조각을 실행한다.
   - 객체를 읽을 때 read barrier가 실행되어 GC로 부터 뷰에 대한 정보를 받는다.
 - mutators가 객체를 쓸 때 write barrier라 불리는 작은 코드 조각을 실행한다.
 - ZGC 알고리즘은 특별한 종류의 load barrier라고 불리는 특별한 read barrier를 사용한다.
 - `load barrier`는 mutators와 GC가 힙에대한 동일한 뷰를 가지게 한다.
 
-
+<br>
 
 **Load Barriers and Colored Pointers**
 
 - mutators가 GC와 동시에 실행되는 동안에도 mutators가 유효한 포인터만 볼 수 있도록 ZGC는 colored pointers와 load barriers를 사용한다.
 - relocation 과정동안 어떤 객체를 가리키는 포인터의 갱신 없이 이 객체를 어느 때나 옮길 수 있다.
-  - 실질적으로 dangling pointer를 만들어낸다.
-
+	- 실질적으로 dangling pointer를 만들어낸다.
 - Load Barrier는 이러한 dangling pointer를 검사해서 재배치된 객체의 주소로 포인터를 갱신해주는 역할을 한다.
 - Load Barrier가 해당 포인터가 dangling pointer인지 아닌지 검사하기 위한 메타데이터가 Colored Pointers에 들어있다.
 - ZGC는 이런 메타데이터를 colors라고 부르며 모든 포인터는 good (pointer is valid)과 bad (pointer is potentially invalid) 색으로 구분된다.
 
-
+<br>
 
 ## 5.1 **Colored Pointers**
 
 ![image-20230309132918931](images/image-20230309132918931.png)
 
 - 이는 JDK15의 Colored Pointers의 구조다.
-  - JDK17부터 최대 힙 사이즈가 16TB로 늘어 주소로 총 44비트를 사용한다.
-
+	- JDK17부터 최대 힙 사이즈가 16TB로 늘어 주소로 총 44비트를 사용한다.
 - 64비트의 포인터에서 4개의 메타 비트를 사용한다.
 - 4개의 메타 비트
-  - Finalizable (F)
-  - Remapped (R): relocation set을 가리키는 지 여부
-  - Marked1 (M1): 마킹된 여부
-  - Marked0 (M0): 마킹된 여부
+	- Finalizable (F)
+	- Remapped (R): relocation set을 가리키는 지 여부
+	- Marked1 (M1): 마킹된 여부
+	- Marked0 (M0): 마킹된 여부
 - 포인터의 색은 메타 비트의 상태로 결정된다.
 - 포인터의 색은  `good` 또는 `bad`다
 - `good`은 R, M1, M0 중 하나의 비트만 1이고 나머지는 0인 상태로 `0100`, `0010`, `0001`이 있다.
 - `good` 이외는 모두 `bad`
 - there is a globally agreed-upon single good color, and its selection is decided twice during a ZGC cycle
-  - in STW1, where it alternates between M1 (0010) or M0 (0001) set
-  - in STW3, where it equals R being set, 0100.
+	- in STW1, where it alternates between M1 (0010) or M0 (0001) set
+	- in STW3, where it equals R being set, 0100.
 
-
+<br>
 
 ## 5.2 **Load Barriers**
 
@@ -405,9 +394,9 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 - `load barrier`는 힙에 있는 객체를 참조할 때 작동된다.
 - JIT가 삽입하는 코드 조각이다.
 - Colored Pointers의 메타 비트를 검사해 bad인 경우 이를 교정하는 작업을 진행한다.
-  - 이러한 작업을 slow path라 하며 만약 객체가 이동했다면 객체의 새로운 주소를 찾아 교정한다.
+	- 이러한 작업을 slow path라 하며 만약 객체가 이동했다면 객체의 새로운 주소를 찾아 교정한다.
 
-
+<br>
 
 
 **예시**
@@ -420,13 +409,13 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 ![image-20230309134120763](images/image-20230309134120763.png)
 
-
+<br>
 
 # 6 ZGC cycle
 
 ![image-20230309132907961](images/image-20230309132907961.png)
 
-
+<br>
 
 ## STW1: The Start of the ZGC Cycle
 
@@ -443,11 +432,8 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
    - 이번 사이클에 새로 생성된 페이지는 `fresh page`라고 한다.
      - ZGC는 fresh page에 있는 모든 객체는 이번 GC cycle로부터 살아남는다고 가정하기 때문에 `relocatable page`에서만 쓰레기 객체를 수집한다.
    - STW1 이후 이 새로운 페이지에 새로운 객체들이 할당된다.
-
 3. 모든 루트에 mark barrier를 적용하고 mark stack에 넣는다.
-
    - 모든 루트에 mark barrier를 적용해서 good color로 만든다.
-
    - 루트에 대해서 mark barrier를 적용하는 이유는 mutator가 루트를 접근할 때 load barrier가 작동하지 않기 때문이다.
      - 스택에 있는 변수를 로딩할 때 load barrier가 동작하지 않기 때문
 
@@ -461,7 +447,7 @@ JDK 11에서 JDK 15 까지는 아래의 옵션이 추가적으로 필요하다.
 
 ![image-20230327133813725](images/image-20230327133813725.png)
 
-
+<br>
 
 ## marking/remapping (M/R)
 

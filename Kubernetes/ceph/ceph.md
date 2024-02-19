@@ -1,18 +1,18 @@
 # 1 Rook Ceph
 
+- [레퍼런스](https://rook.io/docs/rook/v1.9/quickstart.html)
 - 일반적으로 스토리지 클래스를 통해 동적으로 퍼시스턴트 볼륨을 생성한다.
 - 스토리지 인프라가 제공되는 퍼블릭 클라우드과 같은 환경이라면 연동을 위한 CSI 드라이버 설치 및 스토리지 클래스를 정의하면 끝이다.
 - 이런 환경이 아니라면 스토리지 시스템을 직접 구성해야한다.
-- [레퍼런스](https://rook.io/docs/rook/v1.9/quickstart.html)
 
-
+<br>
 
 ## 1.1 Ceph
 
 - Ceph는 수년간 운영 환경을 구축한 블록 스토리지, 객체 스토리지 및 공유 파일 시스템을 위한 확장성이 뛰어난 분산 스토리지 솔루션이다.
 - [ceph architecture](https://docs.ceph.com/en/quincy/architecture/)
 
-
+<br>
 
 ## 1.2 Rook
 
@@ -20,7 +20,7 @@
 - ceph이 쿠버네티스 클러스터에 동작중이면 쿠버네티스의 애플리케이션은 rook에 의해 관리되는 블록 디바이스와 파일 시스템을 마운트할 수 있다.
 - Rook operator가 스토리지 설정을 자동화해주며 스토리지의 사용 여부와 상태를 모니터링 한다. 
 
-
+<br>
 
 # 2 Rook의 구조
 
@@ -31,14 +31,14 @@
 
 ![img](images/JCqauQYhPzmjyfW4hr1o6cFHzswFYRX-7OxcPvMCoJI23EBeg2asBN9_OnjAytAO8ABYQ-JABk4fQqlrJLIbMvbRydkOau0FIuObLnKqgDXpVbaoiXGS9Er8U6uM8nU8WRtDF7CYFVE.png)
 
-
+<br>
 
 ## 2.1 Operator
 
 - Operator는 storage cluster를 부트스트랩하고 모니터링하는 컨테이너다.
 - Operator는 MON을 시작하고 모니터링한다.
 
-
+<br>
 
 ## 2.2 [Ceph Manager](https://docs.ceph.com/en/quincy/mgr/#ceph-manager-daemon)
 
@@ -47,7 +47,7 @@
 - If there is no mgr daemon running, you will see a health warning to that effect, and some of the other information in the output of ceph status will be missing or stale until a mgr is started.
 - 고가용성을 위해 2개 이상의 인스턴스가 필요 하나는 활성화하고 하는 준비상태.
 
-
+<br>
 
 ## 2.3 [MDS](https://docs.ceph.com/en/quincy/cephfs/add-remove-mds/#cephfs-add-remote-mds)
 
@@ -55,7 +55,7 @@
 - The Ceph metadata server daemon must be running in any Ceph cluster that runs the CephFS file system. 
 - The MDS stores all filesystem metadata.
 
-
+<br>
 
 ## 2.4 MON
 
@@ -78,9 +78,7 @@
 ## 2.6 [RGW](https://docs.ceph.com/en/quincy/glossary/#term-RGW)
 
 - RADOS Gate Way.
-
 - The component of Ceph that provides a gateway to both the Amazon S3 RESTful API and the OpenStack Swift API. 
-
 - Also called “RADOS Gateway” and “Ceph Object Gateway”
 
 
@@ -175,7 +173,7 @@ sudo apt-get install -y lvm2
 
 - Operator의 설정 값은 아래 참조
 - [values.yaml](https://github.com/rook/rook/blob/release-1.9/deploy/charts/rook-ceph/values.yaml)
-  - Default values for rook-ceph-operator
+	- Default values for rook-ceph-operator
 
 ```bash
 helm repo add rook-release https://charts.rook.io/release

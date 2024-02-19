@@ -3,5 +3,15 @@
   "livePreview": true,
   "spellcheck": true,
   "promptDelete": false,
-  "attachmentFolderPath": "./images"
+  "attachmentFolderPath": "./images",
+  "communityThemeSortOrder": "download",
+  "alwaysUpdateLinks": true,
+  "showFrontmatter": false,
+  "strictLineBreaks": true,
+  "showLineNumber": false,
+  "rightToLeft": false,
+  "newLinkFormat": "shortest",
+  "showInlineTitle": false,
+  "foldHeading": true,
+  "showIndentGuide": true
 }

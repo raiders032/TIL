@@ -7,21 +7,21 @@
 * 작업이 끝난 스레드는 다시 작업 큐에서 새로운 작업을 가져와 처리한다.
 * 자바는 스레드풀을 생성하고 사용할 수 있도록 java.util.concurrent 패키지에서 ExecutorService 인터페이스와 Executors 클래스를 제공한다.
 
-
+<br>
 
 ## 1.1 ExecutorService의 이점
 
 - 자바 프로그래머가 태스크 제출과 실행을 분리할 수 있는 기능을 제공한다.
 - 즉 스레드의 생성과 관리를 직접하는 것이 아니라 ExecutorService를 통해 스레드를 관리하는 것이 좋다.
 
-
+<br>
 
 # 2 Thread Pool 생성
 
 * Executors로 ExecutorService의 구현 객체 만들기
 * Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀이다
 
-
+<br>
 
 **Executors의 정적 메소드**
 
@@ -30,7 +30,7 @@
 | newCachedThreadPool | 0              | 0              | Integer.MAX_VALUE |
 | newFixedThreadPool  | 0              | nThreads       | nThreads          |
 
-
+<br>
 
 ## 2.1 newCachedThreadPool
 
@@ -42,7 +42,7 @@
 ExecutorService executorService = Executors.newCachedThreadPool();
 ```
 
-
+<br>
 
 ## 2.2 newFixedThreadPool
 
@@ -59,27 +59,29 @@ public static ExecutorService newFixedThreadPool(int nThreads){
 ```
 
 ```java
-// CPU 코어의 수만큼 최대 스레드를 사용하는 스레드 풀을 새성하는 예제
+// CPU 코어의 수만큼 최대 스레드를 사용하는 스레드 풀을 생성하는 예제
 Executors.newFixedThreadPool(
   Runtime.getRuntime().availableProcessors()
 );
 ```
 
+<br>
 
+# 3 Thread Pool 종료 
 
-# 3 Thread Pool 종료
-
-* 스레드 풀의 스레드는 기본적으로 데몬 스레드가 아니기 때문에 main 스레드가 종료되더라도 작업을 처리하기 위해 계속 실행 상태로 남아있다.
-  * 그래서 main() 메소드가 실행이 끝나도 애플리케이션 프로세스는 종료되지 않는다
+* 스레드 풀의 스레드는 기본적으로 데몬 스레드가 아니기 때문에 main 스레드가 종료되더라도 작업을 처리하기 위해 계속 실행 상태로 남아있다.  
+	* 그래서 main() 메소드가 실행이 끝나도 애플리케이션 프로세스는 종료되지 않는다
 * 애플리케이션을 종료하려면 스레드풀을 종료시켜 스레드들이 종료 상태가 되도록 처리해야한다.
+
+<br>
 
 **ExecutorService 인터페이스**
 
-| 리턴 타입      | 메소드                                        | 설명                                                         |
-| -------------- | --------------------------------------------- | ------------------------------------------------------------ |
-| void           | shutdown()                                    | 현재 처리 중인 작업뿐만 아니라 작업 큐에 대기하고 있는 모든 작업을 처리한 뒤에 스레드풀을 종료 |
-| List<Runnable> | shutdownNow()                                 | 현재 작업 처리중인 스레드를 interrupt해서 작업 중지를 시도하고 스레드플 종료시킨다. 작업 큐에 있던 미처리된 작업을 반환한다. |
-| boolean        | awaitTermination(long timeout, TimeUnit unit) | shutdown() 메소드 호출 이후, 모든 작업 처리를 timeout 시간 내 완료하면 true를 반환하고, 완료하지 못하면 작업 처리중인 스레드를 interrupt하고 false를 리턴한다. |
+| 리턴 타입        | 메소드                                        | 설명                                                         |
+| ---------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| `void`           | shutdown()                                    | 현재 처리 중인 작업뿐만 아니라 작업 큐에 대기하고 있는 모든 작업을 처리한 뒤에 스레드풀을 종료 |
+| `List<Runnable>` | shutdownNow()                                 | 현재 작업 처리중인 스레드를 interrupt해서 작업 중지를 시도하고 스레드플 종료시킨다. 작업 큐에 있던 미처리된 작업을 반환한다. |
+| `boolean`        | awaitTermination(long timeout, TimeUnit unit) | shutdown() 메소드 호출 이후, 모든 작업 처리를 timeout 시간 내 완료하면 true를 반환하고, 완료하지 못하면 작업 처리중인 스레드를 interrupt하고 false를 리턴한다. |
 
 ```java
 // 남아있는 작업 마무리하고 스레드풀 종료
@@ -89,7 +91,7 @@ executorService.shutdown();
 List<Runnable> runnables = executorService.shutdownNow();
 ```
 
-
+<br>
 
 # 4 작업 처리
 
@@ -113,26 +115,26 @@ public interface Callable<V> {
 }
 ```
 
-
+<br>
 
 ## 4.2 작업 처리 요청
 
 * 작업 처리 요청이란 ExecutorService의 작업 큐에 Runnable 또는 Callable 객체를 넣은 행위를 말한다.
 
-
+<br>
 
 **ExecutorService 인터페이스**
 
-| 리턴 타입 | 메소드                          | 설명                                                         |
-| --------- | ------------------------------- | ------------------------------------------------------------ |
-| void      | execute(Runnable command)       | Runnable을 작업 큐에 저장. 작업 결과를 받지 못함             |
-| Future<T> | submit(Callable<T> task)        | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
-| Future<?> | submit(Runnable task)           | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
-| Future<T> | submit(Runnable task, T result) | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
+| 리턴 타입   | 메소드                            | 설명                                                         |
+| ----------- | --------------------------------- | ------------------------------------------------------------ |
+| `void`      | `execute(Runnable command)`       | Runnable을 작업 큐에 저장. 작업 결과를 받지 못함             |
+| `Future<T>` | `submit(Callable<T> task)`        | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
+| `Future<?>` | `submit(Runnable task)`           | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
+| `Future<T>` | `submit(Runnable task, T result)` | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
 
 * execute()는 작업 처리중 예외 발생하면 스레드 종료되고 스레드 풀에서 제거된다.
 * submit()은 작업 처리중 예외가 발생하더라도 스레드 종료되지 않고 다음 작업을 위해 재사용된다.
-  * 가급적 스레드 생성 오버헤드를 줄이기 위해 submit()을 사용하자
+	* 가급적 스레드 생성 오버헤드를 줄이기 위해 submit()을 사용하자
 
 
 
@@ -141,7 +143,7 @@ public interface Callable<V> {
 * ExecutorService의 submit() 메소드는 Runnable 또는 Callable를 작업 큐에 넣고 즉시 Future 객체를 리턴한다.
 * Future 객체는 작업 결과가 아니라 작업이 완료될 때까지 기다렸다가 최종 결과를 얻는데 사용된다.
 * 작업을 처리하는 스레드가 작업을 완료하기 전까지 get() 메소드가 블로킹되어 다른 코드를 실행할 수 없다
-  * 따라서 get() 메소드를 호출하는 스레드는 새로운 스레드가 되어야한다.
+	* 따라서 get() 메소드를 호출하는 스레드는 새로운 스레드가 되어야한다.
 
 ```java
 ExecutorService executorService = Executors.newCachedThreadPool();
@@ -150,7 +152,7 @@ Future<String> future = executorService.submit(() -> "result");
 executorService.submit(() -> future.get());
 ```
 
-
+<br>
 
 **Future 인터페이스**
 
@@ -162,15 +164,15 @@ executorService.submit(() -> future.get());
 | boolean   | isCancelled()                       | 작업이 취소되었는지 여부                                     |
 | boolean   | isDone()                            | 작업이 처리가 완료되었는지 여부                              |
 
-
+<br>
 
 ## 5.1 반환값이 없는 작업 완료 통보
 
 * submit() 메소드의 아규먼트로 Runnable 객체를 전달할 수 있다. 
 * Runnable은 결과 값이 없지만 submit()는 Future를 반환한다.
 * 반환된 Future는 스레드가 작업 처리를 정상적으로 완료했는지 아니면 예외가 발생했는지 확인할 때 사용된다.
-  * 정상 완료: `future.get() == null` 
-  * 예외 발생: 스레드가 작업 처리 도중 interrupt되면 InterruptedException을 발생시키고 예외가 발생하면 ExcutionException을 발생시킨다.
+	* 정상 완료: `future.get() == null` 
+	* 예외 발생: 스레드가 작업 처리 도중 interrupt되면 InterruptedException을 발생시키고 예외가 발생하면 ExcutionException을 발생시킨다.
 
 ```java
 try {
@@ -181,6 +183,8 @@ try {
   // 작업 도중 예외가 발생된 경우 처리 코드
 }
 ```
+
+<br>
 
 **예시**
 
@@ -215,7 +219,7 @@ public class NoResultExample {
 }
 ```
 
-
+<br>
 
 ## 5.2 반환값이 있는 작업 완료 통보
 
@@ -256,12 +260,13 @@ public class YesResultExample {
 }
 ```
 
-
+<br>
 
 ## 5.3 콜백 방식 작업 완료 통보
 
 * 콜백이란 애플리케이션이 스레드에게 작업 처리를 요청한 후 스레드가 작업을 완료하면 특정 메소드를 자동 실행하는 기법을 말한다.
-  * 이때 자동 실행되는 메소드를 콜백 메소드라고 한다.
+	* 이때 자동 실행되는 메소드를 콜백 메소드라고 한다.
+
 * 콜백 메소드를 가진 클래스가 필요하다.
   - 직접 정의하거나 `java.nio.channels.CompletionHandler`를 이용한다.
 * `java.nio.channels.CompletionHandler`
@@ -277,9 +282,9 @@ public interface CompletionHandler<V,A> {
 ```
 
 * 위에서 A attachment는 콜백 메소드 결과값 외에 추가적으로 전달할 객체가 있으면 설정해주면 된다.
-  * 없으면 null
+	* 없으면 null
 
-
+<br>
 
 **예시**
 

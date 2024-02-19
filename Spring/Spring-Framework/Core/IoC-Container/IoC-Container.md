@@ -10,7 +10,7 @@
 # 2 ApplicationContext
 
 - `package org.springframework.context`
-  - [레퍼런스](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContext.html)
+	- [레퍼런스](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContext.html)
 
 
 
@@ -21,45 +21,44 @@
 - ApplicationContext 어떤 빈을 초기화하고 의존성을 어떻게 조립할지 configuration metadata를 읽어 확인한다
 - configuration metadata의 형태로 XML, Java Annotation 방식 등이 있다.
 
-
+<br>
 
 
 **ApplicationContext의 부가 기능**
 
 - ApplicationContext는 빈 관리 및 조회 기능 외의 수 많은 부가기능이 있다.
-
 - ApplicationEventPublisher: 이벤트를 발행하고 구독하는 모델을 편리하게 지원
 - BeanFactory: 빈 관리 및 조회 기능
 - EnvironmentCapable: 환경변수(로컬, 개발, 운영등을 구분해서 처리)
 - ResourceLoader: 편리한 리소스 조회(파일, 클래스패스 등)
 
-
+<br>
 
 **스프링 빈**
 
 - 스프링 컨테이너에 등록된 객체를 스프링 빈이라고 한다.
 - ApplicationContext를 통해 등록된 빈을 찾아서 사용할 수 있다.
-  - applicationContext.getBean() 메서드를 사용함
+	- applicationContext.getBean() 메서드를 사용함
 
-
+<br>
 
 ## 2.1 BeanFactory
 
 - ApplicationContext는 BeanFactory를 상속해 BeanFactory의 모든 기능을 사용할 수 있어 동일하게 취급한다.
-  - 실제로 빈을 관리하는 기능은 BeanFactory에 있다.
-  - 보통 BeanFactory의 기능을 직접 사용하지 않고 ApplicationContext를 통해 간접적으로 사용한다.
+	- 실제로 빈을 관리하는 기능은 BeanFactory에 있다.
+	- 보통 BeanFactory의 기능을 직접 사용하지 않고 ApplicationContext를 통해 간접적으로 사용한다.
 - BeanFactory은 스프링 컨테이너의 최상위 인터페이스다
 - BeanFactory가 스프링 빈을 관리하고 조회하는 역할을 담당한다.
 - applicationContext.getBean() 메서드는 BeanFactory로 부터 상속받은 메서드다.
 
-
+<br>
 
 ## 2.2 configuration metadata 설정
 
 - 스프링 컨테이너는 configuration metadata에 명시한대로 빈을 초기화하고 의존관계를 조립한다.
 - configuration metadata은 XML, Java Annotation 기반 설정 파일이다.
 
-
+<br>
 
 **Java-based configuration metadata 설정**
 

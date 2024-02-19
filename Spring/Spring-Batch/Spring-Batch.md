@@ -37,7 +37,7 @@
 
 
 
-![Job Hierarchy](images/job-heirarchy.png)
+![Job Hierarchy](job-heirarchy.png)
 
 > JobInstance란?
 >
@@ -55,7 +55,7 @@
 
 **Figure. Job Parameters**
 
-![Job Parameters](images/job-stereotypes-parameters.png)
+![Job Parameters](job-stereotypes-parameters.png)
 
 - EndOfDay Job과 같이 하루가 끝날 때 한 번 실행해야 하는 배치 작업을 생각해보자.
 
@@ -127,9 +127,9 @@
 
 **JobExecution과의 관계**
 
-![Figure 2.1: Job Hierarchy With Steps](images/jobHeirarchyWithSteps.png)
+![Figure 2.1: Job Hierarchy With Steps](jobHeirarchyWithSteps.png)
 
-![Spring Batch Meta-Data ERD](images/meta-data-erd.png)
+![Spring Batch Meta-Data ERD](meta-data-erd.png)
 
 - JobExecution과 `StepExecution`의 관계는 일대다 관계이다.
   - 하나의 Job을 여러 Step으로 구성했을 때 `StepExecution`은 하나의 JobExecution을 부모로 가진다.
@@ -171,13 +171,13 @@
 - StepExecution 스코프에서 사용 가능한 ExecutionContext는 BATCH_STEP_EXCUTION_CONTEXT에 저장된다.
 - JobExecution 스코프에서 사용 가능한 ExecutionContext는 BATCH_JOB_EXCUTION_CONTEXT에 저장된다.
 
-![Spring Batch Meta-Data ERD](images/meta-data-erd-1096595.png)
+![Spring Batch Meta-Data ERD](meta-data-erd-1096595.png)
 
 
 
 ## 2.8 JobRepository
 
-![Figure 2.1: Batch Stereotypes](images/spring-batch-reference-model.png)
+![Figure 2.1: Batch Stereotypes](spring-batch-reference-model.png)
 
 - [레퍼런스](https://docs.spring.io/spring-batch/docs/current/reference/html/domain.html#jobrepository)
 - 배치 잡 실행 중 오류가 발생하면 어떻게 복구할까?

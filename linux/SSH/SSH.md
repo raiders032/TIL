@@ -4,40 +4,40 @@
 - 기존 원격 접속은 ‘텔넷(Telnet)’이라는 방식을 사용했는데, 암호화를 제공하지 않기 때문에 보안상 취약하다는 단점이 있었습니다. 
 - 때문에 이를 암호화하는 SSH 기술이 등장했고, 현재 원격 접속 보안을 위한 필수적인 요소로 자리잡고 있습니다.
 
-
+<br>
 
 # 2 SSH 동작원리
 
 - SSH는 연결 상대를 인증하고 안전한 정보 전달을 위해서 여러가지 암호화 기술을 사용한다.
 - SSH는 비대칭키, 대칭키, 해싱 암호화 기술을 사용한다.
 
-
+<br>
 
 ## 2.1 비대칭키 방식
 
-- 가장 먼저 사용자와 서버가 서로의 정체를 증명해야 합니다. 이 시점에서 사용되는 것이 비대칭키 방식이다.
+- 가장 먼저 사용자와 서버가 서로의 정체를 증명해야 한다. 이 시점에서 사용되는 것이 비대칭키 방식이다.
 - 비대칭키 방식에서는 서버 또는 사용자가 Key Pair(키 페어, 키 쌍)를 생성한다. 
 - 키 페어는 공개 키와 개인 키의 두 가지로 이루어진 한 쌍을 뜻하며, 보통 공개 키의 경우 .pub, 개인 키의 경우 .pem의 파일 형식을 띄고 있다
 - 클라이언트가 키 페어를 생성할 경우 공개 키를 서버에 전송한다
 - 서버는 공개키를 받아서, 이 공개 키로 랜덤한 값을 생성해 클라이언트의 전송한다.
 - 이 값은 클라이언트가 올바른 키 페어를 가지고 있는지 확인하는 일종의 시험지다
-- 클라이언트는 이 시험지를 개인키로 풀어서 서벗에 전송한다
+- 클라이언트는 이 시험지를 개인키로 풀어서 서버에 전송한다
 - 서버는 전송받은 값과 자신이 처음 보낸 값과 비교하며 값이 같으면 내가 아는 사용자가 맞다라고 판단하고 접속을 허용해 준다.
 -  이렇게 최초 접속 시 클라이언트와 서버 간의 인증 절차가 비대칭키 방식을 통해 완료된다.
 
-
+<br>
 
 ## 2.2 대칭키 방식
 
-- 서로가 누군지를 알았으니 이제 정보를 주고받을 차례입니다. 
-- 주고받는 과정에서 정보가 새어나가지 않기 위해 정보를 암호화해서 주고받는데, 여기서 사용되는 과정이 대칭키 방식입니다. 
-- 대칭키 방식에서는 비대칭키 방식과 달리 한 개의 키만을 사용하는데, 우리는 이것을 대칭 키라고 합니다.
+- 서로가 누군지를 알았으니 이제 정보를 주고받을 차례다. 
+- 주고받는 과정에서 정보가 새어나가지 않기 위해 정보를 암호화해서 주고받는데, 여기서 사용되는 과정이 대칭키 방식이다. 
+- 대칭키 방식에서는 비대칭키 방식과 달리 한 개의 키만을 사용하는데, 우리는 이것을 대칭 키라고 한다.
 
-
+<br>
 
 # 3 설정
 
-* 클라이언트 쪽에서 config 파일을 작성하고 서버 쪽 특정 디렉토리 위치에 공개키를 위치시키면 간단하게 ssh로 접속할 수 있다. 
+* 클라이언트 쪽에서 config 파일을 작성하고 서버 쪽 특정 디렉토리 위치에 클라이언트의 공개키를 위치시키면 간단하게 ssh로 접속할 수 있다. 
 
 
 
@@ -57,32 +57,27 @@ Host worker-1
 - User: Linux 유저를 명시한다.
 - IdentityFile: 개인키를 명시하는데 비밀번호라고 생각하면 된다.
 
-
+<br>
 
 **공개키 (서버)**
 
 - ssh를 이용해 접속하려는 호스트에 특정 파일에 클라이언트의 공개키 정보를 추가해야 한다.
-
 - `scp ~/.ssh/id_rsa.pub ys@worker-1` 과 같은 명령을 이용해 클라이언트의 공개키를 서버로 복사한다.
 - 서버에서 `~/.ssh/authorized_keys` 파일이 존재하는지 확인한다.
-  - 존재하지 않으면 `mkdir -p ~/.ssh`, `touch ~/.ssh/authorized_keys` 명령어로 생성한다.
-- 서버로 복사된 공개키를  ~/.ssh/authorized_keys 파일에 추가한다.
-  - `cat ~/id_rsa.pub >> ~/.ssh/authorized_keys`
+	- 존재하지 않으면 `mkdir -p ~/.ssh`, `touch ~/.ssh/authorized_keys` 명령어로 생성한다.
+- 서버로 복사된 공개키를  `~/.ssh/authorized_keys` 파일에 추가한다.
+	- `cat ~/id_rsa.pub >> ~/.ssh/authorized_keys`
 
-
+<br>
 
 **사용하기**
 
 - 이제 `ssh worker-1 ` 명령어로 비대칭키 방식의 인증을 통해 간편하게 원격 호스트에 접속할 수 있다.
 
- 
+<br>
 
 참고
 
 - https://library.gabia.com/contents/infrahosting/9002/
 - https://library.gabia.com/contents/9008/
 - https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process
-
-
-
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC0jRk2r7nPxpiw7VQInbP/lVL+UYF1eW0hmCFNX2dEhbE+vVK/KL0cMrIWDI+5UE3143y57+UUqJLz/+PSadqKdL5PyiM01MDKgDZ9fIf0T+Zc7FpLSwsviYiidmiazHM663MV31MKBVyyOgSa8vRiDZ9S4kr6h1PLct3FW3Jn8Bh7S7vZ3TRQMizOWJsjpmpgP/tTzrO9lOZMMj6bHOa9fWqJ73TDSl4vubuNhPAdkuxkfJZ7y1dr125RLSJC1rGzCSs0T9nJliQ63SHQ+vBMido8P8RXqBA/htQIgS1lFAL6w4u3dvrBT5OH1LHUF6TRdS0RJ869lQkG1LNZaWYfQOuNGFhzLVOJuzBQbkAzZl4F4+vu5m2GmXCpnVwg1CxyvmvJDk+M0lpKX0sAfuwfZ/fppujUazbRyNWHr3Jd4BTBrm2f0CDRGcFMeW+fAL/9k734h+/pj/KVB0hBJlKBMQhfIWF1AbSHTwnS1OU6vJ0PhSvfBW25BHAb4/iZQns= YT@yeongsamnoui-MacBookPro.local

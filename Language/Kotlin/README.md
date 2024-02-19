@@ -1,6 +1,6 @@
 # Kotlin
 
-- [Annotation](Annotation/Annotation.md) 
+- [Annotation](Language/Kotlin/Annotation/Annotation.md) 
 - [Class](Class/Class.md)
   - abstract class, open
   - nested class, inner
@@ -17,5 +17,7 @@
 - [Kotlin](Kotlin/Kotlin.md)
 - [Lambda](Lambda/Lambda.md)
 - [Modifier](Modifier/Modifier.md)
-- [Type](Type/Type.md) 
+- [Nullable Type](Nullable-Type/Nullable-Type.md)
+- [Operator Overloading](Operator-Overloading/Operator-Overloading.md) 
+- [Type System](Type-System/Type-System.md) 
 - [Variable](Variable/Variable.md)

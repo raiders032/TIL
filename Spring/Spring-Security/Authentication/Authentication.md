@@ -10,7 +10,7 @@
   - ThreadLocal은 하나의 Thread 내에 저장소라고 생각하면 된다.
   - 따라서 서비스와 리포지토리간에 메소드 파라미터 통헤 데이터를 넘겨주는 작업 없이 한 쓰레드 내에서 공용으로 사용할 수 있다.
 
-![image-20201021221913460](./images/SecurityContextHolder.png)
+![image-20201021221913460](Spring/Spring-Security/Authentication/images/SecurityContextHolder.png)
 
 **예시**
 
@@ -45,13 +45,13 @@ Collection<? extends GrantedAuthority> authorities = authentication.getAuthoriti
 - **SecurityContext** 는 [SecurityContextHolder](#1-securitycontextholder)로 부터 얻을 수 있다
 - [Authentication](#3-authentication) 객체를 가지고 있다.
 
-![image-20201021221913460](./images/SecurityContextHolder.png)
+![image-20201021221913460](Spring/Spring-Security/Authentication/images/SecurityContextHolder.png)
 
 
 
 # 3 Authentication
 
-![image-20201021221913460](./images/SecurityContextHolder.png)
+![image-20201021221913460](Spring/Spring-Security/Authentication/images/SecurityContextHolder.png)
 
 - **Authentication**은 `Principal`, `GrantAuthority`, `Credentials` 를 가지고 있다.
 
@@ -84,7 +84,7 @@ Collection<? extends GrantedAuthority> authorities = authentication.getAuthoriti
   * **GrantedAuthority** 의 콜렉션을 반환한다.
 * 권한은 보통 `ROLE_ADMINISTRATOR` 또는 `ROLE_HR_SUPERVISOR` 와 같은 역할이다
 * 이러한 역할은 추후에 웹 인가, 메소드 인가, 도메인 오브젝트 인가에서 사용된다.
-  * [Method-Security.md](../Method-Security/Method-Security.md)
+  * [Method-Security.md](Method-Security.md)
 * username/password 기반의 인증을 사용하면 UserDetailsService를 통해 **GrantedAuthority**가 로드된다.
 
 
@@ -183,7 +183,7 @@ public interface AuthenticationManager {
 - 여러개의 [AuthenticationProvider](#7-authenticationprovider) 중 인자로 받은 [Authentication](#3-authentication) 을 지원하는 [AuthenticationProvider](#7-authenticationprovider)가 인증을 처리한다
 - 적합한 [AuthenticationProvider](#7-authenticationprovider)가 없을 경우 `ProviderNotFoundException`과 함께 인증은 실패한다.
 
-![providermanager](./images/providermanager.png)
+![providermanager](Spring/Spring-Security/Authentication/images/providermanager.png)
 
 
 

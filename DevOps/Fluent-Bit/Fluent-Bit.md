@@ -420,14 +420,9 @@
 
 - CPU metrics은 Elasticsearch로 보내고 Memory metrics은 standard output으로 보내는 Match Rule
 
-
-
 # 7 Output
-
 - Input 소스가 다양한 만큼 Output 소스도 다양하다.
   - 지원되는 아웃풋 솟 https://docs.fluentbit.io/manual/pipeline/outputs 참고
-
-
 
 ## 7.1 Elasticsearch Plugin
 
