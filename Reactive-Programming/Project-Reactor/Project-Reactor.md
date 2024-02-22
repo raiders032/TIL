@@ -45,7 +45,6 @@ public final <R> Mono<R> flatMap(Function<? super T,? extends Mono<? extends R>>
 
 ![[Pasted image 20240213141324.png]]
 
-
 <br>
 
 ### justOrEmpty
@@ -59,6 +58,7 @@ public static <T> Mono<T> justOrEmpty(@Nullable
 - [레퍼런스](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#justOrEmpty-java.util.Optional-)
 - data의 isPresent()가 true인 경우 원소를 반환하는 새로운 Mono를 생성한다.
 - isPresent()가 false인 경우 onComplete 신호만 방출한다.
+- just()의 확장 오퍼레이터로 just와 달리 emit할 데이터가 null일 경우 NPE가 발생하지 않고 onComplete 신호를 전송합니다.
 
 <br>
 
@@ -128,7 +128,9 @@ public final <V> Mono<V> then(Mono<V> other)
 ```java
 public static Mono<Void> when(Iterable<? extends Publisher<?>> sources)
 ```
+
 ![[Pasted image 20230818090047.png]]
+
 - [레퍼런스](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#when-java.lang.Iterable-)
 - 지정된 Publisher를 모든 Publisher가 완료되면 이행될 새로운 모노로 대체한다.
 - 오류가 발생하면 보류 중인 결과가 취소되고 반환된 모노에 즉시 오류가 방출된다.
@@ -200,8 +202,8 @@ public static <T> Flux<T> defer(Supplier<? extends Publisher<T>> supplier)
 
 - [레퍼런스](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#defer-java.util.function.Supplier-)
 - Flux.defer는 Flux를 즉시 생성하지 않는다.
-	- 대신, 실제 소스의 생성을 구독 시점까지 지연시킨다.
-	- 이는 구독이 일어날 때마다 Supplier가 호출되어 새로운 Publisher 인스턴스를 생성
+	- 대신, 실제 소스의 생성을 구독 시점까지 지연시킵니다.
+	- 이는 구독이 일어날 때마다 Supplier가 호출되어 새로운 Publisher 인스턴스를 생성합니다.
 
 <br>
 
@@ -243,6 +245,19 @@ public final Flux<T> filter(Predicate<? super T> p)
 - [레퍼런스](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#filter-java.util.function.Predicate-)
 - 이 연산자는 소스로부터 받은 각 값에 대해 주어진 조건(`Predicate`)을 평가하고, 이 조건을 만족하는 값만을 방출한다.
 - 조건을 만족하지 않는 값은 무시되고, 상위 스트림에게 다음 요소(1개 요청)를 요청한다.
+
+<br>
+
+### flatMap
+
+```java
+public final <R> Flux<R> flatMap(Function<? super T,? extends Publisher<? extends R>> mapper)
+```
+
+![[Pasted image 20240219143741.png]]
+
+- [레퍼런스](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#flatMap-java.util.function.Function-)
+
 
 <br>
 

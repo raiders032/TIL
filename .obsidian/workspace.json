@@ -26,20 +26,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Language/Java/Collection-Framework/Map/Map.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "38135d297b517a74",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Untitled.md",
+                "file": "Network/OAuth2/OAuth2.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -78,7 +65,98 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Untitled 1.md",
+                "file": "WIP/chat-server/chat-server.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a0a1922a3aa4ea8b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Kubernetes/Ingress/Ingress.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1150fe7fca884fe1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "WIP/HyperCloud/Registry.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "5555146b6be3d10e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Redis/Data-Type/Data-Type.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "48c219ef7466f4f0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS/ECS/ECS.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d352307773a17873",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "e4d38abbb6bd7e10",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS/SecretsManager/SecretsManager.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "041bd46844ea91b6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS/ElasticLoadBalancing/ElasticLoadBalancing.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -86,7 +164,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 10
       }
     ],
     "direction": "vertical"
@@ -131,7 +209,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "redis",
+                "query": "redis-cli",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -169,7 +247,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Untitled.md"
+                "file": "AWS/SecretsManager/SecretsManager.md"
               }
             }
           },
@@ -179,7 +257,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Untitled.md",
+                "file": "AWS/SecretsManager/SecretsManager.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -196,7 +274,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Untitled.md",
+                "file": "AWS/SecretsManager/SecretsManager.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -249,38 +327,43 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "38135d297b517a74",
+  "active": "e4d38abbb6bd7e10",
   "lastOpenFiles": [
-    "Language/Java/Anonymous-Class/Anonymous-Class.md",
-    "Language/Java/Collection-Framework/Map/Map.md",
-    "Language/Kotlin/Coroutines/Coroutine-Builder.md",
-    "Language/Kotlin/Coroutines/Coroutines.md",
-    "Language/Kotlin/Coroutines/Coroutine-Context.md",
+    "AWS/SES/SES.md",
+    "AWS/ElastiCache/ElastiCache.md",
+    "AWS/ElasticBeanstalk/ElasticBeanstalk.md",
+    "AWS/EFS/EFS.md",
+    "AWS/EBS/EBS.md",
+    "AWS/CloudFront/CloudFront.md",
+    "AWS/CloudWatch/CloudWatch.md",
+    "AWS/ASG/ASG.md",
+    "AWS/Glue/Glue.md",
+    "AWS/GlobalAccelerator/GlobalAccelerator.md",
+    "AWS/Redshift/Redshift.md",
+    "AWS/Athena/Athena.md",
+    "AWS/API-Gateway/API-Gateway.md",
+    "AWS/SQS/SQS.md",
+    "AWS/SNS/SNS.md",
+    "AWS/S3/S3.md",
+    "AWS/RDS/RDS.md",
+    "AWS/ElasticLoadBalancing/ElasticLoadBalancing.md",
+    "AWS/Aurora/Aurora.md",
+    "AWS/ECS/ECS.md",
+    "AWS/ECR/ECR.md",
+    "AWS/EC2/EC2.md",
+    "Untitled.md",
+    "AWS/EC2",
+    "AWS/ELB/ELB.md",
+    "AWS/ECR",
+    "AWS/ECS",
+    "AWS/EKS",
+    "Reactive-Programming/Project-Reactor/Project-Reactor.md",
     "System-Design/Chatting/Chatting.md",
-    "System-Design/Cache/Cache.md",
+    "Reactive-Programming/Project-Reactor/images/Pasted image 20240219143741.png",
     "System-Design/Chatting",
-    "WIP/chat-server/chat-server.md",
     "WIP/chat-server/images/Pasted image 20240216132219.png",
     "WIP/chat-server/images",
-    "Computer-Science/Data-Structure/Tree/Tree.md",
-    "Language/Kotlin/Class/Class.md",
-    "WIP/tmax/IMS/IMS.md",
-    "Untitled 1.md",
-    "Language/Kotlin/Nullable-Type/Nullable-Type.md",
-    "Redis/Data-Type/Data-Type.md",
-    "Redis/Redis/Redis.md",
-    "Reactive-Programming/Project-Reactor/Project-Reactor.md",
-    "DB/MongoDB/MongoDB.md",
-    "Computer-Science/Algorithm/Floyd–Warshall-Algorithm/Floyd–Warshall-Algorithm.md",
-    "Computer-Science/Algorithm/Dijkstra-Algorithm/Dijkstra-Algorithm.md",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20240214142005.png",
-    "DB/Database-Normalization/Database-Normalization.md",
-    "Design-Pattern/Strategy/Strategy.md",
-    "Design-Pattern/Template-Callback/Template-Callback.md",
-    "Language/Java/Behavior-Parameterization/Behavior-Parameterization.md",
-    "Design-Pattern/Template-Method/Template-Method.md",
-    "Design-Pattern/Observer/Observer.md",
-    "Design-Pattern/Factory-Method/Factory-Method.md",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20240213141324.png",
     "Design-Pattern/Command",
     "images/Pasted image 20240205101537.png",
@@ -289,14 +372,9 @@
     "WIP/HyperCloud/images",
     "DB/CAP",
     "Kubernetes/Debug",
-    "Language/Kotlin/Coroutines",
-    "WIP/HyperCloud",
-    "WIP/tmax/commerce-homepage",
-    "WIP/tmax/FOCUS",
     "images/Pasted image 20240102143308.png",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20231231142710.png",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20231230172640.png",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20231230171128.png",
     "Untitled.canvas"
   ]
 }
