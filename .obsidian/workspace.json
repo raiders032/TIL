@@ -26,7 +26,20 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Network/OAuth2/OAuth2.md",
+                "file": "System-Design/Chatting/Chatting.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "e7a78f303e4364bc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS/SQS/SQS.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -143,7 +156,33 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AWS/SecretsManager/SecretsManager.md",
+                "file": "AWS/IAM/IAM.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ef7095b71b84a625",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Docker/Docker/Docker.md",
+                "mode": "source",
+                "backlinks": true,
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "e5449a0898c49539",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -164,7 +203,7 @@
             }
           }
         ],
-        "currentTab": 10
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -209,7 +248,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "redis-cli",
+                "query": "docker-compose",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -247,7 +286,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AWS/SecretsManager/SecretsManager.md"
+                "file": "AWS/SQS/SQS.md"
               }
             }
           },
@@ -257,7 +296,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AWS/SecretsManager/SecretsManager.md",
+                "file": "AWS/SQS/SQS.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -274,7 +313,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "AWS/SecretsManager/SecretsManager.md",
+                "file": "AWS/SQS/SQS.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -327,10 +366,24 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "e4d38abbb6bd7e10",
+  "active": "e7a78f303e4364bc",
   "lastOpenFiles": [
-    "AWS/SES/SES.md",
+    "Network/OAuth2/OAuth2.md",
+    "Untitled.md",
+    "System-Design/Chatting/Chatting.md",
+    "Docker/Docker-Compose/Docker-Compose.md",
+    "Docker/Network/Network.md",
+    "Docker/Docker/Docker.md",
+    "Docker/CLI/CLI.md",
+    "Docker/Dockerfile/Dockerfile.md",
+    "AWS/IAM/IAM.md",
+    "AWS/IAM/images/Pasted image 20240223110209.png",
+    "AWS/IAM/images",
+    "Kubernetes/Security/Security.md",
     "AWS/ElastiCache/ElastiCache.md",
+    "AWS/AMI/AMI.md",
+    "AWS/SecretsManager/SecretsManager.md",
+    "AWS/SES/SES.md",
     "AWS/ElasticBeanstalk/ElasticBeanstalk.md",
     "AWS/EFS/EFS.md",
     "AWS/EBS/EBS.md",
@@ -343,22 +396,10 @@
     "AWS/Athena/Athena.md",
     "AWS/API-Gateway/API-Gateway.md",
     "AWS/SQS/SQS.md",
-    "AWS/SNS/SNS.md",
-    "AWS/S3/S3.md",
-    "AWS/RDS/RDS.md",
-    "AWS/ElasticLoadBalancing/ElasticLoadBalancing.md",
-    "AWS/Aurora/Aurora.md",
-    "AWS/ECS/ECS.md",
-    "AWS/ECR/ECR.md",
-    "AWS/EC2/EC2.md",
-    "Untitled.md",
     "AWS/EC2",
-    "AWS/ELB/ELB.md",
     "AWS/ECR",
     "AWS/ECS",
     "AWS/EKS",
-    "Reactive-Programming/Project-Reactor/Project-Reactor.md",
-    "System-Design/Chatting/Chatting.md",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20240219143741.png",
     "System-Design/Chatting",
     "WIP/chat-server/images/Pasted image 20240216132219.png",
@@ -371,10 +412,8 @@
     "WIP/HyperCloud/images/Pasted image 20240122160749.png",
     "WIP/HyperCloud/images",
     "DB/CAP",
-    "Kubernetes/Debug",
     "images/Pasted image 20240102143308.png",
     "Reactive-Programming/Project-Reactor/images/Pasted image 20231231142710.png",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20231230172640.png",
     "Untitled.canvas"
   ]
 }

@@ -1,16 +1,64 @@
 {
   "recentFiles": [
     {
+      "basename": "SQS",
+      "path": "AWS/SQS/SQS.md"
+    },
+    {
+      "basename": "Chatting",
+      "path": "System-Design/Chatting/Chatting.md"
+    },
+    {
+      "basename": "OAuth2",
+      "path": "Network/OAuth2/OAuth2.md"
+    },
+    {
+      "basename": "Untitled",
+      "path": "Untitled.md"
+    },
+    {
+      "basename": "Docker-Compose",
+      "path": "Docker/Docker-Compose/Docker-Compose.md"
+    },
+    {
+      "basename": "Network",
+      "path": "Docker/Network/Network.md"
+    },
+    {
+      "basename": "Docker",
+      "path": "Docker/Docker/Docker.md"
+    },
+    {
+      "basename": "CLI",
+      "path": "Docker/CLI/CLI.md"
+    },
+    {
+      "basename": "Dockerfile",
+      "path": "Docker/Dockerfile/Dockerfile.md"
+    },
+    {
+      "basename": "IAM",
+      "path": "AWS/IAM/IAM.md"
+    },
+    {
+      "basename": "Security",
+      "path": "Kubernetes/Security/Security.md"
+    },
+    {
+      "basename": "ElastiCache",
+      "path": "AWS/ElastiCache/ElastiCache.md"
+    },
+    {
+      "basename": "AMI",
+      "path": "AWS/AMI/AMI.md"
+    },
+    {
       "basename": "SecretsManager",
       "path": "AWS/SecretsManager/SecretsManager.md"
     },
     {
       "basename": "SES",
       "path": "AWS/SES/SES.md"
-    },
-    {
-      "basename": "ElastiCache",
-      "path": "AWS/ElastiCache/ElastiCache.md"
     },
     {
       "basename": "ElasticBeanstalk",
@@ -57,10 +105,6 @@
       "path": "AWS/API-Gateway/API-Gateway.md"
     },
     {
-      "basename": "SQS",
-      "path": "AWS/SQS/SQS.md"
-    },
-    {
       "basename": "SNS",
       "path": "AWS/SNS/SNS.md"
     },
@@ -93,20 +137,12 @@
       "path": "AWS/EC2/EC2.md"
     },
     {
-      "basename": "Untitled",
-      "path": "Untitled.md"
-    },
-    {
       "basename": "ELB",
       "path": "AWS/ELB/ELB.md"
     },
     {
       "basename": "Project-Reactor",
       "path": "Reactive-Programming/Project-Reactor/Project-Reactor.md"
-    },
-    {
-      "basename": "Chatting",
-      "path": "System-Design/Chatting/Chatting.md"
     },
     {
       "basename": "Redis-CLI",
@@ -163,42 +199,6 @@
     {
       "basename": "chat-server",
       "path": "WIP/chat-server/chat-server.md"
-    },
-    {
-      "basename": "Query",
-      "path": "DB/MongoDB/Query.md"
-    },
-    {
-      "basename": "Mongosh",
-      "path": "DB/MongoDB/Mongosh.md"
-    },
-    {
-      "basename": "Untitled 1",
-      "path": "Untitled 1.md"
-    },
-    {
-      "basename": "OAuth2",
-      "path": "Network/OAuth2/OAuth2.md"
-    },
-    {
-      "basename": "Map",
-      "path": "Language/Java/Collection-Framework/Map/Map.md"
-    },
-    {
-      "basename": "Anonymous-Class",
-      "path": "Language/Java/Anonymous-Class/Anonymous-Class.md"
-    },
-    {
-      "basename": "Coroutine-Builder",
-      "path": "Language/Kotlin/Coroutines/Coroutine-Builder.md"
-    },
-    {
-      "basename": "Coroutines",
-      "path": "Language/Kotlin/Coroutines/Coroutines.md"
-    },
-    {
-      "basename": "Coroutine-Context",
-      "path": "Language/Kotlin/Coroutines/Coroutine-Context.md"
     }
   ],
   "omittedPaths": [],

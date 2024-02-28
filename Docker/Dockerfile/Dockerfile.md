@@ -125,7 +125,7 @@ ADD test.txt /absoluteDir/
 >
 > 이미지 생성을 위해 필요한 각종 파일, 소스코드, 메타데이터를 담고 있는 디렉토리를 뜻하며 Dockerfile이 위치한 디렉토리가 빌드 컨텍스트가 된다
 
-
+<br>
 
 ## [COPY](https://docs.docker.com/engine/reference/builder/#copy)
 
@@ -136,19 +136,18 @@ COPY [--chown=<user>:<group>] <src>... <dest>
 COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
 ```
 
-* `<src>`의 로컬의 파일 또는 디렉토리를 컨테이너의 파일 시스템 `<dest>` 경로에 복사한다.
-* 여러개의 `<src>` 를 명시할 수 있으며 빌드 컨텍스트로부터 상대 경로다
-* `<dest>` 는 절대경로 또는 `WORKDIR`으로부터 상대경로이다.
-* `.dockerignore`를 사용해 카피 대상에서 제외할 수 있다.
-
+* 로컬 파일 시스템에서 컨테이너의 파일 시스템 내 특정 위치로 파일과 디렉토리를 복사하는 데 사용됩니다.
+- Dockerfile을 작성할 때 `COPY` 지시어는 이미지에 파일과 디렉토리를 레이어별로 추가하는 중요한 역할을 합니다.
+- `<src>`는 하나 이상의 로컬 파일 또는 디렉토리를 포함할 수 있으며, 이들은 빌드 컨텍스트에 대한 상대 경로입니다.
+- `<dest>`는 컨테이너 내에서 파일과 디렉토리가 복사될 경로를 지정하며, 절대 경로 또는 `WORKDIR` 기준의 상대 경로가 될 수 있습니다.
+- `.dockerignore` 파일을 사용하여 복사 대상에서 파일과 디렉토리를 제외할 수 있습니다.
 
 
 > **빌드 컨텍스트**
 >
 > 이미지 생성을 위해 필요한 각종 파일, 소스코드, 메타데이터를 담고 있는 디렉토리를 뜻하며 Dockerfile이 위치한 디렉토리가 빌드 컨텍스트가 된다
 
-
-
+<br>
 
 ## [VOLUME](https://docs.docker.com/engine/reference/builder/#volume)
 
@@ -191,18 +190,17 @@ RUN groupadd -r author && useradd -r -g author nys
 USER nys
 ```
 
-
+<br>
 
 ## [WORKDIR](https://docs.docker.com/engine/reference/builder/#workdir)
 
 * 작업 디렉토리를 지정한다.
-  * 셸에서 cd 명령어를 입력하는 것과 같은 기능을 한다.
-
+	* 셸에서 cd 명령어를 입력하는 것과 같은 기능을 한다.
 * 해당 디렉토리가 없으면 새로 생성한다.
 * 작업 디렉토리를 지정하면 그 이후 명령어는 해당 디렉토리를 기준으로 동작한다.
-  * `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD`
+	* `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD`
 
-
+<br>
 
 ## [ARG](https://docs.docker.com/engine/reference/builder/#arg)
 
@@ -300,30 +298,34 @@ PID TTY STAY TIME COMMAND
  13               ps x
 ```
 
-
+<br>
 
 # 3 이미지 생성
 
-* Dockerfile을 사용이 이미지를 생성해 보자
-* docker build 명령어는 Dockerfile에 기록된 대로 컨테이너를 실행한 뒤 완성된 이미지를 만들어 낸다.
-  * Dockerfile에 기록된 명령어를 하나 하나를 스텝이라고 한다.
-  * 하나의 스텝마다 이전 스텝에서 만들어진 이미지로 임시 컨테이너를 생성하고 명령어를 적용하고 이를 이미지로 커밋하고 컨테이너는 삭제한다.
+* Dockerfile을 사용하여 Docker 이미지를 생성하는 과정을 살펴봅시다.
+- `docker build` 명령어는 Dockerfile에 기록된 지시사항을 따라 컨테이너를 실행한 후, 그 결과로 완성된 이미지를 생성합니다.
+    - Dockerfile 내의 각 지시사항은 '스텝(step)'으로 간주됩니다.
+    - 각 스텝은 이전 스텝의 결과로 생성된 이미지를 기반으로 임시 컨테이너를 생성, 해당 명령어를 실행하고, 그 결과를 새 이미지로 커밋한 다음, 임시 컨테이너를 삭제합니다.
+- `-t` 옵션을 사용하면 이미지에 이름을 지정할 수 있습니다. 이름을 지정하지 않을 경우, 이미지는 16진수 형태의 무작위 이름으로 생성됩니다. 따라서 명확한 관리를 위해 `-t` 옵션의 사용을 권장합니다.
 
-* -t 옵션을 사용하지 않으면 16진수 형태의 이름으로 이미지가 만들어지므로 가급적 -t 옵션을 사용하자
+<br>
+
+**예시**
 
 ```bash
-# 현재 디렉토리에 있는 Dockerfile로 이미지를 만들며 이미지의 이름은 -t 옵션으로 지정
 docker build -t imagename ./
 ```
 
+- 현재 디렉토리의 Dockerfile을 사용하여 이미지 생성, 이미지 이름은 -t 옵션으로 지정
 
+<br>
 
 # 4 `.dockerignore`
 
 * dockerfile 빌드시 `.dockerignore` 파일에 명시된 파일을 컨텍스트에서 제거한다
 * `.dockerignore`의 위치는 컨텍스트 취상위 즉, build 명령어에서 dockerfile이 위치한 경로와 같아야한다.
 
-
+<br>
 
 # 5 Multi Stage Docker Build
 

@@ -1,4 +1,4 @@
-# Docker Compose
+# 1 Docker Compose
 
 > 다중 컨테이너 도커 애플리케이션을 정의하고 실행하기 위한 도구입니다.
 >
@@ -85,9 +85,9 @@ volumes:
 
 
 # 2 설치
+
 * [레퍼런스](https://docs.docker.com/compose/install/)
 * Mac 또는 Window 용 Docker Desktop을 설치했다면 docker-compose도 설치된 상태이다
-
 
 
 **Linux**
@@ -101,9 +101,10 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 $ sudo rm /usr/local/bin/docker-compose
 ```
 
-
+<br>
 
 # 3 Compose file version 3 reference
+
 * [레퍼런스](https://docs.docker.com/compose/compose-file/compose-file-v3/)
 * 도커 컴포즈는 컨테이너의 설정이 정의된 컴포즈 파일(YAML)을 읽어 도커 엔진을 통해 컨테이너를 생성한다
 * 따라서 도커 컴포즈를 사용하려면 먼저 YAML 파일을 작성해야 한다
@@ -145,8 +146,10 @@ build: ./dir
 image: webapp:tag
 ```
 
+<br>
 
 ## command
+
 * 컨테이너가 실행될 때 수행할 명령어를 설정
 * docker run 명령어에 마지막에 붙는 커맨드와 같다
 
@@ -280,6 +283,7 @@ sevices:
 
 
 ## networks
+
 * 도커 컴포즈는 생성된 컨테이너를 위해 기본적으로 브리지 타입의 네트워크를 생성한다
 	* `[프로젝트이름]_default_` 라는 이름으로 네트워크가 만들어진다
 
@@ -325,9 +329,10 @@ services:
 
 
 # 4 Docker Compose CLI
+
 * [레퍼런스](https://docs.docker.com/compose/reference/)
 
-
+<br>
 
 ## docker compose down
 * [레퍼런스](https://docs.docker.com/engine/reference/commandline/compose_down/)
@@ -350,7 +355,8 @@ Options:
 ```
 
 
-## docker compose up 
+## docker compose up
+
 * [레퍼런스](https://docs.docker.com/engine/reference/commandline/compose_up/)
 
 ``` bash
