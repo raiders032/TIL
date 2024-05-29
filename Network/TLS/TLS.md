@@ -4,7 +4,7 @@
 - 인터넷 통신의 개인정보 보호, 인증, 데이터 무결성을 보장하기 위해 Netscape가 1995년 처음으로 개발했습니다. 
 - SSL은 현재 사용 중인 TLS 암호화의 전신입니다.
 
-
+<br>
 
 ## 1.1 SSL와 TLS
 
@@ -12,11 +12,11 @@
 - 1999년 IETF(Internet Engineering Task Force)는 SSL에 대한 업데이트를 제안했습니다. 
 - IETF가 이 업데이트를 개발하고 Netscape는 더 이상 참여하지 않게 되면서, 이름이 TLS로 바뀌었습니다. 
 - SSL의 최종 버전(3.0)과 TLS 첫 버전의 차이는 크지 않으며, 이름이 바뀐 것은 소유권 변경을 나타내기 위한 것입니다.
-  - 더이상 Netscape와 관련이 없다.
+	- 더이상 Netscape와 관련이 없다.
 - 이들은 긴밀히 연계되어 있어 두 용어가 혼합되어 사용되는 경우가 많습니다. 
 - TLS를 아직 SSL이라 부르기도 하고, SSL의 인지도가 높으므로, ‘SSL/TLS 암호화’라 부르는 경우도 있습니다.
 
-
+<br>
 
 ## 1.2 SSL의 최신 상태
 
@@ -28,7 +28,7 @@
 - 실제로, 현재 "SSL"을 제공하는 업체는 사실 상 TLS 보호를 제공하는 것이며, 이는 거의 20년 동안 업계 표준으로 자리 잡고 있습니다. 
 - 하지만 아직도 많은 고객이 "SSL 보호"를 찾고 있기 때문에, 많은 제품 페이지에 이 용어가 나타나고 있습니다.
 
-
+<br>
 
 > 출처
 >
@@ -42,7 +42,7 @@
 - TLS의 주요 사용 사례는 웹 브라우저가 웹 사이트를 로드하는 것과 같은 웹 응용 프로그램과 서버 간의 통신을 암호화하는 것이다.
 - TLS는 email, 메시징 및 VoIP(Voice over IP)와 같은 다른 통신을 암호화하는 데도 사용할 수 있다
 
-
+<br>
 
 ## 2.1 TLS의 기능
 
@@ -50,27 +50,25 @@
 - **Authentication**: 정보를 교환하는 당사자가 자신이 주장하는 주체인지 확인한다.
 - **Integrity**: 데이터가 위조되거나 변조되지 않았는지 확인한다.
 
-
+<br>
 
 ## 2.2 TLS의 동작과정
 
 - TLS은 높은 수준의 개인정보 보호를 제공하기 위해, 웹에서 전송되는 데이터를 암호화한다. 
-  - 데이터를 가로채려는 자는 거의 해독할 수 없는 복잡한 문자만 보게 된다.
+	- 데이터를 가로채려는 자는 거의 해독할 수 없는 복잡한 문자만 보게 된다.
 - TLS은 두 통신 장치 사이에 [핸드셰이크](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/)라는 **인증** 프로세스를 시작하여 두 장치의 ID를 확인한다.
 - TLS은 또한 **데이터 무결성**을 제공하기 위해 데이터에 디지털 서명하여 데이터가 의도된 수신자에 도착하기 전에 조작되지 않았다는 것을 확인한다.
 
-
+<br>
 
 ## 2.3 HTTPS와의 차이점
 
 - HTTPS는 HTTP 프로토콜 위에 TLS 암호화를 구현한 것이다.
 - 따라서 HTTPS를 사용하는 모든 웹 사이트는 TLS 암호화를 사용한다.
 
-
+<br>
 
 # 3 TLS Handshake
-
-
 
 ## 3.1 동작과정
 
@@ -111,19 +109,36 @@
 # 4 TLS의 정보
 
 - TLS certificates는 아래와 같은 정보를 가지고 있다.
+	- The [domain name](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name/) that the certificate was issued for
+	- Which person, organization, or device it was issued to
+	- Which certificate authority issued it
+	- The certificate authority's digital signature
+	- Associated subdomains
+	- Issue date of the certificate
+	- Expiration date of the certificate
+	- The public key (the private key is kept secret)
 
-  - The [domain name](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name/) that the certificate was issued for
+<br>
 
-  - Which person, organization, or device it was issued to
+# 5 openssl
 
-  - Which certificate authority issued it
+```bash
+openssl s_client -connect {hostname}:{port} -showcerts
+```
 
-  - The certificate authority's digital signature
+- OpenSSL 도구를 사용하여 원격 서버에서 TLS 인증서 보기
 
-  - Associated subdomains
+<br>
 
-  - Issue date of the certificate
 
-  - Expiration date of the certificate
+```bash
+echo | openssl s_client -connect {hostname}:{port} -showcerts | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > server.crt
+```
 
-  - The public key (the private key is kept secret)b
+- OpenSSL 도구를 사용하여 원격 서버에서 TLS 인증서를 다운로드
+
+<br>
+
+```bash
+openssl x509 -in server.crt -text -noout
+```

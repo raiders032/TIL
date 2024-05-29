@@ -103,7 +103,7 @@ $ sudo rm /usr/local/bin/docker-compose
 
 <br>
 
-# 3 Compose file version 3 reference
+# 3 Compose file version 3
 
 * [레퍼런스](https://docs.docker.com/compose/compose-file/compose-file-v3/)
 * 도커 컴포즈는 컨테이너의 설정이 정의된 컴포즈 파일(YAML)을 읽어 도커 엔진을 통해 컨테이너를 생성한다
@@ -113,7 +113,13 @@ $ sudo rm /usr/local/bin/docker-compose
 ## build
 
 * [레퍼런스](https://docs.docker.com/compose/compose-file/build/)
-* Dockerfile을 이용해서 이미지를 빌드한다.
+* build 옵션은 Dockerfile을 이용해서 이미지를 빌드하는 데 사용됩니다.
+* build 옵션의 context는 Dockerfile을 포함하고 있는 디렉토리 경로 또는 Git 저장소 URL을 지정합니다.
+* dockerfile 옵션을 사용하면 Dockerfile의 이름이 Dockerfile이 아닌 다른 이름일 경우 해당 이름을 지정할 수 있습니다.
+* args 옵션을 사용하면 빌드 시 Dockerfile에 전달할 argument를 지정할 수 있습니다.
+* build와 image 옵션을 함께 사용하면 빌드한 이미지에 이름과 태그를 붙일 수 있습니다.
+
+<br>
 
 **예시**
 
@@ -125,26 +131,33 @@ services:
     build: ./dir
 ```
 
+- 위의 예시에서는 `./dir` 디렉토리에 있는 Dockerfile을 이용해서 `webapp` 서비스의 이미지를 빌드합니다.
+
+<br>
+
 ```yml
-# Dockerfile이 있는 context 위치와 Dockerfile의 이름 그리고 빌드시 arguments 전달
 version: "3.9"
 services:
   webapp:
     build:
-      # context: Dockerfile를 포함하고 있는 directory 경로 또는 git repository URL
       context: ./dir
-      # Dockerfile의 이름이 Dockerfile이 아니라면 이름 지정
       dockerfile: Dockerfile-alternate
       args:
         buildno: 1
 ```
 
+- 위의 예시에서는 `./dir` 디렉토리에 있는 `Dockerfile-alternate`라는 이름의 Dockerfile을 이용해서 `webapp` 서비스의 이미지를 빌드합니다.
+- 또한, `args` 옵션을 사용하여 빌드 시 `buildno`라는 argument를 전달합니다
+
+<br>
+
 ```yml
-# build와 image를 같이 사용하면 ./dir 컨텍스트의 Dockerfile을 이용해 이미지를 만든다.
-# 만들어진 이미지의 이름은 webapp 태그는 tag
 build: ./dir
 image: webapp:tag
 ```
+
+- build와 image를 같이 사용하면 ./dir 컨텍스트의 Dockerfile을 이용해 이미지를 만든다.
+- 만들어진 이미지의 이름은 webapp 태그는 tag
 
 <br>
 

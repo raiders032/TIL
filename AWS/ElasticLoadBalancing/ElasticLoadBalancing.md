@@ -1,9 +1,10 @@
 # 1 Elastic Load Balancing
 
-- ELB는 트래픽을 다양한 타겟으로 자동 분배하는 역할을 한다.
-- 타겟의 종류로는 EC2 인스턴스, 컨테이너, IP 주소 등이 있다.
-- ELB는 등록된 타겟의 health를 주기적으로 모니터링하여 건강한 타겟으로만 트랙픽을 분배한다.
-- ELB의 종류는 아래 4가지가 있다.
+- Elastic Load Balancing(ELB)는 AWS에서 제공하는 로드 밸런싱 서비스입니다.
+- ELB는 다양한 타겟에 걸쳐 들어오는 애플리케이션 트래픽을 자동으로 분배합니다.
+- 타겟에는 EC2 인스턴스, 컨테이너, IP 주소 등이 포함될 수 있습니다.
+- ELB는 등록된 타겟의 상태를 주기적으로 확인하고, 건강한 타겟으로만 트래픽을 분배하여 애플리케이션의 가용성을 높입니다.
+- ELB의 종류는 아래 4가지가 있습니다.
 	- Application Load Balancers
 	- Network Load Balancers
 	- Gateway Load Balancers
@@ -14,10 +15,9 @@
 # 2 Application Load Balancer
 
  * [레퍼런스](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
- * Application Load Balancer OSI 7계층에서 작동하는 로드 밸런서다.
- * 주로 HTTP/HTTPS 트래픽을 처리하며, 웹소켓과 HTTP/2도 지원한다.
- * HTTP 요청의 URL, 헤더, 메소드 등을 기반으로 라우팅 규칙을 설정할 수 있다.
- * 사용자의 세션을 특정 대상에 고정시키는 기능(스티키 세션)을 제공한다.
+ * Application Load Balancer는 주로 HTTP/HTTPS 트래픽을 처리하며 OSI 7계층에서 작동합니다.
+ * ALB는 웹소켓과 HTTP/2도 지원하며, URL, 헤더, 메소드 등을 기반으로 트래픽 라우팅 규칙을 설정할 수 있습니다.
+ * ALB는 사용자 세션을 특정 타겟에 고정시키는 스티키 세션 기능도 제공합니다.
 
 <br>
 
@@ -45,8 +45,9 @@
 # 3 Network Load Balancer
 
 * [레퍼런스](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html)
-* 높은 성능과 저지연 연결을 처리하는 데 최적화된 로드 밸런서다.
-* NLB는 TCP, UDP, TLS를 통한 L4 (전송 계층) 트래픽에 사용된다
+* Network Load Balancer는 높은 성능과 저지연 연결을 처리하는 데 최적화되어 있습니다. 
+* NLB는 주로 TCP, UDP, TLS 트래픽을 처리하며, 이는 OSI 모델의 4계층인 전송 계층에서 작동합니다.
+* NLB는 수백만 개의 요청을 초당 처리할 수 있으며, 자동 스케일링 및 무중단 서비스를 제공합니다.
 
 <br>
 
@@ -75,6 +76,6 @@
 	- 침입 탐지 시스템(IDS intrusion detection system)
 	- 침입 방지 시스템(IPS intrusion prevention systems)
 	- 심층 패킷 검사 시스템
-- Gateway Load Balancer는 모든 트랙픽에 관에 단일 입구 및 출구 지점 역할을 하는 동시에 수요에 따라 가상 어플라이언스를 확장하는 기능을 한다.
+- Gateway Load Balancer는 모든 트랙픽에 대해 단일 입구 및 출구 지점 역할을 하는 동시에 수요에 따라 가상 어플라이언스를 확장하는 기능을 한다.
 - Gateway Load Balancer는 OSI 모델의 3계층인 네트워크 계층에서 작동한다.
 - 이 로드 밸런서는 모든 포트에 걸쳐 모든 IP 패킷을 청취하고, 리스너 규칙에 지정된 대상 그룹으로 트래픽을 전달한다.

@@ -82,7 +82,7 @@
 
 ## 3.2 Secondary Indexing
 
-![image-20210830195911042](./images/Secondary Index.png)
+![[Secondary Index.png]]
 
 * non-clustering Index라고도 한다
 * 인덱스의 탐색 키 값에 따라 **데이터 파일이 정렬되어 있는 않은 경우**를 말한다.

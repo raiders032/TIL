@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "5466c23a8943d049",
+        "id": "1c13021fa058a818",
         "type": "tabs",
         "children": [
           {
-            "id": "01546af4106c393f",
+            "id": "5be56c87d85548e4",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Language/Kotlin/Coroutines/Coroutines.md",
+                "file": "Spring/Spring-Batch/Domain/Domain.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -21,12 +21,12 @@
             }
           },
           {
-            "id": "290368d8990ee113",
+            "id": "464f895d19a7bebf",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "System-Design/Chatting/Chatting.md",
+                "file": "Spring/Spring-Batch/Domain/Domain.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -34,12 +34,12 @@
             }
           },
           {
-            "id": "e7a78f303e4364bc",
+            "id": "7f4f04c1429078f8",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AWS/SQS/SQS.md",
+                "file": "Spring/Spring-Batch/Partitioning/Partitioning.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -47,12 +47,12 @@
             }
           },
           {
-            "id": "bf3af854430f05e5",
+            "id": "862f95de599716f4",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Language/Kotlin/Coroutines/Coroutine-Context.md",
+                "file": "AWS/RDS/RDS.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -60,12 +60,12 @@
             }
           },
           {
-            "id": "ab7385ea356460df",
+            "id": "e1f0c67a54dc46ab",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Language/Kotlin/Class/Class.md",
+                "file": "AWS/Snowball-Edge/Snowball-Edge.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -73,129 +73,12 @@
             }
           },
           {
-            "id": "0ec1266df8bff2a4",
+            "id": "03e02514856c2d58",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "WIP/chat-server/chat-server.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "a0a1922a3aa4ea8b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Kubernetes/Ingress/Ingress.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "1150fe7fca884fe1",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "WIP/HyperCloud/Registry.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "5555146b6be3d10e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Redis/Data-Type/Data-Type.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "48c219ef7466f4f0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AWS/ECS/ECS.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "d352307773a17873",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Untitled.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "e4d38abbb6bd7e10",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AWS/IAM/IAM.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "ef7095b71b84a625",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Docker/Docker/Docker.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "e5449a0898c49539",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Untitled.md",
-                "mode": "source",
-                "backlinks": true,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "041bd46844ea91b6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AWS/ElasticLoadBalancing/ElasticLoadBalancing.md",
+                "file": "AWS/EC2/EC2.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -203,7 +86,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -248,7 +131,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "docker-compose",
+                "query": "uber jar",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -270,7 +153,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 402.5
+    "width": 399.5
   },
   "right": {
     "id": "b0ca09c3c27e1ac4",
@@ -286,7 +169,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AWS/SQS/SQS.md"
+                "file": "AWS/EC2/EC2.md"
               }
             }
           },
@@ -296,7 +179,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AWS/SQS/SQS.md",
+                "file": "AWS/EC2/EC2.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -313,7 +196,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "AWS/SQS/SQS.md",
+                "file": "AWS/EC2/EC2.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -366,54 +249,54 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "e7a78f303e4364bc",
+  "active": "03e02514856c2d58",
   "lastOpenFiles": [
-    "Network/OAuth2/OAuth2.md",
-    "Untitled.md",
-    "System-Design/Chatting/Chatting.md",
-    "Docker/Docker-Compose/Docker-Compose.md",
-    "Docker/Network/Network.md",
-    "Docker/Docker/Docker.md",
-    "Docker/CLI/CLI.md",
-    "Docker/Dockerfile/Dockerfile.md",
-    "AWS/IAM/IAM.md",
-    "AWS/IAM/images/Pasted image 20240223110209.png",
-    "AWS/IAM/images",
-    "Kubernetes/Security/Security.md",
-    "AWS/ElastiCache/ElastiCache.md",
-    "AWS/AMI/AMI.md",
-    "AWS/SecretsManager/SecretsManager.md",
-    "AWS/SES/SES.md",
-    "AWS/ElasticBeanstalk/ElasticBeanstalk.md",
-    "AWS/EFS/EFS.md",
-    "AWS/EBS/EBS.md",
-    "AWS/CloudFront/CloudFront.md",
-    "AWS/CloudWatch/CloudWatch.md",
-    "AWS/ASG/ASG.md",
-    "AWS/Glue/Glue.md",
-    "AWS/GlobalAccelerator/GlobalAccelerator.md",
-    "AWS/Redshift/Redshift.md",
-    "AWS/Athena/Athena.md",
-    "AWS/API-Gateway/API-Gateway.md",
+    "Language/Java/Jar/Jar.md",
+    "AWS/VPC/VPC.md",
+    "Untitled 10.md",
+    "Untitled 6.md",
+    "AWS/Lambda/Lambda.md",
     "AWS/SQS/SQS.md",
-    "AWS/EC2",
-    "AWS/ECR",
-    "AWS/ECS",
-    "AWS/EKS",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20240219143741.png",
-    "System-Design/Chatting",
-    "WIP/chat-server/images/Pasted image 20240216132219.png",
-    "WIP/chat-server/images",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20240214142005.png",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20240213141324.png",
-    "Design-Pattern/Command",
-    "images/Pasted image 20240205101537.png",
-    "images/Pasted image 20240131131500.png",
-    "WIP/HyperCloud/images/Pasted image 20240122160749.png",
-    "WIP/HyperCloud/images",
-    "DB/CAP",
-    "images/Pasted image 20240102143308.png",
-    "Reactive-Programming/Project-Reactor/images/Pasted image 20231231142710.png",
+    "AWS/S3/S3.md",
+    "AWS/GlobalAccelerator/GlobalAccelerator.md",
+    "AWS/AWSStorageGateway/AWSStorageGateway.md",
+    "AWS/DataSync/DataSync.md",
+    "AWS/DataSync",
+    "AWS/SNS/SNS.md",
+    "AWS/Snowball-Edge/Snowball-Edge.md",
+    "AWS/Direct-Connect/Direct-Connect.md",
+    "AWS/Direct-Connect",
+    "AWS/AppFlow/AppFlow.md",
+    "AWS/AppFlow",
+    "AWS/Data-Firehose/Data-Firehose.md",
+    "AWS/EBS/EBS.md",
+    "AWS/RDS/RDS.md",
+    "Untitled 12.md",
+    "Design-Pattern/Template-Method/Template-Method.md",
+    "Network/Protocol/HTTPS/HTTPS.md",
+    "Network/Protocol/HTTP/README.md",
+    "Network/Protocol/HTTP/136h7s2robdd4v9ev6xe.png",
+    "Network/Protocol/HTTP/HTTP-MEASSAGE/HTTP-MEASSAGE.md",
+    "Network/Protocol/HTTP/HTTP/HTTP.md",
+    "Spring/Spring-Batch/Partitioning/Partitioning.md",
+    "Spring/Spring-Batch/Domain/Domain.md",
+    "Spring/Spring-Batch/Partitioning",
+    "Spring/Spring-Batch/Step/Step.md",
+    "AWS/Systems-Manager-Session-Manager",
+    "AWS/KMS",
+    "AWS/Shield",
+    "AWS/CloudTrail",
+    "AWS/Data-Firehose",
+    "Network/Window/Route",
+    "Spring/Spring-Batch/Spring-Batch/images/job-heirarchy.png",
+    "Design-Pattern/Command/images/Pasted image 20240418221551.png",
+    "WIP/tmax/SAS/CICD/images/Pasted image 20240418111905.png",
+    "images/Pasted image 20240314143519.png",
+    "WIP/공유문서/images/Pasted image 20240311104644.png",
+    "WIP/공유문서/images/focus_master___ 1.png",
+    "WIP/공유문서/images/focus_master___.png",
+    "WIP/공유문서/images/Pasted image 20240311104436.png",
+    "WIP/공유문서/images/Workflow_runs_·_cm-rnd_postsales.png",
     "Untitled.canvas"
   ]
 }

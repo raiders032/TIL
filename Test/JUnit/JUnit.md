@@ -1,9 +1,8 @@
 # 1 JUnit5
 
-* 자바 개발자가 가장 많이 사용하는 테스팅 프레임워크.
-* 자바8 이상을 필요로함.
-* 대체제: TestNG, Spock, ...
-
+* 자바 개발자가 가장 많이 사용하는 테스팅 프레임워크입니다.
+- JUnit5는 자바 8 이상 버전을 필요로 합니다.
+- JUnit 이외에도 TestNG, Spock 등의 대체 프레임워크가 존재합니다.
 <br>
 
 ## 1.1 build
@@ -26,34 +25,39 @@ dependencies {
 
 ![3 JUnit architecture - JUnit in Action, Third Edition](./images/architecture.png)
 
-* JUnit5는 크게 세 개의 요소로 구성되어 있다
-* `JUnit 5 = JUnit Platform + JUnit Jupiter + JUnit Vintage`
+* JUnit5는 크게 세 개의 요소로 구성되어 있습니다.
+- `JUnit 5 = JUnit Platform + JUnit Jupiter + JUnit Vintage`
 
 <br>
 
 ## 2.1 JUnit Platform
 
-* 테스팅 프레임워크를 구동하기 위한 런처와 테스트 엔진을 위한 API를 제공한다
-	* 런처: junit-platform-launcher
-	* 테스트 엔진 API: junit-platform-engine
+* JUnit Platform은 테스팅 프레임워크를 구동하기 위한 런처(Launcher)와 테스트 엔진을 위한 API를 제공합니다.
+- 런처: `junit-platform-launcher` 모듈에서 제공됩니다.
+- 테스트 엔진 API: `junit-platform-engine` 모듈에서 제공됩니다.
 
 <br>
 
 ## 2.2 Jupiter
 
-* TestEngine API 구현체로 JUnit 5를 제공
+* JUnit Jupiter는 JUnit 5에서 제공하는 TestEngine API의 구현체입니다.
+- JUnit 5의 새로운 프로그래밍 모델과 확장 모델을 제공합니다.
 
 <br>
 
 ## 2.3 Vintage
 
-* JUnit 4와 3을 지원하는 TestEngine API 구현체
+* JUnit Vintage는 JUnit 3와 JUnit 4를 지원하기 위한 TestEngine API의 구현체입니다.
+- 이를 통해 이전 버전의 JUnit으로 작성된 테스트를 JUnit 5 플랫폼에서 실행할 수 있습니다.
 
 <br>
 
 ## 1.2 Junit5 시작하기
 
-2.2버전 이상의 스프링 부트 프로젝트를 만든다면 기본으로 JUnit 5 의존성 추가 됨.
+- 스프링 부트 2.2 버전 이상의 프로젝트를 생성하면 기본적으로 JUnit 5의 의존성이 추가됩니다.
+- 만약 수동으로 의존성을 추가하려면 다음과 같이 설정할 수 있습니다.
+
+
 
 ```xml
 <dependency> 
@@ -68,13 +72,13 @@ dependencies {
 
 # 2 [애노테이션](https://junit.org/junit5/docs/current/user-guide/#writing-tests-annotations)
 
+- JUnit 5에서 제공하는 주요 애노테이션은 다음과 같습니다.
+
 ## 2.1 @Test
 
-- 메서드가 테스트 메서드임을 나타냅니다. 
-- JUNIT 4의 `@Test` 주석과는 달리, JUNIT Jupiter의 테스트 확장은 자체 전용 주석을 기반으로 작동하기 때문에 이 주석에는 어떠한 attribute도 선언하지 않습니다.
-- Junit5부터는 `public`이 아니여도 된다.
-	- 리플렉션을 사용하기 때문에
-- 메서드가 private이면 안된다
+- `@Test` 애노테이션은 메서드가 테스트 메서드임을 나타냅니다.
+- JUnit 4의 `@Test` 애노테이션과 달리 JUnit Jupiter의 `@Test` 애노테이션에는 속성이 없습니다.
+- 리플렉션을 사용하므로 메서드의 접근 제어자가 `public`일 필요는 없지만, `private`은 안됩니다.
 
 <br>
 
@@ -137,15 +141,15 @@ void test(){
 
 ## 2.5 @DisplayNameGeneration
 
-* Method와 Class 레퍼런스를 사용해서 테스트 이름을 표기하는 방법 설정.
-* 기본 구현체로 ReplaceUnderscores 제공
+* `@DisplayNameGeneration` 애노테이션은 테스트 이름을 표기하는 방법을 설정합니다.
+- 기본 구현체로 `ReplaceUnderscores`가 제공됩니다.
 
 <br>
 
 ## 2.6 @DisplayName
 
-* 어떤 테스트인지 테스트 이름을 보다 쉽게 표현할 수 있는 방법을 제공하는 애노테이션.
-* @DisplayNameGeneration 보다 우선 순위가 높다.
+* `@DisplayName`은 테스트에 이름을 부여할 때 사용되는 애노테이션입니다.
+- `@DisplayNameGeneration` 보다 우선 순위가 높습니다.
 
 ```java
 @DisplayName("메뉴 추가")
@@ -195,23 +199,29 @@ void createMenu() throws Exception {
 
 # 4 [JUnit5 테스트 순서](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order)
 
-* 테스트의 순서는 항상 일정하지 않다.
+* JUnit은 각 테스트 클래스의 새로운 인스턴스를 만들어 테스트 메서드를 실행합니다.
+- 이는 테스트 메서드의 독립성을 유지하고, 테스트 간의 예기치 않은 부작용을 방지하기 위함입니다.
 * 순서대로 테스트를 실행하고 싶은 경우
 	* `@TestMethodOrder`를 사용해 테스트 메소드의 순서를 정할 수 있다. 
 	* `@TestInstance(Lifecycle.PER_CLASS)`와 함께 사용하여 유즈 케이스나 시나리오 테스트를 하는데 용이하다.
 
 <br>
 
-# 5 [JUnit 5 테스트 인스턴스](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle)
+# 5 JUnit 5 테스트 인스턴스
 
-> 개별 테스트 방법이 분리되어 실행될 수 있도록 허용하고 테스트 인스턴스 상태로 인한 예기치 않은 부작용을 방지하기 위해 JUnit은 각 테스트 클래스의 새 인스턴스를 만든 후 각 테스트 메서드를 실행합니다.
+- [레퍼런스](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle)
+- JUnit에서는 개별 테스트 메서드를 독립적으로 실행하고 변경 가능한 테스트 인스턴스 상태로 인한 예기치 않은 부작용을 방지하기 위해, 각 **테스트 메서드(정의 참조)를 실행하기 전에 각 테스트 클래스의 새 인스턴스를 생성**합니다.
+- "메서드별" 테스트 인스턴스 수명 주기는 JUnit Jupiter의 기본 동작이며 이전 버전의 JUnit과 유사합니다.
+- 만약 JUnit Jupiter가 모든 테스트 메서드를 동일한 테스트 인스턴스에서 실행하기를 원한다면, 테스트 클래스에 @TestInstance(Lifecycle.PER_CLASS) 어노테이션을 붙이면 됩니다
+
+<br>
 
 **@TestInstance(Lifecycle.PER_CLASS)**
 
-* 테스트 클래스당 인스턴스를 하나만 만들어 사용한다.
-* 경우에 따라, 테스트 간에 공유하는 모든 상태를 @BeforeEach 또는 @AfterEach에서
-  초기화 할 필요가 있다.
-* @BeforeAll과 @AfterAll을 인스턴스 메소드 또는 인터페이스에 정의한 default 메소드로 정의할 수도 있다.
+* 이 모드를 사용하면 테스트 클래스당 한 번 새 테스트 인스턴스가 생성됩니다.
+- 따라서 테스트 메서드가 인스턴스 변수에 저장된 상태에 의존하는 경우, @BeforeEach 또는 @AfterEach 메서드에서 해당 상태를 재설정해야 할 수도 있습니다.
+- "클래스별" 모드는 기본 "메서드별" 모드에 비해 몇 가지 추가적인 이점이 있습니다.
+- 특히 "클래스별" 모드에서는 정적이 아닌 메서드와 인터페이스 기본 메서드에서 @BeforeAll과 @AfterAll을 선언할 수 있습니다.
 
 <br>
 

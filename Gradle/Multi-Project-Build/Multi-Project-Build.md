@@ -36,3 +36,36 @@
 - `.gradle`, `gradle`, `gradlew`, `gradlew.bat`, `settings.gradle.kts` 파일이 루트 디렉토리에 위치한다.
 - `settings.gradle.kts` 파일은 모든 서브 프로젝트를 포함해야 한다.
 - 각 서브 프로젝트는 자체 `build.gradle.kts` 파일을 가진다.
+
+<br>
+
+# 2 Root Project
+
+- 루트 프로젝트의 settings.gradle.kts의 구조를 알아보자.
+
+<br>
+
+## 2.1 plugins
+
+- 프로젝트에서 사용할 플러그인을 정의하는 블록입니다
+- 해당 플러그인은 루트 프로젝트와 하위 프로젝트에 자동 적용됩니다.
+- `apply false`가 명시된 플러그인은 루트 프로젝트와 하위 프로젝트에 적용되지 않습니다.
+	- apply의 기본 값은 true입니다.
+
+<br>
+
+## 2.2 allprojects
+
+- 루트 프로젝트와 모든 하위 프로젝트에 공통으로 적용되는 설정을 정의하는 블록입니다.
+
+<br>
+
+## 2.3 subprojects
+
+- 하위 프로젝트에만 적용되는 설정을 정의하는 블록입니다.
+
+<br>
+
+# 3 Sub Project
+
+- 서브 프로젝트의 settings.gradle.kts의 구조를 알아보자.

@@ -15,7 +15,7 @@
   - Default arguments, Named arguments, Variable number of arguments
 - [Interface](Interface/Interface.md)
 - [Kotlin](Kotlin/Kotlin.md)
-- [Lambda](Lambda/Lambda.md)
+- [Lambda](Language/Kotlin/Lambda/Lambda.md)
 - [Modifier](Modifier/Modifier.md)
 - [Nullable Type](Nullable-Type/Nullable-Type.md)
 - [Operator Overloading](Operator-Overloading/Operator-Overloading.md) 

@@ -1,7 +1,7 @@
 # 1 Node Affinity
 
 - 테인트는 파드를 특정 노드에서 떨어뜨려 놓는 데 사용된다.
-  -  [Taints-And-Tolerations.md](../Taints-And-Tolerations/Taints-And-Tolerations.md) 참고
+	-  [Taints-And-Tolerations.md](../Taints-And-Tolerations/Taints-And-Tolerations.md) 참고
 - Node Affinity는 특정 노드 집합에만 파드를 스케줄링하도록 지시할 수 있다.
 
 

@@ -12,5 +12,10 @@ tbsql sys/tibero
 SELECT DB_NAME FROM V$INSTANCE;
 ```
 
+<br>
+
+# 2 세션
+
+
 
 

@@ -31,7 +31,7 @@
 * [JSP](JSP/JSP.md) 
 * [JVM](JVM/README.md) 
   * Class Loader, Runtime Data Area, Execution Engine
-* [Lambda](Lambda/Lambda.md)
+* [Lambda](Language/Java/Lambda/Lambda.md)
   * Functional Interface, Function, Consumer, Supplier, Predicate, Method Reference
 * [Modules](Modules/Modules.md) 
 * [Multi Thread](Multi-Thread/Multi-Thread.md)

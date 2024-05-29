@@ -51,8 +51,26 @@ implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1
 - `@ApiParam` → `@Parameter`
 - `@ApiResponse(code = 404, message = "foo")` → `@ApiResponse(responseCode = "404", description = "foo")`
 
+<br>
 
+# 3 OpenAPI 스펙 기반 Swagger UI 생성
 
+```groovy
+plugins {
+    id("org.hidetake.swagger.generator") version "2.18.2"
+}
+```
+
+```groovy
+swaggerSources {
+    register("apiDocs") {
+        setInputFile(file("build/api-spec/open-api-3.0.1.yaml"))
+    }
+}
+```
+
+- `swaggerSources` 블록에서 Swagger UI에 사용할 OpenAPI 스펙 파일을 등록합니다.
+- `generateSwaggerUI` 태스크 실행: Gradle에서 `generateSwaggerUI` 태스크를 실행하면 생성된 OpenAPI 스펙 파일을 기반으로 Swagger UI가 생성됩니다.
 
 
 참고
